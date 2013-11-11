@@ -1,0 +1,80 @@
+Y:\BD\THE_HUNGER_GAMES\BDMV\PLAYLIST\00076.MPLS
+Y:\BD\TOY_STORY_2_USA\BDMV\PLAYLIST\00200.mpls
+Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\PLAYLIST\00009.MPLS
+Y:\BDAM\BLACK_HAWK_DOWN_15min.m2ts
+
+# Concatenate M2TS files - FIRST A/V/S TRACKS ONLY - SUCCEEDS
+ffmpeg -y -i "concat:Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00000.M2TS|Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00001.M2TS" -c copy Y:\BDAM\BLACK_HAWK_DOWN.mkv
+
+# Concatenate M2TS files - selected tracks only + specific pcm_s16le codec for pcm_bluray track - SUCCEEDS (VERY VERY SLOW - Apparently pcm_bluray needs to be transcoded to pcm_s16le)
+ffmpeg -y -i "concat:Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00000.M2TS|Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00001.M2TS" -map 0:0 -map 0:1 -map 0:2 -map 0:4 -map 0:5 -map 0:6 -map 0:7 -map 0:8 -c copy -c:a:1 pcm_s16le Y:\BDAM\BLACK_HAWK_DOWN.mkv
+
+# Concatenate M2TS files - selected tracks only (no PCM)
+ffmpeg -y -i "concat:Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00000.M2TS|Y:\BD\49123204_BLACK_HAWK_DOWN\BDMV\STREAM\00001.M2TS" -map 0:0 -map 0:1 -map 0:4 -map 0:5 -map 0:6 -map 0:7 -map 0:8 -c copy Y:\BDAM\BLACK_HAWK_DOWN_FULL.mkv
+
+---
+
+# Single 15 minute M2TS file - selected tracks only (no PCM)
+ffmpeg -y -i Y:\BDAM\BLACK_HAWK_DOWN_15min.m2ts -map 0:0 -map 0:1 -map 0:4 -map 0:5 -map 0:6 -map 0:7 -map 0:8 -c copy Y:\BDAM\BLACK_HAWK_DOWN_15min.mkv
+
+---
+
+How to concatenate files: http://ffmpeg.org/trac/ffmpeg/wiki/How%20to%20concatenate%20(join%2C%20merge)%20media%20files#samecodec
+
+Concat demuxer
+
+The concat demuxer was added to ffmpeg 1.1 . You can read about it in the documentation.
+
+Create a file "mylist.txt" with all the files you want to have concatenated in the following form ( Lines starting with a dash are ignored ) :
+
+    # this is a comment
+    file '/path/to/file1'
+    file '/path/to/file2'
+    file '/path/to/file3'
+
+Note that these can be either relative or absolute paths. Then you can encode your files with:
+
+    ffmpeg -f concat -i mylist.txt -c copy output
+
+---
+
+List of codec IDs: http://pvdm.xs4all.nl/wiki/index.php5/Convert_an_AVCHD_/_MTS_file_to_MP4_using_ffmpeg
+
+Run:
+
+    $ ffmpeg -formats
+
+Codecs:
+ D..... = Decoding supported
+ .E.... = Encoding supported
+ ..V... = Video codec
+ ..A... = Audio codec
+ ..S... = Subtitle codec
+ ...S.. = Supports draw_horiz_band
+ ....D. = Supports direct rendering method 1
+ .....T = Supports weird frame truncation
+ ------
+ D A    pcm_bluray      PCM signed 16|20|24-bit big-endian for Blu-ray media
+ D A    pcm_dvd         PCM signed 20|24-bit big-endian
+ DEA    pcm_f32be       PCM 32-bit floating point big-endian
+ DEA    pcm_f32le       PCM 32-bit floating point little-endian
+ DEA    pcm_f64be       PCM 64-bit floating point big-endian
+ DEA    pcm_f64le       PCM 64-bit floating point little-endian
+ D A    pcm_lxf         PCM signed 20-bit little-endian planar
+ DEA    pcm_mulaw       PCM mu-law
+ DEA    pcm_s16be       PCM signed 16-bit big-endian
+ DEA    pcm_s16le       PCM signed 16-bit little-endian
+ D A    pcm_s16le_planar PCM 16-bit little-endian planar
+ DEA    pcm_s24be       PCM signed 24-bit big-endian
+ DEA    pcm_s24daud     PCM D-Cinema audio signed 24-bit
+ DEA    pcm_s24le       PCM signed 24-bit little-endian
+ DEA    pcm_s32be       PCM signed 32-bit big-endian
+ DEA    pcm_s32le       PCM signed 32-bit little-endian
+ DEA    pcm_s8          PCM signed 8-bit
+ DEA    pcm_u16be       PCM unsigned 16-bit big-endian
+ DEA    pcm_u16le       PCM unsigned 16-bit little-endian
+ DEA    pcm_u24be       PCM unsigned 24-bit big-endian
+ DEA    pcm_u24le       PCM unsigned 24-bit little-endian
+ DEA    pcm_u32be       PCM unsigned 32-bit big-endian
+ DEA    pcm_u32le       PCM unsigned 32-bit little-endian
+ DEA    pcm_u8          PCM unsigned 8-bit

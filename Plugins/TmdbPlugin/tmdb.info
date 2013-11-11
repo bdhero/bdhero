@@ -1,0 +1,23 @@
+﻿Status Codes: http://api.themoviedb.org/2.1/status-codes
+1 : Success.
+2 : Invalid service - This service does not exist.
+3 : Authentication failed - You do not have permissions to access the service.
+4 : Invalid format - This service doesn't exist in that format.
+5 : Invalid parameters - Your request parameters are incorrect.
+6 : Invalid id - The pre-requisite id is invalid or not found.
+7 : Invalid API key - You must be granted a valid key.
+8 : Duplicate entry - The data you tried to submit already exists.
+9 : Service offline - This service is temporarily offline. Try again later.
+10 : Suspended API key - Access to your account has been suspended, contact TMDb.
+11 : Internal error - Something went wrong. Contact TMDb.
+12 : The item/record was updated successfully.
+13 : The item/record was deleted successfully.
+14 : Authentication failed.
+15 : Failed.
+16 : Device denied.
+17 : Session denied.
+18 : Validation failed.
+19 : Invalid accept header.
+20 : Invalid date range. Should be a range no longer than 14 days..
+21 : Entry not found - The item you are trying to edit cannot be found..
+22 : Invalid page. Pages start at 1 and are expected to be an integer..

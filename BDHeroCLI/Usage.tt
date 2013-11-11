@@ -1,0 +1,49 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+USAGE:
+    <#= _exeName #> [OPTIONS]
+
+OPTIONS:
+    /?
+    -h
+    --help
+        Show help and usage information and exit.
+
+    -V
+    --version
+        Show version number and exit.
+
+    -i bdrom_path
+    --input bdrom_path
+        Scan the given BD-ROM.
+
+    -o mkv_path
+    --output mkv_path
+        Write to the given MKV file.
+
+    -y
+    --yes
+        Always overwrite existing MKV files without prompting.
+
+    -n
+    --no
+        Never overwrite existing MKV files; abort immediately if the output file already exists.
+
+    --debug
+        Log DEBUG-, INFO-, WARN-, ERROR-, and FATAL-level messages to the console and log file.
+
+    -v
+    --verbose
+        Log INFO-, WARN-, ERROR-, and FATAL-level messages to the console and log file.  This is the default behavior.
+
+    -w
+    --warn
+        Only log WARN-, ERROR-, and FATAL-level messages to the console and log file.
+
+    -q
+    --quiet
+        Only log ERROR- and FATAL-level messages to the console and log file.
+
+    -s
+    --silent
+        Only log FATAL-level messages to the console and log file.

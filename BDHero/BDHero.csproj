@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BDHero</RootNamespace>
+    <AssemblyName>BDHero</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BDROM\AnyDVDDiscInf.cs" />
+    <Compile Include="BDROM\Chapter.cs" />
+    <Compile Include="BDROM\ChapterSearchResult.cs" />
+    <Compile Include="BDROM\Codec.cs" />
+    <Compile Include="BDROM\Disc.cs" />
+    <Compile Include="BDROM\DiscFileSystem.cs" />
+    <Compile Include="BDROM\DiscFeatures.cs" />
+    <Compile Include="BDROM\DiscMetadata.cs" />
+    <Compile Include="BDROM\Isan.cs" />
+    <Compile Include="BDROM\Playlist.cs" />
+    <Compile Include="BDROM\RegionCode.cs" />
+    <Compile Include="BDROM\StreamClip.cs" />
+    <Compile Include="BDROM\Track.cs" />
+    <Compile Include="Config\InjectorFactory.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
+    <Compile Include="IController.cs" />
+    <Compile Include="JobQueue\SearchQuery.cs" />
+    <Compile Include="Plugin\DevPluginService.cs" />
+    <Compile Include="Plugin\IPluginRepository.cs" />
+    <Compile Include="Plugin\IPluginService.cs" />
+    <Compile Include="Plugin\PluginService.cs" />
+    <Compile Include="Plugin\PluginUtils.cs" />
+    <Compile Include="Plugin\ProgressToken.cs" />
+    <Compile Include="Plugin\ProgressProvider.cs" />
+    <Compile Include="Plugin\IPlugin.cs" />
+    <Compile Include="Plugin\IPluginHost.cs" />
+    <Compile Include="Plugin\PluginProgressHandler.cs" />
+    <Compile Include="Plugin\PluginRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JobQueue\CoverArt.cs" />
+    <Compile Include="JobQueue\ReleaseMedium.cs" />
+    <Compile Include="JobQueue\Job.cs" />
+    <Compile Include="Startup\DirectoryLocator.cs" />
+    <Compile Include="Startup\IDirectoryLocator.cs" />
+    <Compile Include="Startup\LogInitializer.cs" />
+    <Compile Include="Startup\PluginLoader.cs" />
+    <Compile Include="Utils\AppConstants.cs" />
+    <Compile Include="Utils\BDFileUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\UpdateLib\UpdateLib.csproj">
+      <Project>{F39EA837-99DD-4453-AA1A-DE408D47A0A6}</Project>
+      <Name>UpdateLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\BDInfo\BDInfo.csproj">
+      <Project>{DFF91717-C9EF-4881-9827-81D25F9A71A3}</Project>
+      <Name>BDInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\DotNetUtils\DotNetUtils.csproj">
+      <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
+      <Name>DotNetUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\I18N\I18N.csproj">
+      <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
+      <Name>I18N</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\OSUtils\OSUtils.csproj">
+      <Project>{ee69e896-8779-4e3d-a033-75a96f28de2f}</Project>
+      <Name>OSUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
+      <Project>{a673442d-599d-4332-bcfa-8ec02171efc0}</Project>
+      <Name>WindowsOSUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,96 @@
+EXE File Names
+==============
+
+bdhero.exe
+bdheroc.exe
+
+vs.
+
+bdhero-cli.exe
+bdhero-gui.exe
+
+
+INSTALLED
+=========
+
+C:\Program Files\BDHero
+    - bdhero-gui.exe
+    - bdhero-cli.exe
+    - Plugins
+        - README.TXT
+        - DiscReader
+            - DiscReaderPlugin.dll
+            - BDInfo.dll
+        - FFmpegMuxer
+            - FFmpegMuxerPlugin.dll
+            - ffmpeg.exe
+        - Tmdb
+            - TmdbPlugin.dll
+            - WatTmdb.dll
+
+C:\Users\<USERNAME>\AppData\Roaming\BDHero
+    - Config
+        - Application
+            - bdhero.config.json
+            - bdhero-gui.log.config
+            - bdhero-cli.log.config
+        - Plugins
+            - README.TXT
+            - DiscReader
+                - TMDbPlugin.config.json
+            - FFmpegMuxer
+                - FFmpegMuxerPlugin.config.json
+            - HandBrake
+                - HandBrakePlugin.config.json
+            - Tmdb
+                - TmdbPlugin.config.json
+    - Plugins
+        - README.TXT
+        - HandBrake
+            - HandBrakePlugin.dll
+            - hb.dll
+
+C:\Users\<USERNAME>\AppData\Local\BDHero
+    - Logs
+        - bdhero-cli.log
+        - bdhero-gui.log
+
+PORTABLE
+========
+
+<InstallDir>
+    - bdhero-gui.exe
+    - bdhero-cli.exe
+    - Config
+        - Application
+            - bdhero.config.json
+            - bdhero-gui.log.config
+            - bdhero-cli.log.config
+        - Plugins
+            - README.TXT
+            - DiscReader
+                - TMDbPlugin.config.json
+            - FFmpegMuxer
+                - FFmpegMuxerPlugin.config.json
+            - HandBrake
+                - HandBrakePlugin.config.json
+            - Tmdb
+                - TmdbPlugin.config.json
+    - Plugins
+        - Required
+            - DiscReader
+                - DiscReaderPlugin.dll
+                - BDInfo.dll
+            - FFmpegMuxer
+                - FFmpegMuxerPlugin.dll
+                - ffmpeg.exe
+            - Tmdb
+                - TmdbPlugin.dll
+                - WatTmdb.dll
+        - Custom
+            - HandBrake
+                - HandBrakePlugin.dll
+                - hb.dll
+    - Logs
+        - bdhero-cli.log
+        - bdhero-gui.log

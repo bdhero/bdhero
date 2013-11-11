@@ -1,0 +1,226 @@
+Chores
+======
+
+[ ] Test silent installs and updates
+[ ] Add /portable command line arg
+
+[ ] Convert batch files to MSBuild
+[ ] Centralize BDHero project URLs
+
+[ ] Move plugin enabling/disabling code to Controller
+
+[ ] Add logging
+    [ ] ProcessUtils and DotNetUtils?
+[ ] Unit tests
+    [ ] Exception handling in all scenarios
+
+Bugs
+====
+
+[ ] XP: ProgressBar2 black background
+[ ] Remove unused outputPath args in Controller.cs
+[ ] Clean up temp files
+    [ ] FFmpegMuxerPlugin: %TEMP%/FFmpegMuxerPlugin/%PID%/..?
+    [ ] AutoUpdate: %TEMP%/bdhero/update/*.exe
+    [ ] Installer rollback: %TEMP%/bdhero/rollback
+
+[ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
+
+[ ] Exception thrown in FileUtils.CreateDirectory() when user types in goofy output path
+[ ] Time Remaining is jumpy, esp. > 80% complete.  Thread queue?
+
+Features
+========
+
+[ ] Highlight placeholders in textbox?  (if it's even possible in winforms...)
+[ ] Context menu for Playlist listitems: add "Language" option
+
+[ ] Add "use last folder" option to File Namer preference dialog
+
+[ ] Fix or remove "low quality" playlist detection
+[ ] Consider chapter count and timestamps when looking for duplicate playlists (playlists w/ identical streams but different chapters are not dups)
+
+[ ] Plugin hooks for UI events:
+    [ ] Select a movie/TV show
+    [ ] Re-configure playlist (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
+    [ ] Re-configure tracks (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
+
+Backlog
+=======
+
+[ ] Don't erase the user's custom chapter titles when they re-select "Default"
+[ ] Add stream files listview?
+
+[ ] Context menu and double click to play for playlists
+[ ] Context menu and double click to view codec info for tracks?
+
+[ ] Group input FileTextBox and buttons into panel; do same w/ output FileTextBox and buttons
+
+[ ] Allow pausing of tasks
+[ ] Angle support
+
+[ ] Validate filter window inputs
+
+[ ] Display drives above input textbox (like VidCoder)
+[ ] Background thread for drive detection
+[ ] Centralize drive detection logic
+[ ] Handle exceptions during drive detection
+
+[ ] CLI prompt to select TMDb search result, playlist, angle, overwrite existing file
+[ ] CLI arg to dump list of main movie playlist files
+[ ] Asynchronous TMDb poster/cover art getter thread (use futures?)
+
+[ ] Add Windows 7 Taskbar buttons for pause/resume and cancel
+[ ] Add Windows 7 Taskbar jump lists?
+
+Chris' Plugins
+==============
+
+[ ] TMDb: Report more detailed, fine-grained progress when loading lots of search results and poster images
+[ ] Chapter Grabber: (THE MATRIX REVOLUTIONS):
+    01:57:31.210: Freedom and Sunlight
+    02:00:12.371: End Credits
+    02:09:13.745: 
+[ ] URI encoding (e.g., http://chapterdb.org/chapters/search?title=BLACK HAWK DOWN&chapterCount=0)
+[ ] Unescape XML/HTML entities (e.g., "&amp;" -> "&")
+[ ] Search ALL media types in Chapter Grabber plugin (not just Blu-ray)
+[ ] Use chapter grabber plugin to auto-detect main movie by comparing playlists to ChapterDb search results
+
+Complete
+========
+
+[X] Update CustomMessages to override title/description to include version number and whether the install is an update or a fresh install
+[X] Remember user's directory selections when switching between Installed and Portable radio buttons
+[X] Delete {code:AutoConfigDirFn} dirs when uninstalling, not just {userappdata} dirs
+[X] Prompt user to remove settings/config files when uninstalling
+[X] Custom icon in top right corner
+[X] Don't create start menu entries for portable installs
+[X] Disable Uninstall for portable installations
+[X] Disable "Installation Type" page for upgrades and silent installs
+[X] Hash artifacts
+[X] Reorganize repo's directory structure
+[X] Add all build tools to Git repo
+    [X] +ILMerge
+[X] Use ILMerge w/ Versioner
+[X] Fix Tmdb plugin prefs JSON file
+[X] Change file name of BDHero-<VERSION>-<OS>-<DIST>.<EXT>
+[X] Allow user to change detected track type
+[X] Update track/playlist listview items when user changes values
+[X] Drive Detector doesn't detect when drive is disconnected (i.e., powered off w/o removing disc)
+[X] Allow any BD-ROM file/subdirectory to be scanned
+[X] Add "Preferences..." link for file renamer plugins in FormMain near "Output" textbos
+    [X] Open preferences dialog directly if only one plugin is enabled
+    [X] Show dropdown menu w/ plugins to choose from if more than one plugin is enabled
+[X] Split output MKV path into directory and file name
+    [X] Move output file name settings out into Preferences dialog (similar to mmg)
+    [X] Separate file namer preferences for movies and TV shows
+[X] File Namer placeholders
+    [X] Add fields to Job class for DirectoryPathTemplate and FileNameTemplate, which File Namer will combine and expand into OutputMkvPath
+[X] Auto enable/disable "Save" and "Reset" buttons when user changes settings in FileNamer dialog
+[X] Update ListView values when user clicks "Reset" in FileNamer dialog
+[X] Add chapters listview
+[X] Clearing "year" field in metadata search doesn't work - value gets repopulated with previous value
+[X] TMDb: search year + 1 if no results found (Avatar, Black Hawk Down)
+[X] TMDb: Parse year out of Job.SearchQuery
+[X] Hide modal dialogs from taskbar
+[X] Disc Detector doesn't work - not receiving WM_ events
+    [X] DREDD: Virtual CloneDrive mount doesn't trigger Disc Detector update (but manually restarting BDHero picks up virtual drive)
+[N] Add "Files" tab to Disc Info window? (not needed; "Open..." buttons already accomplish this)
+[X] Add checkmark/cross icons to DiscInfoMetadataPanel fields
+[X] Add buttons to view metadata files/folders in Explorer
+[X] 00000000E0660000300000000S: Die Another Day: test parsing
+[X] Add progress reporting to IsanPlugin
+[N] Use V-ISAN and/or ISAN runtime for auto detection (doesn't work... runtime is way off in isan.org DB)
+[X] Include ISAN title/year in TMDb search params
+[X] ADJUSTMENT_BUREAU: D-BOX FilmIndex.xml title is "ADJUSTMENT BUREAU~" (w/ tilde)
+[X] 26617374_LORD_OF_WAR_BD: Remove "_BD" from volume label
+[X] DARK_SHADOWS: Check ANY!/DUPLICATE for mcmf.xml file if none found in ANY!
+[X] HttpUtils User Agent: DotNetUtils
+[N] RestSharp User Agent: RestSharp (no easy way to change it)
+[X] HTML unescape ISAN text
+[X] Add "Order" property to IPlugin
+[X] Add Disc Info class
+[X] Allow users to enable/disable plugins from GUI
+[X] Add track filter
+[X] Add plugin icons
+[X] Add "Rescan" menu item (F5)
+[N] Add "Convert" menu item
+[X] Add "Show log file in Windows Explorer"
+[X] Add separate class for project URLs and to launch them
+[X] Show BDHero version number in FormMain title
+[X] Detect drives on startup
+[X] Menu bar
+[X] Basic about box
+[X] Update output MKV path when user's selection changes
+[X] Chapter Grabber: (IN_TIME)
+    Scene 1
+    Scene 2
+    Scene 3
+[X] Switch to "Save File" dialog for output MKV path
+[X] MIRROR_MIRROR_BD doesn't auto-detect any Main Feature playlists
+[X] GUI repaints but does not respond to user input while scanning disc.  Thread queue?
+[X] Don't load AppData plugins when *.vhost.exe is present in PluginService.cs
+[X] Drag-n-drop scanning
+[X] Scan automatically after Browse
+[X] NPE when scanning CASINO_ROYAL:
+    2013-07-01 00:59:14,967 [1176][1] ERROR BDHero.Controller - Unhandled exception was thrown by plugin
+    System.NullReferenceException: Object reference not set to an instance of an object.
+       at BDHero.Plugin.DiscReader.Transformer.StreamClipTransformer.Transform(TSStreamClip tsStreamClip, Int32 index)
+       at System.Linq.Enumerable.<SelectIterator>d__7`2.MoveNext()
+       at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+       at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+       at BDHero.Plugin.DiscReader.Transformer.StreamClipTransformer.Transform(IEnumerable`1 tsStreamClips)
+       at BDHero.Plugin.DiscReader.Transformer.PlaylistTransformer.Transform(TSPlaylistFile playlistFile)
+       at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+       at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+       at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+       at BDHero.Plugin.DiscReader.Transformer.PlaylistTransformer.Transform(IEnumerable`1 playlistFiles)
+       at BDHero.Plugin.DiscReader.Transformer.DiscTransformer.Transform(BDROM bdrom)
+       at BDHero.Plugin.DiscReader.DiscReader.ReadBDROM(CancellationToken cancellationToken, String bdromPath)
+       at BDHero.Controller.<>c__DisplayClass25.<ReadBDROM>b__24(CancellationToken token)
+       at BDHero.Controller.<>c__DisplayClass22.<RunPluginSync>b__20(IThreadInvoker invoker, CancellationToken token)
+       at DotNetUtils.TaskUtils.TaskBuilder.<InvokeDoWork>b__2()
+       at DotNetUtils.TaskUtils.TaskBuilder.Try(Action action)
+[X] Don't skip unknown codecs - ffmpeg includes ALL codecs when counting streams (even IGS and DTS Express), which means BDHero's track indexes won't match
+[X] Estimated time left -- double decrement bug
+[X] Exception not propagated to UI and doesn't stop UI:
+    2013-06-27 16:57:24,043 [6620][7] ERROR ProcessUtils.NonInteractiveProcess - Error occurred while starting/running NonInteractiveProcess
+    System.InvalidOperationException: Requested process already belongs to another job group. Check http://stackoverflow.com/a/4232259/3205 for help.
+       at ProcessUtils.JobObject2.AssignProcess(IntPtr handle)
+       at ProcessUtils.JobObject2.AssignProcess(Process process)
+       at ProcessUtils.NonInteractiveProcess.StartImpl()
+       at ProcessUtils.NonInteractiveProcess.Start()
+    2013-06-27 16:57:24,063 [6620][7] ERROR ProcessUtils.BackgroundProcessWorker - Error occurred while running NonInteractiveProcess in BackgroundWorker
+    System.InvalidOperationException: No process is associated with this object.
+       at System.Diagnostics.Process.EnsureState(State state)
+       at System.Diagnostics.Process.get_HasExited()
+       at ProcessUtils.NonInteractiveProcess.get_CanKill()
+       at ProcessUtils.NonInteractiveProcess.Kill()
+       at ProcessUtils.NonInteractiveProcess.Start()
+[X] Create parent dirs of output file
+[X] What if mkvpropedit.exe, ffmpeg.exe, etc. don't exist?  Currently the UI just hangs
+    [X] Exceptions thrown in NonInteractiveProcess.Start() are not caught - they just disappear and the UI hangs
+[X] Exception when pressing cancel during FFmpeg after EXE has exited immediately due to an error:
+System.AggregateException: One or more errors occurred. ---> System.InvalidOperationException: No process is associated with this object.
+   at System.Diagnostics.Process.get_HasExited()
+   at ProcessUtils.NonInteractiveProcess.get_CanKill()
+[X] Parse FFmpeg error output when output path is not writeable (dir doesn't exist)
+[X] mkvpropedit.exe
+[X] Filter bad chars in output file names
+[X] Fix race condition in cancelation/status reporting
+[X] Allow cancellation of tasks
+[X] Dependency Injection
+[X] Threaded controller
+    http://reedcopsey.com/2009/11/17/synchronizing-net-4-tasks-with-the-ui-thread/
+[X] Break Controller.cs into separate classes: AppConfig (initialize directories; singleton), LogInitializer (singleton), PluginLoader
+[X] Reorganize solution using VS "Solution Folders"
+[X] Basic CLI args
+[X] Remove PluginException
+[X] Auto file namer
+[X] Error detection, handling, and status for FFmpeg (stderr + exit code)
+[X] Job objects not working
+[X] Movie title (year) in MKV title field
+[X] Use larger poster image
+
+[N] Don't set PGS subs to default
+[!] Auto-default tracks in FFmpeg/MkvPropEdit (doesn't appear to be possible: FFmpeg doesn't include the flags in its output, so adding them with mkvpropedit breaks the MKV file)
