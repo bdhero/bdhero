@@ -1,0 +1,97 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+USAGE:
+    <#= _exeName #> [OPTIONS]
+
+DESCRIPTION:
+    Utility to update BDHero version numbers.  Allows incremental "bumps",
+    custom version numbers, and synchronization (ensuring that version numbers
+    are in sync across all files).
+
+    The "current" version number is read from the AssemblyVersion or
+    AssemblyFileVersion attributes in BDHero/Properties/AssemblyInfo.cs,
+    whichever appears first in the file.
+
+    If invoked without any arguments, this utility will synchronize the
+    current version number across all files.
+
+OPTIONS:
+    -h, --help, /?
+        Display this message and exit.
+
+    --workspace=SOLUTION_DIR
+        Absolute path to the Visual Studio root solution directory.
+        If not specified, defaults to the current working directory (%CD%).
+
+    --test
+        Perform a test run.  Output the result of any other options,
+        but do not actually write changes to disk.
+
+    --test-with=CURRENT_VERSION
+        Same as --test, but uses CURRENT_VERSION for the current version
+        number instead of reading it from disk.
+
+    -v, --version
+    -p, --print
+        Print the current BDHero version number to stdout and exit.
+
+    --id, --version-id
+        Print the current BDHero version number ID to stdout and exit.
+        The version ID is a signed integer representation of the version
+        number suitable for use in the <versionId> tag of a
+        BitRock InstallBuilder update.xml file.
+
+        The exact format of the ID is the integer value of the
+        concatenation of each version group in two digit form.
+
+        Examples:
+
+            1.2.3.4   =   1020304
+            0.8.0.1   =     80001
+            0.8.0.10  =     80010
+           20.8.0.10  =  20080010
+
+    --strategy=STRATEGY
+        Determines how {0} updates version numbers in the solution.", exe
+
+        STRATEGY must be one of the following:
+
+            "_._._.x": Incremental: bug fix
+                       (Version.Revision)
+            "_._.x._": Incremental: minor feature/enhancement
+                       (Version.Build)
+            "_.x._._": Incremental: full release
+                       (Version.Minor)
+            "x._._._": Incremental: major milestone
+                       (Version.Major)
+            "x.x.x.x": Non-incremental: use custom version number
+                       (see --custom)
+            "_._._._": None: don't increment the version number; leave it as is
+                       and synchronize the value across all files
+                       (default behavior)
+
+    --custom=VERSION_NUMBER
+        Use a custom version number instead of incrementing the current number.
+
+    --infinite, --no-limit
+        Don't limit version number groups (major, minor, build, revision) to
+        0-9 when incrementing; if a group's current value is 9, allow it to go
+        to 10 instead of setting it to zero and incrementing the next most
+        significant group.
+
+        Examples:
+
+            > Versioner
+            6.7.8.9 => 6.7.8.9 (same as --strategy=_._._._)
+
+            > Versioner --strategy=_._._.x
+            6.7.8.9 => 6.7.9.0
+
+            > Versioner --strategy=_._._.x --infinite
+            6.7.8.9 => 6.7.8.10
+
+            > Versioner --strategy=_._._.x
+            1.9.9.9 => 2.0.0.0
+
+            > Versioner --strategy=_._._.x --infinite
+            1.9.9.9 => 1.9.9.10

@@ -1,0 +1,51 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+USAGE:
+    <#= _exeName #> [OPTIONS]
+
+DESCRIPTION:
+    Utility to generate a BDHero update manifest file (update.json).
+
+OPTIONS:
+    -h, --help, /?
+        Display this message and exit.
+
+    --workspace SOLUTION_DIR
+        Absolute path to the Visual Studio root solution directory.
+        If not specified, defaults to the current working directory (%CD%).
+
+    -r URL
+    --mirror URL
+        Add a URL to the list of mirrors.  MUST end with a forward slash (/).
+
+    --windows
+    --mac
+    --linux
+        Sets the operating system/platform for all subsequent options.
+        Any options appearing AFTER one of these OSes will be assumed
+        to belong to that OS.
+
+    -s PATH
+    --setup PATH
+        Sets the path to the setup (installer) application.
+
+    -x PATH
+    --sfx PATH
+        Sets the path to the self-extracting archive application.
+
+    -7 PATH
+    --7z PATH
+    --7zip PATH
+    --sevenZip PATH
+        Sets the path to the 7-Zip archive.
+
+    -z PATH
+    --zip PATH
+        Sets the path to the Zip archive.
+
+    -o PATH
+    --output PATH
+        Write JSON output to the given file.
+
+        If no -o option is specified, defaults to update.json
+        (relative to --workspace).

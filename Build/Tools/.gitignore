@@ -1,0 +1,6 @@
+*.exe
+
+ILMerge
+InnoSetup
+SignTool
+unxutils

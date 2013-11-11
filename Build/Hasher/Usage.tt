@@ -1,0 +1,86 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+USAGE:
+    <#= _exeName #> [OPTIONS] [FILES...]
+
+DESCRIPTION:
+    Computes cryptographic hash values for files and input data.
+
+OPTIONS:
+    -h, --help, /?
+        Print this message and exit.
+
+    -V, --verbose
+        Display additional information, such as file name and file size.
+        Does not apply when --json is used.
+
+    --md5
+    --sha1
+    --sha256
+    --sha512
+        Add the selected algorithm to the list of algorithms to
+        compute hashes for.  You can combine any number of algorithms.
+        
+        If no algorithm is specified, all available algorithms
+        will be used.
+
+    --json
+        Output hashes in JSON format as an array of objects.
+
+        Example:
+
+            > echo "hello" | <#= _exeName #> --md5 --sha1 --json README.md
+            [
+              {
+                "name": "stdin",
+                "size": 10,
+                "algorithms": {
+                  "md5": "C4A246E402C50CD67617E59AFFD536B1",
+                  "sha1": "4706C9535AD91A653FFD5431837202F402FCA8A2"
+                },
+                "humanSize": "10 B"
+              },
+              {
+                "name": "README.md",
+                "size": 9382,
+                "algorithms": {
+                  "md5": "FCAD61F3B4815BEDA6A640350B9C3FDF",
+                  "sha1": "4F0CD49CA3DE522CF9AFC6BE873D789EC730C631"
+                },
+                "humanSize": "9.2 KiB"
+              }
+            ]
+
+    --map
+        When combined with --json, outputs an object containing
+        key-value pairs instead of an array.
+
+        Example:
+        
+            > echo "hello" | <#= _exeName #> --md5 --sha1 --json --map README.md
+            {
+              "stdin": {
+                "name": "stdin",
+                "size": 10,
+                "humanSize": "10 B",
+                "algorithms": {
+                  "md5": "C4A246E402C50CD67617E59AFFD536B1",
+                  "sha1": "4706C9535AD91A653FFD5431837202F402FCA8A2"
+                }
+              },
+              "README.md": {
+                "name": "README.md",
+                "size": 9382,
+                "humanSize": "9.2 KiB",
+                "algorithms": {
+                  "md5": "FCAD61F3B4815BEDA6A640350B9C3FDF",
+                  "sha1": "4F0CD49CA3DE522CF9AFC6BE873D789EC730C631"
+                }
+              }
+            }
+
+    --lower
+        Lowercase hash values.
+
+EXAMPLES:
+    <#= _exeName #> --md5 --sha1 --sha256 --sha512 --json setup.exe

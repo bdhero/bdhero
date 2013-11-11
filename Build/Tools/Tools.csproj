@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D9B387D9-6C12-491E-9680-520484809F05}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tools</RootNamespace>
+    <AssemblyName>Tools</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hasher.exe" />
+    <Content Include="ILMerge\ILMerge.exe" />
+    <Content Include="InnoSetup\Compil32.exe" />
+    <Content Include="InnoSetup\isbunzip.dll" />
+    <Content Include="InnoSetup\isbzip.dll" />
+    <Content Include="InnoSetup\ISCC.exe" />
+    <Content Include="InnoSetup\ISCmplr.dll" />
+    <Content Include="InnoSetup\isfaq.htm" />
+    <Content Include="InnoSetup\islzma.dll" />
+    <Content Include="InnoSetup\islzma32.exe" />
+    <Content Include="InnoSetup\islzma64.exe" />
+    <Content Include="InnoSetup\ISPP.dll" />
+    <Content Include="InnoSetup\isscint.dll" />
+    <Content Include="InnoSetup\isunzlib.dll" />
+    <Content Include="InnoSetup\iszlib.dll" />
+    <Content Include="InnoSetup\license.txt" />
+    <Content Include="InnoSetup\WizModernImage-IS.bmp" />
+    <Content Include="InnoSetup\WizModernImage.bmp" />
+    <Content Include="InnoSetup\WizModernSmallImage-IS.bmp" />
+    <Content Include="InnoSetup\WizModernSmallImage.bmp" />
+    <Content Include="SignTool\signtool.exe" />
+    <Content Include="UMGen.exe" />
+    <Content Include="unxutils\egrep.exe" />
+    <Content Include="unxutils\fgrep.exe" />
+    <Content Include="unxutils\gawk.exe" />
+    <Content Include="unxutils\grep.exe" />
+    <Content Include="unxutils\less.exe" />
+    <Content Include="unxutils\printf.exe" />
+    <Content Include="unxutils\sed.exe" />
+    <Content Include="unxutils\sha1sum.exe" />
+    <Content Include="unxutils\sleep.exe" />
+    <Content Include="unxutils\tail.exe" />
+    <Content Include="unxutils\tee.exe" />
+    <Content Include="unxutils\touch.exe" />
+    <Content Include="unxutils\unzip.exe" />
+    <Content Include="unxutils\wc.exe" />
+    <Content Include="unxutils\wget.exe" />
+    <Content Include="unxutils\xargs.exe" />
+    <Content Include="unxutils\zip.exe" />
+    <Content Include="Versioner.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ILMerge\ILMerge License.rtf" />
+    <None Include="ILMerge\ILMerge.doc" />
+    <None Include="InnoSetup\Default.isl" />
+    <None Include="InnoSetup\ISetup.chm" />
+    <None Include="InnoSetup\ISPP.chm" />
+    <None Include="InnoSetup\ISPPBuiltins.iss" />
+    <None Include="InnoSetup\Languages\BrazilianPortuguese.isl" />
+    <None Include="InnoSetup\Languages\Catalan.isl" />
+    <None Include="InnoSetup\Languages\Corsican.isl" />
+    <None Include="InnoSetup\Languages\Czech.isl" />
+    <None Include="InnoSetup\Languages\Danish.isl" />
+    <None Include="InnoSetup\Languages\Dutch.isl" />
+    <None Include="InnoSetup\Languages\Finnish.isl" />
+    <None Include="InnoSetup\Languages\French.isl" />
+    <None Include="InnoSetup\Languages\German.isl" />
+    <None Include="InnoSetup\Languages\Greek.isl" />
+    <None Include="InnoSetup\Languages\Hebrew.isl" />
+    <None Include="InnoSetup\Languages\Hungarian.isl" />
+    <None Include="InnoSetup\Languages\Italian.isl" />
+    <None Include="InnoSetup\Languages\Japanese.isl" />
+    <None Include="InnoSetup\Languages\Nepali.islu" />
+    <None Include="InnoSetup\Languages\Norwegian.isl" />
+    <None Include="InnoSetup\Languages\Polish.isl" />
+    <None Include="InnoSetup\Languages\Portuguese.isl" />
+    <None Include="InnoSetup\Languages\Russian.isl" />
+    <None Include="InnoSetup\Languages\SerbianCyrillic.isl" />
+    <None Include="InnoSetup\Languages\SerbianLatin.isl" />
+    <None Include="InnoSetup\Languages\Slovenian.isl" />
+    <None Include="InnoSetup\Languages\Spanish.isl" />
+    <None Include="InnoSetup\Languages\Ukrainian.isl" />
+    <None Include="InnoSetup\Setup.e32" />
+    <None Include="InnoSetup\SetupLdr.e32" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
