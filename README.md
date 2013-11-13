@@ -33,6 +33,14 @@ BDHero is little more than a bit of glue and some brains wrapped around existing
 *  [FFmpeg][ffmpeg]
 *  [MKVToolNix][mkvtoolnix]
 
+BDHero also uses the following web services for content:
+
+*  [TMDb][tmdb]
+*  [TVDB][tvdb]
+*  [ChapterDb][chapterdb]
+
+BDHero would not be possible without the fantastic work of the above projects.
+
 # Development
 
 ## Required tools
@@ -59,6 +67,7 @@ BDHero is little more than a bit of glue and some brains wrapped around existing
 [ffmpeg]: http://ffmpeg.org/
 [mkvtoolnix]: http://bunkus.org/videotools/mkvtoolnix/
 [tmdb]: http://tmdb.org/
+[tvdb]: http://thetvdb.com/
 [chapterdb]: http://chapterdb.org/
 [icaros]: http://shark007.net/tools.html
 [aacs]: http://en.wikipedia.org/wiki/Advanced_Access_Content_System
