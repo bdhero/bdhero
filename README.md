@@ -71,6 +71,16 @@ You'll be glad you did :-)
 
 4.  Build, debug, and rejoice!
 
+### Other Useful NuGet Commands
+
+Reinstall a specific package in a specific project:
+
+    Update-Package -Id <PACKAGE_ID> -Reinstall -FileConflictAction Overwrite -ProjectName <PROJECT_NAME>
+
+Reinstall EVERYTHING:
+
+    Update-Package -Reinstall -FileConflictAction Overwrite
+
 [mono]: http://mono-project.com/
 [bdinfo]: http://cinemasquid.com/blu-ray/tools/bdinfo
 [ffmpeg]: http://ffmpeg.org/
