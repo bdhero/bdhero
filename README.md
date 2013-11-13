@@ -41,6 +41,12 @@ BDHero also uses the following web services for content:
 
 BDHero would not be possible without the fantastic work of the above projects.
 
+## Donations
+
+We do not accept monetary donations of any kind.  If BDHero has made your life easier
+and you wish to thank us, please consider making a donation to one of the above projects.
+You'll be glad you did :-)
+
 # Development
 
 ## Required tools
