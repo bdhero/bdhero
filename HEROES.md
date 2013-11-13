@@ -41,8 +41,8 @@ Development Tools
 The best of the best of the best, sir!
 
 *  [Git](http://git-scm.com/): Blazing fast cross-platform distributed version control system (VCS)
-*  [Microsoft Visual Studio 2010](http://www.microsoft.com/visualstudio/)
-*  [JetBrains ReSharper 7](http://www.jetbrains.com/resharper/): Code inspection, automated code refactoring, blazing fast navigation, and coding assistance
+*  [Microsoft Visual Studio 2013](http://www.microsoft.com/visualstudio/)
+*  [JetBrains ReSharper 8](http://www.jetbrains.com/resharper/): Code inspection, automated code refactoring, blazing fast navigation, and coding assistance
 *  [Inno Setup](http://www.jrsoftware.org/isinfo.php): Fast, free setup builder for Windows
 *  [BitRock InstallBuilder 8 Enterprise](http://installbuilder.bitrock.com/): Cross-platform installer (free for open source projects!)
 *  [7-Zip](http://www.7-zip.org/): Free file archiver with superior compression ratios
