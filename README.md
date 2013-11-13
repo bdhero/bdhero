@@ -23,7 +23,7 @@ All features are fully automatic, but can of course be customized, disabled, or 
 **BDHero does not circumvent [AACS][aacs]/[BD+][bdplus] copy protection** in any way,
 as doing so would violate the [DMCA][dmca].
 
-BDHero is **only** intended for use with **unencrypted** Blu-Ray Discs®.
+BDHero is **only** intended for use with **unencrypted** Blu-ray Discs®.
 
 ## Credit
 
