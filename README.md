@@ -18,6 +18,13 @@ All features are fully automatic, but can of course be customized, disabled, or 
 *  Cross-platform (via [Mono][mono])
 *  Free and Open Source
 
+## Copy Protection
+
+**BDHero does not circumvent [AACS][aacs]/[BD+][bdplus] copy protection** in any way,
+as doing so would violate the [DMCA][dmca].
+
+BDHero is **only** intended for use with **unencrypted** Blu-Ray Discs®.
+
 ## Credit
 
 BDHero is little more than a bit of glue and some brains wrapped around existing open-source software:
@@ -54,3 +61,6 @@ BDHero is little more than a bit of glue and some brains wrapped around existing
 [tmdb]: http://tmdb.org/
 [chapterdb]: http://chapterdb.org/
 [icaros]: http://shark007.net/tools.html
+[aacs]: http://en.wikipedia.org/wiki/Advanced_Access_Content_System
+[bdplus]: http://en.wikipedia.org/wiki/BD%2B
+[dmca]: http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act
