@@ -50,6 +50,9 @@ namespace Versioner
             if (!_commitChanges && !IsPrintAndExit)
                 Console.WriteLine("TEST RUN - changes will NOT be written to disk");
 
+            if (!string.IsNullOrWhiteSpace(custom))
+                strategy = VersionStrategy.Custom;
+
             var currentVersion = overrideCurrentVersion ? Version.Parse(testVersion) : CurrentVersion;
             var newVersion = strategy == VersionStrategy.Custom ? Version.Parse(custom) : Bump(currentVersion, strategy);
 
