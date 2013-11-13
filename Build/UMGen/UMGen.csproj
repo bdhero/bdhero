@@ -104,7 +104,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)Build\Release\mergetool.bat $(SolutionDir) $(TargetFileName) $(TargetPath) $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)Build\Scripts\mergetool.bat $(SolutionDir) $(TargetFileName) $(TargetPath) $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
