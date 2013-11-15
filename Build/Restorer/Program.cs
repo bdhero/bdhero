@@ -29,7 +29,7 @@ namespace Restorer
 
             var solutionDir = curDir;
             var packages = Package.GetPackages(solutionDir);
-            var projects = Project.GetProjects(solutionDir);
+            var projects = args.Any() ? Project.GetProjects(args) : Project.GetProjects(solutionDir);
 
             foreach (var package in packages)
             {
@@ -59,13 +59,23 @@ namespace Restorer
             get { return File.ReadAllText(Path.Combine(ProjectDirectory.FullName, "packages.config")); }
         }
 
+        public static List<Project> GetProjects(string[] projectPaths)
+        {
+            var projectDirs = projectPaths.Select(projectPath => new DirectoryInfo(projectPath)).ToList();
+            return GetProjects(projectDirs);
+        }
+
         public static List<Project> GetProjects(DirectoryInfo solutionDir)
         {
-            var projects =
-                solutionDir.GetDirectories("*", SearchOption.AllDirectories)
-                           .Where(IsProjectDirectory)
-                           .Select(CreateProject)
-                           .ToList();
+            var allDirs = solutionDir.GetDirectories("*", SearchOption.AllDirectories).ToList();
+            return GetProjects(allDirs);
+        }
+
+        private static List<Project> GetProjects(List<DirectoryInfo> directories)
+        {
+            var projects = directories.Where(IsProjectDirectory)
+                                      .Select(CreateProject)
+                                      .ToList();
             return projects;
         }
 
