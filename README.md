@@ -49,9 +49,12 @@ You'll be glad you did :-)
 
 # Development
 
-## Required tools
+## Required Tools
 
 *  Visual Studio 2010+
+
+## Recommended Tools
+
 *  ReSharper 7+
 *  NuGet extension for VS
 
