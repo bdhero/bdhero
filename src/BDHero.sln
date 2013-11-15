@@ -99,10 +99,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsanPluginTests", "Tests\Unit\IsanPluginTests\IsanPluginTests.csproj", "{69AE48FD-B09E-464C-8503-370DB044084A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Versioner", "Build\Versioner\Versioner.csproj", "{A17D678C-F60A-4120-B274-EC284E86FEB9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B387D9-6C12-491E-9680-520484809F05} = {D9B387D9-6C12-491E-9680-520484809F05}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{49210501-785D-4DCD-8C8F-53EB07EBA150}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hasher", "Build\Hasher\Hasher.csproj", "{E1F2C620-F968-4DD0-9A1D-B3070F9F4F3C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B387D9-6C12-491E-9680-520484809F05} = {D9B387D9-6C12-491E-9680-520484809F05}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C1A6C1BA-8DD5-4AFA-B6FD-83FD55940A06}"
 EndProject
@@ -111,6 +117,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterTests", "Tests\Unit\UpdaterTests\UpdaterTests.csproj", "{C28A1DE0-08AA-4E5E-9450-2F86E7F59DB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMGen", "Build\UMGen\UMGen.csproj", "{D98FBB34-9674-4CAC-99F1-4B788B78DC77}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B387D9-6C12-491E-9680-520484809F05} = {D9B387D9-6C12-491E-9680-520484809F05}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildUtils", "Build\BuildUtils\BuildUtils.csproj", "{B3694ACC-C425-4335-A865-B2685D5E429F}"
 EndProject
