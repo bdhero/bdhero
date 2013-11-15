@@ -65,6 +65,7 @@
     <Content Include="InnoSetup\WizModernImage.bmp" />
     <Content Include="InnoSetup\WizModernSmallImage-IS.bmp" />
     <Content Include="InnoSetup\WizModernSmallImage.bmp" />
+    <Content Include="Restorer.exe" />
     <Content Include="SignTool\signtool.exe" />
     <Content Include="UMGen.exe" />
     <Content Include="unxutils\egrep.exe" />

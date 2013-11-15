@@ -45,6 +45,10 @@
         <NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
         <NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(NuGetExePath)</NuGetCommand>
 
+        <RestoreContentExePath Condition=" '$(RestoreContentExePath)' == '' ">$(SolutionDir)\Build\Tools\Restorer.exe</RestoreContentExePath>
+        <RestoreContentCommand Condition=" '$(OS)' == 'Windows_NT'">"$(RestoreContentExePath)"</RestoreContentCommand>
+        <RestoreContentCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(RestoreContentExePath)</RestoreContentCommand>
+
         <PackageOutputDir Condition="$(PackageOutputDir) == ''">$(TargetDir.Trim('\\'))</PackageOutputDir>
         
         <RequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</RequireConsentSwitch>
