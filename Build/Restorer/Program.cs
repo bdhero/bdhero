@@ -38,8 +38,6 @@ namespace Restorer
                     package.CopyContentTo(project);
                 }
             }
-
-            Console.Read();
         }
     }
 
