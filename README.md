@@ -4,7 +4,7 @@ An intelligent, automatic, cross-platform Blu-ray™ to MKV muxer.
 
 ## Features
 
-All features are fully automatic, but can of course be customized, disabled, or overridden by the user:
+All features are fully automatic, and most can be customized or disabled if desired:
 
 *  Lossless conversion to MKV
 *  Movie name detection
