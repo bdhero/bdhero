@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using BDHero.BDROM;
+using DotNetUtils.Annotations;
 
 namespace BDHeroGUI
 {
@@ -73,7 +74,7 @@ namespace BDHeroGUI
             return show && !hide;
         }
 
-        [Annotations.NotifyPropertyChangedInvocator]
+        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;

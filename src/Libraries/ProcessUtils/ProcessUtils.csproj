@@ -53,7 +53,6 @@
     <Compile Include="BackgroundProcessWorker.cs" />
     <Compile Include="NonInteractiveProcess.cs" />
     <Compile Include="ProcessExtensions.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
