@@ -1,7 +1,7 @@
 *.exe
 
-7-Zip
-ILMerge
-InnoSetup
-SignTool
-unxutils
+7-Zip/
+ILMerge/
+InnoSetup/
+SignTool/
+unxutils/
