@@ -39,6 +39,8 @@
 
     For example, these are some of the PCM _encoding formats_ that FFmpeg can encode/decode (write/read):
 
+    (run ```ffmpeg -formats``` for the full list)
+
         D  = Decoding supported
          E = Encoding supported
         --
@@ -63,6 +65,8 @@
 
     These are some of the _codecs_ (encoding/decoding _programs_) that FFmpeg ships with
     to encode/decode (write/read) the above formats:
+
+    (run ```ffmpeg -codecs``` for the full list)
 
         D  = Decoding supported
          E = Encoding supported
