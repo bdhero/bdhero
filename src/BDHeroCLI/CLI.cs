@@ -8,12 +8,14 @@ using BDHero;
 using BDHero.Plugin;
 using BDHero.Startup;
 using DotNetUtils;
+using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using Mono.Options;
 using ProcessUtils;
 
 namespace BDHeroCLI
 {
+    [UsedImplicitly]
     class CLI
     {
         private static string ExeFileName
