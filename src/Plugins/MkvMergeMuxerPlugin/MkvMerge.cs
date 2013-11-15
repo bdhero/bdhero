@@ -22,7 +22,6 @@ namespace BDHero.Plugin.MkvMergeMuxer
         private readonly bool _keepM2TsAudio;
 
         private double _progress;
-        private bool _isError;
         private readonly List<String> _errorMessages = new List<string>();
 
         string Name { get { return "MkvMerge"; } }
@@ -79,7 +78,6 @@ namespace BDHero.Plugin.MkvMergeMuxer
             }
             else if (Regex.IsMatch(line, errorRegex))
             {
-                _isError = true;
                 _errorMessages.Add(line);
             }
         }
