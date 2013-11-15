@@ -98,7 +98,7 @@
         DE  pcm_u32le         -  unsigned 32-bit little-endian
         DE  pcm_u8            -  unsigned 8-bit
 
-    As you can see, FFmpeg's ```pcm_bluray``` codec is able to _decode_ Blu-ray LPCM.
+    As you can see, FFmpeg's ```pcm_bluray``` codec is able to _decode_ the Blu-ray LPCM _format_.
     So to mux a Blu-ray playlist containing a Blu-ray LPCM track to MKV, you need to use
     the ```pcm_bluray``` codec to _decode_ the data on the Blu-ray Disc and another codec
     to _encode_ the data into a different PCM format that your media player can understand
