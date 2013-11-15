@@ -1,4 +1,6 @@
-# Terminology
+# Glossary
+
+The following is a list of terms used by BDHero, Blu-ray, Matroska, and the audio/video community in general.
 
 *  **Codec** _(noun)_: Short for coder-decoder.  The program used to encode or decode an audio/video/subtitle _track_.
 
