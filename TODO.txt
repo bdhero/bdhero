@@ -1,0 +1,87 @@
+Chores
+======
+
+[ ] Test silent installs and updates
+[ ] Add /portable command line arg
+
+[ ] Convert batch files to MSBuild
+[ ] Centralize BDHero project URLs
+
+[ ] Move plugin enabling/disabling code to Controller
+
+[ ] Add logging
+    [ ] ProcessUtils and DotNetUtils?
+[ ] Unit tests
+    [ ] Exception handling in all scenarios
+
+Bugs
+====
+
+[ ] XP: ProgressBar2 black background
+[ ] Remove unused outputPath args in Controller.cs
+[ ] Clean up temp files
+    [ ] FFmpegMuxerPlugin: %TEMP%/FFmpegMuxerPlugin/%PID%/..?
+    [ ] AutoUpdate: %TEMP%/bdhero/update/*.exe
+    [ ] Installer rollback: %TEMP%/bdhero/rollback
+
+[ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
+
+[ ] Exception thrown in FileUtils.CreateDirectory() when user types in goofy output path
+[ ] Time Remaining is jumpy, esp. > 80% complete.  Thread queue?
+
+Features
+========
+
+[ ] Highlight placeholders in textbox?  (if it's even possible in winforms...)
+[ ] Context menu for Playlist listitems: add "Language" option
+
+[ ] Add "use last folder" option to File Namer preference dialog
+
+[ ] Fix or remove "low quality" playlist detection
+[ ] Consider chapter count and timestamps when looking for duplicate playlists (playlists w/ identical streams but different chapters are not dups)
+
+[ ] Plugin hooks for UI events:
+    [ ] Select a movie/TV show
+    [ ] Re-configure playlist (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
+    [ ] Re-configure tracks (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
+
+Backlog
+=======
+
+[ ] Don't erase the user's custom chapter titles when they re-select "Default"
+[ ] Add stream files listview?
+
+[ ] Context menu and double click to play for playlists
+[ ] Context menu and double click to view codec info for tracks?
+
+[ ] Group input FileTextBox and buttons into panel; do same w/ output FileTextBox and buttons
+
+[ ] Allow pausing of tasks
+[ ] Angle support
+
+[ ] Validate filter window inputs
+
+[ ] Display drives above input textbox (like VidCoder)
+[ ] Background thread for drive detection
+[ ] Centralize drive detection logic
+[ ] Handle exceptions during drive detection
+
+[ ] CLI prompt to select TMDb search result, playlist, angle, overwrite existing file
+[ ] CLI arg to dump list of main movie playlist files
+[ ] Asynchronous TMDb poster/cover art getter thread (use futures?)
+
+[ ] Add Windows 7 Taskbar buttons for pause/resume and cancel
+[ ] Add Windows 7 Taskbar jump lists?
+
+Chris' Plugins
+==============
+
+[ ] TMDb: Report more detailed, fine-grained progress when loading lots of search results and poster images
+[ ] Chapter Grabber: (THE MATRIX REVOLUTIONS):
+    01:57:31.210: Freedom and Sunlight
+    02:00:12.371: End Credits
+    02:09:13.745: 
+[ ] URI encoding (e.g., http://chapterdb.org/chapters/search?title=BLACK HAWK DOWN&chapterCount=0)
+[ ] Unescape XML/HTML entities (e.g., "&amp;" -> "&")
+[ ] Search ALL media types in Chapter Grabber plugin (not just Blu-ray)
+[ ] Use chapter grabber plugin to auto-detect main movie by comparing playlists to ChapterDb search results
