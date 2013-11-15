@@ -20,7 +20,7 @@ The following is a list of terms used by BDHero, Blu-ray, Matroska, and the audi
 
     *  **Matroska**: ```.mkv``` (video), ```.mka``` (audio)
 
-        Codec agnostic.  Can hold any arbitrary type of data and any codec.
+        Codec agnostic.  Can theoretically hold any arbitrary type of data and any codec.
 
     *  **MPEG-4 video (standard)**: ```.mp4```
 
