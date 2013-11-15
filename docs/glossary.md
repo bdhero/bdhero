@@ -44,6 +44,8 @@ The following is a list of terms used by BDHero, Blu-ray, Matroska, and the audi
 
 *  **Elementary Stream** _(noun)_: Synonym for _track_ and _elementary stream_.  The MPEG and Blu-ray specs use this term.
 
+*  **Encoding Format** _(noun)_: A standard that specifies _how_ audio/video/subtitle information is physically stored in bytes.
+
 *  **Metadata** _(noun)_: Information that describes an aspect or property of a movie or _track_.
 
     Title and language are probably the most common types of metadata stored in audio/video containers.
