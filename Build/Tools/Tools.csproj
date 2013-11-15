@@ -45,6 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="7-Zip\7za.exe" />
+    <Content Include="7-Zip\license.txt" />
+    <Content Include="7-Zip\readme.txt" />
     <Content Include="Hasher.exe" />
     <Content Include="ILMerge\ILMerge.exe" />
     <Content Include="InnoSetup\Compil32.exe" />
@@ -88,6 +91,9 @@
     <Content Include="Versioner.exe" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="7-Zip\7-zip.chm" />
+    <None Include="7-Zip\7z.sfx" />
+    <None Include="7-Zip\7zCon.sfx" />
     <None Include="ILMerge\ILMerge License.rtf" />
     <None Include="ILMerge\ILMerge.doc" />
     <None Include="InnoSetup\Default.isl" />
