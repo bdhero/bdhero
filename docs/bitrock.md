@@ -1,8 +1,8 @@
 BitRock InstallBuilder 8 Enterprise
 ===================================
 
-Suggestions
------------
+Feedback
+--------
 
 *  Can't pin InstallBuilder to taskbar
     http://msdn.microsoft.com/en-us/library/windows/desktop/hh127439(v=vs.85).aspx
