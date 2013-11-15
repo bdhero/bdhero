@@ -212,6 +212,8 @@ namespace BDHero.Plugin.FFmpegMuxer
             return newImage;
         }
 
+#if TestMkvPropEdit
+
         public static void Test(string mkvFilePath = null)
         {
             mkvFilePath = mkvFilePath ?? @"Y:\BDAM\out\progress\BLACK_HAWK_DOWN_00000.mpls.propedit2.mkv";
@@ -252,6 +254,8 @@ namespace BDHero.Plugin.FFmpegMuxer
 //                .DeleteAttachment(attachmentNumber);
 //            mkvPropEdit.Start();
         }
+
+#endif
     }
 
     public enum CoverArtSize
