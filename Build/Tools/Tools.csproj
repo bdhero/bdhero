@@ -45,6 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="7-Zip\7za.exe" />
     <Content Include="7-Zip\license.txt" />
     <Content Include="7-Zip\readme.txt" />
