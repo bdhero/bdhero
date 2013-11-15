@@ -28,8 +28,10 @@ namespace Restorer
             }
 
             var solutionDir = curDir;
-            var packages = Package.GetPackages(solutionDir);
+            var packages = Package.GetPackagesWithContent(solutionDir);
             var projects = args.Any() ? Project.GetProjects(args) : Project.GetProjects(solutionDir);
+
+            Console.WriteLine("Projects: {0}", string.Join(", ", projects));
 
             foreach (var package in packages)
             {
@@ -98,8 +100,19 @@ namespace Restorer
     [DebuggerDisplay("PackageDirectory = {PackageDirectory}")]
     class Package
     {
-        private static readonly Regex IdRegex = new Regex(@"<(?<tag>id)>(?<value>[^<>]+)</\1>", RegexOptions.Multiline);
-        private static readonly Regex VersionRegex = new Regex(@"<(?<tag>version)>(?<value>[^<>]+)</\1>", RegexOptions.Multiline);
+        /// <summary>
+        ///     Matches a NuGet package directory name.
+        /// </summary>
+        /// <example>
+        ///     <code>"BDHero.BuildTools.0.8.7.2" -> { "id": "BDHero.BuildTools", "version": "0.8.7.2" }</code>
+        ///     <code>"BDHero.BuildTools.0.8.7.2-alpha23" -> { "id": "BDHero.BuildTools", "version": "0.8.7.2-alpha23" }</code>
+        ///     <code>"BDHero.BuildTools.0.8.7.2-alpha2.3" -> NO MATCH</code>
+        /// </example>
+        private static readonly Regex NuPkgRegex = new Regex(@"^(?<id>[\w.-]+[a-zA-Z])\.(?<version>\d+(?:\.\d+){0,3}(?:-\w+)?)", RegexOptions.Multiline);
+
+        /// <summary>
+        ///     Matches a NuGet package listing found in a project's <c>packages.config</c> file.
+        /// </summary>
         private static readonly Regex PackageRegex = new Regex("<package id=\"(?<id>[^\"]+)\" version=\"(?<version>[^\"]+)\"[^>]*?/>", RegexOptions.Multiline);
 
         /// <summary>
@@ -111,7 +124,7 @@ namespace Restorer
         /// <summary>
         ///     /packages/[ID].[VERSION]/content
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         public readonly DirectoryInfo ContentDirectory;
 
         public readonly string Id;
@@ -121,7 +134,7 @@ namespace Restorer
         private Package(DirectoryInfo packageDirectory, string id, string version)
         {
             PackageDirectory = packageDirectory;
-            ContentDirectory = PackageDirectory.GetDirectories("content").First();
+            ContentDirectory = PackageDirectory.GetDirectories("content").FirstOrDefault();
             Id = id;
             Version = version;
         }
@@ -131,8 +144,7 @@ namespace Restorer
             var projectPackagesConfig = project.PackagesConfig;
             var allPackageMatches = PackageRegex.Matches(projectPackagesConfig).OfType<Match>();
             var thisPackageMatches =
-                allPackageMatches.Where(match =>
-                                        match.Groups["id"].Value == Id && match.Groups["version"].Value == Version)
+                allPackageMatches.Where(match => match.Value("id") == Id && match.Value("version") == Version)
                                  .ToList();
             return thisPackageMatches.Any();
         }
@@ -158,11 +170,11 @@ namespace Restorer
             return string.Format("PackageDirectory: {0}", PackageDirectory);
         }
 
-        public static List<Package> GetPackages(DirectoryInfo solutionDir)
+        public static List<Package> GetPackagesWithContent(DirectoryInfo solutionDir)
         {
             var packagesDir = solutionDir.GetDirectories("packages").First();
             var packageDirs = packagesDir.GetDirectories();
-            var packages = packageDirs.Where(IsPackageDirectory).Select(CreatePackage).ToList();
+            var packages = packageDirs.Where(IsPackageDirectoryWithContent).Select(CreatePackage).ToList();
             return packages;
         }
 
@@ -193,38 +205,33 @@ namespace Restorer
             }
         }
 
-        private static bool IsPackageDirectory(DirectoryInfo packageDir)
+        private static bool IsPackageDirectoryWithContent(DirectoryInfo packageDir)
         {
-            return packageDir.GetFiles("*.nuspec").Any();
+            return packageDir.GetFiles("*.nupkg").Any() &&
+                   packageDir.GetDirectories("content").Any() &&
+                   packageDir.GetDirectories("content").First().GetFiles("*.*", SearchOption.AllDirectories)
+                             .Any(file => !file.Name.EndsWith(".pp", StringComparison.OrdinalIgnoreCase));
         }
 
         private static Package CreatePackage(DirectoryInfo packageDir)
         {
-            var spec = File.ReadAllText(packageDir.GetFiles("*.nuspec").First().FullName);
+            var match = NuPkgRegex.Match(packageDir.Name);
 
-            var idMatch = IdRegex.Match(spec);
-            var versionmatch = VersionRegex.Match(spec);
-
-            if (!idMatch.Success)
+            if (!match.Success)
             {
-                Console.Error.WriteLine("Unable to find <id> tag in \"{0}\"; skipping", packageDir.FullName);
+                Console.Error.WriteLine("Unable to find NuGet package ID and Version in \"{0}\" directory; skipping", packageDir.FullName);
                 return null;
             }
 
-            if (!versionmatch.Success)
-            {
-                Console.Error.WriteLine("Unable to find <version> tag in \"{0}\"; skipping", packageDir.FullName);
-                return null;
-            }
-
-            return new Package(packageDir,
-                               Value(idMatch),
-                               Value(versionmatch));
+            return new Package(packageDir, match.Value("id"), match.Value("version"));
         }
+    }
 
-        private static string Value(Match match)
+    internal static class RegexExtensions
+    {
+        public static string Value(this Match match, string groupName)
         {
-            return match.Groups["value"].Value;
+            return match.Groups[groupName].Value;
         }
     }
 
