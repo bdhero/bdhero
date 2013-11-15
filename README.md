@@ -15,8 +15,20 @@ All features are fully automatic, and most can be customized or disabled if desi
     *  Chapter names
 *  Customizable file name and output directory with variables
 *  Audio/video/subtitle track auto-select based on preferences (language, codec, channel count, etc.)
-*  Cross-platform (via [Mono][mono])
 *  Free and Open Source
+
+## Requirements
+
+*  .NET 4.0
+*  Windows XP, Vista, 7, 8, or 8.1 (32- or 64-bit)
+*  ~20-50 GB of free disk space per movie
+
+You can use a tool such as [HandBrake][handbrake] to reduce the file size after muxing.
+
+## Feature Roadmap
+
+*  Cross-platform via [Mono][mono] (in progress)
+*  TV show support (not started)
 
 ## Copy Protection
 
@@ -49,6 +61,8 @@ You'll be glad you did :-)
 
 # Development
 
+BDHero is written in C# / .NET 4.0.
+
 ## Required Tools
 
 *  Visual Studio 2010+
@@ -60,24 +74,21 @@ You'll be glad you did :-)
 
 ## Project Setup
 
-When you first open the solution in Visual Studio, you may see a large number of missing reference errors.
+When you first open the solution in Visual Studio, you will see a ton of errors about missing assembly references.
+This is because we use NuGet Package Restore instead of keeping our NuGet packages in source control.
 
-Simply build the solution in Visual Studio to automatically restore all missing NuGet packages.
+Simply build the solution to automatically restore all missing NuGet packages and fix the reference errors.
 
-### Other Useful NuGet Commands
+## Development Roadmap
 
-Reinstall a specific package in a specific project:
-
-    Update-Package -Id <PACKAGE_ID> -Reinstall -FileConflictAction Overwrite -ProjectName <PROJECT_NAME>
-
-Reinstall EVERYTHING:
-
-    Update-Package -Reinstall -FileConflictAction Overwrite
+*  [Mono][mono] compatibility
+*  Upgrade to .NET 4.5.1 (will require dropping XP support)
 
 [mono]: http://mono-project.com/
 [bdinfo]: http://cinemasquid.com/blu-ray/tools/bdinfo
 [ffmpeg]: http://ffmpeg.org/
 [mkvtoolnix]: http://bunkus.org/videotools/mkvtoolnix/
+[handbrake]: http://handbrake.fr/
 [tmdb]: http://tmdb.org/
 [tvdb]: http://thetvdb.com/
 [chapterdb]: http://chapterdb.org/
