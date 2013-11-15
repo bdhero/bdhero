@@ -57,6 +57,11 @@ namespace Restorer
             get { return File.ReadAllText(Path.Combine(ProjectDirectory.FullName, "packages.config")); }
         }
 
+        public override string ToString()
+        {
+            return string.Format("ProjectDirectory: {0}", ProjectDirectory);
+        }
+
         public static List<Project> GetProjects(string[] projectPaths)
         {
             var projectDirs = projectPaths.Select(projectPath => new DirectoryInfo(projectPath)).ToList();
@@ -146,6 +151,11 @@ namespace Restorer
             // Copy all the files
             foreach (var sourceFile in ContentDirectory.GetFiles("*.*", SearchOption.AllDirectories))
                 Try(sourceFile, getNewPath, File.Copy);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("PackageDirectory: {0}", PackageDirectory);
         }
 
         public static List<Package> GetPackages(DirectoryInfo solutionDir)
