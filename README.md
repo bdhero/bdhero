@@ -57,19 +57,9 @@ You'll be glad you did :-)
 
 ## Project Setup
 
-1.  Open the solution in Visual Studio
-2.  Open the NuGet Package Manager Console:
+When you first open the solution in Visual Studio, you may see a large number of missing reference errors.
 
-        Tools > Library Package Manager > Package Manager Console
-
-3.  Run the following commands:
-
-        .nuget/NuGet restore -NonInteractive
-        Update-Package -Id FFmpeg.Binaries -Reinstall -FileConflictAction Overwrite
-        Update-Package -Id mkvpropedit.Binaries -Reinstall -FileConflictAction Overwrite
-        Update-Package -Id BDHero.BuildTools -Reinstall -FileConflictAction Overwrite
-
-4.  Build, debug, and rejoice!
+Simply build the solution in Visual Studio to automatically restore all missing NuGet packages.
 
 ### Other Useful NuGet Commands
 
