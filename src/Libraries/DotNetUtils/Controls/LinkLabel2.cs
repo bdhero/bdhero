@@ -5,32 +5,57 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-// For the latest version visit: http://wyday.com/linklabel2/
-
-// Bugs or suggestions: http://wyday.com/forum/
 
 namespace DotNetUtils.Controls
 {
+    /// <summary>
+    ///     A better replacement for .NET's default <see cref="LinkLabel"/>.
+    /// </summary>
+    /// <remarks>
+    ///     <para>For the latest version visit: http://wyday.com/linklabel2/ </para>
+    ///     <para>Bugs or suggestions: http://wyday.com/forum/ </para>
+    /// </remarks>
     public class LinkLabel2 : Control
     {
         private Font _hoverFont;
-
-        private Rectangle _textRect;
-
-        private bool _isHovered;
-        private bool _keyAlreadyProcessed;
 
         private Image _image;
         private int _imageRightPad = 8;
 
         private bool _isEnabled = true;
+        private bool _isHovered;
+        private bool _keyAlreadyProcessed;
+        private Rectangle _textRect;
+
+        /// <summary>
+        ///     Constructs a new <see cref="LinkLabel2"/> instance.
+        /// </summary>
+        public LinkLabel2()
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint
+                     | ControlStyles.SupportsTransparentBackColor
+                     | ControlStyles.OptimizedDoubleBuffer
+                     | ControlStyles.ResizeRedraw
+                     | ControlStyles.UserPaint
+                     | ControlStyles.FixedHeight
+                     | ControlStyles.FixedWidth, true);
+
+            SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, false);
+
+            _hoverFont = new Font(Font, FontStyle.Underline);
+
+            ForeColor = SystemColors.HotTrack;
+
+            UseSystemColor = true;
+            HoverUnderline = true;
+        }
 
         [DefaultValue(8)]
         public int ImageRightPad
         {
             get { return _imageRightPad; }
-            set 
-            { 
+            set
+            {
                 _imageRightPad = value;
 
                 RefreshTextRect();
@@ -42,8 +67,8 @@ namespace DotNetUtils.Controls
         public Image Image
         {
             get { return _image; }
-            set 
-            { 
+            set
+            {
                 _image = value;
 
                 RefreshTextRect();
@@ -59,21 +84,14 @@ namespace DotNetUtils.Controls
 
 
         public Color RegularColor { get; set; }
+
         public Color HoverColor { get; set; }
+
         public Color DisabledColor { get; set; }
-
-        [DllImport("user32.dll")]
-        public static extern int LoadCursor(int hInstance, int lpCursorName);
-
-        [DllImport("user32.dll")]
-        public static extern int SetCursor(int hCursor);
 
         public override string Text
         {
-            get
-            {
-                return base.Text;
-            }
+            get { return base.Text; }
             set
             {
                 base.Text = value;
@@ -84,25 +102,11 @@ namespace DotNetUtils.Controls
             }
         }
 
-        public LinkLabel2()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint
-                | ControlStyles.SupportsTransparentBackColor
-                | ControlStyles.OptimizedDoubleBuffer
-                | ControlStyles.ResizeRedraw
-                | ControlStyles.UserPaint
-                | ControlStyles.FixedHeight
-                | ControlStyles.FixedWidth, true);
+        [DllImport("user32.dll")]
+        private static extern int LoadCursor(int hInstance, int lpCursorName);
 
-            SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, false);
-
-            _hoverFont = new Font(Font, FontStyle.Underline);
-
-            ForeColor = SystemColors.HotTrack;
-
-            UseSystemColor = true;
-            HoverUnderline = true;
-        }
+        [DllImport("user32.dll")]
+        private static extern int SetCursor(int hCursor);
 
         protected override void OnEnabledChanged(EventArgs e)
         {
@@ -125,7 +129,9 @@ namespace DotNetUtils.Controls
         protected override void OnMouseDown(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
+            {
                 Focus();
+            }
 
             base.OnMouseDown(e);
         }
@@ -203,7 +209,9 @@ namespace DotNetUtils.Controls
         protected override void OnMouseUp(MouseEventArgs e)
         {
             if (_isHovered && e.Clicks == 1 && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle))
+            {
                 OnClick(e);
+            }
 
             base.OnMouseUp(e);
         }
@@ -215,18 +223,25 @@ namespace DotNetUtils.Controls
 
             // image
             if (_image != null)
-                e.Graphics.DrawImage(_image, new Rectangle(0, 0, _image.Width, _image.Height), new Rectangle(0, 0, _image.Width, _image.Height), GraphicsUnit.Pixel);
+            {
+                e.Graphics.DrawImage(_image, new Rectangle(0, 0, _image.Width, _image.Height),
+                                     new Rectangle(0, 0, _image.Width, _image.Height), GraphicsUnit.Pixel);
+            }
 
             //text
             TextRenderer.DrawText(e.Graphics, Text,
-                _isHovered && HoverUnderline ? _hoverFont : Font,
-                _textRect,
-                UseSystemColor ? ForeColor : (!_isEnabled ? DisabledColor : _isHovered ? HoverColor : RegularColor),
-                TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+                                  _isHovered && HoverUnderline ? _hoverFont : Font,
+                                  _textRect,
+                                  UseSystemColor
+                                      ? ForeColor
+                                      : (!_isEnabled ? DisabledColor : _isHovered ? HoverColor : RegularColor),
+                                  TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
 
             // draw the focus rectangle.
             if (Focused && ShowFocusCues)
+            {
                 ControlPaint.DrawFocusRectangle(e.Graphics, ClientRectangle);
+            }
         }
 
         protected override void OnFontChanged(EventArgs e)
@@ -239,7 +254,9 @@ namespace DotNetUtils.Controls
 
         private void RefreshTextRect()
         {
-            _textRect = new Rectangle(Point.Empty, TextRenderer.MeasureText(Text, Font, Size, TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix));
+            _textRect = new Rectangle(Point.Empty,
+                                      TextRenderer.MeasureText(Text, Font, Size,
+                                                               TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix));
             int width = _textRect.Width + 1,
                 height = _textRect.Height + 1;
 
