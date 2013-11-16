@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.Extensions;
 
 namespace DotNetUtils.Controls
 {
@@ -12,6 +13,7 @@ namespace DotNetUtils.Controls
         {
             ReadOnly = true;
             BorderStyle = BorderStyle.None;
+            this.EnableSelectAll();
         }
 
         protected override void OnParentBackColorChanged(EventArgs e)
