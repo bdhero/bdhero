@@ -20,8 +20,8 @@ namespace BDHeroGUI.Forms
             labelVersion.Text = String.Format("Version {0}", AppUtils.AppVersion);
             labelBuildDate.Text = String.Format("Built on {0}", AppUtils.BuildDate);
             labelCopyright.Text = AppUtils.Copyright;
+            linkLabelSourceCode.Url = AppConstants.SourceCodeUrl;
             textBoxSystemInfo.Text = string.Format("{0} {1}{2}{3}", AppUtils.AppName, AppUtils.AppVersion, Environment.NewLine, SystemInfo.Instance);
-            new ToolTip().SetToolTip(linkLabelSourceCode, AppConstants.SourceCodeUrl);
         }
 
         private void linkLabelSourceCode_Click(object sender, EventArgs e)

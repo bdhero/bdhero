@@ -27,15 +27,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxSystemInfo = new System.Windows.Forms.RichTextBox();
-            this.linkLabelSourceCode = new DotNetUtils.Controls.LinkLabel2();
+            this.buttonOk = new System.Windows.Forms.Button();
+            this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
             this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
             this.labelVersion = new DotNetUtils.Controls.SelectableLabel();
             this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
-            this.buttonOk = new System.Windows.Forms.Button();
+            this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,34 +56,33 @@
             this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(99, 13);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 7;
             this.label1.Text = "System Information:";
             // 
-            // textBoxSystemInfo
+            // buttonOk
             // 
-            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSystemInfo.HideSelection = false;
-            this.textBoxSystemInfo.Location = new System.Drawing.Point(146, 130);
-            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
-            this.textBoxSystemInfo.ReadOnly = true;
-            this.textBoxSystemInfo.Size = new System.Drawing.Size(309, 168);
-            this.textBoxSystemInfo.TabIndex = 6;
-            this.textBoxSystemInfo.Text = "";
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonOk.Location = new System.Drawing.Point(380, 304);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonOk.TabIndex = 0;
+            this.buttonOk.Text = "&OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // linkLabelSourceCode
             // 
             this.linkLabelSourceCode.DisabledColor = System.Drawing.Color.Empty;
+            this.linkLabelSourceCode.Enabled = false;
             this.linkLabelSourceCode.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelSourceCode.HoverColor = System.Drawing.Color.Empty;
             this.linkLabelSourceCode.Location = new System.Drawing.Point(143, 91);
             this.linkLabelSourceCode.Name = "linkLabelSourceCode";
             this.linkLabelSourceCode.RegularColor = System.Drawing.Color.Empty;
             this.linkLabelSourceCode.Size = new System.Drawing.Size(77, 14);
-            this.linkLabelSourceCode.TabIndex = 7;
+            this.linkLabelSourceCode.TabIndex = 5;
             this.linkLabelSourceCode.Text = "GitHub Project";
-            this.linkLabelSourceCode.Click += new System.EventHandler(this.linkLabelSourceCode_Click);
             // 
             // labelCopyright
             // 
@@ -132,17 +132,18 @@
             this.labelProductName.TabIndex = 1;
             this.labelProductName.Text = "Product Name";
             // 
-            // buttonOk
+            // textBoxSystemInfo
             // 
-            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonOk.Location = new System.Drawing.Point(380, 304);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(75, 23);
-            this.buttonOk.TabIndex = 8;
-            this.buttonOk.Text = "&OK";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
+            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSystemInfo.HideSelection = false;
+            this.textBoxSystemInfo.Location = new System.Drawing.Point(146, 130);
+            this.textBoxSystemInfo.Multiline = true;
+            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
+            this.textBoxSystemInfo.ReadOnly = true;
+            this.textBoxSystemInfo.Size = new System.Drawing.Size(309, 168);
+            this.textBoxSystemInfo.TabIndex = 8;
             // 
             // AboutBox
             // 
@@ -151,9 +152,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonOk;
             this.ClientSize = new System.Drawing.Size(467, 339);
-            this.Controls.Add(this.buttonOk);
-            this.Controls.Add(this.linkLabelSourceCode);
             this.Controls.Add(this.textBoxSystemInfo);
+            this.Controls.Add(this.linkLabelSourceCode);
+            this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.labelCopyright);
             this.Controls.Add(this.labelBuildDate);
@@ -184,9 +185,9 @@
         private DotNetUtils.Controls.SelectableLabel labelBuildDate;
         private DotNetUtils.Controls.SelectableLabel labelCopyright;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RichTextBox textBoxSystemInfo;
-        private DotNetUtils.Controls.LinkLabel2 linkLabelSourceCode;
         private System.Windows.Forms.Button buttonOk;
+        private DotNetUtils.Controls.HyperlinkLabel linkLabelSourceCode;
+        private System.Windows.Forms.TextBox textBoxSystemInfo;
 
     }
 }
