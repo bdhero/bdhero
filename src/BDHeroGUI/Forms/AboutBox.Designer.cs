@@ -1,6 +1,6 @@
 ﻿namespace BDHeroGUI.Forms
 {
-    partial class AboutBox
+    sealed partial class AboutBox
     {
         /// <summary>
         /// Required designer variable.
@@ -27,150 +27,139 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
-            this.labelProductName = new System.Windows.Forms.Label();
-            this.labelVersion = new System.Windows.Forms.Label();
-            this.labelCopyright = new System.Windows.Forms.Label();
-            this.okButton = new System.Windows.Forms.Button();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxSystemInfo = new System.Windows.Forms.RichTextBox();
             this.linkLabelSourceCode = new DotNetUtils.Controls.LinkLabel2();
-            this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
-            this.labelBuildDate = new System.Windows.Forms.Label();
-            this.tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
+            this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
+            this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
+            this.labelVersion = new DotNetUtils.Controls.SelectableLabel();
+            this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
+            this.buttonOk = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel
+            // pictureBoxLogo
             // 
-            this.tableLayoutPanel.ColumnCount = 2;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel.Controls.Add(this.logoPictureBox, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.labelProductName, 1, 0);
-            this.tableLayoutPanel.Controls.Add(this.labelVersion, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.labelCopyright, 1, 3);
-            this.tableLayoutPanel.Controls.Add(this.okButton, 1, 6);
-            this.tableLayoutPanel.Controls.Add(this.linkLabelSourceCode, 1, 4);
-            this.tableLayoutPanel.Controls.Add(this.textBoxSystemInfo, 1, 5);
-            this.tableLayoutPanel.Controls.Add(this.labelBuildDate, 1, 2);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 7;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(555, 362);
-            this.tableLayoutPanel.TabIndex = 0;
+            this.pictureBoxLogo.Image = global::BDHeroGUI.Properties.Resources.bdhero_gui_128;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(12, 12);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(128, 128);
+            this.pictureBoxLogo.TabIndex = 0;
+            this.pictureBoxLogo.TabStop = false;
             // 
-            // logoPictureBox
+            // label1
             // 
-            this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logoPictureBox.Image = global::BDHeroGUI.Properties.Resources.bdhero_gui_128;
-            this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 7);
-            this.logoPictureBox.Size = new System.Drawing.Size(134, 356);
-            this.logoPictureBox.TabIndex = 12;
-            this.logoPictureBox.TabStop = false;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(143, 111);
+            this.label1.Margin = new System.Windows.Forms.Padding(3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "System Information:";
             // 
-            // labelProductName
+            // textBoxSystemInfo
             // 
-            this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelProductName.Location = new System.Drawing.Point(146, 0);
-            this.labelProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelProductName.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelProductName.Name = "labelProductName";
-            this.labelProductName.Size = new System.Drawing.Size(406, 17);
-            this.labelProductName.TabIndex = 19;
-            this.labelProductName.Text = "Product Name";
-            this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // labelVersion
-            // 
-            this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersion.Location = new System.Drawing.Point(146, 20);
-            this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(406, 17);
-            this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "Version";
-            this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // labelCopyright
-            // 
-            this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCopyright.Location = new System.Drawing.Point(146, 60);
-            this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelCopyright.Name = "labelCopyright";
-            this.labelCopyright.Size = new System.Drawing.Size(406, 17);
-            this.labelCopyright.TabIndex = 21;
-            this.labelCopyright.Text = "Copyright";
-            this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // okButton
-            // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(477, 336);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 0;
-            this.okButton.Text = "&OK";
+            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSystemInfo.HideSelection = false;
+            this.textBoxSystemInfo.Location = new System.Drawing.Point(146, 130);
+            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
+            this.textBoxSystemInfo.ReadOnly = true;
+            this.textBoxSystemInfo.Size = new System.Drawing.Size(309, 168);
+            this.textBoxSystemInfo.TabIndex = 6;
+            this.textBoxSystemInfo.Text = "";
             // 
             // linkLabelSourceCode
             // 
             this.linkLabelSourceCode.DisabledColor = System.Drawing.Color.Empty;
-            this.linkLabelSourceCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.linkLabelSourceCode.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelSourceCode.HoverColor = System.Drawing.Color.Empty;
-            this.linkLabelSourceCode.Location = new System.Drawing.Point(146, 80);
-            this.linkLabelSourceCode.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this.linkLabelSourceCode.Location = new System.Drawing.Point(143, 91);
             this.linkLabelSourceCode.Name = "linkLabelSourceCode";
             this.linkLabelSourceCode.RegularColor = System.Drawing.Color.Empty;
-            this.linkLabelSourceCode.Size = new System.Drawing.Size(406, 20);
-            this.linkLabelSourceCode.TabIndex = 1;
+            this.linkLabelSourceCode.Size = new System.Drawing.Size(77, 14);
+            this.linkLabelSourceCode.TabIndex = 7;
             this.linkLabelSourceCode.Text = "GitHub Project";
             this.linkLabelSourceCode.Click += new System.EventHandler(this.linkLabelSourceCode_Click);
             // 
-            // textBoxSystemInfo
+            // labelCopyright
             // 
-            this.textBoxSystemInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSystemInfo.Location = new System.Drawing.Point(146, 103);
-            this.textBoxSystemInfo.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
-            this.textBoxSystemInfo.Multiline = true;
-            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
-            this.textBoxSystemInfo.ReadOnly = true;
-            this.textBoxSystemInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxSystemInfo.Size = new System.Drawing.Size(406, 226);
-            this.textBoxSystemInfo.TabIndex = 2;
-            this.textBoxSystemInfo.Text = "System Information";
+            this.labelCopyright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCopyright.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelCopyright.Location = new System.Drawing.Point(146, 71);
+            this.labelCopyright.Name = "labelCopyright";
+            this.labelCopyright.ReadOnly = true;
+            this.labelCopyright.Size = new System.Drawing.Size(309, 13);
+            this.labelCopyright.TabIndex = 4;
+            this.labelCopyright.Text = "Copyright";
             // 
             // labelBuildDate
             // 
-            this.labelBuildDate.AutoSize = true;
-            this.labelBuildDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelBuildDate.Location = new System.Drawing.Point(146, 40);
-            this.labelBuildDate.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+            this.labelBuildDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBuildDate.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelBuildDate.Location = new System.Drawing.Point(146, 51);
             this.labelBuildDate.Name = "labelBuildDate";
-            this.labelBuildDate.Size = new System.Drawing.Size(406, 20);
-            this.labelBuildDate.TabIndex = 27;
+            this.labelBuildDate.ReadOnly = true;
+            this.labelBuildDate.Size = new System.Drawing.Size(309, 13);
+            this.labelBuildDate.TabIndex = 3;
             this.labelBuildDate.Text = "Build Date";
+            // 
+            // labelVersion
+            // 
+            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelVersion.Location = new System.Drawing.Point(146, 31);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.ReadOnly = true;
+            this.labelVersion.Size = new System.Drawing.Size(309, 13);
+            this.labelVersion.TabIndex = 2;
+            this.labelVersion.Text = "Version";
+            // 
+            // labelProductName
+            // 
+            this.labelProductName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelProductName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelProductName.Location = new System.Drawing.Point(146, 12);
+            this.labelProductName.Name = "labelProductName";
+            this.labelProductName.ReadOnly = true;
+            this.labelProductName.Size = new System.Drawing.Size(309, 13);
+            this.labelProductName.TabIndex = 1;
+            this.labelProductName.Text = "Product Name";
+            // 
+            // buttonOk
+            // 
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonOk.Location = new System.Drawing.Point(380, 304);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonOk.TabIndex = 8;
+            this.buttonOk.Text = "&OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // AboutBox
             // 
-            this.AcceptButton = this.okButton;
+            this.AcceptButton = this.buttonOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.okButton;
-            this.ClientSize = new System.Drawing.Size(573, 380);
-            this.Controls.Add(this.tableLayoutPanel);
+            this.CancelButton = this.buttonOk;
+            this.ClientSize = new System.Drawing.Size(467, 339);
+            this.Controls.Add(this.buttonOk);
+            this.Controls.Add(this.linkLabelSourceCode);
+            this.Controls.Add(this.textBoxSystemInfo);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelCopyright);
+            this.Controls.Add(this.labelBuildDate);
+            this.Controls.Add(this.labelVersion);
+            this.Controls.Add(this.labelProductName);
+            this.Controls.Add(this.pictureBoxLogo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -180,23 +169,24 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
-            this.tableLayoutPanel.ResumeLayout(false);
-            this.tableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
+            this.Load += new System.EventHandler(this.AboutBox_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private System.Windows.Forms.PictureBox logoPictureBox;
-        private System.Windows.Forms.Label labelProductName;
-        private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.Label labelCopyright;
-        private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
+        private DotNetUtils.Controls.SelectableLabel labelProductName;
+        private DotNetUtils.Controls.SelectableLabel labelVersion;
+        private DotNetUtils.Controls.SelectableLabel labelBuildDate;
+        private DotNetUtils.Controls.SelectableLabel labelCopyright;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RichTextBox textBoxSystemInfo;
         private DotNetUtils.Controls.LinkLabel2 linkLabelSourceCode;
-        private System.Windows.Forms.TextBox textBoxSystemInfo;
-        private System.Windows.Forms.Label labelBuildDate;
+        private System.Windows.Forms.Button buttonOk;
+
     }
 }
