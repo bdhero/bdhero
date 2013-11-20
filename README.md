@@ -2,6 +2,8 @@
 
 An intelligent, automatic, cross-platform Blu-ray™ to MKV muxer.
 
+![BDHero logo](http://i.bdhero.org/logo/v5/bdhero_gui_128.png)
+
 ## Features
 
 All features are fully automatic, and most can be customized or disabled if desired:
