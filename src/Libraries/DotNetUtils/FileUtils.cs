@@ -14,6 +14,57 @@ namespace DotNetUtils
     public static class FileUtils
     {
         /// <summary>
+        ///     .NET implementation of the Unix <c>touch</c> command.
+        ///     Updates the last write time of <paramref name="filePath"/>.
+        ///     If <paramref name="filePath"/> does not already exist, it will be created along with all of its parent
+        ///     directories.  This method does not alter the contents of <paramref name="filePath"/> in any way.
+        /// </summary>
+        /// <param name="filePath">Path to the file to touch.</param>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     The caller does not have the required permission.
+        ///     -or-
+        ///     <paramref name="filePath"/> specified a file that is read-only.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="filePath"/> is a zero-length string, contains only white space, or contains one or more
+        ///     invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="filePath"/> is null.
+        /// </exception>
+        /// <exception cref="PathTooLongException">
+        ///     The specified <paramref name="filePath"/>, file name, or both exceed the system-defined maximum length.
+        ///     For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be
+        ///     less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        ///     The specified <paramref name="filePath"/> is invalid (for example, it is on an unmapped drive).
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occurred while creating the file.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     <paramref name="filePath"/> is in an invalid format.
+        /// </exception>
+        public static void TouchFile(string filePath)
+        {
+            var dirPath = new FileInfo(filePath).DirectoryName;
+            if (dirPath == null)
+            {
+                throw new DirectoryNotFoundException(string.Format("File \"{0}\" has no parent directory", filePath));
+            }
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+            }
+            File.SetLastWriteTimeUtc(filePath, DateTime.UtcNow);
+        }
+
+        /// <summary>
         /// Detects the encoding of the file using .NET's <see cref="StreamReader"/> class.
         /// </summary>
         /// <param name="path">Complete path to the file to be read</param>
