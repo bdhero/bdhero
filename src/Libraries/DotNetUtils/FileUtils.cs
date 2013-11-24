@@ -23,7 +23,7 @@ namespace DotNetUtils
         public static Encoding DetectEncodingAuto(String path, out String contents)
         {
             // open the file with the stream-reader:
-            using (StreamReader reader = new StreamReader(path, true))
+            using (var reader = new StreamReader(path, true))
             {
                 // read the contents of the file into a string
                 contents = reader.ReadToEnd();
