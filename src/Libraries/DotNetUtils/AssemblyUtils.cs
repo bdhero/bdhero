@@ -96,6 +96,15 @@ namespace DotNetUtils
             return Path.GetDirectoryName(AssemblyOrDefault(assembly).Location);
         }
 
+        /// <summary>
+        ///     Gets the path to the directory that contains the assembly for the given <paramref name="type"/>.
+        /// </summary>
+        /// <seealso cref="AssemblyOrDefault"/>
+        public static string GetInstallDir(Type type)
+        {
+            return Path.GetDirectoryName(AssemblyOrDefault(Assembly.GetAssembly(type)).Location);
+        }
+
         #endregion
 
         /// <summary>
@@ -143,58 +152,6 @@ namespace DotNetUtils
             dt = dt.AddSeconds(secondsSince1970);
             dt = dt.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(dt).Hours);
             return dt;
-        }
-
-        #endregion
-
-        #region Temp Directories
-
-        /// <summary>
-        /// Creates a temporary directory "%TEMP%/{Assembly.Name}/{Assembly.Version}/{Process.ID}/{subFolderNames[0]}/{subFolderNames[1]}/{...}" and returns its path.
-        /// </summary>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetTempDir(Assembly assembly = null, params string[] subFolderNames)
-        {
-            var folderNames = new List<string>
-                            {
-                                Path.GetTempPath(),
-                                GetAssemblyName(assembly),
-                                GetAssemblyVersion(assembly).ToString(),
-                                Process.GetCurrentProcess().Id.ToString("0")
-                            };
-            folderNames.AddRange(subFolderNames.Where(s => !string.IsNullOrWhiteSpace(s)));
-            var path = Path.Combine(folderNames.ToArray());
-            Directory.CreateDirectory(path);
-            return path;
-        }
-
-        /// <summary>
-        /// Creates a temporary directory "%TEMP%/{Assembly.Name}/{Assembly.Version}/{Process.ID}/{subFolderNames[0]}/{subFolderNames[1]}/{...}" and returns its path.
-        /// </summary>
-        public static string GetTempDir(Type type, params string[] subFolderNames)
-        {
-            return GetTempDir(Assembly.GetAssembly(type), subFolderNames);
-        }
-
-        #endregion
-
-        #region Temp Files
-
-        /// <summary>
-        /// Creates a temporary directory "%TEMP%/{Assembly.Name}/{Assembly.Version}/{Process.ID}/{subFolderNames[0]}/{subFolderNames[1]}/{...}" and returns the full path to <paramref name="filename"/> within that directory.
-        /// </summary>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetTempFilePath(Assembly assembly, string filename, params string[] subFolderNames)
-        {
-            return Path.Combine(GetTempDir(assembly, subFolderNames), filename);
-        }
-
-        /// <summary>
-        /// Creates a temporary directory "%TEMP%/{Assembly.Name}/{Assembly.Version}/{Process.ID}/{subFolderNames[0]}/{subFolderNames[1]}/{...}" and returns the full path to <paramref name="filename"/> within that directory.
-        /// </summary>
-        public static string GetTempFilePath(Type type, string filename, params string[] subFolderNames)
-        {
-            return GetTempFilePath(Assembly.GetAssembly(type), filename, subFolderNames);
         }
 
         #endregion

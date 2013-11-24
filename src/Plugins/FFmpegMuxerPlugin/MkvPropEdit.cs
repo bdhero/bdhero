@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using BDHero.BDROM;
@@ -19,6 +18,8 @@ namespace BDHero.Plugin.FFmpegMuxer
     public class MkvPropEdit : BackgroundProcessWorker
     {
         private const string MkvPropEditFileName = "mkvpropedit.exe";
+
+        private readonly ITempFileRegistrar _tempFileRegistrar;
 
         /// <summary>
         /// Gets or sets the path to the source Matroska file that will be modified by MkvPropEdit.
@@ -40,18 +41,17 @@ namespace BDHero.Plugin.FFmpegMuxer
         }
         private string _sourceFilePath;
 
-        [UsedImplicitly]
-        public MkvPropEdit(IJobObjectManager jobObjectManager)
+        public MkvPropEdit(IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
         {
+            _tempFileRegistrar = tempFileRegistrar;
             SetExePath();
         }
 
         private void SetExePath()
         {
-            var assemblyPath = Assembly.GetExecutingAssembly().Location;
-            var mkvPropEditAssemblyDir = Path.GetDirectoryName(assemblyPath);
-            ExePath = Path.Combine(mkvPropEditAssemblyDir, MkvPropEditFileName);
+            var exeDir = AssemblyUtils.GetInstallDir(GetType());
+            ExePath = Path.Combine(exeDir, MkvPropEditFileName);
         }
 
         public MkvPropEdit SetChapters(IEnumerable<Chapter> chapters)
@@ -172,9 +172,9 @@ namespace BDHero.Plugin.FFmpegMuxer
         /// <param name="chapters"></param>
         /// <returns>Full, absolute path to the chapter XML file</returns>
         [NotNull]
-        private static string SaveChaptersToXml(IEnumerable<Chapter> chapters)
+        private string SaveChaptersToXml(IEnumerable<Chapter> chapters)
         {
-            var path = AssemblyUtils.GetTempFilePath(typeof(MkvPropEdit), "chapters.xml");
+            var path = _tempFileRegistrar.CreateTempFile(GetType(), "chapters.xml");
             ChapterWriterV3.SaveAsXml(chapters, path);
             return path;
         }
@@ -186,13 +186,13 @@ namespace BDHero.Plugin.FFmpegMuxer
         /// <param name="width">120 for small or 600 for large</param>
         /// <param name="filename">cover.{jpg,png} or small_cover.{jpg,png}</param>
         /// <returns>Full, absolute path to the resized image on disk if <paramref name="image"/> is not null; otherwise null.</returns>
-        [NotNull]
+        [CanBeNull]
         private string ResizeCoverArt([CanBeNull] Image image, CoverArtSize width, [NotNull] string filename)
         {
             if (image == null) return null;
             var ext = Path.GetExtension(filename.ToLowerInvariant());
             var format = ext == ".png" ? ImageFormat.Png : ImageFormat.Jpeg;
-            var path = AssemblyUtils.GetTempFilePath(GetType(), filename);
+            var path = _tempFileRegistrar.CreateTempFile(GetType(), filename);
             ScaleImage(image, (int)width, int.MaxValue).Save(path, format);
             return path;
         }

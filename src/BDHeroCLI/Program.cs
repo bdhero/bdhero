@@ -1,6 +1,7 @@
 ﻿using BDHero.Config;
 using BDHero.Startup;
 using BDHeroCLI.Properties;
+using DotNetUtils;
 using Ninject;
 using OSUtils.JobObjects;
 
@@ -19,6 +20,8 @@ namespace BDHeroCLI
                 return;
 
             kernel.Get<CLI>().Run(args);
+
+            kernel.Get<ITempFileRegistrar>().DeleteEverything();
         }
 
         private static IKernel CreateInjector()

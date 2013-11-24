@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using BDHero.Config;
 using BDHero.Startup;
 using BDHeroGUI.Properties;
+using DotNetUtils;
 using Ninject;
 using OSUtils.JobObjects;
 
@@ -27,6 +28,8 @@ namespace BDHeroGUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(kernel.Get<FormMain>());
+
+            kernel.Get<ITempFileRegistrar>().DeleteEverything();
         }
 
         private static IKernel CreateInjector()

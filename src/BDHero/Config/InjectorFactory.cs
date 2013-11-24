@@ -5,6 +5,7 @@ using System.Text;
 using WindowsOSUtils;
 using BDHero.Plugin;
 using BDHero.Startup;
+using DotNetUtils;
 using Ninject;
 using Ninject.Modules;
 using OSUtils;
@@ -47,6 +48,7 @@ namespace BDHero.Config
         {
             Bind<IDirectoryLocator>().To<DirectoryLocator>().InSingletonScope();
             Bind<LogInitializer>().ToSelf().InSingletonScope();
+            Bind<ITempFileRegistrar>().To<TempFileRegistrar>().InSingletonScope();
             Bind<IPluginRepository>().To<PluginRepository>().InSingletonScope();
             Bind<PluginLoader>().ToSelf().InSingletonScope();
             Bind<Updater>().ToSelf().InSingletonScope();

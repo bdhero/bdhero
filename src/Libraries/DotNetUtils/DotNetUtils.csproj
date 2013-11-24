@@ -134,6 +134,7 @@
     <Compile Include="TaskUtils\TaskDelegates.cs" />
     <Compile Include="TaskUtils\ThreadInvoker.cs" />
     <Compile Include="TaskUtils\TaskBuilder.cs" />
+    <Compile Include="TempFileRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

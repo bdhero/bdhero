@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using DotNetUtils;
 using OSUtils.JobObjects;
 using ProcessUtils;
 
@@ -32,6 +33,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly List<Track> _selectedTracks;
         private readonly string _outputMKVPath;
         private readonly IJobObjectManager _jobObjectManager;
+        private readonly ITempFileRegistrar _tempFileRegistrar;
         private readonly string _progressFilePath;
 
         public long CurFrame { get; private set; }
@@ -45,7 +47,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private readonly FFmpegTrackIndexer _indexer;
 
-        public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager)
+        public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
         {
             _playlistLength = playlist.Length;
@@ -53,7 +55,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             _selectedTracks = playlist.Tracks.Where(track => track.Keep).ToList();
             _outputMKVPath = outputMKVPath;
             _jobObjectManager = jobObjectManager;
-            _progressFilePath = Path.GetTempFileName();
+            _tempFileRegistrar = tempFileRegistrar;
+
+            _progressFilePath = _tempFileRegistrar.CreateTempFile(GetType(), "progress.log");
             _indexer = new FFmpegTrackIndexer(playlist);
 
             VerifyInputPaths();
@@ -342,12 +346,14 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             LogExit(processState, exitCode);
 
+            _tempFileRegistrar.DeleteTempFile(_progressFilePath);
+
             if (processState != NonInteractiveProcessState.Completed)
                 return;
 
             var coverArt = releaseMedium != null ? releaseMedium.CoverArtImages.FirstOrDefault(image => image.IsSelected) : null;
             var coverArtImage = coverArt != null ? coverArt.Image : null;
-            var mkvPropEdit = new MkvPropEdit(_jobObjectManager) { SourceFilePath = outputMKVPath }
+            var mkvPropEdit = new MkvPropEdit(_jobObjectManager, _tempFileRegistrar) { SourceFilePath = outputMKVPath }
                 .RemoveAllTags()
                 .AddCoverArt(coverArtImage)
                 .SetChapters(playlist.Chapters)
