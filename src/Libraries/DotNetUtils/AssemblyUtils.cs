@@ -25,23 +25,46 @@ namespace DotNetUtils
 
         #region Assembly Name
 
+        /// <summary>
+        ///     Gets the simple name of the assembly.
+        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
+        ///     minus its extension.
+        /// </summary>
+        /// <param name="assembly">See <see cref="AssemblyOrDefault"/>.</param>
+        /// <returns>The simple name of the assembly.</returns>
         /// <seealso cref="AssemblyOrDefault"/>
         public static string GetAssemblyName(Assembly assembly = null)
         {
             return AssemblyOrDefault(assembly).GetName().Name;
         }
 
+        /// <summary>
+        ///     Gets the simple name of the assembly that contains <paramref name="type"/>.
+        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
+        ///     minus its extension.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The simple name of the assembly that contains <paramref name="type"/>.</returns>
         public static string GetAssemblyName(Type type)
         {
             return GetAssemblyName(Assembly.GetAssembly(type));
         }
 
-        /// <seealso cref="AssemblyOrDefault"/>
+        /// <summary>
+        ///     Gets the assembly's version.
+        /// </summary>
+        /// <param name="assembly">See <see cref="AssemblyOrDefault"/>.</param>
+        /// <returns>The assembly's version.</returns>
         public static Version GetAssemblyVersion(Assembly assembly = null)
         {
             return AssemblyOrDefault(assembly).GetName().Version;
         }
 
+        /// <summary>
+        ///     Gets the version of the assembly that contains <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The version of the assembly that contains <paramref name="type"/>.</returns>
         public static Version GetAssemblyVersion(Type type)
         {
             return GetAssemblyVersion(Assembly.GetAssembly(type));
