@@ -11,8 +11,8 @@ namespace BDHero.Plugin
     [UsedImplicitly]
     public class PluginRepository : IPluginRepository
     {
-        private readonly ConcurrentDictionary<string, ProgressProvider> _progressProviders =
-            new ConcurrentDictionary<string, ProgressProvider>();
+        private readonly ConcurrentDictionary<Guid, ProgressProvider> _progressProviders =
+            new ConcurrentDictionary<Guid, ProgressProvider>();
 
         private readonly IList<IPlugin> _plugins = new List<IPlugin>();
 

@@ -117,14 +117,14 @@ namespace BDHero.Plugin
         /// <summary>
         /// Gets the GUID of the plugin assembly DLL.
         /// </summary>
-        public string Guid { get; private set; }
+        public Guid Guid { get; private set; }
 
         /// <summary>
         /// Gets the full path to the plugin's JSON config file.
         /// </summary>
         public string ConfigFilePath { get; private set; }
 
-        public PluginAssemblyInfo(string location, Version version, DateTime buildDate, string guid, string configFilePath)
+        public PluginAssemblyInfo(string location, Version version, DateTime buildDate, Guid guid, string configFilePath)
         {
             Location = location;
             Version = version;

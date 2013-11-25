@@ -24,7 +24,7 @@ namespace BDHero
         /// </summary>
         private TaskScheduler _callbackScheduler;
 
-        private readonly ConcurrentDictionary<string, int> _progressMap = new ConcurrentDictionary<string, int>();
+        private readonly ConcurrentDictionary<Guid, int> _progressMap = new ConcurrentDictionary<Guid, int>();
 
         #region Properties
 

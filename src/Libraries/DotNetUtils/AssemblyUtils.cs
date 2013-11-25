@@ -26,10 +26,11 @@ namespace DotNetUtils
         /// <summary>
         ///     Gets the .NET GuidAttribute value for the given assembly.
         /// </summary>
-        public static string Guid(Assembly assembly = null)
+        public static Guid Guid(Assembly assembly = null)
         {
             assembly = AssemblyOrDefault(assembly);
-            return ((GuidAttribute) assembly.GetCustomAttributes(typeof (GuidAttribute), true)[0]).Value;
+            var guid = ((GuidAttribute) assembly.GetCustomAttributes(typeof (GuidAttribute), true)[0]).Value;
+            return new Guid(guid);
         }
 
         #region Dates
