@@ -345,7 +345,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             LogExit(processState, exitCode);
 
-            _tempFileRegistrar.DeleteTempFile(_progressFilePath);
+            _tempFileRegistrar.DeleteTempFiles(_progressFilePath);
 
             if (processState != NonInteractiveProcessState.Completed)
                 return;

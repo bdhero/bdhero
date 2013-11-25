@@ -10,16 +10,16 @@ namespace DotNetUtils.FS
     public interface ITempFileRegistrar : IDisposable
     {
         /// <summary>
-        ///     Registers the given <paramref name="filePath"/> for deletion when the application exits.
+        ///     Registers the given <paramref name="filePaths"/> for deletion when the application exits.
         /// </summary>
-        /// <param name="filePath">Path to a file that should be deleted when the application exits.</param>
-        void RegisterTempFile(string filePath);
+        /// <param name="filePaths">Paths to files that should be deleted when the application exits.</param>
+        void RegisterTempFiles(params string[] filePaths);
 
         /// <summary>
-        ///     Registers the given <paramref name="dirPath"/> for deletion when the application exits.
+        ///     Registers the given <paramref name="dirPaths"/> for deletion when the application exits.
         /// </summary>
-        /// <param name="dirPath">Path to a directory that should be deleted when the application exits.</param>
-        void RegisterTempDirectory(string dirPath);
+        /// <param name="dirPaths">Paths to directories that should be deleted when the application exits.</param>
+        void RegisterTempDirectories(params string[] dirPaths);
 
         /// <summary>
         ///     Creates and returns the path to a temporary directory that includes the name of the given
@@ -147,16 +147,16 @@ namespace DotNetUtils.FS
         string CreateTempFile(Type type, string filename = null, params string[] subdirectoryNames);
 
         /// <summary>
-        ///     Attempts to delete the given file, suppressing any exceptions that are thrown.
+        ///     Attempts to delete the given files, suppressing any exceptions that are thrown.
         /// </summary>
-        /// <param name="filePath">Path to the file to delete.</param>
-        void DeleteTempFile(string filePath);
+        /// <param name="filePaths">Paths to the files to delete.</param>
+        void DeleteTempFiles(params string[] filePaths);
 
         /// <summary>
-        ///     Attempts to delete the given directory and its contents recursively, suppressing any exceptions that are thrown.
+        ///     Attempts to delete the given directories and their contents recursively, suppressing any exceptions that are thrown.
         /// </summary>
-        /// <param name="dirPath">Path to the directory to delete.</param>
-        void DeleteTempDirectory(string dirPath);
+        /// <param name="dirPaths">Paths to the directories to delete.</param>
+        void DeleteTempDirectories(params string[] dirPaths);
 
         /// <summary>
         ///     Deletes all registered files and directories, suppressing any exceptions that may be thrown.

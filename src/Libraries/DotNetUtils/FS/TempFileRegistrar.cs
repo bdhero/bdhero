@@ -70,19 +70,19 @@ namespace DotNetUtils.FS
 
         #region Registration
 
-        public void RegisterTempFile(string filePath)
+        public void RegisterTempFiles(params string[] filePaths)
         {
             lock (this)
             {
-                _tempFilePaths.Add(filePath);
+                _tempFilePaths.AddRange(filePaths);
             }
         }
 
-        public void RegisterTempDirectory(string dirPath)
+        public void RegisterTempDirectories(params string[] dirPaths)
         {
             lock (this)
             {
-                _tempDirPaths.Add(dirPath);
+                _tempDirPaths.AddRange(dirPaths);
             }
         }
 
@@ -114,11 +114,11 @@ namespace DotNetUtils.FS
             }
         }
 
-        public void DeleteTempFile(string filePath)
+        public void DeleteTempFiles(params string[] filePaths)
         {
             lock (this)
             {
-                DeleteTempFileNonLocking(filePath);
+                filePaths.ForEach(DeleteTempFileNonLocking);
             }
         }
 
@@ -132,11 +132,11 @@ namespace DotNetUtils.FS
                 });
         }
 
-        public void DeleteTempDirectory(string dirPath)
+        public void DeleteTempDirectories(params string[] dirPaths)
         {
             lock (this)
             {
-                DeleteTempDirectoryNonLocking(dirPath);
+                dirPaths.ForEach(DeleteTempDirectoryNonLocking);
             }
         }
 
@@ -197,7 +197,7 @@ namespace DotNetUtils.FS
             folderNames.AddRange(subdirectoryNames.Where(s => !string.IsNullOrWhiteSpace(s)));
             var path = Combine(folderNames.ToArray());
             Directory.CreateDirectory(path);
-            RegisterTempDirectory(path);
+            RegisterTempDirectories(path);
             return path;
         }
 
@@ -220,7 +220,7 @@ namespace DotNetUtils.FS
             }
             var path = Combine(CreateTempDirectory(assembly, subdirectoryNames), filename);
             FileUtils.TouchFile(path);
-            RegisterTempFile(path);
+            RegisterTempFiles(path);
             return path;
         }
 
