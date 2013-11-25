@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using BDHero.Config;
 using BDHero.Startup;
 using BDHeroGUI.Properties;
-using DotNetUtils;
+using DotNetUtils.FS;
 using Ninject;
 using OSUtils.JobObjects;
 

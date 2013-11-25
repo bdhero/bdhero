@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.Utils;
 using DotNetUtils;
+using DotNetUtils.FS;
 using OSUtils;
 
 namespace BDHeroGUI.Forms

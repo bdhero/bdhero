@@ -1,4 +1,6 @@
-﻿namespace DotNetUtils.Net
+﻿using DotNetUtils.FS;
+
+namespace DotNetUtils.Net
 {
     /// <summary>
     /// Represents the current progess state of a <see cref="FileDownloader"/>.

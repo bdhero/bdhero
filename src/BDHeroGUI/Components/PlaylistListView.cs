@@ -11,8 +11,8 @@ using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
-using DotNetUtils;
 using DotNetUtils.Extensions;
+using DotNetUtils.FS;
 
 namespace BDHeroGUI.Components
 {

@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
-using DotNetUtils;
+using DotNetUtils.FS;
 using OSUtils.JobObjects;
 using ProcessUtils;
 

@@ -109,10 +109,11 @@
       <DependentUpon>DetailForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\IWndProcObservable.cs" />
+    <Compile Include="FS\ITempFileRegistrar.cs" />
     <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="MultiValueDictionary.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FileUtils.cs" />
+    <Compile Include="FS\FileUtils.cs" />
     <Compile Include="Net\FileDownloadProgress.cs" />
     <Compile Include="Net\FileDownloader.cs" />
     <Compile Include="Net\FileDownloadProgressChangedHandler.cs" />
@@ -134,7 +135,7 @@
     <Compile Include="TaskUtils\TaskDelegates.cs" />
     <Compile Include="TaskUtils\ThreadInvoker.cs" />
     <Compile Include="TaskUtils\TaskBuilder.cs" />
-    <Compile Include="TempFileRegistrar.cs" />
+    <Compile Include="FS\TempFileRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

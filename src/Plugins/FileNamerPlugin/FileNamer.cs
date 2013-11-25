@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using BDHero.BDROM;
 using BDHero.JobQueue;
-using DotNetUtils;
+using DotNetUtils.FS;
 
 namespace BDHero.Plugin.FileNamer
 {

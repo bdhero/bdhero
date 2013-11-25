@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
+using DotNetUtils.FS;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 // ReSharper disable MemberCanBePrivate.Global

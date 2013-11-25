@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using DotNetUtils.FS;
 
 namespace DotNetUtils.Crypto
 {

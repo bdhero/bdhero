@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BDHero.Plugin;
 using BDHero.JobQueue;
 using DotNetUtils;
+using DotNetUtils.FS;
 using DotNetUtils.TaskUtils;
 
 namespace BDHero

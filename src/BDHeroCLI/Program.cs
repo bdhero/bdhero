@@ -1,7 +1,7 @@
 ﻿using BDHero.Config;
 using BDHero.Startup;
 using BDHeroCLI.Properties;
-using DotNetUtils;
+using DotNetUtils.FS;
 using Ninject;
 using OSUtils.JobObjects;
 

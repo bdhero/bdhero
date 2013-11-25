@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using DotNetUtils.Annotations;
 
-namespace DotNetUtils
+namespace DotNetUtils.FS
 {
     public static class FileUtils
     {

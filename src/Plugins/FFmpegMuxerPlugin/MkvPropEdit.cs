@@ -9,6 +9,7 @@ using System.Xml;
 using BDHero.BDROM;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.FS;
 using I18N;
 using OSUtils.JobObjects;
 using ProcessUtils;

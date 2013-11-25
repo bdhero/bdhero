@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Reflection;
-using DotNetUtils;
 using System;
 using System.IO;
+using DotNetUtils.FS;
 using NUnit.Framework;
 using System.Collections.Generic;
 

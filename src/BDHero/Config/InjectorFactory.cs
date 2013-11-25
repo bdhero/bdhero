@@ -5,7 +5,7 @@ using System.Text;
 using WindowsOSUtils;
 using BDHero.Plugin;
 using BDHero.Startup;
-using DotNetUtils;
+using DotNetUtils.FS;
 using Ninject;
 using Ninject.Modules;
 using OSUtils;
