@@ -926,6 +926,7 @@ namespace BDHeroGUI
         {
             return _state != ProgressProviderState.Running
                 && _state != ProgressProviderState.Paused
+                && !e.Data.GetDataPresent(typeof(ExternalDragProvider.Format))
                 && GetFirstBDROMDirectory(e) != null
                 ;
         }

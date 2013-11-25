@@ -96,7 +96,7 @@
     <Compile Include="Controls\SplitContainerWithDivider.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DragUtils.cs" />
+    <Compile Include="Forms\DragUtils.cs" />
     <Compile Include="Extensions\ListViewItemExtensions.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Extensions\TextBoxExtensions.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Forms\DetailForm.Designer.cs">
       <DependentUpon>DetailForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExternalDragProvider.cs" />
     <Compile Include="Forms\IWndProcObservable.cs" />
     <Compile Include="FS\ITempFileRegistrar.cs" />
     <Compile Include="Mono.Options\Options.cs" />
