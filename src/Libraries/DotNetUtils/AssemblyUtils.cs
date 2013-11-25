@@ -147,8 +147,8 @@ namespace DotNetUtils
             assembly = AssemblyOrDefault(assembly);
 
             string filePath = assembly.Location;
-            const int c_PeHeaderOffset = 60;
-            const int c_LinkerTimestampOffset = 8;
+            const int cPeHeaderOffset = 60;
+            const int cLinkerTimestampOffset = 8;
             byte[] b = new byte[2048];
             Stream s = null;
 
@@ -165,8 +165,8 @@ namespace DotNetUtils
                 }
             }
 
-            int i = BitConverter.ToInt32(b, c_PeHeaderOffset);
-            int secondsSince1970 = BitConverter.ToInt32(b, i + c_LinkerTimestampOffset);
+            int i = BitConverter.ToInt32(b, cPeHeaderOffset);
+            int secondsSince1970 = BitConverter.ToInt32(b, i + cLinkerTimestampOffset);
             DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0);
             dt = dt.AddSeconds(secondsSince1970);
             dt = dt.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(dt).Hours);
