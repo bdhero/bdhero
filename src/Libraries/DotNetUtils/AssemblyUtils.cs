@@ -7,127 +7,24 @@ using System.Text.RegularExpressions;
 namespace DotNetUtils
 {
     /// <summary>
-    /// Collection of helpful utilities for working with Assemblies (name, version, install path)
+    ///     Collection of helpful utilities for working with Assemblies (name, version, install path)
     /// </summary>
     public static class AssemblyUtils
     {
         /// <summary>
-        /// Returns
-        /// <paramref name="assembly"/> if it is not <c>null</c>, otherwise
-        /// <see cref="Assembly.GetEntryAssembly()"/> if it is not <c>null</c>, or
-        /// <see cref="Assembly.GetCallingAssembly()"/> as a last resort.
-        /// This method is guaranteed not to return null.
+        ///     Returns
+        ///     <paramref name="assembly" /> if it is not <c>null</c>, otherwise
+        ///     <see cref="Assembly.GetEntryAssembly()" /> if it is not <c>null</c>, or
+        ///     <see cref="Assembly.GetCallingAssembly()" /> as a last resort.
+        ///     This method is guaranteed not to return null.
         /// </summary>
         public static Assembly AssemblyOrDefault(Assembly assembly = null)
         {
             return assembly ?? Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         }
 
-        #region Assembly Name
-
         /// <summary>
-        ///     Gets the simple name of the assembly.
-        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
-        ///     minus its extension.
-        /// </summary>
-        /// <param name="assembly">See <see cref="AssemblyOrDefault"/>.</param>
-        /// <returns>The simple name of the assembly.</returns>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetAssemblyName(Assembly assembly = null)
-        {
-            return AssemblyOrDefault(assembly).GetName().Name;
-        }
-
-        /// <summary>
-        ///     Gets the simple name of the assembly that contains <paramref name="type"/>.
-        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
-        ///     minus its extension.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>The simple name of the assembly that contains <paramref name="type"/>.</returns>
-        public static string GetAssemblyName(Type type)
-        {
-            return GetAssemblyName(Assembly.GetAssembly(type));
-        }
-
-        /// <summary>
-        ///     Gets the assembly's version.
-        /// </summary>
-        /// <param name="assembly">See <see cref="AssemblyOrDefault"/>.</param>
-        /// <returns>The assembly's version.</returns>
-        public static Version GetAssemblyVersion(Assembly assembly = null)
-        {
-            return AssemblyOrDefault(assembly).GetName().Version;
-        }
-
-        /// <summary>
-        ///     Gets the version of the assembly that contains <paramref name="type"/>.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>The version of the assembly that contains <paramref name="type"/>.</returns>
-        public static Version GetAssemblyVersion(Type type)
-        {
-            return GetAssemblyVersion(Assembly.GetAssembly(type));
-        }
-
-        #endregion
-
-        #region Assembly Version
-
-        /// <summary>
-        /// Gets a "human friendly" version number for the given assembly in which any trailing ".0" are removed.
-        /// </summary>
-        /// <example>GetAssemblyVersionShort(1.0.0.0) -> 1</example>
-        /// <example>GetAssemblyVersionShort(1.2.0.0) -> 1.2</example>
-        /// <example>GetAssemblyVersionShort(1.2.4.0) -> 1.2.4</example>
-        /// <example>GetAssemblyVersionShort(1.2.4.8) -> 1.2.4.8</example>
-        /// <example>GetAssemblyVersionShort(1.0.0.0, true) -> 1.0</example>
-        /// <example>GetAssemblyVersionShort(1.2.0.0, true) -> 1.2</example>
-        /// <param name="assembly">The assembly containing the required version number.</param>
-        /// <param name="keepMinorIfZero">Keep the minor version number even if it is zero.</param>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetAssemblyVersionShort(Assembly assembly = null, bool keepMinorIfZero = false)
-        {
-            var version = Regex.Replace(GetAssemblyVersion(assembly).ToString(), @"(?:\.0)+$", "");
-
-            // 1.0.0.0 -> 1 -> 1.0
-            if (keepMinorIfZero && new Regex(@"^\d+$").IsMatch(version))
-                version += ".0";
-
-            return version;
-        }
-
-        public static string GetAssemblyVersionShort(Type type)
-        {
-            return GetAssemblyVersionShort(Assembly.GetAssembly(type));
-        }
-
-        #endregion
-
-        #region Install Directory
-
-        /// <summary>
-        /// Gets the path to the directory that contains the given assembly.
-        /// </summary>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetInstallDir(Assembly assembly = null)
-        {
-            return Path.GetDirectoryName(AssemblyOrDefault(assembly).Location);
-        }
-
-        /// <summary>
-        ///     Gets the path to the directory that contains the assembly for the given <paramref name="type"/>.
-        /// </summary>
-        /// <seealso cref="AssemblyOrDefault"/>
-        public static string GetInstallDir(Type type)
-        {
-            return Path.GetDirectoryName(AssemblyOrDefault(Assembly.GetAssembly(type)).Location);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Gets the .NET GuidAttribute value for the given assembly.
+        ///     Gets the .NET GuidAttribute value for the given assembly.
         /// </summary>
         public static string Guid(Assembly assembly = null)
         {
@@ -138,39 +35,150 @@ namespace DotNetUtils
         #region Dates
 
         /// <summary>
-        /// Gets the date and time that the given assembly was linked.
+        ///     Gets the date and time that the given assembly was linked.
         /// </summary>
-        /// <returns>Date and time the assembly was linked</returns>
-        /// <seealso cref="http://stackoverflow.com/a/1600990/467582"/>
+        /// <param name="assembly"></param>
+        /// <returns>Date and time the assembly was linked.</returns>
+        /// <seealso cref="http://stackoverflow.com/a/1600990/467582" />
         public static DateTime GetLinkerTimestamp(Assembly assembly = null)
         {
             assembly = AssemblyOrDefault(assembly);
 
-            string filePath = assembly.Location;
-            const int cPeHeaderOffset = 60;
-            const int cLinkerTimestampOffset = 8;
-            byte[] b = new byte[2048];
-            Stream s = null;
+            const int peHeaderOffset = 60;
+            const int linkerTimestampOffset = 8;
+            const int bufferSize = 2048;
 
-            try
+            var filePath = assembly.Location;
+            var buffer = new byte[bufferSize];
+
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                s = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                s.Read(b, 0, 2048);
-            }
-            finally
-            {
-                if (s != null)
-                {
-                    s.Close();
-                }
+                stream.Read(buffer, 0, bufferSize);
             }
 
-            int i = BitConverter.ToInt32(b, cPeHeaderOffset);
-            int secondsSince1970 = BitConverter.ToInt32(b, i + cLinkerTimestampOffset);
-            DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0);
-            dt = dt.AddSeconds(secondsSince1970);
-            dt = dt.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(dt).Hours);
-            return dt;
+            var i = BitConverter.ToInt32(buffer, peHeaderOffset);
+            var secondsSince1970 = BitConverter.ToInt32(buffer, i + linkerTimestampOffset);
+            var timestamp = new DateTime(1970, 1, 1, 0, 0, 0);
+            timestamp = timestamp.AddSeconds(secondsSince1970);
+            timestamp = timestamp.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(timestamp).Hours);
+            return timestamp;
+        }
+
+        #endregion
+
+        #region Assembly Name
+
+        /// <summary>
+        ///     Gets the simple name of the assembly.
+        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
+        ///     minus its extension.
+        /// </summary>
+        /// <param name="assembly">See <see cref="AssemblyOrDefault" />.</param>
+        /// <returns>The simple name of the assembly.</returns>
+        /// <seealso cref="AssemblyOrDefault" />
+        public static string GetAssemblyName(Assembly assembly = null)
+        {
+            return AssemblyOrDefault(assembly).GetName().Name;
+        }
+
+        /// <summary>
+        ///     Gets the simple name of the assembly that contains <paramref name="type" />.
+        ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
+        ///     minus its extension.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The simple name of the assembly that contains <paramref name="type" />.</returns>
+        public static string GetAssemblyName(Type type)
+        {
+            return GetAssemblyName(Assembly.GetAssembly(type));
+        }
+
+        /// <summary>
+        ///     Gets the assembly's version.
+        /// </summary>
+        /// <param name="assembly">See <see cref="AssemblyOrDefault" />.</param>
+        /// <returns>The assembly's version.</returns>
+        public static Version GetAssemblyVersion(Assembly assembly = null)
+        {
+            return AssemblyOrDefault(assembly).GetName().Version;
+        }
+
+        /// <summary>
+        ///     Gets the version of the assembly that contains <paramref name="type" />.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>The version of the assembly that contains <paramref name="type" />.</returns>
+        public static Version GetAssemblyVersion(Type type)
+        {
+            return GetAssemblyVersion(Assembly.GetAssembly(type));
+        }
+
+        #endregion
+
+        #region Assembly Version
+
+        /// <summary>
+        ///     Gets a "human friendly" version number for the given assembly in which any trailing ".0" are removed.
+        /// </summary>
+        /// <param name="assembly">The assembly containing the required version number.</param>
+        /// <param name="keepMinorIfZero">Keep the minor version number even if it is zero.</param>
+        /// <returns>Human friendly version number of the given assembly.</returns>
+        /// <example><pre>GetAssemblyVersionShort(1.0.0.0) -> 1</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.0.0) -> 1.2</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.4.0) -> 1.2.4</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.4.8) -> 1.2.4.8</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.0.0.0, true) -> 1.0</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.0.0, true) -> 1.2</pre></example>
+        /// <seealso cref="AssemblyOrDefault" />
+        public static string GetAssemblyVersionShort(Assembly assembly = null, bool keepMinorIfZero = false)
+        {
+            var version = Regex.Replace(GetAssemblyVersion(assembly).ToString(), @"(?:\.0)+$", "");
+
+            // 1.0.0.0 -> 1 -> 1.0
+            if (keepMinorIfZero && new Regex(@"^\d+$").IsMatch(version))
+            {
+                version += ".0";
+            }
+
+            return version;
+        }
+
+        /// <summary>
+        ///     Gets a "human friendly" version number of the assembly that contains <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>Human friendly version number of the assembly that contains <paramref name="type"/>.</returns>
+        /// <example><pre>GetAssemblyVersionShort(1.0.0.0) -> 1</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.0.0) -> 1.2</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.4.0) -> 1.2.4</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.4.8) -> 1.2.4.8</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.0.0.0, true) -> 1.0</pre></example>
+        /// <example><pre>GetAssemblyVersionShort(1.2.0.0, true) -> 1.2</pre></example>
+        public static string GetAssemblyVersionShort(Type type)
+        {
+            return GetAssemblyVersionShort(Assembly.GetAssembly(type));
+        }
+
+        #endregion
+
+        #region Install Directory
+
+        /// <summary>
+        ///     Gets the path to the directory that contains the given assembly.
+        /// </summary>
+        /// <seealso cref="AssemblyOrDefault" />
+        public static string GetInstallDir(Assembly assembly = null)
+        {
+            return Path.GetDirectoryName(AssemblyOrDefault(assembly).Location);
+        }
+
+        /// <summary>
+        ///     Gets the path to the directory that contains the assembly for the given <paramref name="type" />.
+        /// </summary>
+        /// <seealso cref="AssemblyOrDefault" />
+        public static string GetInstallDir(Type type)
+        {
+            return Path.GetDirectoryName(AssemblyOrDefault(Assembly.GetAssembly(type)).Location);
         }
 
         #endregion
