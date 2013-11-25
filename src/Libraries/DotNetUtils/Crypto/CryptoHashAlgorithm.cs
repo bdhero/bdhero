@@ -14,9 +14,9 @@ namespace DotNetUtils.Crypto
     {
         /// <summary>
         ///     Gets or sets whether hexadecimal hash values should be uppercase (<c>true</c>) or lowercase (<c>false</c>).
-        ///     The default is <c>true</c>.
+        ///     The default is <c>false</c>.
         /// </summary>
-        public bool UpperCase = true;
+        public bool UpperCase;
 
         #region Abstract members
 
