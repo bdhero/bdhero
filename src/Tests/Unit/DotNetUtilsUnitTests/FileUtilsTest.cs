@@ -1,10 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Reflection;
-using System;
+﻿using System.Reflection;
 using System.IO;
 using DotNetUtils.FS;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace DotNetUtilsUnitTests
 {
