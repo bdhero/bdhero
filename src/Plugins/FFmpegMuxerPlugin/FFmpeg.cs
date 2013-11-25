@@ -34,6 +34,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly IJobObjectManager _jobObjectManager;
         private readonly ITempFileRegistrar _tempFileRegistrar;
         private readonly string _progressFilePath;
+        private readonly string _inputFileListPath;
         private readonly FFmpegTrackIndexer _indexer;
 
         public long CurFrame { get; private set; }
@@ -56,6 +57,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             _tempFileRegistrar = tempFileRegistrar;
 
             _progressFilePath = _tempFileRegistrar.CreateTempFile(GetType(), "progress.log");
+            _inputFileListPath = _tempFileRegistrar.CreateTempFile(GetType(), "inputFileList.txt");
             _indexer = new FFmpegTrackIndexer(playlist);
 
             VerifyInputPaths();
@@ -175,7 +177,40 @@ namespace BDHero.Plugin.FFmpegMuxer
             Arguments.AddAll("-progress", _progressFilePath);
         }
 
+        /// <summary>
+        ///     New input file list implementation.  Writes the list of input M2TS files to a temporary text file
+        ///     and passes the path to the text file in to the FFmpeg CLI.  Avoids the 8191 character limit
+        ///     imposed by cmd.exe in Windows XP and newer.  Works in FFmpeg 1.1+.
+        /// </summary>
+        /// <seealso cref="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
+        /// <seealso cref="http://support.microsoft.com/kb/830473"/>
         private void SetInputFiles()
+        {
+            var fileList = _inputM2TSPaths.Select(EscapeInputPath)
+                                          .Select(FormatInputPath);
+            File.WriteAllLines(_inputFileListPath, fileList);
+            Arguments.AddAll("-f", "concat", "-i", _inputFileListPath);
+        }
+
+        private static string EscapeInputPath(string m2tsPath)
+        {
+            // Escape single quotes
+            return m2tsPath.Replace(@"'", @"\'");
+        }
+
+        private static string FormatInputPath(string m2tsPath)
+        {
+            return string.Format("file '{0}'", m2tsPath);
+        }
+
+        /// <summary>
+        ///     Original input file list implementation.  Passes the concatenated list of input files directly to the
+        ///     FFmpeg CLI.  Simple and easy to use, but complex Blu-ray playlists with many .m2ts files may cause an
+        ///     error if the command length exceeds 8191 characters in Windows XP or newer.  Works in FFmpeg 1.0+.
+        /// </summary>
+        /// <seealso cref="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
+        /// <seealso cref="http://support.microsoft.com/kb/830473"/>
+        private void SetInputFilesV1()
         {
             var inputFiles = GetInputFiles(_inputM2TSPaths);
             Arguments.AddAll("-i", inputFiles);
@@ -344,7 +379,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             LogExit(processState, exitCode);
 
-            _tempFileRegistrar.DeleteTempFiles(_progressFilePath);
+            _tempFileRegistrar.DeleteTempFiles(_progressFilePath, _inputFileListPath);
 
             if (processState != NonInteractiveProcessState.Completed)
                 return;
