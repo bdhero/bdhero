@@ -7,6 +7,9 @@ namespace DotNetUtils.Net
     /// </summary>
     public class FileDownloadProgress
     {
+        /// <summary>
+        /// Gets or sets the state of the file download.
+        /// </summary>
         public readonly FileDownloadState State;
 
         /// <summary>
