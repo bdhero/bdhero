@@ -173,6 +173,7 @@ namespace DotNetUtils
     }
 
     /// <summary>
+    ///     Concrete implementation of the <seealso cref="ITempFileRegistrar"/> interface.
     ///     <pre>
     ///         %TEMP%/{ProductName}/{EntryAssemblyPathSHA1Hash[0,7]}/{Process.ID}/{CallingAssembly.Name}/{subdirectoryNames[0]}/{subdirectoryNames[1]}/{...}
     ///     </pre>
@@ -185,7 +186,7 @@ namespace DotNetUtils
     [UsedImplicitly]
     public class TempFileRegistrar : ITempFileRegistrar
     {
-        private volatile bool _disposed;
+        private volatile bool _isDisposed;
 
         private readonly ISet<string> _tempFilePaths = new HashSet<string>();
         private readonly ISet<string> _tempDirPaths = new HashSet<string>();
@@ -213,9 +214,9 @@ namespace DotNetUtils
             // (If I'm being called from Finalize then the objects might not exist anymore)
             if (freeManagedObjectsAlso)
             {
-                if (_disposed) { return; }
+                if (_isDisposed) { return; }
                 DeleteEverything();
-                _disposed = true;
+                _isDisposed = true;
             }
         }
 
@@ -232,12 +233,18 @@ namespace DotNetUtils
 
         public void RegisterTempFile(string filePath)
         {
-            _tempFilePaths.Add(filePath);
+            lock (this)
+            {
+                _tempFilePaths.Add(filePath);
+            }
         }
 
         public void RegisterTempDirectory(string dirPath)
         {
-            _tempDirPaths.Add(dirPath);
+            lock (this)
+            {
+                _tempDirPaths.Add(dirPath);
+            }
         }
 
         #endregion
@@ -246,97 +253,92 @@ namespace DotNetUtils
 
         public void DeleteEverything()
         {
-            var fileDirPaths = _tempFilePaths.Select(Path.GetDirectoryName).ToArray();
-            var dirPaths = _tempDirPaths.ToArray();
-            
-            _tempFilePaths.ToArray().ForEach(DeleteTempFile);
-            _tempDirPaths.ToArray().ForEach(DeleteTempDirectory);
-
-            foreach (var dirPath in fileDirPaths)
+            lock (this)
             {
-                DeleteDirectoryTree(dirPath);
-            }
+                var tempFilePaths = _tempFilePaths.ToArray();
+                var tempDirPaths = _tempDirPaths.ToArray();
 
-            foreach (var dirPath in dirPaths)
-            {
-                DeleteDirectoryTree(dirPath);
-            }
+                // Get the parent directories of all explicitly registered files and directories
+                var fileParentDirs = tempFilePaths.Select(Path.GetDirectoryName).ToArray();
+                var dirParentDirs = tempDirPaths.Select(Path.GetDirectoryName).ToArray();
 
-            DeleteRootTempDirectory();
-        }
+                // Delete files and directories that were explicitly registered
+                tempFilePaths.ForEach(DeleteTempFileNonLocking);
+                tempDirPaths.ForEach(DeleteTempDirectoryNonLocking);
 
-        private static void DeleteRootTempDirectory()
-        {
-            try
-            {
-                var rootPath = RootTempDirectory;
+                // Now that all explicitly registered files and directories have been deleted,
+                // check if their parent directories are empty and, if so, delete them.
+                fileParentDirs.ForEach(DeleteDirectoryTree);
+                dirParentDirs.ForEach(DeleteDirectoryTree);
 
-                if (!Directory.Exists(rootPath)) { return; }
-                if (new DirectoryInfo(rootPath).GetFiles("*.*", SearchOption.AllDirectories).Any()) { return; }
-
-                Directory.Delete(rootPath, true);
-            }
-            catch
-            {
-            }
-        }
-
-        private static void DeleteDirectoryTree(string dirPath)
-        {
-            if (string.IsNullOrWhiteSpace(dirPath)) { return; }
-
-            if (IsTempDir(dirPath))
-            {
-                return;
-            }
-
-            try
-            {
-                if (Directory.Exists(dirPath))
-                {
-                    var dir = new DirectoryInfo(dirPath);
-                    if (dir.GetFiles().Any()) { return; }
-                    if (dir.GetDirectories().Any()) { return; }
-                    Directory.Delete(dirPath, true);
-                }
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                DeleteDirectoryTree(Path.GetDirectoryName(dirPath));
-            }
-            catch
-            {
+                DeleteRootTempDirectory();
             }
         }
 
         public void DeleteTempFile(string filePath)
         {
-            try
+            lock (this)
             {
-                File.Delete(filePath);
-                _tempFilePaths.Remove(filePath);
-                DeleteDirectoryTree(Path.GetDirectoryName(filePath));
+                DeleteTempFileNonLocking(filePath);
             }
-            catch
-            {
-            }
+        }
+
+        private void DeleteTempFileNonLocking(string filePath)
+        {
+            Try(delegate
+                {
+                    File.Delete(filePath);
+                    _tempFilePaths.Remove(filePath);
+                    DeleteDirectoryTree(Path.GetDirectoryName(filePath));
+                });
         }
 
         public void DeleteTempDirectory(string dirPath)
         {
-            try
+            lock (this)
             {
-                Directory.Delete(dirPath, true);
-                _tempDirPaths.Remove(dirPath);
-                DeleteDirectoryTree(Path.GetDirectoryName(dirPath));
+                DeleteTempDirectoryNonLocking(dirPath);
             }
-            catch
-            {
-            }
+        }
+
+        private void DeleteTempDirectoryNonLocking(string dirPath)
+        {
+            Try(delegate
+                {
+                    Directory.Delete(dirPath, true);
+                    _tempDirPaths.Remove(dirPath);
+                    DeleteDirectoryTree(Path.GetDirectoryName(dirPath));
+                });
+        }
+
+        private static void DeleteDirectoryTree(string dirPath)
+        {
+            if (string.IsNullOrWhiteSpace(dirPath)) { return; }
+            if (IsTempDir(dirPath)) { return; }
+
+            Try(delegate
+                {
+                    var dir = new DirectoryInfo(dirPath);
+                    if (!Directory.Exists(dirPath)) { return; }
+                    if (dir.GetFiles().Any()) { return; }
+                    if (dir.GetDirectories().Any()) { return; }
+                    Directory.Delete(dirPath, true);
+                });
+
+            Try(() => DeleteDirectoryTree(Path.GetDirectoryName(dirPath)));
+        }
+
+        private static void DeleteRootTempDirectory()
+        {
+            Try(delegate
+                {
+                    var rootPath = RootTempDirectory;
+
+                    if (!Directory.Exists(rootPath)) { return; }
+                    if (new DirectoryInfo(rootPath).GetFiles("*.*", SearchOption.AllDirectories).Any()) { return; }
+
+                    Directory.Delete(rootPath, true);
+                });
         }
 
         #endregion
@@ -455,6 +457,12 @@ namespace DotNetUtils
             dirPath = NormalizeDirectoryPath(dirPath);
             var tempPath = NormalizeDirectoryPath(Path.GetTempPath());
             return String.Equals(dirPath, tempPath, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static void Try(Action action)
+        {
+            try { action(); }
+            catch { }
         }
 
         #endregion
