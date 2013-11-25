@@ -34,6 +34,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly IJobObjectManager _jobObjectManager;
         private readonly ITempFileRegistrar _tempFileRegistrar;
         private readonly string _progressFilePath;
+        private readonly FFmpegTrackIndexer _indexer;
 
         public long CurFrame { get; private set; }
         public double CurFps { get; private set; }
@@ -43,8 +44,6 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly IList<string> _errors = new List<string>();
 
         private readonly BackgroundWorker _progressWorker = new BackgroundWorker();
-
-        private readonly FFmpegTrackIndexer _indexer;
 
         public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
