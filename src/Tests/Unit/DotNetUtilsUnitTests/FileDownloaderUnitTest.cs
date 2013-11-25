@@ -21,8 +21,8 @@ namespace DotNetUtilsUnitTests
         [Test]
         public void Test()
         {
-            const string uri = "https://raw.github.com/bdhero/bdhero/master/Assets/Icons/bdhero_gui_512.png";
-            var path = Environment.ExpandEnvironmentVariables(@"%TEMP%\bdhero_gui_512.png");
+            const string uri = "http://www.gravatar.com/avatar/77a0d71856a3815b527de22e233a8827.png";
+            var path = Environment.ExpandEnvironmentVariables(Path.Combine("%TEMP%", "bdhero_gui_80.png"));
             var downloader = new FileDownloader
                 {
                     Uri = uri,
@@ -30,7 +30,7 @@ namespace DotNetUtilsUnitTests
                 };
             downloader.DownloadSync();
 
-            const string expected = "945ec6311f160967a797eecd9648a38b10a662ec";
+            const string expected = "e770bb640d0d97fcb29c0e7ee25844a6c302301f";
             var actual = Hash(path);
 
             Assert.AreEqual(expected, actual, "Downloaded file's SHA-1 hash does not match the expected value");
@@ -39,13 +39,13 @@ namespace DotNetUtilsUnitTests
         [Test]
         public void TestContentLength()
         {
-            const string uri = "https://raw.github.com/bdhero/bdhero/master/Assets/Icons/bdhero_gui_512.png";
+            const string uri = "http://www.gravatar.com/avatar/77a0d71856a3815b527de22e233a8827.png";
             var downloader = new FileDownloader
                 {
                     Uri = uri
                 };
             var actual = downloader.GetContentLength();
-            const long expected = 89485;
+            const long expected = 5036;
 
             Assert.AreEqual(expected, actual, "Incorrect Content-Length value");
         }
