@@ -16,6 +16,7 @@ namespace Hasher
         private static bool _verbose;
         private static bool _json;
         private static bool _map;
+        private static bool _upper = true;
 
         private static Stream StdIn
         {
@@ -47,7 +48,7 @@ namespace Hasher
                     { "V|verbose", s => _verbose = true },
                     { "json", s => _json = true },
                     { "map", s => _map = true },
-                    { "lower", s => CryptoHashAlgorithm.LowerCase = true },
+                    { "lower", s => _upper = false },
                     { "md5", s => algorithms.Add(new MD5Algorithm()) },
                     { "sha1", s => algorithms.Add(new SHA1Algorithm()) },
                     { "sha256", s => algorithms.Add(new SHA256Algorithm()) },
@@ -63,6 +64,8 @@ namespace Hasher
                 algorithms.Add(new SHA256Algorithm());
                 algorithms.Add(new SHA512Algorithm());
             }
+
+            algorithms.ForEach(algorithm => algorithm.UpperCase = _upper);
 
             var stdin = StdIn;
             if (stdin != null)
