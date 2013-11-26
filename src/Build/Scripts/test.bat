@@ -1,5 +1,7 @@
 @ECHO OFF
 
+REM %CD% = C:\Projects\BDHero\src
+
 set nunit_home=%1
 set nunit_cli=%nunit_home%\bin\nunit-console.exe
 

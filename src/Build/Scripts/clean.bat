@@ -1,6 +1,6 @@
 @ECHO OFF
 
-REM %CD% = C:\Projects\BDHero
+REM %CD% = C:\Projects\BDHero\src
 
 git status
 
