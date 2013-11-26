@@ -21,7 +21,7 @@ namespace UpdateManifestGenerator
 
         static void Main(string[] args)
         {
-            string outputPath = "update.json";
+            string outputPath = "src/update.json";
             var update = new UpdateResponse
                 {
                     Version = VersionUtils.CurrentVersion
