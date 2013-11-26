@@ -16,6 +16,8 @@ namespace DotNetUtils.Controls
 
         private readonly ToolTip _toolTip = new ToolTip();
 
+        private bool _isKeyHandled;
+
         /// <summary>
         ///     Gets or sets the URL that 
         /// </summary>
@@ -41,6 +43,23 @@ namespace DotNetUtils.Controls
             ContextMenuStrip = new ContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Open link in browser", null, OnClick));
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Copy URL to clipboard", null, CopyUrlToClipboard));
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (!_isKeyHandled && (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space))
+            {
+                _isKeyHandled = true;
+                e.Handled = true;
+                OnClick(e);
+            }
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            _isKeyHandled = false;
+            base.OnKeyDown(e);
         }
 
         private void OnClick(object sender, EventArgs eventArgs)
