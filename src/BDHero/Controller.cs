@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BDHero.Plugin;
 using BDHero.JobQueue;
+using BDHero.Prefs;
 using DotNetUtils;
 using DotNetUtils.FS;
 using DotNetUtils.TaskUtils;
@@ -18,6 +19,7 @@ namespace BDHero
         private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IPluginRepository _pluginRepository;
+        private readonly IPreferenceManager _preferenceManager;
 
         /// <summary>
         /// Needed for <see cref="ProgressProviderOnUpdated"/> to invoke progress update callbacks on the correct thread.
@@ -54,9 +56,10 @@ namespace BDHero
 
         #endregion
 
-        public Controller(IPluginRepository pluginRepository)
+        public Controller(IPluginRepository pluginRepository, IPreferenceManager preferenceManager)
         {
             _pluginRepository = pluginRepository;
+            _preferenceManager = preferenceManager;
         }
 
         public void SetEventScheduler(TaskScheduler scheduler = null)
@@ -95,6 +98,7 @@ namespace BDHero
 
         public Task<bool> CreateScanTask(CancellationToken cancellationToken, string bdromPath, string mkvPath = null)
         {
+            SaveRecentBDROMBeforeScan(bdromPath);
             var token = cancellationToken;
             var readBDROMPhase = new CriticalPhase(() => ReadBDROM(token, bdromPath));
             var optionalPhases = new[] { CreateGetMetadataPhase(token), CreateAutoDetectPhase(token), CreateRenamePhase(token, mkvPath) };
@@ -454,6 +458,8 @@ namespace BDHero
 
         private void ScanSucceed()
         {
+            SaveRecentBDROMAfterSuccessfulScan(Job.Disc.FileSystem.Directories.Root.FullName);
+
             if (ScanSucceeded != null)
                 ScanSucceeded();
 
@@ -492,6 +498,28 @@ namespace BDHero
         {
             if (ConvertCompleted != null)
                 ConvertCompleted();
+        }
+
+        #endregion
+
+        #region User Preferences
+
+        private void SaveRecentBDROMBeforeScan(string bdromPath)
+        {
+            SaveRecentBDROM(bdromPath, false);
+        }
+
+        private void SaveRecentBDROMAfterSuccessfulScan(string bdromPath)
+        {
+            SaveRecentBDROM(bdromPath, true);
+        }
+
+        private void SaveRecentBDROM(string bdromPath, bool isSuccessfulScan)
+        {
+            var recentFiles = _preferenceManager.Preferences.RecentFiles;
+            if (!recentFiles.RememberRecentFiles) { return; }
+            if (recentFiles.SaveOnlyOnSuccessfulScan && !isSuccessfulScan) { return; }
+            _preferenceManager.UpdatePreferences(prefs => prefs.RecentFiles.AddBDROM(bdromPath));
         }
 
         #endregion

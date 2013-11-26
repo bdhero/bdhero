@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using WindowsOSUtils;
 using BDHero.Plugin;
+using BDHero.Prefs;
 using BDHero.Startup;
 using DotNetUtils.FS;
 using Ninject;
@@ -46,6 +47,7 @@ namespace BDHero.Config
             Bind<IDirectoryLocator>().To<DirectoryLocator>().InSingletonScope();
             Bind<LogInitializer>().ToSelf().InSingletonScope();
             Bind<ITempFileRegistrar>().To<TempFileRegistrar>().InSingletonScope();
+            Bind<IPreferenceManager>().To<PreferenceManager>().InSingletonScope();
             Bind<IPluginRepository>().To<PluginRepository>().InSingletonScope();
             Bind<PluginLoader>().ToSelf().InSingletonScope();
             Bind<Updater>().ToSelf().InSingletonScope();

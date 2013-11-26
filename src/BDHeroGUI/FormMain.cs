@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using BDHero;
 using BDHero.BDROM;
 using BDHero.Plugin;
+using BDHero.Prefs;
 using BDHero.Startup;
 using BDHero.Utils;
 using BDHeroGUI.Forms;
@@ -34,6 +35,7 @@ namespace BDHeroGUI
 
         private readonly log4net.ILog _logger;
         private readonly IDirectoryLocator _directoryLocator;
+        private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
         private readonly IController _controller;
 
@@ -64,7 +66,7 @@ namespace BDHeroGUI
 
         #region Constructor and OnLoad
 
-        public FormMain(log4net.ILog logger, IDirectoryLocator directoryLocator, PluginLoader pluginLoader, IController controller, Updater updater, IDriveDetector driveDetector)
+        public FormMain(log4net.ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, PluginLoader pluginLoader, IController controller, Updater updater, IDriveDetector driveDetector)
         {
             InitializeComponent();
 
@@ -72,6 +74,7 @@ namespace BDHeroGUI
 
             _logger = logger;
             _directoryLocator = directoryLocator;
+            _preferenceManager = preferenceManager;
             _pluginLoader = pluginLoader;
             _controller = controller;
             _updater = updater;
@@ -104,6 +107,12 @@ namespace BDHeroGUI
             SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
 
             FormClosing += OnFormClosing;
+
+            var recentFiles = _preferenceManager.Preferences.RecentFiles;
+            if (recentFiles.RememberRecentFiles && recentFiles.RecentBDROMPaths.Any())
+            {
+                textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
+            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
@@ -255,57 +264,64 @@ namespace BDHeroGUI
 
             foreach (var plugin in _controller.PluginsByType)
             {
-                IPlugin pluginCopy = plugin;
-
-                var ifaces = plugin.GetType().GetInterfaces().Except(new[] {typeof(IPlugin)});
-                var curPluginType = ifaces.FirstOrDefault(type => type.GetInterfaces().Contains(typeof(IPlugin)));
-                if (prevPluginType != null && prevPluginType != curPluginType)
-                {
-                    pluginsToolStripMenuItem.DropDownItems.Add("-");
-                }
-
-                var iconImage16 = plugin.Icon != null ? new Icon(plugin.Icon, new Size(16, 16)).ToBitmap() : null;
-                var pluginItem = new ToolStripMenuItem(plugin.Name) { Image = iconImage16, Tag = plugin };
-
-                var enabledItem = new ToolStripMenuItem("Enabled") { CheckOnClick = true, Name = PluginEnabledMenuItemName };
-                enabledItem.Click += delegate(object sender, EventArgs args)
-                    {
-                        if (pluginCopy is IDiscReaderPlugin)
-                        {
-                            _controller.PluginsByType.OfType<IDiscReaderPlugin>()
-                                       .ForEach(readerPlugin => readerPlugin.Enabled = readerPlugin == pluginCopy);
-                        }
-                        else
-                        {
-                            pluginCopy.Enabled = enabledItem.Checked;
-                        }
-                        AutoCheckPluginMenu();
-                    };
-
-                pluginItem.DropDownItems.Add(enabledItem);
-
-                if (plugin.EditPreferences != null)
-                {
-                    pluginItem.DropDownItems.Add(new ToolStripMenuItem("Preferences...", null,
-                                                                        (sender, args) =>
-                                                                        EditPreferences(pluginCopy)));
-                }
-
-                pluginItem.DropDownItems.Add("-");
-
-                pluginItem.DropDownItems.Add(
-                    new ToolStripMenuItem(string.Format("Run order: {0}", plugin.RunOrder)) { Enabled = false });
-                pluginItem.DropDownItems.Add(
-                    new ToolStripMenuItem(string.Format("Version {0}", plugin.AssemblyInfo.Version)) { Enabled = false });
-                pluginItem.DropDownItems.Add(
-                    new ToolStripMenuItem(string.Format("Built on {0}", plugin.AssemblyInfo.BuildDate)) { Enabled = false });
-
-                pluginsToolStripMenuItem.DropDownItems.Add(pluginItem);
-
-                prevPluginType = curPluginType;
+                prevPluginType = InitPlugin(plugin, prevPluginType);
             }
 
             AutoCheckPluginMenu();
+        }
+
+        private Type InitPlugin(IPlugin plugin, Type prevPluginType)
+        {
+            var curPluginInterfaces = plugin.GetType().GetInterfaces().Except(new[] { typeof(IPlugin) });
+            var curPluginType = curPluginInterfaces.FirstOrDefault(type => type.GetInterfaces().Contains(typeof(IPlugin)));
+
+            if (prevPluginType != null && prevPluginType != curPluginType)
+            {
+                pluginsToolStripMenuItem.DropDownItems.Add("-");
+            }
+
+            var iconImage16 = plugin.Icon != null ? new Icon(plugin.Icon, new Size(16, 16)).ToBitmap() : null;
+            var pluginItem = new ToolStripMenuItem(plugin.Name) { Image = iconImage16, Tag = plugin };
+
+            var enabledItem = new ToolStripMenuItem("Enabled") { CheckOnClick = true, Name = PluginEnabledMenuItemName };
+            enabledItem.Click += delegate
+                {
+                    if (plugin is IDiscReaderPlugin)
+                    {
+                        _controller.PluginsByType.OfType<IDiscReaderPlugin>()
+                                   .ForEach(readerPlugin => readerPlugin.Enabled = readerPlugin == plugin);
+                    }
+                    else
+                    {
+                        plugin.Enabled = enabledItem.Checked;
+                        _preferenceManager.UpdatePreferences(prefs =>
+                                                             prefs.Plugins.SetPluginEnabled(plugin.AssemblyInfo.Guid,
+                                                                                            plugin.Enabled));
+                    }
+                    AutoCheckPluginMenu();
+                };
+
+            pluginItem.DropDownItems.Add(enabledItem);
+
+            if (plugin.EditPreferences != null)
+            {
+                pluginItem.DropDownItems.Add(new ToolStripMenuItem("Preferences...", null,
+                                                                   (sender, args) =>
+                                                                   EditPreferences(plugin)));
+            }
+
+            pluginItem.DropDownItems.Add("-");
+
+            pluginItem.DropDownItems.Add(
+                new ToolStripMenuItem(string.Format("Run order: {0}", plugin.RunOrder)) { Enabled = false });
+            pluginItem.DropDownItems.Add(
+                new ToolStripMenuItem(string.Format("Version {0}", plugin.AssemblyInfo.Version)) { Enabled = false });
+            pluginItem.DropDownItems.Add(
+                new ToolStripMenuItem(string.Format("Built on {0}", plugin.AssemblyInfo.BuildDate)) { Enabled = false });
+
+            pluginsToolStripMenuItem.DropDownItems.Add(pluginItem);
+
+            return curPluginType;
         }
 
         private void EditPreferences(IPlugin plugin)

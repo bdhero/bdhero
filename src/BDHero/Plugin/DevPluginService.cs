@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using BDHero.Prefs;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
@@ -17,8 +18,8 @@ namespace BDHero.Plugin
         private bool _loaded;
 
         [UsedImplicitly]
-        public DevPluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPluginRepository repository)
-            : base(logger, kernel, directoryLocator, repository)
+        public DevPluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
+            : base(logger, kernel, directoryLocator, preferenceManager, repository)
         {
         }
 

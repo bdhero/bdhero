@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using BDHero.Prefs;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
@@ -22,15 +23,17 @@ namespace BDHero.Plugin
 
         private readonly IKernel _kernel;
         private readonly IDirectoryLocator _directoryLocator;
+        private readonly IPreferenceManager _preferenceManager;
         private readonly IPluginRepository _repository;
 
         [UsedImplicitly]
-        public PluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPluginRepository repository)
+        public PluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
         {
             Logger = logger;
 
             _kernel = kernel;
             _directoryLocator = directoryLocator;
+            _preferenceManager = preferenceManager;
             _repository = repository;
         }
 
@@ -91,6 +94,8 @@ namespace BDHero.Plugin
             var configFileName = machineName + ".config.json";
             var configFilePath = Path.Combine(_directoryLocator.PluginConfigDir, machineName, configFileName);
 
+            var disabledGuids = _preferenceManager.Preferences.Plugins.DisabledPluginGuids;
+
             // Next we'll loop through all the Types found in the assembly
             foreach (Type pluginType in pluginAssembly.GetTypes().Where(IsValidPlugin))
             {
@@ -102,7 +107,7 @@ namespace BDHero.Plugin
                 var newPlugin = (IPlugin) _kernel.Get(pluginType);
 
                 // TODO: Store this in preferences file
-                newPlugin.Enabled = true;
+                newPlugin.Enabled = !disabledGuids.Contains(guid);
 
                 var assemblyInfo = new PluginAssemblyInfo(dllPath,
                                                           AssemblyUtils.GetAssemblyVersion(pluginAssembly),

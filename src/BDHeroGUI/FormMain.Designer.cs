@@ -45,12 +45,17 @@ namespace BDHeroGUI
             this.textBoxInput = new DotNetUtils.Controls.FileTextBox();
             this.splitContainerMain = new DotNetUtils.Controls.SplitContainerWithDivider();
             this.splitContainerTop = new DotNetUtils.Controls.SplitContainerWithDivider();
+            this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
+            this.mediaPanel = new BDHeroGUI.Components.MediaPanel();
             this.splitContainerWithDivider1 = new DotNetUtils.Controls.SplitContainerWithDivider();
+            this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
+            this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
             this.textBoxOutput = new DotNetUtils.Controls.FileTextBox();
             this.progressBar = new DotNetUtils.Controls.ProgressBar2();
             this.menuStripTop = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBDROMFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDiscToolStripMenuItem = new BDHeroGUI.Components.DiscMenu(this.components);
             this.rescanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.searchForMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,11 +86,6 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
-            this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
-            this.mediaPanel = new BDHeroGUI.Components.MediaPanel();
-            this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
-            this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
-            this.openDiscToolStripMenuItem = new BDHeroGUI.Components.DiscMenu(this.components);
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -239,7 +239,7 @@ namespace BDHeroGUI
             this.textBoxInput.Location = new System.Drawing.Point(93, 3);
             this.textBoxInput.Name = "textBoxInput";
             this.textBoxInput.OverwritePrompt = false;
-            this.textBoxInput.SelectedPath = "W:\\BD\\49123204_BLACK_HAWK_DOWN";
+            this.textBoxInput.SelectedPath = "V:\\BD\\49123204_BLACK_HAWK_DOWN";
             this.textBoxInput.ShowNewFolderButton = false;
             this.textBoxInput.Size = new System.Drawing.Size(896, 24);
             this.textBoxInput.TabIndex = 0;
@@ -282,6 +282,25 @@ namespace BDHeroGUI
             this.splitContainerTop.SplitterDistance = 711;
             this.splitContainerTop.TabIndex = 7;
             // 
+            // playlistListView
+            // 
+            this.playlistListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.playlistListView.Location = new System.Drawing.Point(0, 0);
+            this.playlistListView.Name = "playlistListView";
+            this.playlistListView.Playlists = null;
+            this.playlistListView.SelectedPlaylist = null;
+            this.playlistListView.ShowAll = false;
+            this.playlistListView.Size = new System.Drawing.Size(711, 105);
+            this.playlistListView.TabIndex = 1;
+            // 
+            // mediaPanel
+            // 
+            this.mediaPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mediaPanel.Location = new System.Drawing.Point(0, 0);
+            this.mediaPanel.Name = "mediaPanel";
+            this.mediaPanel.Size = new System.Drawing.Size(433, 105);
+            this.mediaPanel.TabIndex = 0;
+            // 
             // splitContainerWithDivider1
             // 
             this.splitContainerWithDivider1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -299,6 +318,24 @@ namespace BDHeroGUI
             this.splitContainerWithDivider1.SplitterDistance = 791;
             this.splitContainerWithDivider1.TabIndex = 1;
             // 
+            // tracksPanel
+            // 
+            this.tracksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tracksPanel.Location = new System.Drawing.Point(0, 0);
+            this.tracksPanel.Name = "tracksPanel";
+            this.tracksPanel.ShowAll = false;
+            this.tracksPanel.Size = new System.Drawing.Size(791, 260);
+            this.tracksPanel.TabIndex = 0;
+            // 
+            // chaptersPanel
+            // 
+            this.chaptersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chaptersPanel.Location = new System.Drawing.Point(0, 0);
+            this.chaptersPanel.Name = "chaptersPanel";
+            this.chaptersPanel.Playlist = null;
+            this.chaptersPanel.Size = new System.Drawing.Size(353, 260);
+            this.chaptersPanel.TabIndex = 0;
+            // 
             // textBoxOutput
             // 
             this.textBoxOutput.AllowAnyExtension = false;
@@ -310,7 +347,7 @@ namespace BDHeroGUI
             this.textBoxOutput.FileExtensions = null;
             this.textBoxOutput.Location = new System.Drawing.Point(93, 407);
             this.textBoxOutput.Name = "textBoxOutput";
-            this.textBoxOutput.SelectedPath = "W:\\BDHero\\test.mkv";
+            this.textBoxOutput.SelectedPath = "";
             this.textBoxOutput.Size = new System.Drawing.Size(896, 24);
             this.textBoxOutput.TabIndex = 4;
             // 
@@ -366,6 +403,13 @@ namespace BDHeroGUI
             this.openBDROMFolderToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openBDROMFolderToolStripMenuItem.Text = "Open BD-ROM Folder...";
             this.openBDROMFolderToolStripMenuItem.Click += new System.EventHandler(this.openBDROMFolderToolStripMenuItem_Click);
+            // 
+            // openDiscToolStripMenuItem
+            // 
+            this.openDiscToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.cd;
+            this.openDiscToolStripMenuItem.Name = "openDiscToolStripMenuItem";
+            this.openDiscToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openDiscToolStripMenuItem.Text = "Open Disc";
             // 
             // rescanToolStripMenuItem
             // 
@@ -601,50 +645,6 @@ namespace BDHeroGUI
             this.toolStripStatusLabelOffline.Name = "toolStripStatusLabelOffline";
             this.toolStripStatusLabelOffline.Size = new System.Drawing.Size(257, 17);
             this.toolStripStatusLabelOffline.Text = "Offline: metadata search may be unavailable";
-            // 
-            // playlistListView
-            // 
-            this.playlistListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.playlistListView.Location = new System.Drawing.Point(0, 0);
-            this.playlistListView.Name = "playlistListView";
-            this.playlistListView.Playlists = null;
-            this.playlistListView.SelectedPlaylist = null;
-            this.playlistListView.ShowAll = false;
-            this.playlistListView.Size = new System.Drawing.Size(711, 105);
-            this.playlistListView.TabIndex = 1;
-            // 
-            // mediaPanel
-            // 
-            this.mediaPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mediaPanel.Location = new System.Drawing.Point(0, 0);
-            this.mediaPanel.Name = "mediaPanel";
-            this.mediaPanel.Size = new System.Drawing.Size(433, 105);
-            this.mediaPanel.TabIndex = 0;
-            // 
-            // tracksPanel
-            // 
-            this.tracksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tracksPanel.Location = new System.Drawing.Point(0, 0);
-            this.tracksPanel.Name = "tracksPanel";
-            this.tracksPanel.ShowAll = false;
-            this.tracksPanel.Size = new System.Drawing.Size(791, 260);
-            this.tracksPanel.TabIndex = 0;
-            // 
-            // chaptersPanel
-            // 
-            this.chaptersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chaptersPanel.Location = new System.Drawing.Point(0, 0);
-            this.chaptersPanel.Name = "chaptersPanel";
-            this.chaptersPanel.Playlist = null;
-            this.chaptersPanel.Size = new System.Drawing.Size(353, 260);
-            this.chaptersPanel.TabIndex = 0;
-            // 
-            // openDiscToolStripMenuItem
-            // 
-            this.openDiscToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.cd;
-            this.openDiscToolStripMenuItem.Name = "openDiscToolStripMenuItem";
-            this.openDiscToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.openDiscToolStripMenuItem.Text = "Open Disc";
             // 
             // FormMain
             // 

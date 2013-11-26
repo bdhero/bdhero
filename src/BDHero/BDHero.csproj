@@ -82,6 +82,7 @@
     <Compile Include="Plugin\IPluginHost.cs" />
     <Compile Include="Plugin\PluginProgressHandler.cs" />
     <Compile Include="Plugin\PluginRepository.cs" />
+    <Compile Include="Prefs\UserPreferences.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JobQueue\CoverArt.cs" />
     <Compile Include="JobQueue\ReleaseMedium.cs" />
