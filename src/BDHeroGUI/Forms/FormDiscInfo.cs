@@ -20,15 +20,23 @@ namespace BDHeroGUI.Forms
             var fs = disc.FileSystem;
             var metadata = disc.Metadata;
 
-            labelQuickSummary.Text = string.Format("{0} {1}",
-                                                   metadata.Derived.VolumeLabel,
-                                                   fs.Directories.Root.FullName
-                );
+            labelQuickSummary.Text = GenerateQuickSummary(metadata, fs);
 
             discInfoMetadataPanel.SetDisc(disc);
             discInfoFeaturesPanel.SetDisc(disc);
 
             this.EnableSelectAll();
+        }
+
+        private static string GenerateQuickSummary(DiscMetadata metadata, DiscFileSystem fs)
+        {
+            var volumeLabel = metadata.Derived.VolumeLabel;
+            var fullPath = fs.Directories.Root.FullName;
+            if (fullPath.EndsWith(volumeLabel))
+            {
+                return fullPath;
+            }
+            return string.Format("{0} ({1})", fullPath, volumeLabel);
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
