@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using DotNetUtils.FS;
+using DotNetUtils.Properties;
+using WebBrowserUtils;
 
 namespace DotNetUtils.Controls
 {
@@ -41,8 +43,20 @@ namespace DotNetUtils.Controls
             Url = null;
             Click += OnClick;
             ContextMenuStrip = new ContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Open link in browser", null, OnClick));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("&Copy URL to clipboard", null, CopyUrlToClipboard));
+            ContextMenuStrip.Items.Add(CreateOpenMenuItem());
+            ContextMenuStrip.Items.Add(CreateCopyMenuItem());
+        }
+
+        private ToolStripMenuItem CreateOpenMenuItem()
+        {
+            var bitmapIcon = DefaultWebBrowser.Instance.GetIconAsBitmap(16) ?? Resources.network;
+            return new ToolStripMenuItem("&Open link in browser", bitmapIcon, OnClick);
+        }
+
+        private ToolStripMenuItem CreateCopyMenuItem()
+        {
+            var bitmapIcon = Resources.clipboard_arrow;
+            return new ToolStripMenuItem("&Copy URL to clipboard", bitmapIcon, CopyUrlToClipboard);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

@@ -159,6 +159,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WebBrowserUtils\WebBrowserUtils.csproj">
+      <Project>{db13678f-8815-4bec-8198-2bac286a3baf}</Project>
+      <Name>WebBrowserUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\network.png" />
   </ItemGroup>
   <ItemGroup>
