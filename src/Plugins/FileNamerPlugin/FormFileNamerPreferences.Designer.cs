@@ -42,7 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxMovieFileName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.linkLabelTVShowReleaseDateFormat = new DotNetUtils.Controls.LinkLabel2();
+            this.hyperlinkLabelTVShowReleaseDateFormat = new DotNetUtils.Controls.HyperlinkLabel();
             this.label15 = new System.Windows.Forms.Label();
             this.textBoxTVShowReleaseDateFormat = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -200,18 +200,18 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Directory template:";
             // 
-            // linkLabelTVShowReleaseDateFormat
+            // hyperlinkLabelTVShowReleaseDateFormat
             // 
-            this.linkLabelTVShowReleaseDateFormat.DisabledColor = System.Drawing.Color.Empty;
-            this.linkLabelTVShowReleaseDateFormat.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.linkLabelTVShowReleaseDateFormat.HoverColor = System.Drawing.Color.Empty;
-            this.linkLabelTVShowReleaseDateFormat.Location = new System.Drawing.Point(240, 178);
-            this.linkLabelTVShowReleaseDateFormat.Name = "linkLabelTVShowReleaseDateFormat";
-            this.linkLabelTVShowReleaseDateFormat.RegularColor = System.Drawing.Color.Empty;
-            this.linkLabelTVShowReleaseDateFormat.Size = new System.Drawing.Size(130, 14);
-            this.linkLabelTVShowReleaseDateFormat.TabIndex = 8;
-            this.linkLabelTVShowReleaseDateFormat.Text = "Formatting help on MSDN";
-            this.linkLabelTVShowReleaseDateFormat.Click += new System.EventHandler(this.linkLabelTVShowReleaseDateFormat_Click);
+            this.hyperlinkLabelTVShowReleaseDateFormat.DisabledColor = System.Drawing.Color.Empty;
+            this.hyperlinkLabelTVShowReleaseDateFormat.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.hyperlinkLabelTVShowReleaseDateFormat.HoverColor = System.Drawing.Color.Empty;
+            this.hyperlinkLabelTVShowReleaseDateFormat.Location = new System.Drawing.Point(240, 178);
+            this.hyperlinkLabelTVShowReleaseDateFormat.Name = "hyperlinkLabelTVShowReleaseDateFormat";
+            this.hyperlinkLabelTVShowReleaseDateFormat.RegularColor = System.Drawing.Color.Empty;
+            this.hyperlinkLabelTVShowReleaseDateFormat.Size = new System.Drawing.Size(130, 14);
+            this.hyperlinkLabelTVShowReleaseDateFormat.TabIndex = 8;
+            this.hyperlinkLabelTVShowReleaseDateFormat.Text = "Formatting help on MSDN";
+            this.hyperlinkLabelTVShowReleaseDateFormat.Url = "http://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.100).aspx";
             // 
             // label15
             // 
@@ -552,7 +552,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.linkLabelTVShowReleaseDateFormat);
+            this.tabPage2.Controls.Add(this.hyperlinkLabelTVShowReleaseDateFormat);
             this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.selectableLabelTVShowPlaceholders);
             this.tabPage2.Controls.Add(this.textBoxTVShowReleaseDateFormat);
@@ -657,7 +657,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderLabel;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
-        private DotNetUtils.Controls.LinkLabel2 linkLabelTVShowReleaseDateFormat;
+        private DotNetUtils.Controls.HyperlinkLabel hyperlinkLabelTVShowReleaseDateFormat;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBoxTVShowReleaseDateFormat;
         private System.Windows.Forms.Button buttonDefault;

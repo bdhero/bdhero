@@ -12,8 +12,6 @@ namespace BDHero.Plugin.FileNamer
 {
     internal partial class FormFileNamerPreferences : Form
     {
-        private const string DateFormatUrl = "http://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.100).aspx";
-
         private readonly Preferences _userPrefs;
         private readonly Preferences _prefsCopy;
 
@@ -196,7 +194,6 @@ namespace BDHero.Plugin.FileNamer
 
         private void InitToolTips()
         {
-            new ToolTip().SetToolTip(linkLabelTVShowReleaseDateFormat, DateFormatUrl);
             new ToolTip().SetToolTip(buttonRevert, "Discard unsaved changes");
             new ToolTip().SetToolTip(buttonDefault, "Use default values");
         }
@@ -304,11 +301,6 @@ namespace BDHero.Plugin.FileNamer
             {
                 // TODO: Tell user the format is wrong
             }
-        }
-
-        private void linkLabelTVShowReleaseDateFormat_Click(object sender, EventArgs e)
-        {
-            FileUtils.OpenUrl(DateFormatUrl);
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
