@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 
@@ -61,6 +62,7 @@ namespace BDHero.Plugin.FileNamer
 
         private void OnLoad(object sender, EventArgs eventArgs)
         {
+            InitLabelBackgrounds();
             InitValues();
             InitReplaceSpaces();
             InitCodecListView();
@@ -73,6 +75,14 @@ namespace BDHero.Plugin.FileNamer
         #endregion
 
         #region Initialization
+
+        private void InitLabelBackgrounds()
+        {
+            foreach (var label in this.Descendants<SelectableLabel>())
+            {
+                label.BackColor = SystemColors.Window;
+            }
+        }
 
         /// <summary>
         /// Converts a number format string to its UI text representation.
