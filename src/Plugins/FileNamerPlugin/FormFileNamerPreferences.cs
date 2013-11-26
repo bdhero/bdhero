@@ -170,6 +170,12 @@ namespace BDHero.Plugin.FileNamer
             textBoxTVShowFileName.TextChanged += (s, e) => Rename();
 
             textBoxTVShowReleaseDateFormat.TextChanged += textBoxTVShowReleaseDateFormat_TextChanged;
+
+            selectableLabelMoviePlaceholders.SelectVariablesOnClick();
+            textBoxMovieFileName.SelectVariablesOnClick();
+
+            selectableLabelTVShowPlaceholders.SelectVariablesOnClick();
+            textBoxTVShowFileName.SelectVariablesOnClick();
         }
 
         private void InitComboBoxEvents()

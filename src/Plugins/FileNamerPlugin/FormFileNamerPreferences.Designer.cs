@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.selectableLabel1 = new DotNetUtils.Controls.SelectableLabel();
+            this.selectableLabelMoviePlaceholders = new DotNetUtils.Controls.SelectableLabel();
             this.textBoxMovieFileNameExample = new DotNetUtils.Controls.SelectableLabel();
             this.textBoxMovieDirectoryExample = new DotNetUtils.Controls.SelectableLabel();
             this.label5 = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             this.comboBoxSeasonNumberFormat = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.selectableLabel4 = new DotNetUtils.Controls.SelectableLabel();
+            this.selectableLabelTVShowPlaceholders = new DotNetUtils.Controls.SelectableLabel();
             this.textBoxTVShowFileNameExample = new DotNetUtils.Controls.SelectableLabel();
             this.textBoxTVShowDirectoryExample = new DotNetUtils.Controls.SelectableLabel();
             this.label9 = new System.Windows.Forms.Label();
@@ -86,7 +86,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.selectableLabel1);
+            this.groupBox1.Controls.Add(this.selectableLabelMoviePlaceholders);
             this.groupBox1.Controls.Add(this.textBoxMovieFileNameExample);
             this.groupBox1.Controls.Add(this.textBoxMovieDirectoryExample);
             this.groupBox1.Controls.Add(this.label5);
@@ -121,17 +121,17 @@
             this.label4.TabIndex = 1;
             this.label4.Text = "Placeholders:";
             // 
-            // selectableLabel1
+            // selectableLabelMoviePlaceholders
             // 
-            this.selectableLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.selectableLabelMoviePlaceholders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.selectableLabel1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.selectableLabel1.Location = new System.Drawing.Point(117, 19);
-            this.selectableLabel1.Name = "selectableLabel1";
-            this.selectableLabel1.ReadOnly = true;
-            this.selectableLabel1.Size = new System.Drawing.Size(646, 13);
-            this.selectableLabel1.TabIndex = 0;
-            this.selectableLabel1.Text = "%volume% %title% %year% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang%";
+            this.selectableLabelMoviePlaceholders.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.selectableLabelMoviePlaceholders.Location = new System.Drawing.Point(117, 19);
+            this.selectableLabelMoviePlaceholders.Name = "selectableLabelMoviePlaceholders";
+            this.selectableLabelMoviePlaceholders.ReadOnly = true;
+            this.selectableLabelMoviePlaceholders.Size = new System.Drawing.Size(646, 13);
+            this.selectableLabelMoviePlaceholders.TabIndex = 0;
+            this.selectableLabelMoviePlaceholders.Text = "%volume% %title% %year% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang%";
             // 
             // textBoxMovieFileNameExample
             // 
@@ -233,7 +233,7 @@
             this.groupBox2.Controls.Add(this.comboBoxSeasonNumberFormat);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.selectableLabel4);
+            this.groupBox2.Controls.Add(this.selectableLabelTVShowPlaceholders);
             this.groupBox2.Controls.Add(this.textBoxTVShowFileNameExample);
             this.groupBox2.Controls.Add(this.textBoxTVShowDirectoryExample);
             this.groupBox2.Controls.Add(this.label9);
@@ -251,6 +251,7 @@
             // 
             // linkLabelTVShowReleaseDateFormat
             // 
+            this.linkLabelTVShowReleaseDateFormat.DisabledColor = System.Drawing.Color.Empty;
             this.linkLabelTVShowReleaseDateFormat.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelTVShowReleaseDateFormat.HoverColor = System.Drawing.Color.Empty;
             this.linkLabelTVShowReleaseDateFormat.Location = new System.Drawing.Point(286, 190);
@@ -338,17 +339,17 @@
             this.label8.TabIndex = 1;
             this.label8.Text = "Placeholders:";
             // 
-            // selectableLabel4
+            // selectableLabelTVShowPlaceholders
             // 
-            this.selectableLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.selectableLabelTVShowPlaceholders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.selectableLabel4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.selectableLabel4.Location = new System.Drawing.Point(117, 19);
-            this.selectableLabel4.Name = "selectableLabel4";
-            this.selectableLabel4.ReadOnly = true;
-            this.selectableLabel4.Size = new System.Drawing.Size(646, 13);
-            this.selectableLabel4.TabIndex = 0;
-            this.selectableLabel4.Text = "%volume% %title% %date% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang% " +
+            this.selectableLabelTVShowPlaceholders.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.selectableLabelTVShowPlaceholders.Location = new System.Drawing.Point(117, 19);
+            this.selectableLabelTVShowPlaceholders.Name = "selectableLabelTVShowPlaceholders";
+            this.selectableLabelTVShowPlaceholders.ReadOnly = true;
+            this.selectableLabelTVShowPlaceholders.Size = new System.Drawing.Size(646, 13);
+            this.selectableLabelTVShowPlaceholders.TabIndex = 0;
+            this.selectableLabelTVShowPlaceholders.Text = "%volume% %title% %date% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang% " +
     "%episodetitle% %season% %episode%";
             // 
             // textBoxTVShowFileNameExample
@@ -517,16 +518,16 @@
             this.columnHeaderNumber});
             this.listViewCodecNames.FullRowSelect = true;
             this.listViewCodecNames.GridLines = true;
-            listViewGroup4.Header = "Video";
-            listViewGroup4.Name = "listViewGroupVideo";
-            listViewGroup5.Header = "Audio";
-            listViewGroup5.Name = "listViewGroupAudio";
-            listViewGroup6.Header = "Subtitles";
-            listViewGroup6.Name = "listViewGroupSubtitles";
+            listViewGroup1.Header = "Video";
+            listViewGroup1.Name = "listViewGroupVideo";
+            listViewGroup2.Header = "Audio";
+            listViewGroup2.Name = "listViewGroupAudio";
+            listViewGroup3.Header = "Subtitles";
+            listViewGroup3.Name = "listViewGroupSubtitles";
             this.listViewCodecNames.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
             this.listViewCodecNames.HideSelection = false;
             this.listViewCodecNames.LabelEdit = true;
             this.listViewCodecNames.Location = new System.Drawing.Point(6, 19);
@@ -620,11 +621,11 @@
         private DotNetUtils.Controls.SelectableLabel textBoxMovieDirectoryExample;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private DotNetUtils.Controls.SelectableLabel selectableLabel1;
+        private DotNetUtils.Controls.SelectableLabel selectableLabelMoviePlaceholders;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private DotNetUtils.Controls.SelectableLabel selectableLabel4;
+        private DotNetUtils.Controls.SelectableLabel selectableLabelTVShowPlaceholders;
         private DotNetUtils.Controls.SelectableLabel textBoxTVShowFileNameExample;
         private DotNetUtils.Controls.SelectableLabel textBoxTVShowDirectoryExample;
         private System.Windows.Forms.Label label9;

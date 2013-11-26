@@ -143,6 +143,8 @@ namespace DotNetUtils.Controls
 
             textBoxPath.TextChanged += (sender, args) => OnTextChanged(args);
             buttonBrowse.Click += ShowDialog;
+
+            textBoxPath.SelectVariablesOnClick();
         }
 
         /// <summary>
