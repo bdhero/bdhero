@@ -18,7 +18,7 @@
 
         <PackagerTargetDir  Condition="$(PackagerTargetDir)  == '' Or $(PackagerTargetDir)  == '*Undefined*'">$(TargetDir)</PackagerTargetDir>
 
-        <AppVeyorRootTargetDir>$(SolutionDir)..\temp</AppVeyorRootTargetDir>
+        <AppVeyorRootTargetDir>$(SolutionDir)..\..\temp</AppVeyorRootTargetDir>
     </PropertyGroup>
 
     <!-- Plugin directories -->
