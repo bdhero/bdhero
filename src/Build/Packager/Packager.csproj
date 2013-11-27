@@ -52,11 +52,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BDHeroCLI\BDHeroCLI.csproj">
+    <ProjectReference Include="..\..\Core\BDHeroCLI\BDHeroCLI.csproj">
       <Project>{F8F1988D-A66D-4646-A533-5EC367656C9E}</Project>
       <Name>BDHeroCLI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\BDHeroGUI\BDHeroGUI.csproj">
+    <ProjectReference Include="..\..\Core\BDHeroGUI\BDHeroGUI.csproj">
       <Project>{0A807DFE-9F38-418E-A811-649B9AD78102}</Project>
       <Name>BDHeroGUI</Name>
     </ProjectReference>

@@ -34,13 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,27 +95,27 @@
     <Compile Include="Utils\BDFileUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\UpdateLib\UpdateLib.csproj">
+    <ProjectReference Include="..\UpdateLib\UpdateLib.csproj">
       <Project>{F39EA837-99DD-4453-AA1A-DE408D47A0A6}</Project>
       <Name>UpdateLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\BDInfo\BDInfo.csproj">
+    <ProjectReference Include="..\..\Libraries\BDInfo\BDInfo.csproj">
       <Project>{DFF91717-C9EF-4881-9827-81D25F9A71A3}</Project>
       <Name>BDInfo</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\DotNetUtils\DotNetUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\DotNetUtils\DotNetUtils.csproj">
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\I18N\I18N.csproj">
+    <ProjectReference Include="..\..\Libraries\I18N\I18N.csproj">
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\OSUtils\OSUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\OSUtils\OSUtils.csproj">
       <Project>{ee69e896-8779-4e3d-a033-75a96f28de2f}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
       <Project>{a673442d-599d-4332-bcfa-8ec02171efc0}</Project>
       <Name>WindowsOSUtils</Name>
     </ProjectReference>

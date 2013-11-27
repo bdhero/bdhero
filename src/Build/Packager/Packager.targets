@@ -2,8 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <SolutionDir        Condition="$(SolutionDir)        == '' Or $(SolutionDir)        == '*Undefined*'">$(MSBuildProjectDirectory)\..\..\</SolutionDir>
+        <RootDir            Condition="$(RootDir)            == '' Or $(RootDir)            == '*Undefined*'">$(SolutionDir)..</RootDir>
         
-        <ArtifactsDir       Condition="$(ArtifactsDir)       == '' Or $(ArtifactsDir)       == '*Undefined*'">$(SolutionDir)\Artifacts</ArtifactsDir>
+        <ArtifactsDir       Condition="$(ArtifactsDir)       == '' Or $(ArtifactsDir)       == '*Undefined*'">$(RootDir)\artifacts</ArtifactsDir>
 
         <PortableDir        Condition="$(PortableDir)        == '' Or $(PortableDir)        == '*Undefined*'">$(ArtifactsDir)\Portable</PortableDir>
         <InstallerDir       Condition="$(InstallerDir)       == '' Or $(InstallerDir)       == '*Undefined*'">$(ArtifactsDir)\Installer</InstallerDir>

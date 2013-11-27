@@ -16,7 +16,7 @@
 #define CodeSigningCertPK GetEnv('CodeSigningCertPK')
 #define CodeSigningCertPW GetEnv('CodeSigningCertPW')
 
-#define InstallerArtifactDir "..\..\Artifacts\Installer"
+#define InstallerArtifactDir "..\..\..\artifacts\Installer"
 #define DeleteFileFlags "uninsrestartdelete ignoreversion"
 #define DeleteDirFlags "uninsrestartdelete ignoreversion createallsubdirs recursesubdirs"
 
@@ -37,11 +37,11 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 
 ;SourceDir=..\..\
-OutputDir=..\..\Artifacts
+OutputDir=..\..\..\artifacts
 OutputBaseFilename={#MyAppMachineName}-{#MyAppVersion}-setup
 
-WizardImageFile=..\..\Assets\InnoSetup\bdrom_wizard_2.bmp
-WizardSmallImageFile=..\..\Assets\InnoSetup\bdhero_gui_55x58.bmp
+WizardImageFile=..\..\..\assets\InnoSetup\bdrom_wizard_2.bmp
+WizardSmallImageFile=..\..\..\assets\InnoSetup\bdhero_gui_55x58.bmp
 
 MinVersion=0,5.01sp3
 PrivilegesRequired=lowest

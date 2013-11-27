@@ -55,10 +55,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -276,23 +276,23 @@
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>
       <Name>BDHero</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\UpdateLib\UpdateLib.csproj">
+    <ProjectReference Include="..\UpdateLib\UpdateLib.csproj">
       <Project>{F39EA837-99DD-4453-AA1A-DE408D47A0A6}</Project>
       <Name>UpdateLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\DotNetUtils\DotNetUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\DotNetUtils\DotNetUtils.csproj">
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\I18N\I18N.csproj">
+    <ProjectReference Include="..\..\Libraries\I18N\I18N.csproj">
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\OSUtils\OSUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\OSUtils\OSUtils.csproj">
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
+    <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
       <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
       <Name>WindowsOSUtils</Name>
     </ProjectReference>
