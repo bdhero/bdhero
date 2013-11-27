@@ -39,7 +39,8 @@ begin
     end;
 end;
 
-// NOTE: This function will not work on Windows 8+ because USB flash drives are no longer reported as "removable".
+// NOTE: This function may not work as intended on Windows 8+
+// because USB flash drives are no longer considered "removable".
 // See http://kb.sandisk.com/app/answers/detail/a_id/12830
 function GetFirstRemovableDrive(): String;
 var
