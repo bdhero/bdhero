@@ -1,11 +1,11 @@
 [Code]
 // Adapted from http://www.vincenzo.net/isxkb/index.php?title=Ask_for_a_drive_to_install
 
-function GetDriveType(lpDisk: String): Integer;
-external 'GetDriveTypeW@kernel32.dll stdcall';
-
 function GetLogicalDriveStrings(nLenDrives: LongInt; lpDrives: String): Integer;
 external 'GetLogicalDriveStringsW@kernel32.dll stdcall';
+
+function GetDriveType(lpDisk: String): Integer;
+external 'GetDriveTypeW@kernel32.dll stdcall';
 
 const
     DRIVE_UNKNOWN     = 0; // The drive type cannot be determined.
