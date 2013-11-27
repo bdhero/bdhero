@@ -91,26 +91,7 @@ begin
       end;
 
 #ifdef DebugMode
-      if ( disktype = DRIVE_UNKNOWN ) then
-        allDrives := allDrives + drive + ' = UNKNOWN' + #13;
-
-      if ( disktype = DRIVE_NO_ROOT_DIR ) then
-        allDrives := allDrives + drive + ' = INVALID (unmounted?)' + #13;
-
-      if ( disktype = DRIVE_REMOVABLE ) then
-        allDrives := allDrives + drive + ' = Removable' + #13;
-
-      if ( disktype = DRIVE_FIXED ) then
-        allDrives := allDrives + drive + ' = Local' + #13;
-
-      if ( disktype = DRIVE_REMOTE ) then
-        allDrives := allDrives + drive + ' = Network ' + #13;
-
-      if ( disktype = DRIVE_CDROM ) then
-        allDrives := allDrives + drive + ' = CD-ROM' + #13;
-
-      if ( disktype = DRIVE_RAMDISK ) then
-        allDrives := allDrives + drive + ' = RAM disk' + #13;
+      allDrives := allDrives + drive + ' = ' + DriveTypeString(disktype) + #13;
 #endif
       
   	  drivesletters := Copy(drivesletters, posnull + 1, Length(drivesletters));
