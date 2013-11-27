@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <SolutionDir        Condition="$(SolutionDir)        == '' Or $(SolutionDir)        == '*Undefined*'">$(MSBuildProjectDirectory)\..\..\</SolutionDir>
+        
+        <ArtifactsDir       Condition="$(ArtifactsDir)       == '' Or $(ArtifactsDir)       == '*Undefined*'">$(SolutionDir)\Artifacts</ArtifactsDir>
+
+        <PortableDir        Condition="$(PortableDir)        == '' Or $(PortableDir)        == '*Undefined*'">$(ArtifactsDir)\Portable</PortableDir>
+        <InstallerDir       Condition="$(InstallerDir)       == '' Or $(InstallerDir)       == '*Undefined*'">$(ArtifactsDir)\Installer</InstallerDir>
+
+        <ProgramFilesDir    Condition="$(ProgramFilesDir)    == '' Or $(ProgramFilesDir)    == '*Undefined*'">$(InstallerDir)\ProgramFiles</ProgramFilesDir>
+
+        <PortableConfigDir  Condition="$(PortableConfigDir)  == '' Or $(PortableConfigDir)  == '*Undefined*'">$(PortableDir)\Config</PortableConfigDir>
+        <InstallerConfigDir Condition="$(InstallerConfigDir) == '' Or $(InstallerConfigDir) == '*Undefined*'">$(InstallerDir)\Config</InstallerConfigDir>
+
+        <PortablePluginDir  Condition="$(PortablePluginDir)  == '' Or $(PortablePluginDir)  == '*Undefined*'">$(PortableDir)\Plugins\Required</PortablePluginDir>
+        <InstallerPluginDir Condition="$(InstallerPluginDir) == '' Or $(InstallerPluginDir) == '*Undefined*'">$(InstallerDir)\Plugins\Required</InstallerPluginDir>
+
+        <PackagerTargetDir  Condition="$(PackagerTargetDir)  == '' Or $(PackagerTargetDir)  == '*Undefined*'">$(TargetDir)</PackagerTargetDir>
+
+        <!-- Plugin directories -->
+        <DiscReaderSourceDir>$(SolutionDir)Plugins\DiscReaderPlugin\bin\$(ConfigurationName)</DiscReaderSourceDir>
+        <TmdbSourceDir>$(SolutionDir)Plugins\TmdbPlugin\bin\$(ConfigurationName)</TmdbSourceDir>
+        <ChapterGrabberSourceDir>$(SolutionDir)Plugins\ChapterGrabberPlugin\bin\$(ConfigurationName)</ChapterGrabberSourceDir>
+        <IsanSourceDir>$(SolutionDir)Plugins\IsanPlugin\bin\$(ConfigurationName)</IsanSourceDir>
+        <AutoDetectorSourceDir>$(SolutionDir)Plugins\AutoDetectorPlugin\bin\$(ConfigurationName)</AutoDetectorSourceDir>
+        <FileNamerSourceDir>$(SolutionDir)Plugins\FileNamerPlugin\bin\$(ConfigurationName)</FileNamerSourceDir>
+        <FFmpegSourceDir>$(SolutionDir)Plugins\FFmpegMuxerPlugin\bin\$(ConfigurationName)</FFmpegSourceDir>
+    </PropertyGroup>
+
+    <!-- Core files -->
+    <ItemGroup>
+        <CoreBinaries Include="$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll" />
+        <ConfigFiles Include="$(PackagerTargetDir)\Config\**\*.*" />
+        <ProgramFiles Include="$(ProgramFilesDir)\*.*" />
+    </ItemGroup>
+
+    <!-- Plugin files -->
+    <ItemGroup>
+        <DiscReaderSourceFiles Include="$(DiscReaderSourceDir)\DiscReaderPlugin.dll;$(DiscReaderSourceDir)\INIFileParser.dll" />
+        <TmdbSourceFiles Include="$(TmdbSourceDir)\TmdbPlugin.dll;$(TmdbSourceDir)\RestSharp.dll;$(TmdbSourceDir)\WatTmdb.dll" />
+        <ChapterGrabberSourceFiles Include="$(ChapterGrabberSourceDir)\ChapterGrabberPlugin.dll" />
+        <IsanSourceFiles Include="$(IsanSourceDir)\IsanPlugin.dll;$(IsanSourceDir)\CsQuery.dll" />
+        <AutoDetectorSourceFiles Include="$(AutoDetectorSourceDir)\AutoDetectorPlugin.dll" />
+        <FileNamerSourceFiles Include="$(FileNamerSourceDir)\FileNamerPlugin.dll" />
+        <FFmpegSourceFiles Include="$(FFmpegSourceDir)\FFmpegMuxerPlugin.dll;$(FFmpegSourceDir)\*.exe" />
+    </ItemGroup>
+
+    <Target Name="Clean">
+        <!-- Delete old artifacts -->
+        <Delete Files="$(ArtifactsDir)\**\*.*" />
+        <RemoveDir Directories="$(ArtifactsDir)" />
+    </Target>
+
+    <Target Name="Compile">
+        <!-- Delete old artifacts -->
+        <Delete Files="$(PortableDir)\**\*.*;$(InstallerDir)\**\*.*" />
+        <RemoveDir Directories="$(PortableDir);$(InstallerDir)" />
+
+        <Message Importance="high" Text="ConfigFiles = @(ConfigFiles)" />
+        <Message Importance="high" Text="ConfigFiles->PortableConfigDir = @(ConfigFiles->'$(PortableConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Message Importance="high" Text="ConfigFiles->InstallerConfigDir = @(ConfigFiles->'$(InstallerConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+        <!--
+            Copy core BDHero EXEs, DLLs, and config files
+        -->
+
+        <Copy SourceFiles="@(CoreBinaries)" DestinationFolder="$(PortableDir)" />
+        <Copy SourceFiles="@(CoreBinaries)" DestinationFolder="$(ProgramFilesDir)" />
+        <Copy SourceFiles="@(ConfigFiles)"  DestinationFiles="@(ConfigFiles->'$(PortableConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy SourceFiles="@(ConfigFiles)"  DestinationFiles="@(ConfigFiles->'$(InstallerConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+        <!-- Delete dummy Packager DLL -->
+        <Delete Files="$(PortableDir)\$(TargetFileName)" />
+        <Delete Files="$(ProgramFilesDir)\$(TargetFileName)" />
+
+        <!--
+            Copy required plugins
+        -->
+
+        <!-- BDInfo Disc Reader -->
+        <Copy SourceFiles="@(DiscReaderSourceFiles)" DestinationFolder="$(PortablePluginDir)\DiscReader" />
+        <Copy SourceFiles="@(DiscReaderSourceFiles)" DestinationFolder="$(InstallerPluginDir)\DiscReader" />
+
+        <!-- TMDb -->
+        <Copy SourceFiles="@(TmdbSourceFiles)" DestinationFolder="$(PortablePluginDir)\Tmdb" />
+        <Copy SourceFiles="@(TmdbSourceFiles)" DestinationFolder="$(InstallerPluginDir)\Tmdb" />
+
+        <!-- Chapter Grabber -->
+        <Copy SourceFiles="@(ChapterGrabberSourceFiles)" DestinationFolder="$(PortablePluginDir)\ChapterGrabber" />
+        <Copy SourceFiles="@(ChapterGrabberSourceFiles)" DestinationFolder="$(InstallerPluginDir)\ChapterGrabber" />
+
+        <!-- ISAN -->
+        <Copy SourceFiles="@(IsanSourceFiles)" DestinationFolder="$(PortablePluginDir)\Isan" />
+        <Copy SourceFiles="@(IsanSourceFiles)" DestinationFolder="$(InstallerPluginDir)\Isan" />
+
+        <!-- Auto Detector -->
+        <Copy SourceFiles="@(AutoDetectorSourceFiles)" DestinationFolder="$(PortablePluginDir)\AutoDetector" />
+        <Copy SourceFiles="@(AutoDetectorSourceFiles)" DestinationFolder="$(InstallerPluginDir)\AutoDetector" />
+
+        <!-- File Namer -->
+        <Copy SourceFiles="@(FileNamerSourceFiles)" DestinationFolder="$(PortablePluginDir)\FileNamer" />
+        <Copy SourceFiles="@(FileNamerSourceFiles)" DestinationFolder="$(InstallerPluginDir)\FileNamer" />
+
+        <!-- FFmpeg Muxer -->
+        <Copy SourceFiles="@(FFmpegSourceFiles)" DestinationFolder="$(PortablePluginDir)\FFmpegMuxer" />
+        <Copy SourceFiles="@(FFmpegSourceFiles)" DestinationFolder="$(InstallerPluginDir)\FFmpegMuxer" />
+    </Target>
+</Project>
