@@ -24,6 +24,10 @@ var
     // E.G.: [ "E:\", "F:\" ]
     removableDrivePaths: Array of String;
 
+    // Array of fixed drive paths EXCLUDING the system drive.
+    // E.G.: [ "G:\" ]
+    fixedNonSysDrivePaths: Array of String;
+
 // Function to convert disk type to a recognizable string.
 function DriveTypeString(driveType: Integer): String;
 begin
@@ -60,7 +64,8 @@ var
     driveStringsBuf: String;
     driveStringsLen: Integer;
 
-    idx: Integer;
+    rIdx: Integer; // removable disk index
+    fIdx: Integer; // fixed disk index
 
     curNullPos: Integer;
 
@@ -79,7 +84,8 @@ begin
     driveStringsLen := GetLogicalDriveStrings(63, driveStringsBuf);
     SetLength(driveStringsBuf, driveStringsLen);
 
-    idx := 0;
+    rIdx := 0;
+    fIdx := 0;
 
     while Length(driveStringsBuf) > 0 do
     begin
@@ -90,19 +96,24 @@ begin
             curDrivePath := UpperCase(Copy(driveStringsBuf, 1, curNullPos - 1));
             curDriveType := GetDriveType(curDrivePath);
 
+            // Default combobox selection to the user's system drive
+            //if (curDrivePath = systemDrivePath) then driveComboBox.ItemIndex := rIdx;
+
             if curDriveType = DRIVE_REMOVABLE then
             begin
-                SetArrayLength(removableDrivePaths, idx + 1);
-                removableDrivePaths[idx] := curDrivePath;
+                SetArrayLength(removableDrivePaths, rIdx + 1);
+                removableDrivePaths[rIdx] := curDrivePath;
+                rIdx := rIdx + 1;
+            end;
 
-                // Default combobox selection to the user's system drive
-                //if (curDrivePath = systemDrivePath) then driveComboBox.ItemIndex := idx;
-
-                idx := idx + 1;
+            if (curDriveType = DRIVE_FIXED) and (not (curDrivePath = systemDrivePath)) then
+            begin
+                SetArrayLength(fixedNonSysDrivePaths, fIdx + 1);
+                fixedNonSysDrivePaths[fIdx] := curDrivePath;
+                fIdx := fIdx + 1;
             end;
 
             driveTypeList := driveTypeList + curDrivePath + ' = ' + DriveTypeString(curDriveType) + #13;
-
             driveStringsBuf := Copy(driveStringsBuf, curNullPos + 1, Length(driveStringsBuf));
         end;
     end;
@@ -111,8 +122,10 @@ begin
     MsgBox(driveTypeList, mbInformation, MB_OK);
 #endif
 
-    if (idx > 0) then
-        Result := removableDrivePaths[idx - 1]
+    if (rIdx > 0) then
+        Result := removableDrivePaths[rIdx - 1]
+    else if (fIdx > 0) then
+        Result := fixedNonSysDrivePaths[fIdx - 1]
     else
         Result := systemDrivePath
 end;
