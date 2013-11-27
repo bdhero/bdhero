@@ -1,10 +1,10 @@
 [Code]
 // Adapted from http://www.vincenzo.net/isxkb/index.php?title=Ask_for_a_drive_to_install
 
-function GetDriveType( lpDisk: String ): Integer;
+function GetDriveType(lpDisk: String): Integer;
 external 'GetDriveTypeW@kernel32.dll stdcall';
 
-function GetLogicalDriveStrings( nLenDrives: LongInt; lpDrives: String ): Integer;
+function GetLogicalDriveStrings(nLenDrives: LongInt; lpDrives: String): Integer;
 external 'GetLogicalDriveStringsW@kernel32.dll stdcall';
 
 const
@@ -18,14 +18,14 @@ const
 
 var
     // Combo box for drives
-    driveComboBox : TComboBox;
+    driveComboBox: TComboBox;
 
     // Array of removable drive paths.
     // E.G.: [ "E:\", "F:\" ]
-    removableDrivePaths: array of String;
+    removableDrivePaths: Array of String;
 
 // Function to convert disk type to a recognizable string.
-function DriveTypeString( driveType: Integer ): String;
+function DriveTypeString(driveType: Integer): String;
 begin
     case driveType of
         DRIVE_NO_ROOT_DIR : Result := 'Root path invalid';
@@ -74,28 +74,28 @@ begin
     systemDrivePath := UpperCase(ExpandConstant('{sd}')) + '\';
 
     // Get all drive letters
-    driveStringsBuf := StringOfChar( ' ', 64 );
-    driveStringsLen := GetLogicalDriveStrings( 63, driveStringsBuf );
-    SetLength( driveStringsBuf , driveStringsLen );
+    driveStringsBuf := StringOfChar(' ', 64);
+    driveStringsLen := GetLogicalDriveStrings(63, driveStringsBuf);
+    SetLength(driveStringsBuf, driveStringsLen);
 
     idx := 0;
 
-    while ( (Length(driveStringsBuf) > 0) ) do
+    while Length(driveStringsBuf) > 0 do
     begin
-        curNullPos := Pos( #0, driveStringsBuf );
+        curNullPos := Pos(#0, driveStringsBuf);
 
         if curNullPos > 0 then
         begin
-            curDrivePath := UpperCase( Copy( driveStringsBuf, 1, curNullPos - 1 ) );
-            curDriveType := GetDriveType( curDrivePath );
+            curDrivePath := UpperCase(Copy(driveStringsBuf, 1, curNullPos - 1));
+            curDriveType := GetDriveType(curDrivePath);
 
-            if ( curDriveType = DRIVE_REMOVABLE ) then
+            if curDriveType = DRIVE_REMOVABLE then
             begin
                 SetArrayLength(removableDrivePaths, idx + 1);
                 removableDrivePaths[idx] := curDrivePath;
 
                 // Default combobox selection to the user's system drive
-                //if ( curDrivePath = systemDrivePath ) then driveComboBox.ItemIndex := idx;
+                //if (curDrivePath = systemDrivePath) then driveComboBox.ItemIndex := idx;
 
                 idx := idx + 1;
             end;
@@ -110,7 +110,7 @@ begin
     MsgBox(driveTypeList, mbInformation, MB_OK);
 #endif
 
-    if ( idx > 0 ) then
+    if (idx > 0) then
         Result := removableDrivePaths[idx - 1]
     else
         Result := systemDrivePath

@@ -1,22 +1,22 @@
 #include "removable-drives.iss"
 
 [Code]
-// http://timesheetsandstuff.wordpress.com/2008/06/27/the-joy-of-part-2/
+// Adapted from http://timesheetsandstuff.wordpress.com/2008/06/27/the-joy-of-part-2/
 
 var pInstallationTypePage: TInputOptionWizardPage;
 
 // Populated by InitializeWizardInstallType()
-var sDefaultInstallDir : String;
-var sCustomInstallDir : String;
-var sDefaultPortableDir : String;
-var sCustomPortableDir : String;
+var sDefaultInstallDir  : String;
+    sCustomInstallDir   : String;
+    sDefaultPortableDir : String;
+    sCustomPortableDir  : String;
 
-function IsAlreadyInstalled : Boolean;
+function IsAlreadyInstalled: Boolean;
 begin
     Result := FileExists(sDefaultInstallDir + '\{#MyAppExeName}');
 end;
 
-function IsPortable : Boolean;
+function IsPortable: Boolean;
 begin
     Result := not (pInstallationTypePage.SelectedValueIndex = 0)
 end;
@@ -30,7 +30,7 @@ begin
     ;
 end;
 
-function GetInstallDirAuto() : String;
+function GetInstallDirAuto(): String;
 begin
     if IsPortable() then
         Result := sCustomPortableDir
@@ -62,7 +62,8 @@ begin
 end;
 
 procedure InitializeWizardInstallType;
-var sInstallationTypeNormalMessageKey : String;
+var
+    sInstallationTypeNormalMessageKey: String;
 begin
     sDefaultInstallDir := WizardForm.DirEdit.Text;
     sCustomInstallDir := sDefaultInstallDir;

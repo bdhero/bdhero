@@ -96,6 +96,7 @@ SetupWindowTitle=Setup - %1 {#MyAppVersion}
 en.InstallationTypeNormal=&Normal - PC Hard Disk (current user only)
 en.InstallationTypeUpgrade=&Upgrade - PC Hard Disk (current user only)
 en.InstallationTypePortable=&Portable - USB Thumb Drive
+
 ;[Tasks]
 ;Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
@@ -122,30 +123,8 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
-[CustomMessages]
-;win_sp_title=Windows %1 Service Pack %2
-
 [Code]
-function NextButtonClick(CurPageID: Integer): boolean;
-begin
-	Result := true;
-
-    if (CurPageID = pInstallationTypePage.ID) then
-        RestoreInstallDirAuto()
-    else
-        Result := NextButtonClickCheckPrereq(CurPageID)
-end;
-
-function ShouldSkipPage(PageID: Integer): Boolean;
-begin
-    if (PageID = wpSelectDir) and (not IsPortable()) and (IsAlreadyInstalled()) then
-        Result := true
-    else
-        Result := false
-    ;
-end;
-
-function InitializeSetup(): boolean;
+function InitializeSetup(): Boolean;
 begin
 	InitializeSetupDeps();
 	Result := true;
@@ -165,14 +144,33 @@ end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
-  mRes : integer;
+    response: Integer;
 begin
-  case CurUninstallStep of
-    usUninstall:
-      begin
-        mRes := MsgBox('Remove preferences too?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
-        if mRes = IDYES then
-          DelTree(ConfigDirAuto(''), True, True, True);
-      end;
-  end;
+    case CurUninstallStep of
+        usUninstall:
+            begin
+                response := MsgBox('Remove preferences too?', mbConfirmation, MB_YESNO or MB_DEFBUTTON2)
+                if response = IDYES then
+                    DelTree(ConfigDirAuto(''), True, True, True);
+            end;
+    end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+    Result := true;
+
+    if CurPageID = pInstallationTypePage.ID then
+        RestoreInstallDirAuto()
+    else
+        Result := NextButtonClickCheckPrereq(CurPageID)
+end;
+
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+    if (PageID = wpSelectDir) and (not IsPortable()) and IsAlreadyInstalled() then
+        Result := true
+    else
+        Result := false
+    ;
 end;
