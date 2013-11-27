@@ -25,7 +25,6 @@ var
     removableDrivePaths: array of String;
 
 // Function to convert disk type to a recognizable string.
-
 function DriveTypeString( driveType: Integer ): String;
 begin
     case driveType of
@@ -42,7 +41,6 @@ end;
 
 // NOTE: This function will not work on Windows 8+ because USB flash drives are no longer reported as "removable".
 // See http://kb.sandisk.com/app/answers/detail/a_id/12830
-
 function GetFirstRemovableDrive(): String;
 var
     // List of all drives and their types (for debugging purposes).
