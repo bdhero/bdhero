@@ -1,5 +1,6 @@
 # Adapted from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+*.bak
 *.backup
 Artifacts
 
