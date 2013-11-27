@@ -37,31 +37,31 @@
 
         <!-- Chapter Grabber -->
         <ChapterGrabberSourceDirLocal>$(SolutionDir)Plugins\ChapterGrabberPlugin\bin\$(ConfigurationName)</ChapterGrabberSourceDirLocal>
-        <ChapterGrabberSourceDirAppVeyor>$(SolutionDir)Plugins\ChapterGrabberPlugin\bin\$(ConfigurationName)</ChapterGrabberSourceDirAppVeyor>
+        <ChapterGrabberSourceDirAppVeyor>$(AppVeyorRootTargetDir)\ChapterGrabberPlugin</ChapterGrabberSourceDirAppVeyor>
         <ChapterGrabberSourceDir Condition="Exists('$(ChapterGrabberSourceDirLocal)')">$(ChapterGrabberSourceDirLocal)</ChapterGrabberSourceDir>
         <ChapterGrabberSourceDir Condition="Exists('$(ChapterGrabberSourceDirAppVeyor)')">$(ChapterGrabberSourceDirAppVeyor)</ChapterGrabberSourceDir>
 
         <!-- ISAN -->
         <IsanSourceDirLocal>$(SolutionDir)Plugins\IsanPlugin\bin\$(ConfigurationName)</IsanSourceDirLocal>
-        <IsanSourceDirAppVeyor>$(SolutionDir)Plugins\IsanPlugin\bin\$(ConfigurationName)</IsanSourceDirAppVeyor>
+        <IsanSourceDirAppVeyor>$(AppVeyorRootTargetDir)\IsanPlugin</IsanSourceDirAppVeyor>
         <IsanSourceDir Condition="Exists('$(IsanSourceDirLocal)')">$(IsanSourceDirLocal)</IsanSourceDir>
         <IsanSourceDir Condition="Exists('$(IsanSourceDirAppVeyor)')">$(IsanSourceDirAppVeyor)</IsanSourceDir>
 
         <!-- Auto Detector -->
         <AutoDetectorSourceDirLocal>$(SolutionDir)Plugins\AutoDetectorPlugin\bin\$(ConfigurationName)</AutoDetectorSourceDirLocal>
-        <AutoDetectorSourceDirAppVeyor>$(SolutionDir)Plugins\AutoDetectorPlugin\bin\$(ConfigurationName)</AutoDetectorSourceDirAppVeyor>
+        <AutoDetectorSourceDirAppVeyor>$(AppVeyorRootTargetDir)\AutoDetectorPlugin</AutoDetectorSourceDirAppVeyor>
         <AutoDetectorSourceDir Condition="Exists('$(AutoDetectorSourceDirLocal)')">$(AutoDetectorSourceDirLocal)</AutoDetectorSourceDir>
         <AutoDetectorSourceDir Condition="Exists('$(AutoDetectorSourceDirAppVeyor)')">$(AutoDetectorSourceDirAppVeyor)</AutoDetectorSourceDir>
 
         <!-- File Namer -->
         <FileNamerSourceDirLocal>$(SolutionDir)Plugins\FileNamerPlugin\bin\$(ConfigurationName)</FileNamerSourceDirLocal>
-        <FileNamerSourceDirAppVeyor>$(SolutionDir)Plugins\FileNamerPlugin\bin\$(ConfigurationName)</FileNamerSourceDirAppVeyor>
+        <FileNamerSourceDirAppVeyor>$(AppVeyorRootTargetDir)\FileNamerPlugin</FileNamerSourceDirAppVeyor>
         <FileNamerSourceDir Condition="Exists('$(FileNamerSourceDirLocal)')">$(FileNamerSourceDirLocal)</FileNamerSourceDir>
         <FileNamerSourceDir Condition="Exists('$(FileNamerSourceDirAppVeyor)')">$(FileNamerSourceDirAppVeyor)</FileNamerSourceDir>
 
         <!-- FFmpeg -->
         <FFmpegSourceDirLocal>$(SolutionDir)Plugins\FFmpegMuxerPlugin\bin\$(ConfigurationName)</FFmpegSourceDirLocal>
-        <FFmpegSourceDirAppVeyor>$(SolutionDir)Plugins\FFmpegMuxerPlugin\bin\$(ConfigurationName)</FFmpegSourceDirAppVeyor>
+        <FFmpegSourceDirAppVeyor>$(AppVeyorRootTargetDir)\FFmpegMuxerPlugin</FFmpegSourceDirAppVeyor>
         <FFmpegSourceDir Condition="Exists('$(FFmpegSourceDirLocal)')">$(FFmpegSourceDirLocal)</FFmpegSourceDir>
         <FFmpegSourceDir Condition="Exists('$(FFmpegSourceDirAppVeyor)')">$(FFmpegSourceDirAppVeyor)</FFmpegSourceDir>
     </PropertyGroup>
@@ -99,6 +99,8 @@
         <Message Importance="high" Text="ConfigFiles->PortableConfigDir = @(ConfigFiles->'$(PortableConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
         <Message Importance="high" Text="ConfigFiles->InstallerConfigDir = @(ConfigFiles->'$(InstallerConfigDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
 
+        <Message Importance="high" Text="DiscReaderSourceDirLocal = $(DiscReaderSourceDirLocal)" />
+        <Message Importance="high" Text="DiscReaderSourceDirAppVeyor = $(DiscReaderSourceDirAppVeyor)" />
         <Message Importance="high" Text="DiscReaderSourceDir = $(DiscReaderSourceDir)" />
 
         <!--
