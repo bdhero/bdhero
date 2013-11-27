@@ -1,11 +1,5 @@
 [Code]
-// http://www.vincenzo.net/isxkb/index.php?title=Ask_for_a_drive_to_install
-
-var
-	// combo box for drives
-	cbDrive : TComboBox ;
-	// array of strings that stores the drive letters
-	DrvLetters: array of String;
+// Adapted from http://www.vincenzo.net/isxkb/index.php?title=Ask_for_a_drive_to_install
 
 function GetDriveType( lpDisk: String ): Integer;
 external 'GetDriveTypeW@kernel32.dll stdcall';
@@ -14,94 +8,108 @@ function GetLogicalDriveStrings( nLenDrives: LongInt; lpDrives: String ): Intege
 external 'GetLogicalDriveStringsW@kernel32.dll stdcall';
 
 const
-  DRIVE_UNKNOWN = 0;     // The drive type cannot be determined.
-  DRIVE_NO_ROOT_DIR = 1; // The root path is invalid. For example, no volume is mounted at the path.
-  DRIVE_REMOVABLE = 2;   // The disk can be removed from the drive.
-  DRIVE_FIXED = 3;       // The disk cannot be removed from the drive.
-  DRIVE_REMOTE = 4;      // The drive is a remote (network) drive.
-  DRIVE_CDROM = 5;       // The drive is a CD-ROM drive.
-  DRIVE_RAMDISK = 6;     // The drive is a RAM disk.
+    DRIVE_UNKNOWN     = 0; // The drive type cannot be determined.
+    DRIVE_NO_ROOT_DIR = 1; // The root path is invalid. For example, no volume is mounted at the path.
+    DRIVE_REMOVABLE   = 2; // The disk can be removed from the drive.
+    DRIVE_FIXED       = 3; // The disk cannot be removed from the drive.
+    DRIVE_REMOTE      = 4; // The drive is a remote (network) drive.
+    DRIVE_CDROM       = 5; // The drive is a CD-ROM drive.
+    DRIVE_RAMDISK     = 6; // The drive is a RAM disk.
 
+var
+    // Combo box for drives
+    driveComboBox : TComboBox;
 
-// function to convert disk type to a regonizable string. This piece needs translation
-// to other languages
-function DriveTypeString( dtype: Integer ): String ;
+    // Array of removable drive paths.
+    // E.G.: [ "E:\", "F:\" ]
+    removableDrivePaths: array of String;
+
+// Function to convert disk type to a recognizable string.
+function DriveTypeString( driveType: Integer ): String;
 begin
-  case dtype of
-    DRIVE_NO_ROOT_DIR : Result := 'Root path invalid';
-    DRIVE_REMOVABLE : Result := 'Removable';
-    DRIVE_FIXED : Result := 'Fixed';
-    DRIVE_REMOTE : Result := 'Network';
-    DRIVE_CDROM : Result := 'CD-ROM';
-    DRIVE_RAMDISK : Result := 'Ram disk';
-  else
-    Result := 'Unknown';
-  end;
+    case driveType of
+        DRIVE_NO_ROOT_DIR : Result := 'Root path invalid';
+        DRIVE_REMOVABLE   : Result := 'Removable';
+        DRIVE_FIXED       : Result := 'Fixed';
+        DRIVE_REMOTE      : Result := 'Network';
+        DRIVE_CDROM       : Result := 'CD-ROM';
+        DRIVE_RAMDISK     : Result := 'RAM disk';
+    else
+        Result := 'Unknown';
+    end;
 end;
 
-function GetFirstRemovableDrive() : String;
+function GetFirstRemovableDrive(): String;
 var
-  n: Integer;
-  drivesletters: String; lenletters: Integer;
-  drive: String;
-  disktype, posnull: Integer;
-  sd: String;
-  allDrives: String;
-  
+    // List of all drives and their types (for debugging purposes).
+    // E.G.:
+    //     C:\ = Fixed
+    //     D:\ = CD-ROM
+    //     E:\ = Fixed
+    driveTypeList: String;
+
+    // E.G.: "C:\"
+    systemDrivePath: String;
+
+    // String buffer containing a series of null-terminated strings,
+    // one for each valid drive in the system, plus an additional null character.
+    // E.G.: "C:\\0D:\\0E:\\0\\0" -> [ "C:\", "D:\", "E:\" ]
+    driveStringsBuf: String;
+    driveStringsLen: Integer;
+
+    idx: Integer;
+
+    curNullPos: Integer;
+
+    // E.G.: "C:\"
+    curDrivePath: String;
+    curDriveType: Integer;
+
 begin
-  //get the system drive
-  sd := UpperCase(ExpandConstant('{sd}'));
+    driveTypeList := '';
 
-  //get all drive letters of the system
-  drivesletters := StringOfChar( ' ', 64 );
-  lenletters := GetLogicalDriveStrings( 63, drivesletters );
-  SetLength( drivesletters , lenletters );
+    // Get the system drive
+    systemDrivePath := UpperCase(ExpandConstant('{sd}')) + '\';
 
-  drive := '';
-  n := 0;
-  
-  allDrives := '';
+    // Get all drive letters
+    driveStringsBuf := StringOfChar( ' ', 64 );
+    driveStringsLen := GetLogicalDriveStrings( 63, driveStringsBuf );
+    SetLength( driveStringsBuf , driveStringsLen );
 
-  while ( (Length(drivesletters) > 0) ) do
-  begin
-    posnull := Pos( #0, drivesletters );
-  	if posnull > 0 then
-  	begin
-      drive := UpperCase( Copy( drivesletters, 1, posnull - 1 ) );
+    idx := 0;
 
-      // get number type of disk
-      disktype := GetDriveType( drive );
+    while ( (Length(driveStringsBuf) > 0) ) do
+    begin
+        curNullPos := Pos( #0, driveStringsBuf );
 
-      // you can add various types of checks here to limit the types of drives that
-      // are displayed to the user. in this example we add a drive only if is not a
-      // removable drive (ie floppy, USB key, etc). you may add whatever limitations
-      // you need in the next IF statement
-      if ( disktype = DRIVE_REMOVABLE ) then
-      begin
-        SetArrayLength(DrvLetters, n + 1);
-        DrvLetters[n] := drive;
+        if curNullPos > 0 then
+        begin
+            curDrivePath := UpperCase( Copy( driveStringsBuf, 1, curNullPos - 1 ) );
+            curDriveType := GetDriveType( curDrivePath );
 
-        // default select C: Drive (not very wise since the users system drive may not be C: or they
-        // may not even have a C: drive
-        //if ( Copy(drive,1,2) = 'C:' ) then cbDrive.ItemIndex := n;
-        // instead default it to the users system drive
-        //if ( Copy(drive,1,2) = sd ) then cbDrive.ItemIndex := n;
-        
-        n := n + 1;
-      end;
+            if ( curDriveType = DRIVE_REMOVABLE ) then
+            begin
+                SetArrayLength(removableDrivePaths, idx + 1);
+                removableDrivePaths[idx] := curDrivePath;
+
+                // Default combobox selection to the user's system drive
+                //if ( curDrivePath = systemDrivePath ) then driveComboBox.ItemIndex := idx;
+
+                idx := idx + 1;
+            end;
+
+            driveTypeList := driveTypeList + curDrivePath + ' = ' + DriveTypeString(curDriveType) + #13;
+
+            driveStringsBuf := Copy(driveStringsBuf, curNullPos + 1, Length(driveStringsBuf));
+        end;
+    end;
 
 #ifdef DebugMode
-      allDrives := allDrives + drive + ' = ' + DriveTypeString(disktype) + #13;
+    MsgBox(driveTypeList, mbInformation, MB_OK);
 #endif
-      
-  	  drivesletters := Copy(drivesletters, posnull + 1, Length(drivesletters));
-  	end;
-  end;
-  
-  MsgBox(allDrives, mbInformation, MB_OK);
 
-  if ( n > 0 ) then
-    Result := DrvLetters[n - 1]
-  else
-    Result := sd + '\'
+    if ( idx > 0 ) then
+        Result := removableDrivePaths[idx - 1]
+    else
+        Result := systemDrivePath
 end;
