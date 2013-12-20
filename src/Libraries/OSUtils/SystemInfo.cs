@@ -134,6 +134,7 @@ namespace OSUtils
                                         CreateNoWindow = true,
                                         WindowStyle = ProcessWindowStyle.Hidden,
                                     };
+                process.Start();
                 var output = process.StandardOutput.ReadToEnd();
                 var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
                 return match.Success ? ulong.Parse(match.Groups[propName].Value) : 0;
@@ -158,7 +159,7 @@ namespace OSUtils
 
         private static ulong GetAvailableMemoryOSX()
         {
-            return GetMemoryOSX(MemPropOSX.Free);
+            return GetTotalPhysicalMemoryOSX() - GetMemoryOSX(MemPropOSX.Used);
         }
 
         /// <summary>
