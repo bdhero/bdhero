@@ -17,11 +17,13 @@ namespace DotNetUtils.Extensions
         /// <param name="listView"></param>
         public static void AutoSizeColumns(this ListView listView)
         {
+#if !__MonoCS__
             listView.SuspendDrawing();
 
             listView.Columns.OfType<ColumnHeader>().ForEach(header => header.AutoResize());
 
             listView.ResumeDrawing();
+#endif
         }
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace DotNetUtils.Extensions
         /// <param name="listView"></param>
         public static void AutoSizeLastColumn(this ListView listView)
         {
+#if !__MonoCS__
             listView.SuspendDrawing();
 
             var columnHeaders = listView.Columns.OfType<ColumnHeader>().ToArray();
@@ -42,6 +45,7 @@ namespace DotNetUtils.Extensions
             }
 
             listView.ResumeDrawing();
+#endif
         }
 
         /// <summary>

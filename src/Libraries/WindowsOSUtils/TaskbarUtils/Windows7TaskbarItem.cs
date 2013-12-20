@@ -54,7 +54,9 @@ namespace WindowsOSUtils.TaskbarUtils
 
         public ITaskbarItem SetOverlayIcon(Icon icon, string accessibilityText)
         {
+#if !__MonoCS__
             _taskbarManager.SetOverlayIcon(_windowHandle, icon, accessibilityText);
+#endif
             return this;
         }
 
@@ -85,10 +87,12 @@ namespace WindowsOSUtils.TaskbarUtils
 
         public ITaskbarItem SetProgress(double percent)
         {
+#if !__MonoCS__
             var currentValue = (int) (percent * Multiplier);
             var maximumValue = (int) (MaxValue * Multiplier);
             _taskbarManager.SetProgressValue(currentValue, maximumValue, _windowHandle);
             _progress = percent;
+#endif
             return this;
         }
 
@@ -99,7 +103,9 @@ namespace WindowsOSUtils.TaskbarUtils
 
         private ITaskbarItem SetProgressState(TaskbarProgressBarState state)
         {
+#if !__MonoCS__
             _taskbarManager.SetProgressState(state, _windowHandle);
+#endif
             return this;
         }
     }
