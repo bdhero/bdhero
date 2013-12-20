@@ -63,7 +63,7 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonOk.Location = new System.Drawing.Point(380, 304);
+            this.buttonOk.Location = new System.Drawing.Point(497, 326);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 0;
@@ -92,7 +92,7 @@
             this.labelCopyright.Location = new System.Drawing.Point(146, 71);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.ReadOnly = true;
-            this.labelCopyright.Size = new System.Drawing.Size(309, 13);
+            this.labelCopyright.Size = new System.Drawing.Size(426, 13);
             this.labelCopyright.TabIndex = 4;
             this.labelCopyright.Text = "Copyright";
             // 
@@ -104,7 +104,7 @@
             this.labelBuildDate.Location = new System.Drawing.Point(146, 51);
             this.labelBuildDate.Name = "labelBuildDate";
             this.labelBuildDate.ReadOnly = true;
-            this.labelBuildDate.Size = new System.Drawing.Size(309, 13);
+            this.labelBuildDate.Size = new System.Drawing.Size(426, 13);
             this.labelBuildDate.TabIndex = 3;
             this.labelBuildDate.Text = "Build Date";
             // 
@@ -116,7 +116,7 @@
             this.labelVersion.Location = new System.Drawing.Point(146, 31);
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.ReadOnly = true;
-            this.labelVersion.Size = new System.Drawing.Size(309, 13);
+            this.labelVersion.Size = new System.Drawing.Size(426, 13);
             this.labelVersion.TabIndex = 2;
             this.labelVersion.Text = "Version";
             // 
@@ -128,7 +128,7 @@
             this.labelProductName.Location = new System.Drawing.Point(146, 12);
             this.labelProductName.Name = "labelProductName";
             this.labelProductName.ReadOnly = true;
-            this.labelProductName.Size = new System.Drawing.Size(309, 13);
+            this.labelProductName.Size = new System.Drawing.Size(426, 13);
             this.labelProductName.TabIndex = 1;
             this.labelProductName.Text = "Product Name";
             // 
@@ -142,7 +142,7 @@
             this.textBoxSystemInfo.Multiline = true;
             this.textBoxSystemInfo.Name = "textBoxSystemInfo";
             this.textBoxSystemInfo.ReadOnly = true;
-            this.textBoxSystemInfo.Size = new System.Drawing.Size(309, 168);
+            this.textBoxSystemInfo.Size = new System.Drawing.Size(426, 190);
             this.textBoxSystemInfo.TabIndex = 8;
             // 
             // AboutBox
@@ -151,7 +151,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonOk;
-            this.ClientSize = new System.Drawing.Size(467, 339);
+            this.ClientSize = new System.Drawing.Size(584, 361);
             this.Controls.Add(this.textBoxSystemInfo);
             this.Controls.Add(this.linkLabelSourceCode);
             this.Controls.Add(this.buttonOk);
@@ -161,13 +161,14 @@
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelProductName);
             this.Controls.Add(this.pictureBoxLogo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(400, 250);
             this.Name = "AboutBox";
             this.Padding = new System.Windows.Forms.Padding(9);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
             this.Load += new System.EventHandler(this.AboutBox_Load);
