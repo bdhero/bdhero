@@ -34,25 +34,23 @@ namespace BDHeroGUI.Components
             InitTextAndIcon(iconVISAN, textBoxVISAN, GetIsanText(raw.V_ISAN));
             InitTextAndIcon(iconAllBdmtTitles, textBoxAllBdmtTitles, GetBdmtTitles(raw.AllBdmtTitles));
 
-            InitTextAndIcon(iconVolumeLabel, textBoxVolumeLabel, der.VolumeLabel);
-            InitTextAndIcon(iconVolumeLabelSanitized, textBoxVolumeLabelSanitized, der.VolumeLabelSanitized);
-            InitTextAndIcon(iconDboxTitleSanitized, textBoxDboxTitleSanitized, der.DboxTitleSanitized);
-            InitTextAndIcon(iconIsan, textBoxIsan, GetIsanText(raw.ISAN));
-            InitTextAndIcon(iconValidBdmtTitles, textBoxValidBdmtTitles, GetBdmtTitles(der.ValidBdmtTitles));
+            InitText(textBoxVolumeLabelSanitized, der.VolumeLabelSanitized);
+            InitText(textBoxDboxTitleSanitized, der.DboxTitleSanitized);
+            InitText(textBoxIsan, GetIsanText(raw.ISAN));
+            InitText(textBoxValidBdmtTitles, GetBdmtTitles(der.ValidBdmtTitles));
 
             // buttons
 
-            InitButton(buttonHardwareVolumeLabel, fs.Directories.Root);
-            InitButton(buttonAnyDVDDiscInf, fs.Files.AnyDVDDiscInf);
-            InitButton(buttonDboxTitle, fs.Files.Dbox);
-            InitButton(buttonVISAN, fs.Files.MCMF);
-            InitButton(buttonAllBdmtTitles, fs.Directories.BDMT);
-
-            InitButton(buttonVolumeLabel, fs.Directories.Root);
             InitButton(buttonVolumeLabelSanitized, fs.Directories.Root);
             InitButton(buttonDboxTitleSanitized, fs.Files.Dbox);
             InitButton(buttonIsan, fs.Files.MCMF);
             InitButton(buttonValidBdmtTitles, fs.Directories.BDMT);
+        }
+
+        private static void InitText(TextBox textBox, string text)
+        {
+            var hasText = !string.IsNullOrWhiteSpace(text);
+            textBox.Text = hasText ? text : NotFound;
         }
 
         private static void InitTextAndIcon(PictureBox icon, TextBox textBox, string text)
@@ -107,7 +105,9 @@ namespace BDHeroGUI.Components
             var lines = new List<string>();
 
             lines.Add(isan.IsSearchable ? "Valid:" : "Invalid:");
+            lines.Add("");
             lines.Add(isan.NumberFormatted);
+            lines.Add("");
             if (!string.IsNullOrWhiteSpace(isan.Title))
                 lines.Add(string.Format("{0} ({1} - {2} min)", isan.Title, isan.Year, isan.LengthMin));
             else

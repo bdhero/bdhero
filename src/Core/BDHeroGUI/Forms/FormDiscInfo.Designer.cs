@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.labelQuickSummary = new System.Windows.Forms.Label();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.labelQuickSummary = new DotNetUtils.Controls.SelectableLabel();
             this.discInfoMetadataPanel = new BDHeroGUI.Components.DiscInfoMetadataPanel();
             this.discInfoFeaturesPanel = new BDHeroGUI.Components.DiscInfoFeaturesPanel();
             this.SuspendLayout();
@@ -44,15 +44,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "BD-ROM:";
             // 
-            // labelQuickSummary
-            // 
-            this.labelQuickSummary.AutoSize = true;
-            this.labelQuickSummary.Location = new System.Drawing.Point(73, 13);
-            this.labelQuickSummary.Name = "labelQuickSummary";
-            this.labelQuickSummary.Size = new System.Drawing.Size(110, 13);
-            this.labelQuickSummary.TabIndex = 1;
-            this.labelQuickSummary.Text = "VOLUME_LABEL D:\\";
-            // 
             // buttonClose
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -60,10 +51,21 @@
             this.buttonClose.Location = new System.Drawing.Point(1030, 444);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 23);
-            this.buttonClose.TabIndex = 3;
+            this.buttonClose.TabIndex = 2;
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            // 
+            // labelQuickSummary
+            // 
+            this.labelQuickSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelQuickSummary.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelQuickSummary.Location = new System.Drawing.Point(72, 13);
+            this.labelQuickSummary.Name = "labelQuickSummary";
+            this.labelQuickSummary.ReadOnly = true;
+            this.labelQuickSummary.Size = new System.Drawing.Size(1033, 13);
+            this.labelQuickSummary.TabIndex = 0;
             // 
             // discInfoMetadataPanel
             // 
@@ -73,7 +75,7 @@
             this.discInfoMetadataPanel.Location = new System.Drawing.Point(152, 44);
             this.discInfoMetadataPanel.Name = "discInfoMetadataPanel";
             this.discInfoMetadataPanel.Size = new System.Drawing.Size(953, 394);
-            this.discInfoMetadataPanel.TabIndex = 0;
+            this.discInfoMetadataPanel.TabIndex = 1;
             // 
             // discInfoFeaturesPanel
             // 
@@ -89,10 +91,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonClose;
             this.ClientSize = new System.Drawing.Size(1117, 479);
+            this.Controls.Add(this.labelQuickSummary);
             this.Controls.Add(this.discInfoMetadataPanel);
             this.Controls.Add(this.discInfoFeaturesPanel);
             this.Controls.Add(this.buttonClose);
-            this.Controls.Add(this.labelQuickSummary);
             this.Controls.Add(this.label1);
             this.Name = "FormDiscInfo";
             this.ShowIcon = false;
@@ -107,9 +109,9 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label labelQuickSummary;
         private Components.DiscInfoMetadataPanel discInfoMetadataPanel;
         private System.Windows.Forms.Button buttonClose;
         private Components.DiscInfoFeaturesPanel discInfoFeaturesPanel;
+        private DotNetUtils.Controls.SelectableLabel labelQuickSummary;
     }
 }
