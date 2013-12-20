@@ -32,7 +32,9 @@ Bugs
 Features
 ========
 
-[ ] Highlight placeholders in textbox?  (if it's even possible in winforms...)
+[ ] Retry TMDb search w/ next best metadata if no results come back (e.g., first try bdmt_xxx.xml value, then ISAN value, then D-BOX, then volume label)
+[ ] Revamp "Disc Info" dialog
+[ ] Add "Disc Info" icons to main form
 [ ] Context menu for Playlist listitems: add "Language" option
 
 [ ] Add "use last folder" option to File Namer preference dialog
@@ -45,10 +47,18 @@ Features
     [ ] Re-configure playlist (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
     [ ] Re-configure tracks (change Cut, Language, selected tracks) -- (for updating output file name, MKV title, track title)
 
+Mono
+====
+
+1. Use Mono build of Ninject.dll
+2. Newtonsoft.Json.dll not getting copied to BDHeroGUI/bin/Debug
+3. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
+
 Backlog
 =======
 
 [ ] Don't erase the user's custom chapter titles when they re-select "Default"
+[ ] Add "Always show details" checkbox in error dialog
 [ ] Add stream files listview?
 
 [ ] Context menu and double click to play for playlists
