@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 
@@ -113,12 +114,51 @@ namespace OSUtils
             return OSType.Unix;
         }
 
+        private enum MemPropOSX
+        {
+            Total, Used, Free
+        }
+
+        private static ulong GetMemoryOSX(MemPropOSX prop)
+        {
+            var propName = prop == MemPropOSX.Free ? "physmem" :
+                           prop == MemPropOSX.Used ? "usermem" :
+                                                     "memsize";
+            using (var process = new Process())
+            {
+                process.StartInfo = new ProcessStartInfo("sysctl", "-a")
+                                    {
+                                        UseShellExecute = false,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardError = true,
+                                        CreateNoWindow = true,
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                    };
+                var output = process.StandardOutput.ReadToEnd();
+                var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
+                return match.Success ? ulong.Parse(match.Groups[propName].Value) : 0;
+            }
+        }
+
         private static ulong GetAvailableMemory()
+        {
+            ulong free = 0;
+            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } } catch {}
+            try { free = GetAvailableMemoryOSX(); if (free > 0) { return free; } } catch {}
+            return free;
+        }
+
+        private static ulong GetAvailableMemoryWin()
         {
             using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
             {
                 return (ulong) counter.NextValue();
             }
+        }
+
+        private static ulong GetAvailableMemoryOSX()
+        {
+            return GetMemoryOSX(MemPropOSX.Free);
         }
 
         /// <summary>
@@ -129,9 +169,11 @@ namespace OSUtils
         /// <see cref="http://stackoverflow.com/a/105109"/>
         private static ulong GetTotalPhysicalMemory()
         {
-            try { return GetTotalPhysicalMemoryWin(); } catch {}
-            try { return GetTotalPhysicalMemoryNix(); } catch {}
-            return 0;
+            ulong total = 0;
+            try { total = GetTotalPhysicalMemoryWin(); if (total > 0) { return total; } } catch {}
+            try { total = GetTotalPhysicalMemoryNix(); if (total > 0) { return total; } } catch {}
+            try { total = GetTotalPhysicalMemoryOSX(); if (total > 0) { return total; } } catch {}
+            return total;
         }
 
         /// <summary>
@@ -151,6 +193,15 @@ namespace OSUtils
         private static ulong GetTotalPhysicalMemoryNix()
         {
             return (ulong) new PerformanceCounter("Mono Memory", "Total Physical Memory").NextValue();
+        }
+
+        /// <summary>
+        /// On Mac OS X, gets the total amount of installed physical memory.
+        /// </summary>
+        /// <returns>The total amount of installed physical memory on the system.</returns>
+        private static ulong GetTotalPhysicalMemoryOSX()
+        {
+            return GetMemoryOSX(MemPropOSX.Total);
         }
 
         /// <summary>
