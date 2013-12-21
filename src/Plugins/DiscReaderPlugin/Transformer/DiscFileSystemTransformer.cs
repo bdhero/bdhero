@@ -34,7 +34,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
                         {
                             AnyDVDDiscInf = GetFile("disc.inf", bdrom.DirectoryRoot),
                             MCMF = null, /* assigned below */
-                            BDMT = null, /* assigned below */
+                            BDMT = new FileInfo[0], /* assigned below */
                             DBox = GetFile("FilmIndex.xml", bdrom.DirectoryRoot)
                         }
                 };
