@@ -32,6 +32,7 @@ Bugs
 Features
 ========
 
+[ ] CTRL + N to open new window (separate instance in a separate process)
 [ ] Retry TMDb search w/ next best metadata if no results come back (e.g., first try bdmt_xxx.xml value, then ISAN value, then D-BOX, then volume label)
 [ ] Revamp "Disc Info" dialog
 [ ] Add "Disc Info" icons to main form
@@ -56,6 +57,14 @@ Mono
 
 Backlog
 =======
+
+[ ] Investigate 3D scanning output from BDInfo:
+    4352    2043000 5.32
+    4352    1911000 4.98
+    4352    2061000 5.37
+    4352    2034000 5.30
+    4352    2112000 5.50
+    4352    2157000 5.62
 
 [ ] Don't erase the user's custom chapter titles when they re-select "Default"
 [ ] Add "Always show details" checkbox in error dialog
