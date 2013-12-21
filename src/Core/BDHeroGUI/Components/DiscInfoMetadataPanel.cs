@@ -73,23 +73,25 @@ namespace BDHeroGUI.Components
             var menu = new ContextMenuStrip();
 
             menu.Items.Add(new ToolStripMenuItem(path) { Enabled = false });
-            menu.Items.Add("-");
-            menu.Items.Add(new ToolStripMenuItem("&Copy path to clipboard", Resources.copy,
-                                                 (sender, args) => Clipboard.SetText(path)));
-            menu.Items.Add("-");
+//            menu.Items.Add("-");
 
             if (info is FileInfo)
             {
+                // TODO: Add default program association icon and name
                 menu.Items.Add(new ToolStripMenuItem("&Open with default program", null,
                                                      (sender, args) => FileUtils.OpenFile(path)));
-                menu.Items.Add(new ToolStripMenuItem("Show in &Explorer", Resources.folder_open,
+                menu.Items.Add(new ToolStripMenuItem("&Show in Explorer", Resources.folder_open,
                                                      (sender, args) => FileUtils.ShowInFolder(path)));
             }
             else if (info is DirectoryInfo)
             {
-                menu.Items.Add(new ToolStripMenuItem("&Explore", Resources.folder_open,
+                menu.Items.Add(new ToolStripMenuItem("&Show in Explorer", Resources.folder_open,
                                                      (sender, args) => FileUtils.OpenFolder(path)));
             }
+
+//            menu.Items.Add("-");
+            menu.Items.Add(new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow,
+                                                 (sender, args) => Clipboard.SetText(path)));
 
             button.Click += delegate
                 {
