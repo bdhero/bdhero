@@ -143,13 +143,15 @@ namespace BDHeroGUI.Components
         {
             var menu = new ContextMenuStrip();
 
-            var playItem = new ToolStripMenuItem("&Play", Resources.play_blue);
+            var hasProgram = FileUtils.HasExplicitProgramAssociation(playlist.FullPath);
+
+            var playItem = new ToolStripMenuItem(hasProgram ? "&Play" : "&Play..." /* , Resources.play_blue */);
             playItem.Click += (o, eventArgs) => FileUtils.OpenFile(playlist.FullPath);
             playItem.Font = new Font(playItem.Font, FontStyle.Bold);
-            if (FileUtils.HasProgramAssociation(playlist.FullPath))
+            if (hasProgram)
                 playItem.Image = FileUtils.GetDefaultProgramIconAsBitmap(playlist.FullPath, new Size(16, 16));
 
-            var copyPathItem = new ToolStripMenuItem("&Copy path to clipboard", Resources.copy);
+            var copyPathItem = new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow);
             copyPathItem.Click += (o, eventArgs) => Clipboard.SetText(playlist.FullPath);
 
             var showFileItem = new ToolStripMenuItem("Show in &folder", Resources.folder_open);

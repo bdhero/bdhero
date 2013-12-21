@@ -400,9 +400,13 @@ namespace DotNetUtils.FS
             return dir.GetFiles().Length == 0 && dir.GetDirectories().Length == 0;
         }
 
+        /// <summary>
+        ///     Opens the given file in its default program as if the user had double-clicked on it in Windows Explorer.
+        /// </summary>
+        /// <param name="filePath">Relative or absolute path to a file to open</param>
         public static void OpenFile(string filePath)
         {
-            if (HasProgramAssociation(filePath))
+            if (HasImplicitProgramAssociation(filePath))
                 Process.Start(filePath);
         }
 
@@ -433,24 +437,72 @@ namespace DotNetUtils.FS
 
         public static string GetDefaultProgram(string filePath)
         {
-            string exePath = null;
-            if (Path.HasExtension(filePath))
+            if (!Path.HasExtension(filePath))
             {
-                try
-                {
-                    var defaultProgram = FileExtentionInfo(AssocStr.Executable, Path.GetExtension(filePath));
-                    exePath = !string.IsNullOrEmpty(defaultProgram) && File.Exists(defaultProgram) ? defaultProgram : null;
-                }
-                catch
-                {
-                }
+                return null;
             }
+
+            string exePath = null;
+
+            try
+            {
+                var defaultExePath = FileExtentionInfo(AssocStr.Executable, Path.GetExtension(filePath));
+
+                if (string.IsNullOrEmpty(defaultExePath))
+                    return null;
+
+                if (!File.Exists(defaultExePath))
+                    return null;
+
+                exePath = defaultExePath;
+            }
+            catch
+            {
+            }
+
             return exePath;
         }
 
-        public static bool HasProgramAssociation(string filePath)
+        /// <summary>
+        ///     Determines if it is possible to open the given file programmatically (as if the user had double-clicked
+        ///     on it in Windows Explorer).
+        /// </summary>
+        /// <param name="filePath">Relative or absolute path to a file</param>
+        /// <returns>
+        ///     <c>true</c> if the given file can be opened via <see cref="Process.Start()"/>; otherwise <c>false</c>.
+        /// </returns>
+        public static bool HasImplicitProgramAssociation(string filePath)
         {
-            return !string.IsNullOrEmpty(GetDefaultProgram(filePath));
+            var exePath = GetDefaultProgram(filePath);
+            var exeName = Path.GetFileName(exePath);
+
+            if (string.IsNullOrEmpty(exePath))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Determines if the given file type has a program explicitly associated with it in the Windows registry.
+        /// </summary>
+        /// <param name="filePath">Relative or absolute path to a file</param>
+        /// <returns>
+        ///     <c>true</c> if the given file has a program associated with it; otherwise <c>false</c>.
+        /// </returns>
+        public static bool HasExplicitProgramAssociation(string filePath)
+        {
+            var exePath = GetDefaultProgram(filePath);
+            var exeName = Path.GetFileName(exePath);
+
+            if (string.IsNullOrEmpty(exePath))
+                return false;
+
+            // In Windows 8 (and possibly earlier), file types that don't have an explicit program association
+            // are implicitly associated with C:\Windows\System32\OpenWith.exe.
+            if ("OpenWith.exe".Equals(exeName, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
         }
 
         [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
