@@ -289,16 +289,6 @@ namespace BDHero.BDROM
         [JsonProperty(PropertyName = "parent")]
         public IsanJson Parent;
 
-        public Isan ToVIsan()
-        {
-            var vIsan = VIsan.TryParse(Number);
-            if (vIsan != null)
-            {
-                Populate(vIsan);
-            }
-            return vIsan;
-        }
-
         public void Populate([NotNull] VIsan vIsan)
         {
             vIsan.Parent = Parent != null ? Parent.ToIsan() : null;
