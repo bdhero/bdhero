@@ -286,6 +286,7 @@ namespace BDHero.BDROM
 
     public class VIsanJson : IsanJson
     {
+        [JsonProperty(PropertyName = "parent")]
         public IsanJson Parent;
 
         public Isan ToVIsan()
