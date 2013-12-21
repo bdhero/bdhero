@@ -4,11 +4,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using BDHero.BDROM;
 using BDHero.JobQueue;
 using BDHero.Plugin;
+using DotNetUtils.Annotations;
+using Newtonsoft.Json;
 
 namespace IsanPlugin
 {
+    [UsedImplicitly]
     public class IsanPlugin : IMetadataProviderPlugin
     {
         public IPluginHost Host { get; private set; }
@@ -40,6 +44,24 @@ namespace IsanPlugin
             var derived = job.Disc.Metadata.Derived;
 
             var token = new ProgressToken(Host, this, cancellationToken);
+            var prefs = PluginUtils.GetPreferences(AssemblyInfo, () => new IsanPreferences());
+
+            if (raw.V_ISAN != null && prefs.TryPopulate(raw.V_ISAN))
+            {
+                return;
+            }
+
+            Lookup(token, raw, derived);
+
+            if (raw.V_ISAN != null)
+            {
+                prefs.Store(raw.V_ISAN);
+                PluginUtils.SavePreferences(AssemblyInfo, prefs);
+            }
+        }
+
+        private static void Lookup(ProgressToken token, DiscMetadata.RawMetadata raw, DiscMetadata.DerivedMetadata derived)
+        {
             var provider = new IsanMetadataProvider(token);
 
             provider.Populate(raw.V_ISAN);
@@ -47,11 +69,33 @@ namespace IsanPlugin
             var isan = raw.ISAN;
             if (isan != null && !string.IsNullOrWhiteSpace(isan.Title))
             {
-                // TODO: Scrape language from isan.org
+                // TODO: Get language from isan.org
                 // Don't insert twice
                 if (!derived.SearchQueries.Any(query => query.Title == isan.Title && query.Year == isan.Year))
                     derived.SearchQueries.Insert(0, new SearchQuery { Title = isan.Title, Year = isan.Year });
             }
+        }
+    }
+
+    internal class IsanPreferences
+    {
+        [JsonProperty(PropertyName = "cache")]
+        public IDictionary<string, VIsanJson> Cache = new Dictionary<string, VIsanJson>();
+
+        public bool TryPopulate([NotNull] VIsan vIsan)
+        {
+            if (!Cache.ContainsKey(vIsan.Number))
+            {
+                return false;
+            }
+            var json = Cache[vIsan.Number];
+            json.Populate(vIsan);
+            return true;
+        }
+
+        public void Store([NotNull] VIsan vIsan)
+        {
+            Cache[vIsan.Number] = vIsan.ToJson();
         }
     }
 }

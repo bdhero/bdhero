@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using DotNetUtils.Annotations;
+using Newtonsoft.Json;
 
 namespace BDHero.BDROM
 {
@@ -213,6 +214,17 @@ namespace BDHero.BDROM
                                  Year
                 );
         }
+
+        public IsanJson ToJson()
+        {
+            return new IsanJson
+                   {
+                       Number = Number,
+                       Title = Title,
+                       Year = Year,
+                       LengthMin = LengthMin
+                   };
+        }
     }
 
     public class VIsan : Isan
@@ -224,6 +236,7 @@ namespace BDHero.BDROM
         {
         }
 
+        [CanBeNull]
         public new static VIsan TryParse(string number)
         {
             if (!IsIsan(number))
@@ -232,6 +245,65 @@ namespace BDHero.BDROM
             var n = Parse(number);
 
             return new VIsan(n[0], n[1], n[2], n[3], n[4], n[5]);
+        }
+
+        public new VIsanJson ToJson()
+        {
+            return new VIsanJson
+                   {
+                       Parent = Parent != null ? Parent.ToJson() : null,
+                       Number = Number,
+                       Title = Title,
+                       Year = Year,
+                       LengthMin = LengthMin
+                   };
+        }
+    }
+
+    public class IsanJson
+    {
+        [JsonProperty(PropertyName = "number")]
+        public string Number;
+
+        [JsonProperty(PropertyName = "title")]
+        public string Title;
+
+        [JsonProperty(PropertyName = "year")]
+        public int? Year;
+
+        [JsonProperty(PropertyName = "length_min")]
+        public int? LengthMin;
+
+        public Isan ToIsan()
+        {
+            var isan = Isan.TryParse(Number);
+            isan.Title = Title;
+            isan.Year = Year;
+            isan.LengthMin = LengthMin;
+            return isan;
+        }
+    }
+
+    public class VIsanJson : IsanJson
+    {
+        public IsanJson Parent;
+
+        public Isan ToVIsan()
+        {
+            var vIsan = VIsan.TryParse(Number);
+            if (vIsan != null)
+            {
+                Populate(vIsan);
+            }
+            return vIsan;
+        }
+
+        public void Populate([NotNull] VIsan vIsan)
+        {
+            vIsan.Parent = Parent != null ? Parent.ToIsan() : null;
+            vIsan.Title = Title;
+            vIsan.Year = Year;
+            vIsan.LengthMin = LengthMin;
         }
     }
 }
