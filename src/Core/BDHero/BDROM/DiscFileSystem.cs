@@ -141,7 +141,7 @@ namespace BDHero.BDROM
             /// D-BOX <c>FilmIndex.xml</c> file.
             /// </summary>
             [CanBeNull]
-            public FileInfo Dbox;
+            public FileInfo DBox;
         }
     }
 }

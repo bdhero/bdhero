@@ -203,7 +203,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static string GetDboxTitle(Disc disc)
         {
-            var dbox = disc.FileSystem.Files.Dbox;
+            var dbox = disc.FileSystem.Files.DBox;
             if (dbox == null)
                 return null;
 

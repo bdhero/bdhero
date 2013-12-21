@@ -42,7 +42,7 @@ namespace BDHeroGUI.Components
             // buttons
 
             InitButton(buttonVolumeLabelSanitized, fs.Directories.Root);
-            InitButton(buttonDboxTitleSanitized, fs.Files.Dbox);
+            InitButton(buttonDboxTitleSanitized, fs.Files.DBox);
             InitButton(buttonIsan, fs.Files.MCMF);
             InitButton(buttonValidBdmtTitles, fs.Directories.BDMT);
         }
