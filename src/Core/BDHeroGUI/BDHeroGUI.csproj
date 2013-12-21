@@ -175,6 +175,7 @@
     <Compile Include="PlaylistFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\clipboard-arrow.png" />
     <None Include="Resources\play_blue.png" />
     <None Include="Resources\slash.png" />
     <None Include="Resources\cross_red.png" />
