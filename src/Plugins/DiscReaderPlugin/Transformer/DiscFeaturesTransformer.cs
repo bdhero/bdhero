@@ -49,8 +49,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static bool IsDCopy(DiscFileSystem fs)
         {
-            // TODO: Implement
-            return false;
+            return HasFiles(fs.Directories.DCOPY);
         }
 
         private static bool IsPSP(DiscFileSystem fs)

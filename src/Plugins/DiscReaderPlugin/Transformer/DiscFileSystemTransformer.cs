@@ -27,7 +27,8 @@ namespace BDHero.Plugin.DiscReader.Transformer
                             SNP = bdrom.DirectorySNP,
                             ANY = GetDirectory("ANY!", bdrom.DirectoryRoot),
                             MAKEMKV = GetDirectory("MAKEMKV", bdrom.DirectoryRoot),
-                            AACS = null /* assigned below */
+                            AACS = null /* assigned below */,
+                            DCOPY = null /* assigned below */
                         },
                     Files = new DiscFileSystem.DiscFiles
                         {
@@ -39,6 +40,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
                 };
 
             fs.Directories.AACS = GetAACSDirectory(fs);
+            fs.Directories.DCOPY = GetDCopyDirectory(fs);
             fs.Files.MCMF = GetFileOrBackup("mcmf.xml", fs.Directories.AACS);
             fs.Files.BDMT = GetFilesByPattern("bdmt_???.xml", fs.Directories.BDMT);
 
@@ -57,6 +59,12 @@ namespace BDHero.Plugin.DiscReader.Transformer
             return fs.Directories.ANY ??
                    GetDirectory("AACS", fs.Directories.MAKEMKV) ??
                    GetDirectory("AACS", fs.Directories.Root);
+        }
+
+        private static DirectoryInfo GetDCopyDirectory(DiscFileSystem fs)
+        {
+            var dir = new DirectoryInfo(Path.Combine(fs.Directories.Root.FullName, "DCOPY"));
+            return dir.Exists ? dir : null;
         }
 
         [CanBeNull]

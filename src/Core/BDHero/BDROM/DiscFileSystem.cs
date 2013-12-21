@@ -112,6 +112,13 @@ namespace BDHero.BDROM
             /// <example><para><c>D:\MakeMKV\AACS</c> (decrypted - MakeMKV)</para></example>
             [CanBeNull]
             public DirectoryInfo AACS;
+
+            /// <summary>
+            /// Directory containing digital copies of the film.
+            /// </summary>
+            /// <example><para><c>D:\DCOPY</c></para></example>
+            [CanBeNull]
+            public DirectoryInfo DCOPY;
         }
 
         /// <summary>
