@@ -230,7 +230,7 @@ namespace DotNetUtils.Controls
         }
     }
 
-    interface IDialog
+    public interface IDialog
     {
         string Title { get; set; }
         string SelectedPath { get; set; }
@@ -238,7 +238,7 @@ namespace DotNetUtils.Controls
         DialogResult ShowDialog(IWin32Window owner);
     }
 
-    class OpenFileDialog2 : IDialog
+    public class OpenFileDialog2 : IDialog
     {
         private readonly OpenFileDialog _dialog = new OpenFileDialog();
         private FileExtension[] _fileExtensions;
@@ -300,7 +300,7 @@ namespace DotNetUtils.Controls
         }
     }
 
-    class SaveFileDialog2 : IDialog
+    public class SaveFileDialog2 : IDialog
     {
         private readonly SaveFileDialog _dialog = new SaveFileDialog();
         private FileExtension[] _fileExtensions;
@@ -373,7 +373,7 @@ namespace DotNetUtils.Controls
         }
     }
 
-    class FolderBrowserDialog2 : IDialog
+    public class FolderBrowserDialog2 : IDialog
     {
         private readonly FolderBrowserDialog _dialog = new FolderBrowserDialog();
 
