@@ -81,6 +81,31 @@ namespace BDHero.JobQueue
             set { _searchQuery = value; }
         }
 
+        [JsonIgnore]
+        public IList<SearchQuery> SearchQueries
+        {
+            get
+            {
+                if (Disc == null)
+                {
+                    return null;
+                }
+
+                var customQuery = SearchQuery;
+                var derivedQueries = Disc.Metadata.Derived.SearchQueries;
+
+                if (derivedQueries.Contains(customQuery))
+                {
+                    return derivedQueries;
+                }
+
+                var allQueries = new List<SearchQuery>();
+                allQueries.Add(customQuery);
+                allQueries.AddRange(derivedQueries);
+                return allQueries;
+            }
+        }
+
         private SearchQuery _searchQuery;
 
         public Job(Disc disc)
