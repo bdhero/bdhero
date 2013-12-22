@@ -8,6 +8,7 @@ using BDHero.JobQueue;
 using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 
@@ -19,6 +20,8 @@ namespace BDHeroGUI.Components
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const double DefaultRatio = 2.0 / 3.0;
+
+        private readonly Hyperlink _hyperlink;
 
         #region Public getter/setter properties
 
@@ -68,11 +71,6 @@ namespace BDHeroGUI.Components
             }
         }
 
-        private bool IsSelectedUrlValid
-        {
-            get { return !string.IsNullOrWhiteSpace(SelectedUrl); }
-        }
-
         #endregion
 
         #region Public events
@@ -83,11 +81,10 @@ namespace BDHeroGUI.Components
 
         #endregion
 
-        private readonly ToolTip _pictureBoxToolTip = new ToolTip();
-
         public MediaPanel()
         {
             InitializeComponent();
+            _hyperlink = new Hyperlink(pictureBox);
             Resize += (sender, args) => AutoResize();
             comboBoxMedia.SelectedIndexChanged += (sender, args) => OnSelectedMediaChanged();
             LoadSearchResults();
@@ -144,16 +141,7 @@ namespace BDHeroGUI.Components
 
             LoadCoverArt();
 
-            if (IsSelectedUrlValid)
-            {
-                pictureBox.Cursor = Cursors.Hand;
-                _pictureBoxToolTip.SetToolTip(pictureBox, SelectedUrl);
-            }
-            else
-            {
-                pictureBox.Cursor = Cursors.Default;
-                _pictureBoxToolTip.RemoveAll();
-            }
+            _hyperlink.Url = SelectedUrl;
 
             if (SelectedMediaChanged != null)
                 SelectedMediaChanged(this, EventArgs.Empty);
@@ -198,14 +186,6 @@ namespace BDHeroGUI.Components
         #endregion
 
         #region UI event handlers
-
-        private void pictureBox_Click(object sender, EventArgs e)
-        {
-            if (IsSelectedUrlValid)
-            {
-                Process.Start(_job.SelectedReleaseMedium.Url);
-            }
-        }
 
         private void linkLabelSearch_Click(object sender, EventArgs e)
         {
