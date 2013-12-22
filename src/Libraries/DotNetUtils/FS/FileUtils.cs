@@ -221,36 +221,6 @@ namespace DotNetUtils.FS
             return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
         }
 
-        public static Icon ExtractIcon(string exePath)
-        {
-            try
-            {
-                return Icon.ExtractAssociatedIcon(exePath);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public static Image ExtractIconAsBitmap(string exePath, Size size)
-        {
-            var icon = ExtractIcon(exePath);
-            return icon != null ? new Icon(icon, size).ToBitmap() : null;
-        }
-
-        public static Icon GetDefaultProgramIcon(string filePath)
-        {
-            return ExtractIcon(filePath);
-        }
-
-        public static Image GetDefaultProgramIconAsBitmap(string filePath, Size size)
-        {
-            var exePath = GetDefaultProgram(filePath);
-            var icon = ExtractIcon(exePath);
-            return icon != null ? new Icon(icon, size).ToBitmap() : null;
-        }
-
         public static bool IsFile(string path)
         {
             return !IsDirectory(path);
@@ -406,8 +376,7 @@ namespace DotNetUtils.FS
         /// <param name="filePath">Relative or absolute path to a file to open</param>
         public static void OpenFile(string filePath)
         {
-            if (HasImplicitProgramAssociation(filePath))
-                Process.Start(filePath);
+            Process.Start(filePath);
         }
 
         public static void ShowInFolder(string filePath)
@@ -434,124 +403,5 @@ namespace DotNetUtils.FS
         {
             Process.Start(url);
         }
-
-        public static string GetDefaultProgram(string filePath)
-        {
-            if (!Path.HasExtension(filePath))
-            {
-                return null;
-            }
-
-            string exePath = null;
-
-            try
-            {
-                var defaultExePath = FileExtentionInfo(AssocStr.Executable, Path.GetExtension(filePath));
-
-                if (string.IsNullOrEmpty(defaultExePath))
-                    return null;
-
-                if (!File.Exists(defaultExePath))
-                    return null;
-
-                exePath = defaultExePath;
-            }
-            catch
-            {
-            }
-
-            return exePath;
-        }
-
-        /// <summary>
-        ///     Determines if it is possible to open the given file programmatically (as if the user had double-clicked
-        ///     on it in Windows Explorer).
-        /// </summary>
-        /// <param name="filePath">Relative or absolute path to a file</param>
-        /// <returns>
-        ///     <c>true</c> if the given file can be opened via <see cref="Process.Start()"/>; otherwise <c>false</c>.
-        /// </returns>
-        public static bool HasImplicitProgramAssociation(string filePath)
-        {
-            var exePath = GetDefaultProgram(filePath);
-            var exeName = Path.GetFileName(exePath);
-
-            if (string.IsNullOrEmpty(exePath))
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        ///     Determines if the given file type has a program explicitly associated with it in the Windows registry.
-        /// </summary>
-        /// <param name="filePath">Relative or absolute path to a file</param>
-        /// <returns>
-        ///     <c>true</c> if the given file has a program associated with it; otherwise <c>false</c>.
-        /// </returns>
-        public static bool HasExplicitProgramAssociation(string filePath)
-        {
-            var exePath = GetDefaultProgram(filePath);
-            var exeName = Path.GetFileName(exePath);
-
-            if (string.IsNullOrEmpty(exePath))
-                return false;
-
-            // In Windows 8 (and possibly earlier), file types that don't have an explicit program association
-            // are implicitly associated with C:\Windows\System32\OpenWith.exe.
-            if ("OpenWith.exe".Equals(exeName, StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return true;
-        }
-
-        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern uint AssocQueryString(AssocF flags, AssocStr str, string pszAssoc, string pszExtra, [Out] StringBuilder pszOut, [In][Out] ref uint pcchOut);
-
-        public static string FileExtentionInfo(AssocStr assocStr, string doctype)
-        {
-            uint pcchOut = 0;
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, null, ref pcchOut);
-
-            var pszOut = new StringBuilder((int)pcchOut);
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, pszOut, ref pcchOut);
-            return pszOut.ToString();
-        }
-
-// ReSharper disable InconsistentNaming
-// ReSharper disable UnusedMember.Local
-
-        [Flags]
-        public enum AssocF
-        {
-            Init_NoRemapCLSID = 0x1,
-            Init_ByExeName = 0x2,
-            Open_ByExeName = 0x2,
-            Init_DefaultToStar = 0x4,
-            Init_DefaultToFolder = 0x8,
-            NoUserSettings = 0x10,
-            NoTruncate = 0x20,
-            Verify = 0x40,
-            RemapRunDll = 0x80,
-            NoFixUps = 0x100,
-            IgnoreBaseClass = 0x200
-        }
-
-        public enum AssocStr
-        {
-            Command = 1,
-            Executable,
-            FriendlyDocName,
-            FriendlyAppName,
-            NoOpen,
-            ShellNewValue,
-            DDECommand,
-            DDEIfExec,
-            DDEApplication,
-            DDETopic
-        }
-
-// ReSharper restore UnusedMember.Local
-// ReSharper restore InconsistentNaming
     }
 }
