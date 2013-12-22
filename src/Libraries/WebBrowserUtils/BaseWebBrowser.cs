@@ -13,21 +13,28 @@ namespace WebBrowserUtils
 
         public string ExePath { get; protected set; }
 
+        private IconImage GetIconImage(int size)
+        {
+            if (MultiIcon == null || !MultiIcon.Any())
+            {
+                return null;
+            }
+            var icons = MultiIcon.First()
+                                 .Where(image => image.Size.Width == size)
+                                 .OrderByDescending(image => image.ColorsInPalette);
+            return icons.FirstOrDefault();
+        }
+
         public Icon GetIcon(int size)
         {
-            if (MultiIcon != null && MultiIcon.Any())
-            {
-                var icons = MultiIcon.First().Where(image => image.Size.Width == size).OrderByDescending(image => image.ColorsInPalette);
-                if (icons.Any())
-                    return icons.First().Icon;
-            }
-            return null;
+            var iconImage = GetIconImage(size);
+            return iconImage == null ? null : iconImage.Icon;
         }
 
         public Image GetIconAsBitmap(int size)
         {
-            var icon = GetIcon(size);
-            return icon != null ? icon.ToBitmap() : null;
+            var iconImage = GetIconImage(size);
+            return iconImage == null ? null : iconImage.Transparent;
         }
     }
 }
