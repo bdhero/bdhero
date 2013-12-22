@@ -66,7 +66,7 @@ namespace TmdbPlugin
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            ApiRequest(job);
+            Search(job);
 
             if (cancellationToken.IsCancellationRequested)
                 return;
@@ -78,18 +78,18 @@ namespace TmdbPlugin
 
         #region Progress reporting
 
-        private const double TotalSteps = 5;
+        private double _totalSteps = 5; // 5 = 1 config req + 3 search attempts + 1 poster image req
         private double _stepsCompleted;
 
         private void StartProgress(string status)
         {
             _stepsCompleted = 0;
-            Host.ReportProgress(this, 100.0 * (_stepsCompleted / TotalSteps), status);
+            Host.ReportProgress(this, 100.0 * (_stepsCompleted / _totalSteps), status);
         }
 
         private void MakeProgress(string status)
         {
-            Host.ReportProgress(this, 100.0 * (++_stepsCompleted / TotalSteps), status);
+            Host.ReportProgress(this, 100.0 * (++_stepsCompleted / _totalSteps), status);
         }
 
         private void FinishProgress(string status)
@@ -174,43 +174,65 @@ namespace TmdbPlugin
 
         #region Movie Search
 
-        private void ApiRequest(Job job)
+        private void Search(Job job)
         {
-            var searchYear = job.SearchQuery.Year;
+            var attempt = 0;
+            var queries = job.SearchQueries.SelectMany(ConstructQueries).ToArray();
 
-            QueryTmdb(job, 1, searchYear);
+            _totalSteps = queries.Count() + 2; // 2 = 1 config req + 1 poster image req
 
-            if (!searchYear.HasValue || job.Movies.Any()) return;
+            foreach (var query in queries)
+            {
+                QueryTmdb(++attempt, job, query);
+
+                if (job.Movies.Any())
+                    break;
+            }
+        }
+
+        private static IList<SearchQuery> ConstructQueries(SearchQuery query)
+        {
+            var queries = new List<SearchQuery>();
+
+            queries.Add(query);
+
+            if (!query.Year.HasValue)
+            {
+                return queries;
+            }
 
             // isan.org has the wrong year for some movies...
             // Search again w/ year + 1 if there are zero results for isan.org's year value
-            QueryTmdb(job, 2, searchYear + 1);
-
-            if (job.Movies.Any()) return;
+            queries.Add(new SearchQuery
+                        {
+                            Language = query.Language,
+                            Title = query.Title,
+                            Year = query.Year + 1
+                        });
 
             // Search again w/o sending a year if there are still zero results
-            QueryTmdb(job, 3);
+            queries.Add(new SearchQuery
+                        {
+                            Language = query.Language,
+                            Title = query.Title,
+                            Year = null
+                        });
+
+            return queries;
         }
 
-        private void QueryTmdb(Job job, int attempt, int? searchYear = null)
+        private void QueryTmdb(int attempt, Job job, SearchQuery query)
         {
-            MakeProgress(string.Format("Querying TMDb w/ year = {0} (attempt {1})...", searchYear, attempt));
-            ApiRequest(job, searchYear);
+            MakeProgress(string.Format("Querying TMDb w/ year = {0} (attempt {1})...", query.Year, attempt));
+            ApiRequest(job, query);
         }
 
-        private void ApiRequest(Job job, int? searchYear)
+        private void ApiRequest(Job job, SearchQuery query)
         {
             job.Movies.Clear();
 
-            var searchQuery = job.SearchQuery;
-            var searchTitle = searchQuery.Title;
-
-            if (searchQuery == null)
-            {
-                const string message = "ERROR: No searchable movie name found";
-                Logger.Error(message);
-                throw new Exception(message);
-            }
+            var searchTitle = query.Title;
+            var searchYear = query.Year;
 
             if (_apiKey == null)
             {
