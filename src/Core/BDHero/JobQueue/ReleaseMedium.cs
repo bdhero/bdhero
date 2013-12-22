@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 
 namespace BDHero.JobQueue
 {
@@ -60,6 +61,20 @@ namespace BDHero.JobQueue
         public override string ToString()
         {
             return ReleaseYearDisplayable == null ? Title : string.Format("{0} ({1})", Title, ReleaseYearDisplayable);
+        }
+
+        public Movie Clone()
+        {
+            var clone = new Movie
+                        {
+                            Id = Id,
+                            Title = Title,
+                            Url = Url,
+                            IsSelected = IsSelected,
+                            ReleaseYear = ReleaseYear
+                        };
+            clone.CoverArtImages.AddRange(CoverArtImages);
+            return clone;
         }
     }
 
