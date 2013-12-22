@@ -19,6 +19,18 @@ namespace DotNetUtils.Extensions
         private const char CTRL_A = '\x1';
 
         /// <summary>
+        /// Turns this control into a hyperlink by changing its cursor to a hand, launching the default browser
+        /// when the user clicks on the control, and adding a context menu that includes options to open the link
+        /// or copy the URL to the clipboard.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="url"></param>
+        public static void MakeHyperlink(this Control control, string url)
+        {
+            HyperlinkAddon.MakeHyperlink(control, url);
+        }
+
+        /// <summary>
         /// Recursively iterates over the control's child controls and returns a collection of all descendant controls.
         /// </summary>
         /// <typeparam name="T"></typeparam>
