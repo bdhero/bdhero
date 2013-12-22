@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.JobQueue;
+using BDHeroGUI.Helpers;
 using DotNetUtils.Controls;
-using DotNetUtils.Forms;
 using I18N;
 
 namespace BDHeroGUI.Forms
@@ -51,9 +53,9 @@ namespace BDHeroGUI.Forms
             SetPosterImage(_openFileDialog.SelectedPath);
         }
 
-        private void SetPosterImage(string imageFilePath)
+        private void SetPosterImage(string imageUri)
         {
-            pictureBoxPoster.ImageLocation = imageFilePath;
+            pictureBoxPoster.ImageLocation = imageUri;
 
             _movieClone.CoverArtImages.Clear();
             _movieClone.CoverArtImages.Add(new InMemoryCoverArt
@@ -108,23 +110,32 @@ namespace BDHeroGUI.Forms
 
         private void FormMediaCustom_DragEnter(object sender, DragEventArgs e)
         {
-            var imageFiles = DragUtils.GetFilesWithExtension(e, AllExtensions);
-            if (imageFiles.Any())
+            var data = new MediaDragData(e, AllExtensions);
+            if (data.AcceptDrop)
             {
                 e.Effect = DragDropEffects.All;
             }
-
-            // TODO: Accept drag and drop from shortcuts and image URLs from Web browsers
-            var imageUrl = DragUtils.GetUnicodeText(e);
-            Console.WriteLine(imageUrl);
         }
 
         private void FormMediaCustom_DragDrop(object sender, DragEventArgs e)
         {
-            var imageFiles = DragUtils.GetFilesWithExtension(e, AllExtensions);
-            if (!imageFiles.Any())
-                return;
-            SetPosterImage(imageFiles.First());
+            var data = new MediaDragData(e, AllExtensions);
+            if (data.HasImageFile)
+            {
+                SetPosterImage(data.ImageFile);
+            }
+            if (data.HasImageUri)
+            {
+                SetPosterImage(data.ImageUri);
+            }
+            if (data.HasMovieTitle)
+            {
+                textBoxTitle.Text = data.MovieTitle;
+            }
+            if (data.HasReleaseYear)
+            {
+                textBoxYear.Text = data.ReleaseYear;
+            }
         }
     }
 }
