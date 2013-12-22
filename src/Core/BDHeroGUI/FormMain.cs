@@ -460,6 +460,15 @@ namespace BDHeroGUI
             _taskbarItem.NoProgress();
             RefreshUI();
             EnableControls(true);
+            PromptForMetadataIfNeeded();
+        }
+
+        private void PromptForMetadataIfNeeded()
+        {
+            if (!_controller.Job.Movies.Any() && !_controller.Job.TVShows.Any())
+            {
+                ShowMetadataSearchWindow();
+            }
         }
 
         private void GetMetadataFail(ExceptionEventArgs args)
@@ -619,6 +628,7 @@ namespace BDHeroGUI
             AppendStatus("Scan succeeded!");
             _taskbarItem.NoProgress();
             RefreshUI();
+            PromptForMetadataIfNeeded();
         }
 
         private void ControllerOnScanFailed(ExceptionEventArgs args)
