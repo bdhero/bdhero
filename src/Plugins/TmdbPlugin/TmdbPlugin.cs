@@ -312,7 +312,7 @@ namespace TmdbPlugin
 
             if (!string.IsNullOrEmpty(movieResult.poster_path))
             {
-                movie.CoverArtImages.Add(new CoverArt
+                movie.CoverArtImages.Add(new RemoteCoverArt
                                              {
                                                  Uri = _rootImageUrl + movieResult.poster_path,
                                                  IsSelected = true
@@ -370,9 +370,9 @@ namespace TmdbPlugin
                 {
                     poster.file_path = _rootImageUrl + poster.file_path;
 
-                    if (movie.CoverArtImages.All(x => x.Uri != poster.file_path))
+                    if (movie.CoverArtImages.OfType<RemoteCoverArt>().All(x => x.Uri != poster.file_path))
                     {
-                        movie.CoverArtImages.Add(new CoverArt
+                        movie.CoverArtImages.Add(new RemoteCoverArt
                         {
                             Uri = _rootImageUrl + poster.file_path,
                             Language = Language.FromCode(poster.iso_639_1)

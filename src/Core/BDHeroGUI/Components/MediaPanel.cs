@@ -25,7 +25,7 @@ namespace BDHeroGUI.Components
         #region Public getter/setter properties
 
         [CanBeNull]
-        public CoverArt SelectedCoverArt
+        public ICoverArt SelectedCoverArt
         {
             get
             {
@@ -39,7 +39,7 @@ namespace BDHeroGUI.Components
             }
         }
 
-        private CoverArt _selectedCoverArt;
+        private ICoverArt _selectedCoverArt;
 
         public Job Job
         {

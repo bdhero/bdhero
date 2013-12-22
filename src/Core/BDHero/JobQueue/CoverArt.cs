@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 using I18N;
 
@@ -11,22 +12,37 @@ namespace BDHero.JobQueue
     /// <summary>
     /// Represents a movie or TV show's official cover art (a.k.a. poster) image.
     /// </summary>
-    public class CoverArt
+    public interface ICoverArt
+    {
+        /// <summary>
+        /// Gets or sets the language of the cover art image.
+        /// </summary>
+        Language Language { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether this CoverArt will be used in the output file.
+        /// </summary>
+        bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Gets the poster image.
+        /// </summary>
+        Image Image { get; }
+    }
+
+    /// <summary>
+    /// Remote web-based cover art, loaded synchronously over HTTP.
+    /// </summary>
+    public class RemoteCoverArt : ICoverArt
     {
         /// <summary>
         /// Gets or sets the URI of the cover art image.
         /// </summary>
         public string Uri;
 
-        /// <summary>
-        /// Gets or sets the language of the cover art image.
-        /// </summary>
-        public Language Language;
+        public Language Language { get; set; }
 
-        /// <summary>
-        /// Gets or sets whether this CoverArt will be used in the output file.
-        /// </summary>
-        public bool IsSelected;
+        public bool IsSelected { get; set; }
 
         /// <summary>
         /// Retrieves the image for the cover art by making an HTTP GET request for the <see cref="Uri"/>.
@@ -40,5 +56,20 @@ namespace BDHero.JobQueue
         {
             get { return HttpRequest.GetImage(Uri); }
         }
+    }
+
+    /// <summary>
+    /// Local in-memory cover art.
+    /// </summary>
+    public class InMemoryCoverArt : ICoverArt
+    {
+        public Language Language { get; set; }
+
+        public bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the poster image.
+        /// </summary>
+        public Image Image { get; set; }
     }
 }
