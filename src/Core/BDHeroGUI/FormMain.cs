@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -760,6 +761,11 @@ namespace BDHeroGUI
         private void searchForMetadataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowMetadataSearchWindow();
+        }
+
+        private void newInstanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
