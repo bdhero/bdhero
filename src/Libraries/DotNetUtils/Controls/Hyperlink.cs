@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using DotNetUtils.FS;
 using DotNetUtils.Properties;
@@ -22,7 +23,17 @@ namespace DotNetUtils.Controls
             set
             {
                 _url = value;
-                _toolTip.SetToolTip(_control, _url);
+
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _toolTip.SetToolTip(_control, _url);
+                    _control.Cursor = Cursors.Hand;
+                }
+                else
+                {
+                    _toolTip.RemoveAll();
+                    _control.Cursor = Cursors.Default;
+                }
             }
         }
 
@@ -40,7 +51,6 @@ namespace DotNetUtils.Controls
         {
             _control = control;
 
-            control.Cursor = Cursors.Hand;
             control.Click += OnClick;
             control.ContextMenuStrip = new ContextMenuStrip();
             control.ContextMenuStrip.Items.Add(CreateOpenMenuItem());
