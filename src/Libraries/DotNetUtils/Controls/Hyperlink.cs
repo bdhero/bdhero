@@ -45,8 +45,15 @@ namespace DotNetUtils.Controls
             control.ContextMenuStrip = new ContextMenuStrip();
             control.ContextMenuStrip.Items.Add(CreateOpenMenuItem());
             control.ContextMenuStrip.Items.Add(CreateCopyMenuItem());
+            control.ContextMenuStrip.Opening += ContextMenuStripOnOpening;
 
             Url = url;
+        }
+
+        private void ContextMenuStripOnOpening(object sender, CancelEventArgs cancelEventArgs)
+        {
+            if (string.IsNullOrEmpty(Url))
+                cancelEventArgs.Cancel = true;
         }
 
         private ToolStripMenuItem CreateOpenMenuItem()
