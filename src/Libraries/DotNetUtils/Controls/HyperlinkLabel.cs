@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using DotNetUtils.Properties;
 using WebBrowserUtils;
@@ -14,11 +15,9 @@ namespace DotNetUtils.Controls
     /// </summary>
     public class HyperlinkLabel : LinkLabel2
     {
-        private string _url;
-
-        private readonly ToolTip _toolTip = new ToolTip();
-
         private bool _isKeyHandled;
+
+        private readonly HyperlinkAddon _hyperlink;
 
         /// <summary>
         ///     Gets or sets the URL that 
@@ -26,12 +25,11 @@ namespace DotNetUtils.Controls
         [DefaultValue(null)]
         public string Url
         {
-            get { return _url; }
+            get { return _hyperlink.Url; }
             set
             {
-                _url = value;
-                _toolTip.SetToolTip(this, _url);
-                Enabled = _url != null;
+                _hyperlink.Url = value;
+                Enabled = value != null;
             }
         }
 
@@ -40,23 +38,7 @@ namespace DotNetUtils.Controls
         /// </summary>
         public HyperlinkLabel()
         {
-            Url = null;
-            Click += OnClick;
-            ContextMenuStrip = new ContextMenuStrip();
-            ContextMenuStrip.Items.Add(CreateOpenMenuItem());
-            ContextMenuStrip.Items.Add(CreateCopyMenuItem());
-        }
-
-        private ToolStripMenuItem CreateOpenMenuItem()
-        {
-            var bitmapIcon = DefaultWebBrowser.Instance.GetIconAsBitmap(16) ?? Resources.network;
-            return new ToolStripMenuItem("&Open link in browser", bitmapIcon, OnClick);
-        }
-
-        private ToolStripMenuItem CreateCopyMenuItem()
-        {
-            var bitmapIcon = Resources.clipboard_arrow;
-            return new ToolStripMenuItem("&Copy URL to clipboard", bitmapIcon, CopyUrlToClipboard);
+            _hyperlink = HyperlinkAddon.MakeHyperlink(this);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -74,18 +56,6 @@ namespace DotNetUtils.Controls
         {
             _isKeyHandled = false;
             base.OnKeyDown(e);
-        }
-
-        private void OnClick(object sender, EventArgs eventArgs)
-        {
-            if (string.IsNullOrEmpty(_url)) { return; }
-            FileUtils.OpenUrl(_url);
-        }
-
-        private void CopyUrlToClipboard(object sender, EventArgs eventArgs)
-        {
-            if (string.IsNullOrEmpty(_url)) { return; }
-            Clipboard.SetText(_url);
         }
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="Controls\SplitContainerWithDivider.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Extensions\HyperlinkAddon.cs" />
     <Compile Include="Forms\DragUtils.cs" />
     <Compile Include="Extensions\ListViewItemExtensions.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
