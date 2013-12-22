@@ -17,7 +17,7 @@ namespace DotNetUtils.Controls
     {
         private bool _isKeyHandled;
 
-        private readonly HyperlinkAddon _hyperlink;
+        private readonly Hyperlink _hyperlink;
 
         /// <summary>
         ///     Gets or sets the URL that 
@@ -38,7 +38,7 @@ namespace DotNetUtils.Controls
         /// </summary>
         public HyperlinkLabel()
         {
-            _hyperlink = HyperlinkAddon.MakeHyperlink(this);
+            _hyperlink = Hyperlink.MakeHyperlink(this);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

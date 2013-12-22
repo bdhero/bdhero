@@ -4,9 +4,14 @@ using DotNetUtils.FS;
 using DotNetUtils.Properties;
 using WebBrowserUtils;
 
-namespace DotNetUtils.Extensions
+namespace DotNetUtils.Controls
 {
-    internal class HyperlinkAddon
+    /// <summary>
+    ///     Turns a <see cref="Control"/> into a hyperlink by changing its cursor to a hand, launching the default browser
+    ///     when the user clicks on the control, and adding a context menu that includes options to open the link
+    ///     or copy the URL to the clipboard.
+    /// </summary>
+    public class Hyperlink
     {
         /// <summary>
         ///     Gets or sets the hyperlink's URL.
@@ -26,7 +31,12 @@ namespace DotNetUtils.Extensions
 
         private readonly ToolTip _toolTip = new ToolTip();
 
-        private HyperlinkAddon(Control control, string url = null)
+        /// <summary>
+        ///     Constructs a new <see cref="Hyperlink"/> object with the given parameters.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="url"></param>
+        public Hyperlink(Control control, string url = null)
         {
             _control = control;
 
@@ -63,9 +73,9 @@ namespace DotNetUtils.Extensions
             Clipboard.SetText(_url);
         }
 
-        public static HyperlinkAddon MakeHyperlink(Control control, string url = null)
+        public static Hyperlink MakeHyperlink(Control control, string url = null)
         {
-            return new HyperlinkAddon(control, url);
+            return new Hyperlink(control, url);
         }
     }
 }

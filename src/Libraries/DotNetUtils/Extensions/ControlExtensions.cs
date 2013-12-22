@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.Controls;
 
 namespace DotNetUtils.Extensions
 {
@@ -27,7 +28,7 @@ namespace DotNetUtils.Extensions
         /// <param name="url"></param>
         public static void MakeHyperlink(this Control control, string url)
         {
-            HyperlinkAddon.MakeHyperlink(control, url);
+            Hyperlink.MakeHyperlink(control, url);
         }
 
         /// <summary>
