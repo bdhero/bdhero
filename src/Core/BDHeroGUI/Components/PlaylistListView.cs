@@ -151,11 +151,11 @@ namespace BDHeroGUI.Components
             if (assoc.HasAssociation)
                 playItem.Image = assoc.GetProgramImage(16);
 
-            var copyPathItem = new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow);
-            copyPathItem.Click += (o, eventArgs) => Clipboard.SetText(playlist.FullPath);
-
             var showFileItem = new ToolStripMenuItem("Show in &folder", Resources.folder_open);
             showFileItem.Click += (o, eventArgs) => FileUtils.ShowInFolder(playlist.FullPath);
+
+            var copyPathItem = new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow);
+            copyPathItem.Click += (o, eventArgs) => Clipboard.SetText(playlist.FullPath);
 
             if (!File.Exists(playlist.FullPath))
             {
@@ -166,8 +166,8 @@ namespace BDHeroGUI.Components
 
             menu.Items.Add(playItem);
             menu.Items.Add("-");
-            menu.Items.Add(copyPathItem);
             menu.Items.Add(showFileItem);
+            menu.Items.Add(copyPathItem);
             menu.Items.Add("-");
 
             AddCutMenuItems(menu, playlist);
