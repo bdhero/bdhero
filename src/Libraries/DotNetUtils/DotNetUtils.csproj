@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="Forms\ExternalDragProvider.cs" />
     <Compile Include="Forms\IWndProcObservable.cs" />
+    <Compile Include="FS\FileAssociation.cs" />
     <Compile Include="FS\ITempFileRegistrar.cs" />
     <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="MultiValueDictionary.cs" />
@@ -159,6 +160,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IconLib\IconLib.csproj">
+      <Project>{CE53747F-D2E6-4E1E-9EF4-A0AE02671B1D}</Project>
+      <Name>IconLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebBrowserUtils\WebBrowserUtils.csproj">
       <Project>{db13678f-8815-4bec-8198-2bac286a3baf}</Project>
       <Name>WebBrowserUtils</Name>
