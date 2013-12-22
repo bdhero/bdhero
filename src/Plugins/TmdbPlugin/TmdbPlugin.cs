@@ -309,11 +309,16 @@ namespace TmdbPlugin
                     Url = string.Format("http://www.themoviedb.org/movie/{0}", movieResult.id),
                     IsSelected = i == 0
                 };
-            movie.CoverArtImages.Add(new CoverArt
-                {
-                    Uri = _rootImageUrl + movieResult.poster_path,
-                    IsSelected = true
-                });
+
+            if (!string.IsNullOrEmpty(movieResult.poster_path))
+            {
+                movie.CoverArtImages.Add(new CoverArt
+                                             {
+                                                 Uri = _rootImageUrl + movieResult.poster_path,
+                                                 IsSelected = true
+                                             });
+            }
+
             return movie;
         }
 
