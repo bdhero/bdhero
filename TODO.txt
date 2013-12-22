@@ -32,8 +32,8 @@ Bugs
 Features
 ========
 
-[ ] CTRL + N to open new window (separate instance in a separate process)
-[ ] Retry TMDb search w/ next best metadata if no results come back (e.g., first try bdmt_xxx.xml value, then ISAN value, then D-BOX, then volume label)
+[ ] Finish FormMediaCustom.cs (incl. drag-n-drop from browsers)
+
 [ ] Revamp "Disc Info" dialog
 [ ] Add "Disc Info" icons to main form
 [ ] Context menu for Playlist listitems: add "Language" option
