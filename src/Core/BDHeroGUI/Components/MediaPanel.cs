@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.JobQueue;
+using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Annotations;
@@ -193,5 +194,10 @@ namespace BDHeroGUI.Components
         }
 
         #endregion
+
+        private void linkLabelCustom_Click(object sender, EventArgs e)
+        {
+            new FormMediaCustom(SelectedReleaseMedium as Movie).ShowDialog(this);
+        }
     }
 }
