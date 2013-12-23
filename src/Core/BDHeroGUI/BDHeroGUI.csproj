@@ -147,6 +147,7 @@
     <Compile Include="Forms\FormDiscInfo.Designer.cs">
       <DependentUpon>FormDiscInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MediaDragData.cs" />
     <Compile Include="TrackFilter.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
