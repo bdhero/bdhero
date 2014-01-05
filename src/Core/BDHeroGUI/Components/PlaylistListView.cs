@@ -285,11 +285,13 @@ namespace BDHeroGUI.Components
             }
         }
 
-        public void SelectFirstPlaylist()
+        public void SelectBestPlaylist()
         {
             if (!VisiblePlaylistsInSortOrder.Any())
                 return;
-            SelectedPlaylist = VisiblePlaylistsInSortOrder.First();
+
+            SelectedPlaylist = VisiblePlaylistsInSortOrder.FirstOrDefault(IsBestChoice) ??
+                               VisiblePlaylistsInSortOrder.FirstOrDefault();
         }
 
         private void linkLabelShowFilterWindow_Click(object sender, EventArgs e)

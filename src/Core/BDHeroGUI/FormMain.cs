@@ -509,7 +509,7 @@ namespace BDHeroGUI
         private void RefreshUI()
         {
             RefreshPlaylists();
-            playlistListView.SelectFirstPlaylist();
+            playlistListView.SelectBestPlaylist();
             mediaPanel.Job = _controller.Job;
         }
 
