@@ -538,12 +538,12 @@ namespace BDHeroGUI
 
 //            optionsToolStripMenuItem.Enabled = enabled;
 
-            textBoxInput.Enabled = enabled;
+            textBoxInput.ReadOnly = !enabled;
             buttonScan.Enabled = enabled;
             buttonCancelScan.Enabled = !enabled && isScanning;
             rescanToolStripMenuItem.Enabled = enabled;
 
-            textBoxOutput.Enabled = enabled;
+            textBoxOutput.ReadOnly = !enabled;
             buttonConvert.Enabled = enabled && isPlaylistSelected;
             buttonCancelConvert.Enabled = !enabled && isConverting;
             linkLabelNameProviderPreferences.Enabled = enabled;
