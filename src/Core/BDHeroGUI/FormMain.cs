@@ -261,17 +261,11 @@ namespace BDHeroGUI
         // TODO: Move logic to Controller
         private void InitPluginMenu()
         {
-            Type prevPluginType = null;
-
-            foreach (var plugin in _controller.PluginsByType)
-            {
-                prevPluginType = InitPlugin(plugin, prevPluginType);
-            }
-
+            _controller.PluginsByType.Aggregate<IPlugin, Type>(null, InitPlugin);
             AutoCheckPluginMenu();
         }
 
-        private Type InitPlugin(IPlugin plugin, Type prevPluginType)
+        private Type InitPlugin([CanBeNull] Type prevPluginType, [NotNull] IPlugin plugin)
         {
             var curPluginInterfaces = plugin.GetType().GetInterfaces().Except(new[] { typeof(IPlugin) });
             var curPluginType = curPluginInterfaces.FirstOrDefault(type => type.GetInterfaces().Contains(typeof(IPlugin)));
