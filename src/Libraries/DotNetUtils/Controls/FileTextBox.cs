@@ -49,6 +49,22 @@ namespace DotNetUtils.Controls
         }
 
         /// <summary>
+        /// Gets or sets whether the text box is read only (i.e., selectable but not editable).
+        /// </summary>
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DefaultValue(false)]
+        public bool ReadOnly
+        {
+            get { return textBoxPath.ReadOnly; }
+            set
+            {
+                textBoxPath.ReadOnly = value;
+                buttonBrowse.Enabled = !value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the type of dialog that will be displayed when the user clicks the "Browse" button.
         /// </summary>
         [Browsable(true)]
