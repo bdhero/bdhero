@@ -81,7 +81,10 @@ namespace BDHeroGUI
             _controller = controller;
             _driveDetector = driveDetector;
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
+
             _updater = updater;
+            _updater.IsPortable = _directoryLocator.IsPortable;
+            _updateHelper = new UpdateHelper(_updater, AppUtils.AppVersion);
 
             _progressBarToolTip = new ToolTip();
             _progressBarToolTip.SetToolTip(progressBar, null);
@@ -98,14 +101,10 @@ namespace BDHeroGUI
             mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
 
-            _updater.IsPortable = _directoryLocator.IsPortable;
-
             var updateObserver = new FormMainUpdateObserver(this, checkForUpdatesToolStripMenuItem, null);
             updateObserver.BeforeInstallUpdate += update => DisableUpdates();
-            var currentVersion = AppUtils.AppVersion;
-            _updateHelper = new UpdateHelper(_updater, currentVersion);
-            _updateHelper.RegisterObserver(updateObserver);
             SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
+            _updateHelper.RegisterObserver(updateObserver);
 
             FormClosing += OnFormClosing;
 
