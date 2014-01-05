@@ -21,6 +21,7 @@ using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
 using DotNetUtils.Net;
+using log4net;
 using Microsoft.Win32;
 using OSUtils.DriveDetector;
 using OSUtils.TaskbarUtils;
@@ -34,7 +35,7 @@ namespace BDHeroGUI
     {
         private const string PluginEnabledMenuItemName = "enabled";
 
-        private readonly log4net.ILog _logger;
+        private readonly ILog _logger;
         private readonly IDirectoryLocator _directoryLocator;
         private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
@@ -67,7 +68,7 @@ namespace BDHeroGUI
 
         #region Constructor and OnLoad
 
-        public FormMain(log4net.ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, PluginLoader pluginLoader, IController controller, Updater updater, IDriveDetector driveDetector)
+        public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, PluginLoader pluginLoader, IController controller, Updater updater, IDriveDetector driveDetector)
         {
             InitializeComponent();
 
