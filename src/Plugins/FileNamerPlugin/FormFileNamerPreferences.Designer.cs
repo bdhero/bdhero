@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.selectableLabelMoviePlaceholders = new DotNetUtils.Controls.SelectableLabel();
@@ -86,11 +87,11 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label6.Location = new System.Drawing.Point(61, 100);
+            this.label6.Location = new System.Drawing.Point(63, 100);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 13);
+            this.label6.Size = new System.Drawing.Size(48, 13);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Example:";
+            this.label6.Text = "Preview:";
             // 
             // label4
             // 
@@ -141,11 +142,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label5.Location = new System.Drawing.Point(61, 55);
+            this.label5.Location = new System.Drawing.Point(63, 55);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(50, 13);
+            this.label5.Size = new System.Drawing.Size(48, 13);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Example:";
+            this.label5.Text = "Preview:";
             // 
             // textBoxMovieDirectory
             // 
@@ -202,6 +203,7 @@
             // 
             // hyperlinkLabelTVShowReleaseDateFormat
             // 
+            this.hyperlinkLabelTVShowReleaseDateFormat.Cursor = System.Windows.Forms.Cursors.Hand;
             this.hyperlinkLabelTVShowReleaseDateFormat.DisabledColor = System.Drawing.Color.Empty;
             this.hyperlinkLabelTVShowReleaseDateFormat.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.hyperlinkLabelTVShowReleaseDateFormat.HoverColor = System.Drawing.Color.Empty;
@@ -275,11 +277,11 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(61, 100);
+            this.label7.Location = new System.Drawing.Point(63, 100);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(50, 13);
+            this.label7.Size = new System.Drawing.Size(48, 13);
             this.label7.TabIndex = 9;
-            this.label7.Text = "Example:";
+            this.label7.Text = "Preview:";
             // 
             // label8
             // 
@@ -331,11 +333,11 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label9.Location = new System.Drawing.Point(61, 55);
+            this.label9.Location = new System.Drawing.Point(63, 55);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(50, 13);
+            this.label9.Size = new System.Drawing.Size(48, 13);
             this.label9.TabIndex = 6;
-            this.label9.Text = "Example:";
+            this.label9.Text = "Preview:";
             // 
             // textBoxTVShowDirectory
             // 
@@ -396,7 +398,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.textBoxReplaceSpacesWith);
             this.groupBox3.Controls.Add(this.checkBoxReplaceSpaces);
-            this.groupBox3.Location = new System.Drawing.Point(12, 12);
+            this.groupBox3.Location = new System.Drawing.Point(12, 270);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(810, 50);
             this.groupBox3.TabIndex = 0;
@@ -456,16 +458,16 @@
             this.columnHeaderNumber});
             this.listViewCodecNames.FullRowSelect = true;
             this.listViewCodecNames.GridLines = true;
-            listViewGroup7.Header = "Video";
-            listViewGroup7.Name = "listViewGroupVideo";
-            listViewGroup8.Header = "Audio";
-            listViewGroup8.Name = "listViewGroupAudio";
-            listViewGroup9.Header = "Subtitles";
-            listViewGroup9.Name = "listViewGroupSubtitles";
+            listViewGroup1.Header = "Video";
+            listViewGroup1.Name = "listViewGroupVideo";
+            listViewGroup2.Header = "Audio";
+            listViewGroup2.Name = "listViewGroupAudio";
+            listViewGroup3.Header = "Subtitles";
+            listViewGroup3.Name = "listViewGroupSubtitles";
             this.listViewCodecNames.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup7,
-            listViewGroup8,
-            listViewGroup9});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
             this.listViewCodecNames.HideSelection = false;
             this.listViewCodecNames.LabelEdit = true;
             this.listViewCodecNames.Location = new System.Drawing.Point(6, 6);
@@ -523,7 +525,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(12, 68);
+            this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(810, 252);
