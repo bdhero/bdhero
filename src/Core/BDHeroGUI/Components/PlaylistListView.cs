@@ -15,7 +15,7 @@ namespace BDHeroGUI.Components
     public partial class PlaylistListView : UserControl
     {
         /// <summary>
-        /// Gets or sets the  list of playlists to display, maintaining the user's current selection if possible.
+        /// Gets or sets the list of playlists to display, maintaining the user's current selection if possible.
         /// </summary>
         public IList<Playlist> Playlists
         {
