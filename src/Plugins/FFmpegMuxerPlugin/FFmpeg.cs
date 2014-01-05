@@ -66,8 +66,8 @@ namespace BDHero.Plugin.FFmpegMuxer
             SetExePath();
 
             SetFFmpegLogLevel();
-            ReplaceExistingFiles();
             RedirectProgressToFile();
+            ReplaceExistingFiles();
             SetInputFiles();
             SetMovieTitle(job);
             MapSelectedTracks();
