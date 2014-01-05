@@ -90,8 +90,8 @@ namespace WindowsOSUtils.TaskbarUtils
             var currentValue = (int) (percent * Multiplier);
             var maximumValue = (int) (MaxValue * Multiplier);
             _taskbarManager.SetProgressValue(currentValue, maximumValue, _windowHandle);
-            _progress = percent;
 #endif
+            _progress = percent;
             return this;
         }
 
