@@ -69,7 +69,7 @@ namespace BDHeroGUI
 
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IController controller, IDriveDetector driveDetector,
-                        Updater updater)
+                        ITaskbarItemFactory taskbarItemFactory, Updater updater)
         {
             InitializeComponent();
 
@@ -81,7 +81,7 @@ namespace BDHeroGUI
             _pluginLoader = pluginLoader;
             _controller = controller;
             _driveDetector = driveDetector;
-            _taskbarItem = new WindowsTaskbarItemFactory().GetInstance(Handle);
+            _taskbarItem = taskbarItemFactory.GetInstance(Handle);
             _updater = updater;
 
             _progressBarToolTip = new ToolTip();

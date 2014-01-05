@@ -68,7 +68,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskbarUtils\Windows7TaskbarItem.cs" />
     <Compile Include="TaskbarUtils\WindowsTaskbarItemFactory.cs" />
-    <Compile Include="TaskbarUtils\WindowsXPTaskbarItem.cs" />
     <Compile Include="Win32\ExtendedWindowStyles.cs" />
     <Compile Include="WindowsInjectorFactory.cs" />
     <Compile Include="WMI\Classes\DiskDrive.cs" />

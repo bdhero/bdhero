@@ -24,7 +24,7 @@ namespace WindowsOSUtils.TaskbarUtils
         {
             if (Windows7TaskbarItem.IsPlatformSupported)
                 return new Windows7TaskbarItem(windowHandle);
-            return new WindowsXPTaskbarItem();
+            return new MockTaskbarItem();
         }
     }
 }
