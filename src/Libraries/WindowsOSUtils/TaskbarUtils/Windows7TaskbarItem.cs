@@ -45,8 +45,10 @@ namespace WindowsOSUtils.TaskbarUtils
             if (!IsPlatformSupported)
                 throw new PlatformNotSupportedException("This class requires Windows 7 or higher");
 
+#if !__MonoCS__
             _taskbarManager = TaskbarManager.Instance;
             _windowHandle = windowHandle;
+#endif
         }
 
         public ITaskbarItem SetOverlayIcon(Icon icon, string accessibilityText)
