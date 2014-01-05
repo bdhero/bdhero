@@ -6,6 +6,9 @@ using System.Text;
 
 namespace OSUtils.TaskbarUtils
 {
+    /// <summary>
+    /// Interface for a Windows taskbar item (program icon) capable of displaying progress information.
+    /// </summary>
     public interface ITaskbarItem
     {
         /// <summary>

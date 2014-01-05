@@ -7,7 +7,8 @@ using OSUtils.TaskbarUtils;
 namespace WindowsOSUtils.TaskbarUtils
 {
     /// <summary>
-    /// XP-safe static wrapper for Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager
+    /// Mono-safe wrapper for <see cref="Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager"/>.
+    /// Requires Windows 7 or higher.
     /// </summary>
     public class Windows7TaskbarItem : ITaskbarItem
     {
@@ -39,6 +40,13 @@ namespace WindowsOSUtils.TaskbarUtils
             set { SetProgress(value); }
         }
 
+        /// <summary>
+        /// Constructs a new Windows 7 taskbar item object.
+        /// </summary>
+        /// <param name="windowHandle">Window handle.</param>
+        /// <exception cref="PlatformNotSupportedException">
+        ///     Thrown if the operating system is not Windows 7 or higher.
+        /// </exception>
         public Windows7TaskbarItem(IntPtr windowHandle)
         {
             if (!IsPlatformSupported)
