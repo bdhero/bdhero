@@ -523,6 +523,7 @@ namespace BDHeroGUI
         {
             var isPlaylistSelected = playlistListView.SelectedPlaylist != null;
             var hasJob = _controller.Job != null;
+            var isScanning = (_stage == Stage.Scan);
             var isConverting = (_stage == Stage.Convert);
 
             openBDROMFolderToolStripMenuItem.Enabled = enabled;
@@ -539,12 +540,12 @@ namespace BDHeroGUI
 
             textBoxInput.Enabled = enabled;
             buttonScan.Enabled = enabled;
-            buttonCancelScan.Enabled = !enabled;
+            buttonCancelScan.Enabled = !enabled && isScanning;
             rescanToolStripMenuItem.Enabled = enabled;
 
             textBoxOutput.Enabled = enabled;
             buttonConvert.Enabled = enabled && isPlaylistSelected;
-            buttonCancelConvert.Enabled = !enabled && isPlaylistSelected;
+            buttonCancelConvert.Enabled = !enabled && isConverting;
             linkLabelNameProviderPreferences.Enabled = enabled;
 
             splitContainerTop.Enabled = enabled && hasJob;
