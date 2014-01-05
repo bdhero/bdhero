@@ -126,7 +126,11 @@ namespace DotNetUtils.FS
             {
                 return null;
             }
-            return _multiIcon.First().FirstOrDefault(img => img.Size.Equals(new Size(size, size)));
+            var sizeObj = new Size(size, size);
+            return _multiIcon.First()
+                             .Where(img => img.Size.Equals(sizeObj))
+                             .OrderByDescending(img => img.ColorsInPalette)
+                             .FirstOrDefault();
         }
 
         /// <summary>
