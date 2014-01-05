@@ -283,10 +283,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\IconLib\IconLib.csproj">
-      <Project>{CE53747F-D2E6-4E1E-9EF4-A0AE02671B1D}</Project>
-      <Name>IconLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BDHero\BDHero.csproj">
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>
       <Name>BDHero</Name>
@@ -306,10 +302,6 @@
     <ProjectReference Include="..\..\Libraries\OSUtils\OSUtils.csproj">
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
-      <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
-      <Name>WindowsOSUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
