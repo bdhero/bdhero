@@ -40,16 +40,15 @@ namespace BDHeroGUI
         private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
         private readonly IController _controller;
+        private readonly IDriveDetector _driveDetector;
+        private readonly ITaskbarItem _taskbarItem;
 
         private readonly Updater _updater;
-        private readonly IDriveDetector _driveDetector;
         private readonly UpdateHelper _updateHelper;
 
         private readonly ToolTip _progressBarToolTip;
-        private readonly ITaskbarItem _taskbarItem;
 
         private bool _isRunning;
-
         private CancellationTokenSource _cancellationTokenSource;
 
         private ProgressProviderState _state = ProgressProviderState.Ready;
@@ -68,7 +67,9 @@ namespace BDHeroGUI
 
         #region Constructor and OnLoad
 
-        public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, PluginLoader pluginLoader, IController controller, Updater updater, IDriveDetector driveDetector)
+        public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
+                        PluginLoader pluginLoader, IController controller, IDriveDetector driveDetector,
+                        Updater updater)
         {
             InitializeComponent();
 
@@ -79,13 +80,12 @@ namespace BDHeroGUI
             _preferenceManager = preferenceManager;
             _pluginLoader = pluginLoader;
             _controller = controller;
-            _updater = updater;
             _driveDetector = driveDetector;
+            _taskbarItem = new WindowsTaskbarItemFactory().GetInstance(Handle);
+            _updater = updater;
 
             _progressBarToolTip = new ToolTip();
             _progressBarToolTip.SetToolTip(progressBar, null);
-
-            _taskbarItem = new WindowsTaskbarItemFactory().GetInstance(Handle);
 
             progressBar.UseCustomColors = true;
             progressBar.GenerateText = percentComplete => string.Format("{0}: {1:0.00}%", _state, percentComplete);
