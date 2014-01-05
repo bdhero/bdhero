@@ -523,12 +523,13 @@ namespace BDHeroGUI
         {
             var isPlaylistSelected = playlistListView.SelectedPlaylist != null;
             var hasJob = _controller.Job != null;
+            var isMuxing = (_stage == Stage.Convert);
 
             openBDROMFolderToolStripMenuItem.Enabled = enabled;
             openDiscToolStripMenuItem.Enabled = enabled;
             searchForMetadataToolStripMenuItem.Enabled = enabled && hasJob;
 
-            discInfoToolStripMenuItem.Enabled = enabled && hasJob;
+            discInfoToolStripMenuItem.Enabled = (enabled || isMuxing) && hasJob;
             filterPlaylistsToolStripMenuItem.Enabled = enabled;
             showAllPlaylistsToolStripMenuItem.Enabled = enabled;
             filterTracksToolStripMenuItem.Enabled = enabled;
