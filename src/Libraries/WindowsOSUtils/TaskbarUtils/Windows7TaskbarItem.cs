@@ -11,7 +11,6 @@ namespace WindowsOSUtils.TaskbarUtils
     /// </summary>
     public class Windows7TaskbarItem : ITaskbarItem
     {
-        private const double MinValue = 0.0;
         private const double MaxValue = 100.0;
 
         /// <summary>
