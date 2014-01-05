@@ -185,7 +185,9 @@ namespace BDHeroGUI
             InitDriveDetector();
 
             toolStripStatusLabelOffline.Visible = false;
-            var monitor = new NetworkStatusMonitor(null, SetIsOnline);
+
+            // TODO: Uncomment (if feasible) w/ setting to enable/disable
+//            var monitor = new NetworkStatusMonitor(null, SetIsOnline);
         }
 
         private void SetIsOnline(bool isOnline)
