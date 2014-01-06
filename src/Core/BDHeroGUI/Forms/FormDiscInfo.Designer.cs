@@ -66,6 +66,7 @@
             this.labelQuickSummary.ReadOnly = true;
             this.labelQuickSummary.Size = new System.Drawing.Size(1033, 13);
             this.labelQuickSummary.TabIndex = 0;
+            this.labelQuickSummary.Text = "E:\\";
             // 
             // discInfoMetadataPanel
             // 
