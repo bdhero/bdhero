@@ -184,7 +184,7 @@ namespace BDHeroGUI.Components
 
         private ToolStripMenuItem CreateShowInExplorer()
         {
-            return new ToolStripMenuItem("Show in &Explorer", Resources.folder_open, ShowInExplorer);
+            return new ToolStripMenuItem("&Show in folder", Resources.folder_open, ShowInExplorer);
         }
 
         private void OpenFile(object sender, EventArgs args)

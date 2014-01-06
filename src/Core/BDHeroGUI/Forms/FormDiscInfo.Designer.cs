@@ -123,7 +123,7 @@
             this.showInExplorerToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.folder_open;
             this.showInExplorerToolStripMenuItem.Name = "showInExplorerToolStripMenuItem";
             this.showInExplorerToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.showInExplorerToolStripMenuItem.Text = "Show in &Explorer";
+            this.showInExplorerToolStripMenuItem.Text = "&Show in folder";
             this.showInExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInExplorerToolStripMenuItem_Click);
             // 
             // copyPathToClipboardToolStripMenuItem
