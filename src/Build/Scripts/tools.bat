@@ -16,7 +16,9 @@ Build\Tools\Versioner -v > VERSION.tmp
 set /p Version= < VERSION.tmp
 del VERSION.tmp
 
-set SetupPath=Artifacts\bdhero-%Version%-setup.exe
-set SfxPath=Artifacts\bdhero-%Version%-sfx.exe
-set SevenZipPath=Artifacts\bdhero-%Version%.7z
-set ZipPath=Artifacts\bdhero-%Version%.zip
+set ArtifactsPath=..\Artifacts
+
+set SetupPath=%ArtifactsPath%\bdhero-%Version%-setup.exe
+set SfxPath=%ArtifactsPath%\bdhero-%Version%-sfx.exe
+set SevenZipPath=%ArtifactsPath%\bdhero-%Version%.7z
+set ZipPath=%ArtifactsPath%\bdhero-%Version%.zip
