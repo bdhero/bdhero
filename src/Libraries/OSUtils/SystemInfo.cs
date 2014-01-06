@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 
 namespace OSUtils
 {
-// ReSharper disable MemberCanBePrivate.Global
     public class SystemInfo
     {
         public static readonly SystemInfo Instance = new SystemInfo();
@@ -22,43 +20,22 @@ namespace OSUtils
         public readonly OS OS;
 
         /// <summary>
-        /// Gets the total amount of installed physical memory in bytes.
+        /// Gets information about the physical hardware.
         /// </summary>
         [UsedImplicitly]
-        public ulong TotalPhysicalMemory { get { return GetTotalPhysicalMemory(); } }
+        public readonly HardwareInfo Hardware;
 
         /// <summary>
-        /// Gets the amount of available system memory in bytes.
+        /// Gets information about the current process.
         /// </summary>
         [UsedImplicitly]
-        public ulong AvailableMemory { get { return GetAvailableMemory(); } }
-
-        /// <summary>
-        /// Gets the width of memory addresses in bits (e.g., 32, 64).
-        /// </summary>
-        [UsedImplicitly]
-        public readonly int MemoryWidth;
-
-        /// <summary>
-        /// Gets whether the current process is using 64-bit instructions and memory addresses.
-        /// </summary>
-        [UsedImplicitly]
-        public readonly bool Is64BitProcess;
-
-        /// <summary>
-        /// Gets the number of logical processors on the CPU.  On Intel processors with hyperthreading,
-        /// this value will be the number of cores multiplied by 2 (e.g., a quad core Intel Core i7
-        /// would return 8).
-        /// </summary>
-        [UsedImplicitly]
-        public readonly int ProcessorCount;
+        public readonly ProcessInfo Process;
 
         private SystemInfo()
         {
             OS = GetOS();
-            MemoryWidth = IntPtr.Size * 8;
-            Is64BitProcess = Environment.Is64BitProcess;
-            ProcessorCount = Environment.ProcessorCount;
+            Hardware = new HardwareInfo();
+            Process = new ProcessInfo();
         }
 
         private static OS GetOS()
@@ -66,6 +43,8 @@ namespace OSUtils
             var os = Environment.OSVersion;
             return new OS(GetOSType(), os.Version, os.VersionString, Environment.Is64BitOperatingSystem);
         }
+
+        #region Native interop
 
         private static OSType GetOSType()
         {
@@ -114,38 +93,53 @@ namespace OSUtils
             return OSType.Unix;
         }
 
-        private enum MemPropOSX
+        #endregion
+
+        public override string ToString()
         {
-            Total, Used, Free
+            return ReflectionUtils.ToString(this);
+        }
+    }
+
+    public class HardwareInfo
+    {
+        /// <summary>
+        /// Gets the number of logical processors on the CPU.  On Intel processors with hyperthreading,
+        /// this value will be the number of cores multiplied by 2 (e.g., a quad core Intel Core i7
+        /// would return 8).
+        /// </summary>
+        [UsedImplicitly]
+        public readonly int ProcessorCount;
+
+        /// <summary>
+        /// Gets the total amount of installed physical memory in bytes.
+        /// </summary>
+        [UsedImplicitly]
+        public readonly ulong TotalPhysicalMemory;
+
+        /// <summary>
+        /// Gets the amount of available system memory in bytes.
+        /// </summary>
+        [UsedImplicitly]
+        public ulong AvailableMemory { get { return GetAvailableMemory(); } }
+
+        public HardwareInfo()
+        {
+            ProcessorCount = Environment.ProcessorCount;
+            TotalPhysicalMemory = GetTotalPhysicalMemory();
         }
 
-        private static ulong GetMemoryOSX(MemPropOSX prop)
-        {
-            var propName = prop == MemPropOSX.Free ? "physmem" :
-                           prop == MemPropOSX.Used ? "usermem" :
-                                                     "memsize";
-            using (var process = new Process())
-            {
-                process.StartInfo = new ProcessStartInfo("sysctl", "-a")
-                                    {
-                                        UseShellExecute = false,
-                                        RedirectStandardOutput = true,
-                                        RedirectStandardError = true,
-                                        CreateNoWindow = true,
-                                        WindowStyle = ProcessWindowStyle.Hidden,
-                                    };
-                process.Start();
-                var output = process.StandardOutput.ReadToEnd();
-                var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
-                return match.Success ? ulong.Parse(match.Groups[propName].Value) : 0;
-            }
-        }
+        #region Native interop
+
+        #region Available memory
 
         private static ulong GetAvailableMemory()
         {
             ulong free = 0;
-            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } } catch {}
-            try { free = GetAvailableMemoryOSX(); if (free > 0) { return free; } } catch {}
+            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX(); if (free > 0) { return free; } }
+            catch { }
             return free;
         }
 
@@ -153,7 +147,7 @@ namespace OSUtils
         {
             using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
             {
-                return (ulong) counter.NextValue();
+                return (ulong)counter.NextValue();
             }
         }
 
@@ -161,6 +155,10 @@ namespace OSUtils
         {
             return GetTotalPhysicalMemoryOSX() - GetMemoryOSX(MemPropOSX.Used);
         }
+
+        #endregion
+
+        #region Total physical memory
 
         /// <summary>
         /// Gets the total amount of installed physical memory on the system using native Win32 interop,
@@ -171,9 +169,12 @@ namespace OSUtils
         private static ulong GetTotalPhysicalMemory()
         {
             ulong total = 0;
-            try { total = GetTotalPhysicalMemoryWin(); if (total > 0) { return total; } } catch {}
-            try { total = GetTotalPhysicalMemoryNix(); if (total > 0) { return total; } } catch {}
-            try { total = GetTotalPhysicalMemoryOSX(); if (total > 0) { return total; } } catch {}
+            try { total = GetTotalPhysicalMemoryWin(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryNix(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryOSX(); if (total > 0) { return total; } }
+            catch { }
             return total;
         }
 
@@ -193,7 +194,7 @@ namespace OSUtils
         /// <returns>The total amount of installed physical memory on the system.</returns>
         private static ulong GetTotalPhysicalMemoryNix()
         {
-            return (ulong) new PerformanceCounter("Mono Memory", "Total Physical Memory").NextValue();
+            return (ulong)new PerformanceCounter("Mono Memory", "Total Physical Memory").NextValue();
         }
 
         /// <summary>
@@ -203,6 +204,50 @@ namespace OSUtils
         private static ulong GetTotalPhysicalMemoryOSX()
         {
             return GetMemoryOSX(MemPropOSX.Total);
+        }
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+
+        #endregion
+
+        #region Mac-specific memory
+
+        private static ulong GetMemoryOSX(MemPropOSX prop)
+        {
+            using (var process = new Process())
+            {
+                process.StartInfo = new ProcessStartInfo("sysctl", "-a")
+                                    {
+                                        UseShellExecute = false,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardError = true,
+                                        CreateNoWindow = true,
+                                        WindowStyle = ProcessWindowStyle.Hidden,
+                                    };
+                process.Start();
+                var propName = prop.GetAttributeProperty<DescriptionAttribute, string>(attribute => attribute.Description);
+                var output = process.StandardOutput.ReadToEnd();
+                var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
+                return match.Success ? UInt64.Parse(match.Groups[propName].Value) : 0;
+            }
+        }
+
+        #endregion
+
+        #region Structs and enums
+
+        private enum MemPropOSX
+        {
+            [Description("memsize")]
+            Total,
+
+            [Description("usermem")]
+            Used,
+
+            [Description("physmem")]
+            Free
         }
 
         /// <summary>
@@ -257,7 +302,7 @@ namespace OSUtils
             public ulong ullAvailExtendedVirtual;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="MEMORYSTATUSEX"/> class.
+            /// Initializes a new instance of the <see cref="OSUtils.HardwareInfo.MEMORYSTATUSEX"/> class.
             /// </summary>
             public MEMORYSTATUSEX()
             {
@@ -265,14 +310,39 @@ namespace OSUtils
             }
         }
 
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+        #endregion
+
+        #endregion
 
         public override string ToString()
         {
             return ReflectionUtils.ToString(this);
         }
     }
-// ReSharper restore MemberCanBePrivate.Global
+
+    public class ProcessInfo
+    {
+        /// <summary>
+        /// Gets the width of memory addresses in bits (e.g., 32, 64).
+        /// </summary>
+        [UsedImplicitly]
+        public readonly int MemoryWidth;
+
+        /// <summary>
+        /// Gets whether the current process is using 64-bit instructions and memory addresses.
+        /// </summary>
+        [UsedImplicitly]
+        public readonly bool Is64Bit;
+
+        public ProcessInfo()
+        {
+            MemoryWidth = IntPtr.Size * 8;
+            Is64Bit = Environment.Is64BitProcess;
+        }
+
+        public override string ToString()
+        {
+            return ReflectionUtils.ToString(this);
+        }
+    }
 }
