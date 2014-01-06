@@ -168,7 +168,7 @@ namespace BDHeroGUI.Components
 
             // File-specific
             Items.Add(CreateOpenFile());
-            Items.Add(CreateShowInExplorer());
+            Items.Add(CreateShowInFolder());
 
             // Common
             Items.Add(CreateCopyToClipboard());
@@ -182,7 +182,7 @@ namespace BDHeroGUI.Components
             return new ToolStripMenuItem(text, _association.GetProgramImage(16), OpenFile);
         }
 
-        private ToolStripMenuItem CreateShowInExplorer()
+        private ToolStripMenuItem CreateShowInFolder()
         {
             return new ToolStripMenuItem("&Show in folder", Resources.folder_open, ShowInExplorer);
         }
@@ -207,13 +207,13 @@ namespace BDHeroGUI.Components
             Items.Add(CreatePath());
 
             // Directory-specific
-            Items.Add(CreateExplore());
+            Items.Add(CreateOpenFolder());
 
             // Common
             Items.Add(CreateCopyToClipboard());
         }
 
-        private ToolStripMenuItem CreateExplore()
+        private ToolStripMenuItem CreateOpenFolder()
         {
             return new ToolStripMenuItem("&Open folder", Resources.folder_open, Explore);
         }
