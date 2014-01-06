@@ -39,8 +39,8 @@
             this.copyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.selectallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelSummary = new DotNetUtils.Controls.SelectableLabel();
             this.checkBoxShowDetails = new System.Windows.Forms.CheckBox();
-            this.labelSummary = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.systemIcon)).BeginInit();
             this.panel.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -73,11 +73,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel.Controls.Add(this.panel2);
-            this.panel.Controls.Add(this.checkBoxShowDetails);
             this.panel.Controls.Add(this.labelSummary);
-            this.panel.Location = new System.Drawing.Point(50, 13);
+            this.panel.Location = new System.Drawing.Point(53, 13);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(422, 207);
+            this.panel.Size = new System.Drawing.Size(419, 207);
             this.panel.TabIndex = 2;
             // 
             // panel2
@@ -86,7 +85,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 13);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(422, 177);
+            this.panel2.Size = new System.Drawing.Size(419, 194);
             this.panel2.TabIndex = 1;
             // 
             // textBoxDetails
@@ -96,11 +95,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDetails.ContextMenuStrip = this.contextMenuStrip;
             this.textBoxDetails.HideSelection = false;
-            this.textBoxDetails.Location = new System.Drawing.Point(3, 5);
-            this.textBoxDetails.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.textBoxDetails.Location = new System.Drawing.Point(0, 10);
+            this.textBoxDetails.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.textBoxDetails.Name = "textBoxDetails";
             this.textBoxDetails.ReadOnly = true;
-            this.textBoxDetails.Size = new System.Drawing.Size(416, 164);
+            this.textBoxDetails.Size = new System.Drawing.Size(419, 184);
             this.textBoxDetails.TabIndex = 1;
             this.textBoxDetails.Text = "";
             // 
@@ -140,26 +139,25 @@
             this.selectallToolStripMenuItem.Text = "Select &all";
             this.selectallToolStripMenuItem.Click += new System.EventHandler(this.selectallToolStripMenuItem_Click);
             // 
-            // checkBoxShowDetails
-            // 
-            this.checkBoxShowDetails.AutoSize = true;
-            this.checkBoxShowDetails.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.checkBoxShowDetails.Location = new System.Drawing.Point(0, 190);
-            this.checkBoxShowDetails.Name = "checkBoxShowDetails";
-            this.checkBoxShowDetails.Size = new System.Drawing.Size(422, 17);
-            this.checkBoxShowDetails.TabIndex = 0;
-            this.checkBoxShowDetails.Text = "Show &Details";
-            this.checkBoxShowDetails.UseVisualStyleBackColor = true;
-            // 
             // labelSummary
             // 
-            this.labelSummary.AutoSize = true;
             this.labelSummary.Dock = System.Windows.Forms.DockStyle.Top;
             this.labelSummary.Location = new System.Drawing.Point(0, 0);
             this.labelSummary.Name = "labelSummary";
-            this.labelSummary.Size = new System.Drawing.Size(100, 13);
+            this.labelSummary.Size = new System.Drawing.Size(419, 13);
             this.labelSummary.TabIndex = 0;
             this.labelSummary.Text = "Exception Message";
+            // 
+            // checkBoxShowDetails
+            // 
+            this.checkBoxShowDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxShowDetails.AutoSize = true;
+            this.checkBoxShowDetails.Location = new System.Drawing.Point(53, 230);
+            this.checkBoxShowDetails.Name = "checkBoxShowDetails";
+            this.checkBoxShowDetails.Size = new System.Drawing.Size(88, 17);
+            this.checkBoxShowDetails.TabIndex = 3;
+            this.checkBoxShowDetails.Text = "Show &Details";
+            this.checkBoxShowDetails.UseVisualStyleBackColor = true;
             // 
             // DetailForm
             // 
@@ -170,6 +168,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.buttonOk;
             this.ClientSize = new System.Drawing.Size(484, 261);
+            this.Controls.Add(this.checkBoxShowDetails);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.systemIcon);
             this.Controls.Add(this.buttonOk);
@@ -182,10 +181,10 @@
             this.Text = "DetailForm";
             ((System.ComponentModel.ISupportInitialize)(this.systemIcon)).EndInit();
             this.panel.ResumeLayout(false);
-            this.panel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -194,14 +193,14 @@
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.PictureBox systemIcon;
         private System.Windows.Forms.Panel panel;
-        private System.Windows.Forms.CheckBox checkBoxShowDetails;
         private System.Windows.Forms.RichTextBox textBoxDetails;
-        private System.Windows.Forms.Label labelSummary;
+        private DotNetUtils.Controls.SelectableLabel labelSummary;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem copySelectedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem selectallToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxShowDetails;
     }
 }
