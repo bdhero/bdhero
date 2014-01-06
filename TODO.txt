@@ -1,6 +1,8 @@
 Chores
 ======
 
+[ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
+
 [ ] Test silent installs and updates
 [ ] Add /portable command line arg
 
@@ -14,15 +16,22 @@ Chores
 [ ] Unit tests
     [ ] Exception handling in all scenarios
 
-Bugs
-====
-
-[ ] XP: ProgressBar2 black background
 [ ] Remove unused outputPath args in Controller.cs
 [ ] Clean up temp files
     [ ] FFmpegMuxerPlugin: %TEMP%/FFmpegMuxerPlugin/%PID%/..?
     [ ] AutoUpdate: %TEMP%/bdhero/update/*.exe
     [ ] Installer rollback: %TEMP%/bdhero/rollback
+
+Bugs
+====
+
+[ ] Deception (2008): Metadata search is not using year from ISAN
+    V:\BD\Uncategorized\DECEPTION
+
+[ ] The Wolverine: FFmpeg fails without any error message (same as other X-Men/Wolverine movie(s)?)
+[ ] FFmpeg: error messages (e.g., "Permission denied") do not get logged with -loglevel fatal
+
+[ ] XP: ProgressBar2 black background
 
 [ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
 
@@ -32,6 +41,7 @@ Bugs
 Features
 ========
 
+[ ] Centralize cover art dimensions
 [ ] Finish FormMediaCustom.cs (incl. drag-n-drop from browsers)
 
 [ ] Revamp "Disc Info" dialog
@@ -57,6 +67,27 @@ Mono
 
 Backlog
 =======
+
+[ ] "About 1 hour remaining" when estimates are in flux
+[ ] Estimate progress for the last 5 seconds (ever 5 seconds reset the counters for "time started" and "initial progress percentage")
+
+[ ] Scrape more information out of bdmt_eng.xml
+
+[ ] What does AnyDVD HD report when it can't auto-detect the region code of a region-locked disc (e.g., Region A) and AnyDVD is configured to NOT remove region codes?  What does it report when it DOES remove the region code?
+
+[ ] Allow individual plugins to be "skipped" at runtime via "Cancel" button dropdown
+
+[ ] Offline detection
+
+[ ] Remember playlist/track filters
+[ ] Allow user to maintain a list of playlist/track filter presets
+
+[ ] Make HyperlinkLabels draggable
+
+[ ] Prompt user for "Scan or convert? (Remember choice)" when user presses <ENTER> in FormMain
+[ ] Prompt user "Are you sure you want to cancel muxing?" when they press "Cancel" button (w/ "Remember choice")
+
+[ ] Allow opening Blu-ray discs w/ BDHero (Windows association)
 
 [ ] Investigate 3D scanning output from BDInfo:
     4352    2043000 5.32
