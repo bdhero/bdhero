@@ -85,6 +85,8 @@ namespace BDHeroGUI
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelRoot.SuspendLayout();
@@ -376,7 +378,8 @@ namespace BDHeroGUI
             this.viewToolStripMenuItem,
             this.pluginsToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.updateToolStripMenuItem});
             this.menuStripTop.Location = new System.Drawing.Point(0, 0);
             this.menuStripTop.Name = "menuStripTop";
             this.menuStripTop.Size = new System.Drawing.Size(1178, 24);
@@ -638,6 +641,22 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem.Text = "&About BDHero";
             this.aboutBDHeroToolStripMenuItem.Click += new System.EventHandler(this.aboutBDHeroToolStripMenuItem_Click);
             // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.downloadUpdateToolStripMenuItem});
+            this.updateToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.asterisk_orange;
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.updateToolStripMenuItem.Text = "&Update";
+            // 
+            // downloadUpdateToolStripMenuItem
+            // 
+            this.downloadUpdateToolStripMenuItem.Name = "downloadUpdateToolStripMenuItem";
+            this.downloadUpdateToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.downloadUpdateToolStripMenuItem.Text = "Download v0.0.0.0";
+            this.downloadUpdateToolStripMenuItem.Click += new System.EventHandler(this.downloadUpdateToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -755,6 +774,8 @@ namespace BDHeroGUI
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelOffline;
         private System.Windows.Forms.ToolStripMenuItem newInstanceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadUpdateToolStripMenuItem;
     }
 }
 

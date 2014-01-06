@@ -1,8 +1,10 @@
 using System;
 using System.Windows.Forms;
+using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Net;
 using UpdateLib;
+using WebBrowserUtils;
 
 namespace BDHeroGUI.Helpers
 {
@@ -10,15 +12,18 @@ namespace BDHeroGUI.Helpers
     {
         private readonly Form _form;
         private readonly ToolStripItem _menuItem;
-        private readonly Control _button;
+        private readonly ToolStripItem _updateMenu;
+        private readonly ToolStripItem _downloadItem;
 
         public event BeforeInstallUpdateEventHandler BeforeInstallUpdate;
 
-        public FormMainUpdateObserver(Form form, ToolStripItem menuItem, Control button)
+        public FormMainUpdateObserver(Form form, ToolStripItem menuItem, ToolStripItem updateMenu, ToolStripItem downloadItem)
         {
             _form = form;
             _menuItem = menuItem;
-            _button = button;
+            _updateMenu = updateMenu;
+            _updateMenu.Visible = false;
+            _downloadItem = downloadItem;
         }
 
         public void OnBeforeCheckForUpdate()
@@ -27,10 +32,22 @@ namespace BDHeroGUI.Helpers
             _menuItem.Enabled = false;
         }
 
+        public void OnUpdateReadyToDownload(Update update)
+        {
+            _menuItem.Text = string.Format("Download Version {0}", update.Version);
+            _menuItem.Enabled = true;
+
+            _updateMenu.Visible = true;
+            _downloadItem.Text = string.Format("Download v{0}...", update.Version);
+            _downloadItem.Image = DefaultWebBrowser.Instance.GetIconAsBitmap(16) ?? Resources.network;
+        }
+
         public void OnBeforeDownloadUpdate(Update update)
         {
             _menuItem.Text = string.Format("Downloading Version {0}...", update.Version);
             _menuItem.Enabled = false;
+
+            _updateMenu.Visible = false;
         }
 
         public void OnUpdateDownloadProgressChanged(Update update, FileDownloadProgress progress)

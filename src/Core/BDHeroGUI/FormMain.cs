@@ -83,7 +83,7 @@ namespace BDHeroGUI
 
             _updater = updater;
             _updater.IsPortable = _directoryLocator.IsPortable;
-            _updateHelper = new UpdateHelper(_updater, AppUtils.AppVersion);
+            _updateHelper = new UpdateHelper(_updater, AppUtils.AppVersion) { AllowDownload = false };
 
             _progressBarToolTip = new ToolTip();
             _progressBarToolTip.SetToolTip(progressBar, null);
@@ -100,7 +100,10 @@ namespace BDHeroGUI
             mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
 
-            var updateObserver = new FormMainUpdateObserver(this, checkForUpdatesToolStripMenuItem, null);
+            var updateObserver = new FormMainUpdateObserver(this,
+                                                            checkForUpdatesToolStripMenuItem,
+                                                            updateToolStripMenuItem,
+                                                            downloadUpdateToolStripMenuItem);
             updateObserver.BeforeInstallUpdate += update => DisableUpdates();
             SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
             _updateHelper.RegisterObserver(updateObserver);
@@ -378,12 +381,13 @@ namespace BDHeroGUI
         private void InitUpdateCheck()
         {
             Disposed += (sender, args) => InstallUpdateIfAvailable(true);
-            _updateHelper.CheckForUpdates();
+            _updateHelper.Click();
         }
 
         private void InstallUpdateIfAvailable(bool silent)
         {
-            _updateHelper.InstallUpdateIfAvailable(silent);
+            // TODO: Re-enable when automatic updating is implemented
+//            _updateHelper.InstallUpdateIfAvailable(silent);
         }
 
         #endregion
@@ -834,12 +838,17 @@ namespace BDHeroGUI
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _updateHelper.CheckForUpdates();
+            _updateHelper.Click();
         }
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog(this);
+        }
+
+        private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _updateHelper.Click();
         }
 
         #endregion

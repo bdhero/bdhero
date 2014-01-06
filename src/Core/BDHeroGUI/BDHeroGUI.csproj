@@ -284,6 +284,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\WebBrowserUtils\WebBrowserUtils.csproj">
+      <Project>{DB13678F-8815-4BEC-8198-2BAC286A3BAF}</Project>
+      <Name>WebBrowserUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BDHero\BDHero.csproj">
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>
       <Name>BDHero</Name>

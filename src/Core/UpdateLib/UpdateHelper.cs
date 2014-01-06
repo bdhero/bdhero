@@ -23,6 +23,7 @@ namespace UpdateLib
 
         private UpdateButtonClickEventHandler _updatesButtonClickAction;
 
+        public bool AllowDownload = true;
         public bool AllowInstallUpdate = true;
 
         public bool CanInstallUpdate
@@ -66,7 +67,7 @@ namespace UpdateLib
 
         #endregion
 
-        public void CheckForUpdates()
+        public void Click()
         {
             if (_updatesButtonClickAction != null)
                 _updatesButtonClickAction();
@@ -111,6 +112,12 @@ namespace UpdateLib
             Notify(observer => observer.OnBeforeCheckForUpdate());
         }
 
+        private void OnUpdateReadyToDownload(CancellationToken cancellationToken)
+        {
+            Logger.Info(string.Format("Version {0} is available", _updater.LatestUpdate.Version));
+            Notify(observer => observer.OnUpdateReadyToDownload(_updater.LatestUpdate));
+        }
+
         private void OnBeforeDownload(CancellationToken cancellationToken)
         {
             Logger.Info(string.Format("Downloading version {0}", _updater.LatestUpdate.Version));
@@ -122,9 +129,12 @@ namespace UpdateLib
             _updater.CheckForUpdate(_currentVersion);
 
             if (!_updater.IsUpdateAvailable)
-            {
                 return;
-            }
+
+            invoker.InvokeOnUIThreadSync(OnUpdateReadyToDownload);
+
+            if (!AllowDownload)
+                return;
 
             invoker.InvokeOnUIThreadSync(OnBeforeDownload);
 
@@ -163,9 +173,18 @@ namespace UpdateLib
         {
             if (_updater.IsUpdateAvailable)
             {
-                _updatesButtonClickAction = InstallUpdateIfAvailable;
-                Logger.Info("Update is ready to install");
-                Notify(observer => observer.OnUpdateReadyToInstall(_updater.LatestUpdate));
+                if (AllowDownload && AllowInstallUpdate)
+                {
+                    _updatesButtonClickAction = InstallUpdateIfAvailable;
+                    Logger.Info("Update is ready to install");
+                    Notify(observer => observer.OnUpdateReadyToInstall(_updater.LatestUpdate));
+                }
+                else
+                {
+                    _updatesButtonClickAction = LaunchBrowser;
+                    Logger.Info("Update is available");
+                    Notify(observer => observer.OnUpdateReadyToDownload(_updater.LatestUpdate));
+                }
             }
             else
             {
@@ -173,6 +192,11 @@ namespace UpdateLib
                 Logger.Info(string.Format("Application is already up to date"));
                 Notify(observer => observer.OnNoUpdateAvailable());
             }
+        }
+
+        private void LaunchBrowser()
+        {
+            FileUtils.OpenUrl("http://bdhero.org/");
         }
     }
 

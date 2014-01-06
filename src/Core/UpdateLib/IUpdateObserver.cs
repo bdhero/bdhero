@@ -6,6 +6,7 @@ namespace UpdateLib
     public interface IUpdateObserver
     {
         void OnBeforeCheckForUpdate();
+        void OnUpdateReadyToDownload(Update update);
         void OnBeforeDownloadUpdate(Update update);
         void OnUpdateDownloadProgressChanged(Update update, FileDownloadProgress progress);
         void OnUpdateException(Exception exception);
