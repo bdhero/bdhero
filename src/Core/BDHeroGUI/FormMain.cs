@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using WindowsOSUtils.Win32;
 using BDHero;
 using BDHero.BDROM;
 using BDHero.Plugin;
@@ -115,6 +116,8 @@ namespace BDHeroGUI
             {
                 textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
             }
+
+            InitSystemMenu();
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
@@ -398,6 +401,28 @@ namespace BDHeroGUI
         {
             openDiscToolStripMenuItem.Initialize(this, _driveDetector);
             openDiscToolStripMenuItem.DiscSelected += driveInfo => Scan(driveInfo.Name);
+        }
+
+        #endregion
+
+        #region System menu
+
+        private void InitSystemMenu()
+        {
+            var systemMenu = new SystemMenu(this, this);
+
+            var alwaysOnTopMenuItem = systemMenu.CreateMenuItem("Always on &top");
+            alwaysOnTopMenuItem.Clicked += delegate
+                                     {
+                                         var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
+                                         TopMost = alwaysOnTop;
+                                         alwaysOnTopMenuItem.Checked = alwaysOnTop;
+                                         systemMenu.UpdateMenu(alwaysOnTopMenuItem);
+                                     };
+
+            uint pos = 5;
+            systemMenu.InsertSeparator(pos++);
+            systemMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
         }
 
         #endregion
