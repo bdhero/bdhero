@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AppUtils.cs" />
     <Compile Include="AssemblyUtils.cs" />
+    <Compile Include="Attributes\FileSizeAttribute.cs" />
     <Compile Include="Concurrency\AtomicValue.cs" />
     <Compile Include="Concurrency\ConcurrentLinkedSet.cs" />
     <Compile Include="Concurrency\ConcurrentMultiValueDictionary.cs" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <None Include="Resources\clipboard-arrow.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

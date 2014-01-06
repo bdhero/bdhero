@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Attributes;
 using DotNetUtils.Extensions;
 
 namespace OSUtils
@@ -114,12 +115,14 @@ namespace OSUtils
         /// <summary>
         /// Gets the total amount of installed physical memory in bytes.
         /// </summary>
+        [FileSize]
         [UsedImplicitly]
         public readonly ulong TotalPhysicalMemory;
 
         /// <summary>
         /// Gets the amount of available system memory in bytes.
         /// </summary>
+        [FileSize]
         [UsedImplicitly]
         public ulong AvailableMemory { get { return GetAvailableMemory(); } }
 
