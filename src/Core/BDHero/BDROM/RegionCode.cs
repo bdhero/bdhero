@@ -43,7 +43,7 @@ namespace BDHero.BDROM
         public static RegionCode Parse(string str)
         {
             RegionCode code;
-            Enum.TryParse<RegionCode>(str, out code);
+            Enum.TryParse(str, out code);
             return code;
         }
     }
