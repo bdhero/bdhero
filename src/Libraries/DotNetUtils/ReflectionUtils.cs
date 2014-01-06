@@ -6,8 +6,16 @@ using DotNetUtils.Attributes;
 
 namespace DotNetUtils
 {
+    /// <summary>
+    ///     Utility methods for working with .NET reflection.
+    /// </summary>
     public static class ReflectionUtils
     {
+        /// <summary>
+        ///     Generates a hierarchical YAML-like string representation of an object.
+        /// </summary>
+        /// <param name="obj">Object to stringify.</param>
+        /// <returns>Human-readable string representation of <paramref name="obj"/>.</returns>
         public static string ToString(Object obj)
         {
             var fields = obj.GetType()
