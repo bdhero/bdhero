@@ -29,6 +29,9 @@ namespace DotNetUtils
 
         private static string ToStringImpl(MemberInfo member, Object value)
         {
+            if (value == null)
+                return "null";
+
             var fileSizeAttr = member.GetCustomAttributes(typeof (FileSizeAttribute), false)
                                      .OfType<FileSizeAttribute>()
                                      .FirstOrDefault();
@@ -41,7 +44,7 @@ namespace DotNetUtils
                     return fileSizeAttr.Format((ulong) value);
             }
 
-            var str = (value ?? "null").ToString();
+            var str = value.ToString();
             var lines = Regex.Split(str, @"[\n\r\f]+");
 
             if (lines.Count() > 1)
