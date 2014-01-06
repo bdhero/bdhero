@@ -11,7 +11,7 @@ namespace BDHero.BDROM
         /// <summary>
         /// No region code is present.
         /// </summary>
-        None = 0,
+        None = -1,
 
         /// <summary>
         /// A/1: Includes most North, Central, and South American and Southeast Asian countries plus Taiwan, Japan, Hong Kong, Macau, and Korea.
@@ -42,6 +42,11 @@ namespace BDHero.BDROM
     {
         public static RegionCode Parse(string str)
         {
+            // Older versions of AnyDVD HD (7.1.3.0 and lower) used "0" for region-free, whereas
+            // newer versions use "-1".  Normalize old values to their new equivalent.
+            if (str == "0")
+                str = "-1";
+
             RegionCode code;
             Enum.TryParse(str, out code);
             return code;
