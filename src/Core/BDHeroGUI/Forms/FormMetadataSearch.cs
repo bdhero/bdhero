@@ -107,7 +107,7 @@ namespace BDHeroGUI.Forms
 
         private void TextBoxYearOnTextChanged(object sender, EventArgs eventArgs)
         {
-            if (Regex.IsMatch(textBoxYear.Text, @"\d{4}"))
+            if (Regex.IsMatch(textBoxYear.Text, @"^[0-9]{4}$"))
                 SearchQuery.Year = int.Parse(textBoxYear.Text);
             else
                 SearchQuery.Year = null;
