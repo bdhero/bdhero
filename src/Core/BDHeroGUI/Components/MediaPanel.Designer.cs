@@ -31,9 +31,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.linkLabelCustom = new DotNetUtils.Controls.LinkLabel2();
             this.comboBoxMedia = new System.Windows.Forms.ComboBox();
             this.linkLabelSearch = new DotNetUtils.Controls.LinkLabel2();
-            this.linkLabelCustom = new DotNetUtils.Controls.LinkLabel2();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -81,6 +81,20 @@
             this.pictureBox.TabIndex = 2;
             this.pictureBox.TabStop = false;
             // 
+            // linkLabelCustom
+            // 
+            this.linkLabelCustom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelCustom.DisabledColor = System.Drawing.Color.Empty;
+            this.linkLabelCustom.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.linkLabelCustom.HoverColor = System.Drawing.Color.Empty;
+            this.linkLabelCustom.Location = new System.Drawing.Point(182, 8);
+            this.linkLabelCustom.Name = "linkLabelCustom";
+            this.linkLabelCustom.RegularColor = System.Drawing.Color.Empty;
+            this.linkLabelCustom.Size = new System.Drawing.Size(52, 12);
+            this.linkLabelCustom.TabIndex = 2;
+            this.linkLabelCustom.Text = "Custom...";
+            this.linkLabelCustom.Click += new System.EventHandler(this.linkLabelCustom_Click);
+            // 
             // comboBoxMedia
             // 
             this.comboBoxMedia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -89,7 +103,7 @@
             this.comboBoxMedia.FormattingEnabled = true;
             this.comboBoxMedia.Location = new System.Drawing.Point(4, 4);
             this.comboBoxMedia.Name = "comboBoxMedia";
-            this.comboBoxMedia.Size = new System.Drawing.Size(230, 21);
+            this.comboBoxMedia.Size = new System.Drawing.Size(172, 21);
             this.comboBoxMedia.TabIndex = 0;
             // 
             // linkLabelSearch
@@ -104,20 +118,6 @@
             this.linkLabelSearch.TabIndex = 1;
             this.linkLabelSearch.Text = "Search...";
             this.linkLabelSearch.Click += new System.EventHandler(this.linkLabelSearch_Click);
-            // 
-            // linkLabelCustom
-            // 
-            this.linkLabelCustom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelCustom.DisabledColor = System.Drawing.Color.Empty;
-            this.linkLabelCustom.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.linkLabelCustom.HoverColor = System.Drawing.Color.Empty;
-            this.linkLabelCustom.Location = new System.Drawing.Point(182, 31);
-            this.linkLabelCustom.Name = "linkLabelCustom";
-            this.linkLabelCustom.RegularColor = System.Drawing.Color.Empty;
-            this.linkLabelCustom.Size = new System.Drawing.Size(52, 14);
-            this.linkLabelCustom.TabIndex = 2;
-            this.linkLabelCustom.Text = "Custom...";
-            this.linkLabelCustom.Click += new System.EventHandler(this.linkLabelCustom_Click);
             // 
             // MediaPanel
             // 
