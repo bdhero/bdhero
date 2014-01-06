@@ -16,6 +16,223 @@ namespace DotNetUtils.FS
     /// </summary>
     public static class FileUtils
     {
+        #region Read
+
+        /// <summary>
+        ///     Reads an entire stream into memory and returns it as an array of bytes.
+        /// </summary>
+        /// <seealso cref="http://stackoverflow.com/a/6586039/467582" />
+        public static byte[] ReadStream(Stream input)
+        {
+            using (var ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        ///     Creates an <see cref="Image" /> object without locking the source file.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to the image file.
+        /// </param>
+        /// <returns>
+        ///     An image object.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
+        public static Image ImageFromFile(string path)
+        {
+            return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
+        }
+
+        #endregion
+
+        #region Detect encoding
+
+        /// <summary>
+        ///     Detects the encoding of the file using .NET's <see cref="StreamReader"/> class.
+        /// </summary>
+        /// <param name="filePath">
+        ///     Relative or absolute path to a text file.
+        /// </param>
+        /// <param name="contents">
+        ///     Output string with the discovered encoding applied to the file.
+        /// </param>
+        /// <returns>
+        ///     The detected encoding of the text file specified by <paramref name="filePath" />.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/a/8935635/467582"/>
+        public static Encoding DetectEncodingAuto(string filePath, out string contents)
+        {
+            // open the file with the stream-reader:
+            using (var reader = new StreamReader(filePath, true))
+            {
+                // read the contents of the file into a string
+                contents = reader.ReadToEnd();
+
+                // return the encoding.
+                return reader.CurrentEncoding;
+            }
+        }
+
+        /// <summary>
+        ///     Detects the encoding of text files.
+        ///     Able to detect UTF-7, UTF-8/16/32 (BOM, no BOM, little &amp; big endian),
+        ///     local default codepage, and potentially other codepages.
+        /// </summary>
+        /// <param name="filePath">
+        ///     Relative or absolute path to a text file.
+        /// </param>
+        /// <param name="contents">
+        ///     Output string with the discovered encoding applied to the file.
+        /// </param>
+        /// <param name="taster">
+        ///     Number of bytes to check in the file (to save processing).
+        ///     Higher values are slower, but more reliable (especially UTF-8 with special characters later on
+        ///     may appear to be ASCII initially).
+        ///     If <paramref name="taster" /> = 0, then <paramref name="taster" /> becomes the length of the file
+        ///     (for maximum reliability).
+        /// </param>
+        /// <returns>
+        ///     The detected encoding of the text file specified by <paramref name="filePath" />.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/a/12853721/467582" />
+        public static Encoding DetectEncodingManual(string filePath, out string contents, int taster = 1000)
+        {
+            byte[] b = File.ReadAllBytes(filePath);
+
+            //////////////// First check the low hanging fruit by checking if a
+            //////////////// BOM/signature exists (sourced from http://www.unicode.org/faq/utf_bom.html#bom4)
+            if (b.Length >= 4 && b[0] == 0x00 && b[1] == 0x00 && b[2] == 0xFE && b[3] == 0xFF) { contents = Encoding.GetEncoding("utf-32BE").GetString(b, 4, b.Length - 4); return Encoding.GetEncoding("utf-32BE"); }  // UTF-32, big-endian 
+            if (b.Length >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0x00 && b[3] == 0x00) { contents = Encoding.UTF32.GetString(b, 4, b.Length - 4); return Encoding.UTF32; }    // UTF-32, little-endian
+            if (b.Length >= 2 && b[0] == 0xFE && b[1] == 0xFF) { contents = Encoding.BigEndianUnicode.GetString(b, 2, b.Length - 2); return Encoding.BigEndianUnicode; }     // UTF-16, big-endian
+            if (b.Length >= 2 && b[0] == 0xFF && b[1] == 0xFE) { contents = Encoding.Unicode.GetString(b, 2, b.Length - 2); return Encoding.Unicode; }              // UTF-16, little-endian
+            if (b.Length >= 3 && b[0] == 0xEF && b[1] == 0xBB && b[2] == 0xBF) { contents = Encoding.UTF8.GetString(b, 3, b.Length - 3); return Encoding.UTF8; } // UTF-8
+            if (b.Length >= 3 && b[0] == 0x2b && b[1] == 0x2f && b[2] == 0x76) { contents = Encoding.UTF7.GetString(b, 3, b.Length - 3); return Encoding.UTF7; } // UTF-7
+
+            //////////// If the code reaches here, no BOM/signature was found, so now
+            //////////// we need to 'taste' the file to see if can manually discover
+            //////////// the encoding. A high taster value is desired for UTF-8
+            if (taster == 0 || taster > b.Length) taster = b.Length;    // Taster size can't be bigger than the filesize obviously.
+
+            // Some text files are encoded in UTF8, but have no BOM/signature. Hence
+            // the below manually checks for a UTF8 pattern. This code is based off
+            // the top answer at: http://stackoverflow.com/questions/6555015/check-for-invalid-utf8
+            // For our purposes, an unnecessarily strict (and terser/slower)
+            // implementation is shown at: http://stackoverflow.com/questions/1031645/how-to-detect-utf-8-in-plain-c
+            // For the below, false positives should be exceedingly rare (and would
+            // be either slightly malformed UTF-8 (which would suit our purposes
+            // anyway) or 8-bit extended ASCII/UTF-16/32 at a vanishingly long shot).
+            int i = 0;
+            bool utf8 = false;
+            while (i < taster - 4)
+            {
+                if (b[i] <= 0x7F) { i += 1; continue; }     // If all characters are below 0x80, then it is valid UTF8, but UTF8 is not 'required' (and therefore the text is more desirable to be treated as the default codepage of the computer). Hence, there's no "utf8 = true;" code unlike the next three checks.
+                if (b[i] >= 0xC2 && b[i] <= 0xDF && b[i + 1] >= 0x80 && b[i + 1] < 0xC0) { i += 2; utf8 = true; continue; }
+                if (b[i] >= 0xE0 && b[i] <= 0xF0 && b[i + 1] >= 0x80 && b[i + 1] < 0xC0 && b[i + 2] >= 0x80 && b[i + 2] < 0xC0) { i += 3; utf8 = true; continue; }
+                if (b[i] >= 0xF0 && b[i] <= 0xF4 && b[i + 1] >= 0x80 && b[i + 1] < 0xC0 && b[i + 2] >= 0x80 && b[i + 2] < 0xC0 && b[i + 3] >= 0x80 && b[i + 3] < 0xC0) { i += 4; utf8 = true; continue; }
+                utf8 = false; break;
+            }
+            if (utf8)
+            {
+                contents = Encoding.UTF8.GetString(b);
+                return Encoding.UTF8;
+            }
+
+            // The next check is a heuristic attempt to detect UTF-16 without a BOM.
+            // We simply look for zeroes in odd or even byte places, and if a certain
+            // threshold is reached, the code is 'probably' UF-16.
+            const double threshold = 0.1; // proportion of chars step 2 which must be zeroed to be diagnosed as utf-16. 0.1 = 10%
+            int count = 0;
+            for (int n = 0; n < taster; n += 2) if (b[n] == 0) count++;
+            if (((double)count) / taster > threshold) { contents = Encoding.BigEndianUnicode.GetString(b); return Encoding.BigEndianUnicode; }
+            count = 0;
+            for (int n = 1; n < taster; n += 2) if (b[n] == 0) count++;
+            if (((double)count) / taster > threshold) { contents = Encoding.Unicode.GetString(b); return Encoding.Unicode; } // (little-endian)
+
+            // Finally, a long shot - let's see if we can find "charset=xyz" or
+            // "encoding=xyz" to identify the encoding:
+            for (int n = 0; n < taster - 9; n++)
+            {
+                if (
+                    ((b[n + 0] == 'c' || b[n + 0] == 'C') && (b[n + 1] == 'h' || b[n + 1] == 'H') && (b[n + 2] == 'a' || b[n + 2] == 'A') && (b[n + 3] == 'r' || b[n + 3] == 'R') && (b[n + 4] == 's' || b[n + 4] == 'S') && (b[n + 5] == 'e' || b[n + 5] == 'E') && (b[n + 6] == 't' || b[n + 6] == 'T') && (b[n + 7] == '=')) ||
+                    ((b[n + 0] == 'e' || b[n + 0] == 'E') && (b[n + 1] == 'n' || b[n + 1] == 'N') && (b[n + 2] == 'c' || b[n + 2] == 'C') && (b[n + 3] == 'o' || b[n + 3] == 'O') && (b[n + 4] == 'd' || b[n + 4] == 'D') && (b[n + 5] == 'i' || b[n + 5] == 'I') && (b[n + 6] == 'n' || b[n + 6] == 'N') && (b[n + 7] == 'g' || b[n + 7] == 'G') && (b[n + 8] == '='))
+                    )
+                {
+                    if (b[n + 0] == 'c' || b[n + 0] == 'C') n += 8; else n += 9;
+                    if (b[n] == '"' || b[n] == '\'') n++;
+                    int oldn = n;
+                    while (n < taster && (b[n] == '_' || b[n] == '-' || (b[n] >= '0' && b[n] <= '9') || (b[n] >= 'a' && b[n] <= 'z') || (b[n] >= 'A' && b[n] <= 'Z')))
+                    { n++; }
+                    byte[] nb = new byte[n - oldn];
+                    Array.Copy(b, oldn, nb, 0, n - oldn);
+                    try
+                    {
+                        string internalEnc = Encoding.ASCII.GetString(nb);
+                        contents = Encoding.GetEncoding(internalEnc).GetString(b);
+                        return Encoding.GetEncoding(internalEnc);
+                    }
+                    catch { break; }    // If C# doesn't recognize the name of the encoding, break.
+                }
+            }
+
+            // If all else fails, the encoding is probably (though certainly not
+            // definitely) the user's local codepage! One might present to the user a
+            // list of alternative encodings as shown here: http://stackoverflow.com/questions/8509339/what-is-the-most-common-encoding-of-each-language
+            // A full list can be found using Encoding.GetEncodings();
+            contents = Encoding.Default.GetString(b);
+            return Encoding.Default;
+        }
+
+        #endregion
+
+        #region Create
+
+        /// <summary>
+        ///     Creates all directories in the specified path hierarchy if they do not already exist.
+        ///     If the path contains a file name with an extension, the file's parent directory will be created.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to a file or directory.
+        /// </param>
+        public static void CreateDirectory(string path)
+        {
+            // TODO: Does this check make sense?
+            // Path will resolve to current working directory
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            // More accurate checks first
+            if (File.Exists(path) || Directory.Exists(path))
+                return;
+
+            var dirPath = path;
+
+            if (ContainsFileName(dirPath))
+            {
+                dirPath = Path.GetDirectoryName(dirPath);
+            }
+
+            if (!string.IsNullOrEmpty(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+        }
+
+        /// <summary>
+        ///     Creates and returns a path to a random temporary directory
+        /// </summary>
+        /// <returns>
+        ///     Path to a random temporary directory.
+        /// </returns>
+        public static string CreateTemporaryDirectory()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            return tempDirectory;
+        }
+
         /// <summary>
         ///     .NET implementation of the Unix <c>touch</c> command.
         ///     Updates the last write time of <paramref name="filePath"/>.
@@ -67,122 +284,9 @@ namespace DotNetUtils.FS
             File.SetLastWriteTimeUtc(filePath, DateTime.UtcNow);
         }
 
-        /// <summary>
-        /// Detects the encoding of the file using .NET's <see cref="StreamReader"/> class.
-        /// </summary>
-        /// <param name="path">Complete path to the file to be read</param>
-        /// <param name="contents"></param>
-        /// <returns></returns>
-        /// <seealso cref="http://stackoverflow.com/a/8935635/467582"/>
-        public static Encoding DetectEncodingAuto(String path, out String contents)
-        {
-            // open the file with the stream-reader:
-            using (var reader = new StreamReader(path, true))
-            {
-                // read the contents of the file into a string
-                contents = reader.ReadToEnd();
+        #endregion
 
-                // return the encoding.
-                return reader.CurrentEncoding;
-            }
-        }
-
-        /// <summary>
-        /// Function to detect the encoding for UTF-7, UTF-8/16/32 (bom, no bom, little
-        /// & big endian), and local default codepage, and potentially other codepages.
-        /// 'taster' = number of bytes to check of the file (to save processing). Higher
-        /// value is slower, but more reliable (especially UTF-8 with special characters
-        /// later on may appear to be ASCII initially). If taster = 0, then taster
-        /// becomes the length of the file (for maximum reliability). 'text' is simply
-        /// the string with the discovered encoding applied to the file.
-        /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/12853721/467582"/>
-        public static Encoding DetectEncodingManual(string filename, out String text, int taster = 1000)
-        {
-            byte[] b = File.ReadAllBytes(filename);
-
-            //////////////// First check the low hanging fruit by checking if a
-            //////////////// BOM/signature exists (sourced from http://www.unicode.org/faq/utf_bom.html#bom4)
-            if (b.Length >= 4 && b[0] == 0x00 && b[1] == 0x00 && b[2] == 0xFE && b[3] == 0xFF) { text = Encoding.GetEncoding("utf-32BE").GetString(b, 4, b.Length - 4); return Encoding.GetEncoding("utf-32BE"); }  // UTF-32, big-endian 
-            if (b.Length >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0x00 && b[3] == 0x00) { text = Encoding.UTF32.GetString(b, 4, b.Length - 4); return Encoding.UTF32; }    // UTF-32, little-endian
-            if (b.Length >= 2 && b[0] == 0xFE && b[1] == 0xFF) { text = Encoding.BigEndianUnicode.GetString(b, 2, b.Length - 2); return Encoding.BigEndianUnicode; }     // UTF-16, big-endian
-            if (b.Length >= 2 && b[0] == 0xFF && b[1] == 0xFE) { text = Encoding.Unicode.GetString(b, 2, b.Length - 2); return Encoding.Unicode; }              // UTF-16, little-endian
-            if (b.Length >= 3 && b[0] == 0xEF && b[1] == 0xBB && b[2] == 0xBF) { text = Encoding.UTF8.GetString(b, 3, b.Length - 3); return Encoding.UTF8; } // UTF-8
-            if (b.Length >= 3 && b[0] == 0x2b && b[1] == 0x2f && b[2] == 0x76) { text = Encoding.UTF7.GetString(b, 3, b.Length - 3); return Encoding.UTF7; } // UTF-7
-
-            //////////// If the code reaches here, no BOM/signature was found, so now
-            //////////// we need to 'taste' the file to see if can manually discover
-            //////////// the encoding. A high taster value is desired for UTF-8
-            if (taster == 0 || taster > b.Length) taster = b.Length;    // Taster size can't be bigger than the filesize obviously.
-
-            // Some text files are encoded in UTF8, but have no BOM/signature. Hence
-            // the below manually checks for a UTF8 pattern. This code is based off
-            // the top answer at: http://stackoverflow.com/questions/6555015/check-for-invalid-utf8
-            // For our purposes, an unnecessarily strict (and terser/slower)
-            // implementation is shown at: http://stackoverflow.com/questions/1031645/how-to-detect-utf-8-in-plain-c
-            // For the below, false positives should be exceedingly rare (and would
-            // be either slightly malformed UTF-8 (which would suit our purposes
-            // anyway) or 8-bit extended ASCII/UTF-16/32 at a vanishingly long shot).
-            int i = 0;
-            bool utf8 = false;
-            while (i < taster - 4)
-            {
-                if (b[i] <= 0x7F) { i += 1; continue; }     // If all characters are below 0x80, then it is valid UTF8, but UTF8 is not 'required' (and therefore the text is more desirable to be treated as the default codepage of the computer). Hence, there's no "utf8 = true;" code unlike the next three checks.
-                if (b[i] >= 0xC2 && b[i] <= 0xDF && b[i + 1] >= 0x80 && b[i + 1] < 0xC0) { i += 2; utf8 = true; continue; }
-                if (b[i] >= 0xE0 && b[i] <= 0xF0 && b[i + 1] >= 0x80 && b[i + 1] < 0xC0 && b[i + 2] >= 0x80 && b[i + 2] < 0xC0) { i += 3; utf8 = true; continue; }
-                if (b[i] >= 0xF0 && b[i] <= 0xF4 && b[i + 1] >= 0x80 && b[i + 1] < 0xC0 && b[i + 2] >= 0x80 && b[i + 2] < 0xC0 && b[i + 3] >= 0x80 && b[i + 3] < 0xC0) { i += 4; utf8 = true; continue; }
-                utf8 = false; break;
-            }
-            if (utf8)
-            {
-                text = Encoding.UTF8.GetString(b);
-                return Encoding.UTF8;
-            }
-
-            // The next check is a heuristic attempt to detect UTF-16 without a BOM.
-            // We simply look for zeroes in odd or even byte places, and if a certain
-            // threshold is reached, the code is 'probably' UF-16.
-            const double threshold = 0.1; // proportion of chars step 2 which must be zeroed to be diagnosed as utf-16. 0.1 = 10%
-            int count = 0;
-            for (int n = 0; n < taster; n += 2) if (b[n] == 0) count++;
-            if (((double)count) / taster > threshold) { text = Encoding.BigEndianUnicode.GetString(b); return Encoding.BigEndianUnicode; }
-            count = 0;
-            for (int n = 1; n < taster; n += 2) if (b[n] == 0) count++;
-            if (((double)count) / taster > threshold) { text = Encoding.Unicode.GetString(b); return Encoding.Unicode; } // (little-endian)
-
-            // Finally, a long shot - let's see if we can find "charset=xyz" or
-            // "encoding=xyz" to identify the encoding:
-            for (int n = 0; n < taster - 9; n++)
-            {
-                if (
-                    ((b[n + 0] == 'c' || b[n + 0] == 'C') && (b[n + 1] == 'h' || b[n + 1] == 'H') && (b[n + 2] == 'a' || b[n + 2] == 'A') && (b[n + 3] == 'r' || b[n + 3] == 'R') && (b[n + 4] == 's' || b[n + 4] == 'S') && (b[n + 5] == 'e' || b[n + 5] == 'E') && (b[n + 6] == 't' || b[n + 6] == 'T') && (b[n + 7] == '=')) ||
-                    ((b[n + 0] == 'e' || b[n + 0] == 'E') && (b[n + 1] == 'n' || b[n + 1] == 'N') && (b[n + 2] == 'c' || b[n + 2] == 'C') && (b[n + 3] == 'o' || b[n + 3] == 'O') && (b[n + 4] == 'd' || b[n + 4] == 'D') && (b[n + 5] == 'i' || b[n + 5] == 'I') && (b[n + 6] == 'n' || b[n + 6] == 'N') && (b[n + 7] == 'g' || b[n + 7] == 'G') && (b[n + 8] == '='))
-                    )
-                {
-                    if (b[n + 0] == 'c' || b[n + 0] == 'C') n += 8; else n += 9;
-                    if (b[n] == '"' || b[n] == '\'') n++;
-                    int oldn = n;
-                    while (n < taster && (b[n] == '_' || b[n] == '-' || (b[n] >= '0' && b[n] <= '9') || (b[n] >= 'a' && b[n] <= 'z') || (b[n] >= 'A' && b[n] <= 'Z')))
-                    { n++; }
-                    byte[] nb = new byte[n - oldn];
-                    Array.Copy(b, oldn, nb, 0, n - oldn);
-                    try
-                    {
-                        string internalEnc = Encoding.ASCII.GetString(nb);
-                        text = Encoding.GetEncoding(internalEnc).GetString(b);
-                        return Encoding.GetEncoding(internalEnc);
-                    }
-                    catch { break; }    // If C# doesn't recognize the name of the encoding, break.
-                }
-            }
-
-            // If all else fails, the encoding is probably (though certainly not
-            // definitely) the user's local codepage! One might present to the user a
-            // list of alternative encodings as shown here: http://stackoverflow.com/questions/8509339/what-is-the-most-common-encoding-of-each-language
-            // A full list can be found using Encoding.GetEncodings();
-            text = Encoding.Default.GetString(b);
-            return Encoding.Default;
-        }
+        #region Format file size
 
         /// <summary>
         ///     Generates a human-friendly file size string (e.g., <c>"2.1 GiB"</c>).
@@ -233,33 +337,9 @@ namespace DotNetUtils.FS
             return string.Format("{0:0" + fractionalFormat + "} {1}", len, sizes[order]);
         }
 
-        /// <summary>
-        ///     Reads an entire stream into memory and returns it as an array of bytes.
-        /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/6586039/467582" />
-        public static byte[] ReadStream(Stream input)
-        {
-            using (var ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
+        #endregion
 
-        /// <summary>
-        ///     Creates an <see cref="Image" /> object without locking the source file.
-        /// </summary>
-        /// <param name="path">
-        ///     Path to the image file.
-        /// </param>
-        /// <returns>
-        ///     An image object.
-        /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
-        public static Image ImageFromFile(string path)
-        {
-            return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
-        }
+        #region Tests
 
         /// <summary>
         ///     Determines if the given <paramref name="path"/> is a file.
@@ -287,37 +367,6 @@ namespace DotNetUtils.FS
         public static bool IsDirectory(string path)
         {
             return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
-        }
-
-        /// <summary>
-        ///     Creates all directories in the specified path hierarchy if they do not already exist.
-        ///     If the path contains a file name with an extension, the file's parent directory will be created.
-        /// </summary>
-        /// <param name="path">
-        ///     Path to a file or directory.
-        /// </param>
-        public static void CreateDirectory(string path)
-        {
-            // TODO: Does this check make sense?
-            // Path will resolve to current working directory
-            if (string.IsNullOrEmpty(path))
-                return;
-
-            // More accurate checks first
-            if (File.Exists(path) || Directory.Exists(path))
-                return;
-
-            var dirPath = path;
-
-            if (ContainsFileName(dirPath))
-            {
-                dirPath = Path.GetDirectoryName(dirPath);
-            }
-
-            if (!string.IsNullOrEmpty(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
         }
 
         /// <summary>
@@ -360,6 +409,46 @@ namespace DotNetUtils.FS
             var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
             return !containsABadCharacter.IsMatch(fileName);
         }
+
+        /// <summary>
+        ///     Determines if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />.
+        /// </summary>
+        /// <param name="path">
+        ///     Relative or absolute path to a file or directory.
+        /// </param>
+        /// <param name="extensions">
+        ///     Zero or more file extensions (will be automatically normalized).
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />; otherwise <c>false</c>.
+        /// </returns>
+        public static bool FileHasExtension(string path, IEnumerable<string> extensions)
+        {
+            var extension = Path.GetExtension(path);
+            var normalized = NormalizeFileExtensions(extensions);
+            return extension != null && normalized.Contains(NormalizeFileExtension(extension));
+        }
+
+        /// <summary>
+        ///     Determines if the given <paramref name="directory"/> contains any files or subdirectories.
+        /// </summary>
+        /// <param name="directory">
+        ///     Parent directory to test.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="directory"/> contains at least one file or subdirectory;
+        ///     otherwise <c>false</c>.
+        /// </returns>
+        public static bool IsEmpty(DirectoryInfo directory)
+        {
+            return directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0;
+        }
+
+        #endregion
+
+        #region Validate / normalize / sanitize
 
         /// <summary>
         ///     Sanitizes the given <paramref name="fileName"/> by removing all invalid characters.
@@ -432,54 +521,9 @@ namespace DotNetUtils.FS
             return extensions.Select(NormalizeFileExtension).ToList();
         }
 
-        /// <summary>
-        ///     Determines if the specified <paramref name="path" /> ends with at least one of the given
-        ///     <paramref name="extensions" />.
-        /// </summary>
-        /// <param name="path">
-        ///     Relative or absolute path to a file or directory.
-        /// </param>
-        /// <param name="extensions">
-        ///     Zero or more file extensions (will be automatically normalized).
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the specified <paramref name="path" /> ends with at least one of the given
-        ///     <paramref name="extensions" />; otherwise <c>false</c>.
-        /// </returns>
-        public static bool FileHasExtension(string path, IEnumerable<string> extensions)
-        {
-            var extension = Path.GetExtension(path);
-            var normalized = NormalizeFileExtensions(extensions);
-            return extension != null && normalized.Contains(NormalizeFileExtension(extension));
-        }
+        #endregion
 
-        /// <summary>
-        ///     Creates and returns a path to a random temporary directory
-        /// </summary>
-        /// <returns>
-        ///     Path to a random temporary directory.
-        /// </returns>
-        public static string CreateTemporaryDirectory()
-        {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-            return tempDirectory;
-        }
-
-        /// <summary>
-        ///     Determines if the given <paramref name="directory"/> contains any files or subdirectories.
-        /// </summary>
-        /// <param name="directory">
-        ///     Parent directory to test.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="directory"/> contains at least one file or subdirectory;
-        ///     otherwise <c>false</c>.
-        /// </returns>
-        public static bool IsEmpty(DirectoryInfo directory)
-        {
-            return directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0;
-        }
+        #region Open file/folder/URL
 
         /// <summary>
         ///     Opens the given file in its default program as if the user had double-clicked on it in Windows Explorer.
@@ -565,5 +609,7 @@ namespace DotNetUtils.FS
             }
             return info.Exists;
         }
+
+        #endregion
     }
 }
