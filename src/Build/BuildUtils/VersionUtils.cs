@@ -26,7 +26,7 @@ namespace BuildUtils
         static readonly Regex InnoSetupVersionRegex = new Regex(@"(#define MyAppVersion .)((?:\d+\.){3}\d+)(.)", RegexOptions.IgnoreCase);
         static readonly Regex ArtifactFileNameRegex = new Regex(@"(<filename>\w+-)([\d.]+)(-(?:(?:windows|mac|linux)-)?(?:installer|setup|portable).(?:exe|zip|run|bin|tgz|dmg)+</filename>)", RegexOptions.IgnoreCase);
 
-        public static readonly string[] Files = new[]
+        public static readonly string[] Files =
             {
                 InnoSetupScriptPath,
                 BDHeroAssemblyInfoPath,
