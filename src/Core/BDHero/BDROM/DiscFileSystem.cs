@@ -149,6 +149,18 @@ namespace BDHero.BDROM
             /// </summary>
             [CanBeNull]
             public FileInfo DBox;
+
+            /// <summary>
+            /// Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
+            /// </summary>
+            [CanBeNull]
+            public FileInfo JacketImageSmall;
+
+            /// <summary>
+            /// Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
+            /// </summary>
+            [CanBeNull]
+            public FileInfo JacketImageLarge;
         }
     }
 }

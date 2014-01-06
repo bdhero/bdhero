@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
                             AnyDVDDiscInf = GetFile("disc.inf", bdrom.DirectoryRoot),
                             MCMF = null, /* assigned below */
                             BDMT = new FileInfo[0], /* assigned below */
-                            DBox = GetFile("FilmIndex.xml", bdrom.DirectoryRoot)
+                            DBox = GetFile("FilmIndex.xml", bdrom.DirectoryRoot),
+                            JacketImageSmall = null, /* assigned below */
+                            JacketImageLarge = null /* assigned below */
                         }
                 };
 
@@ -43,6 +46,8 @@ namespace BDHero.Plugin.DiscReader.Transformer
             fs.Directories.DCOPY = GetDCopyDirectory(fs);
             fs.Files.MCMF = GetFileOrBackup("mcmf.xml", fs.Directories.AACS);
             fs.Files.BDMT = GetFilesByPattern("bdmt_???.xml", fs.Directories.BDMT);
+            fs.Files.JacketImageSmall = GetJacketImage(JacketSize.Small, fs.Directories.BDMT);
+            fs.Files.JacketImageLarge = GetJacketImage(JacketSize.Large, fs.Directories.BDMT);
 
             disc.FileSystem = fs;
         }
@@ -95,6 +100,64 @@ namespace BDHero.Plugin.DiscReader.Transformer
         private static FileInfo[] GetFilesByPattern(string pattern, DirectoryInfo dir)
         {
             return dir != null ? dir.GetFiles(pattern) : new FileInfo[0];
+        }
+
+        [CanBeNull]
+        private static FileInfo GetJacketImage(JacketSize jacketSize, DirectoryInfo dir)
+        {
+            var size = jacketSize.GetDimensions();
+            var files = dir.GetFiles("*.jpg", SearchOption.AllDirectories)
+                           .Where(info => Image.FromFile(info.FullName).Size.Equals(size))
+                           .ToArray();
+            return files.FirstOrDefault();
+        }
+    }
+
+    // TODO: Externalize
+    public enum JacketSize
+    {
+        /// <summary>
+        ///     416 x 240
+        /// </summary>
+        [Size(416, 240)]
+        Small,
+
+        /// <summary>
+        ///     640 x 360
+        /// </summary>
+        [Size(640, 360)]
+        Large
+    }
+
+    // TODO: Externalize
+    [AttributeUsage(AttributeTargets.Field)]
+    public class SizeAttribute : Attribute
+    {
+        public Size Size { get; set; }
+
+        public SizeAttribute(int width, int height)
+        {
+            Size = new Size(width, height);
+        }
+    }
+
+    public static class JacketSizeExtensions
+    {
+        public static Size GetDimensions(this JacketSize jacketSize)
+        {
+            var type = typeof(JacketSize);
+            var info = type.GetMember(jacketSize.ToString());
+
+            if (!info.Any())
+                return default(Size);
+
+            var attr = info[0].GetCustomAttributes(typeof(SizeAttribute), false);
+
+            if (!attr.Any())
+                return default(Size);
+
+            var description = ((SizeAttribute)attr[0]).Size;
+            return description;
         }
     }
 }
