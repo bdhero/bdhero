@@ -98,7 +98,7 @@ namespace BDHeroGUI.Forms
 
         private void showInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileUtils.ShowInFolder(_smallJacketImagePath);
+            FileUtils.ShowInFolder(_smallJacketImagePath, this);
         }
 
         private void copyPathToClipboardToolStripMenuItem_Click(object sender, EventArgs e)

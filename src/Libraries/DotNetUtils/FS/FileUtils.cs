@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using DotNetUtils.Annotations;
 
 namespace DotNetUtils.FS
@@ -370,18 +371,35 @@ namespace DotNetUtils.FS
             return dir.GetFiles().Length == 0 && dir.GetDirectories().Length == 0;
         }
 
+        private static bool Exists([NotNull] FileSystemInfo info, [CanBeNull] Control parentControl = null)
+        {
+            if (!info.Exists && parentControl != null)
+            {
+                var form = (parentControl as Form) ?? parentControl.FindForm();
+                var type = (info is DirectoryInfo) ? "Directory" : "File";
+                var message = string.Format("{0} \"{1}\" does not exist", type, info.FullName);
+                var title = string.Format("{0} Not Found", type);
+                MessageBox.Show(form, message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return info.Exists;
+        }
+
         /// <summary>
         ///     Opens the given file in its default program as if the user had double-clicked on it in Windows Explorer.
         /// </summary>
         /// <param name="filePath">Relative or absolute path to a file to open</param>
-        public static void OpenFile(string filePath)
+        /// <param name="parentControl"></param>
+        public static void OpenFile([NotNull] string filePath, [CanBeNull] Control parentControl = null)
         {
+            if (!Exists(new FileInfo(filePath), parentControl))
+                return;
+
             Process.Start(filePath);
         }
 
-        public static void ShowInFolder(string filePath)
+        public static void ShowInFolder([NotNull] string filePath, [CanBeNull] Control parentControl = null)
         {
-            if (!File.Exists(filePath))
+            if (!Exists(new FileInfo(filePath), parentControl))
                 return;
 
             // combine the arguments together
@@ -391,9 +409,9 @@ namespace DotNetUtils.FS
             Process.Start("explorer.exe", argument);
         }
 
-        public static void OpenFolder(string folderPath)
+        public static void OpenFolder([NotNull] string folderPath, [CanBeNull] Control parentControl = null)
         {
-            if (!Directory.Exists(folderPath))
+            if (!Exists(new DirectoryInfo(folderPath), parentControl))
                 return;
 
             Process.Start(folderPath);

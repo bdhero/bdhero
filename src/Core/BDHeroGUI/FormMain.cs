@@ -830,7 +830,7 @@ namespace BDHeroGUI
 
         private void showLogFileInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileUtils.OpenFolder(_directoryLocator.LogDir);
+            FileUtils.OpenFolder(_directoryLocator.LogDir, this);
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)

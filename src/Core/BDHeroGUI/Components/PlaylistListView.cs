@@ -146,13 +146,13 @@ namespace BDHeroGUI.Components
             var assoc = new FileAssociation(playlist.FullPath);
 
             var playItem = new ToolStripMenuItem(assoc.HasAssociation ? string.Format("&Play with {0}", assoc.AppName) : "&Play with...");
-            playItem.Click += (o, eventArgs) => FileUtils.OpenFile(playlist.FullPath);
+            playItem.Click += (o, eventArgs) => FileUtils.OpenFile(playlist.FullPath, this);
             playItem.Font = new Font(playItem.Font, FontStyle.Bold);
             if (assoc.HasAssociation)
                 playItem.Image = assoc.GetProgramImage(16);
 
             var showFileItem = new ToolStripMenuItem("Show in &folder", Resources.folder_open);
-            showFileItem.Click += (o, eventArgs) => FileUtils.ShowInFolder(playlist.FullPath);
+            showFileItem.Click += (o, eventArgs) => FileUtils.ShowInFolder(playlist.FullPath, this);
 
             var copyPathItem = new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow);
             copyPathItem.Click += (o, eventArgs) => Clipboard.SetText(playlist.FullPath);
@@ -223,7 +223,7 @@ namespace BDHeroGUI.Components
                 return;
 
             if (File.Exists(playlist.FullPath))
-                FileUtils.OpenFile(playlist.FullPath);
+                FileUtils.OpenFile(playlist.FullPath, this);
             else
                 MessageBox.Show(this, string.Format("The file \"{0}\" could not be found.", playlist.FullPath), "File not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }

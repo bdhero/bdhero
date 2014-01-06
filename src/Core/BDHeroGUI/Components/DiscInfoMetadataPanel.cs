@@ -189,12 +189,12 @@ namespace BDHeroGUI.Components
 
         private void OpenFile(object sender, EventArgs args)
         {
-            FileUtils.OpenFile(Path);
+            FileUtils.OpenFile(Path, this);
         }
 
         private void ShowInExplorer(object sender, EventArgs args)
         {
-            FileUtils.ShowInFolder(Path);
+            FileUtils.ShowInFolder(Path, this);
         }
     }
 
@@ -220,7 +220,7 @@ namespace BDHeroGUI.Components
 
         private void Explore(object sender, EventArgs args)
         {
-            FileUtils.OpenFolder(Path);
+            FileUtils.OpenFolder(Path, this);
         }
     }
 }
