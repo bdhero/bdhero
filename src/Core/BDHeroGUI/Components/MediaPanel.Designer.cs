@@ -85,6 +85,7 @@
             // 
             this.linkLabelCustom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelCustom.DisabledColor = System.Drawing.Color.Empty;
+            this.linkLabelCustom.Enabled = false;
             this.linkLabelCustom.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelCustom.HoverColor = System.Drawing.Color.Empty;
             this.linkLabelCustom.Location = new System.Drawing.Point(182, 8);
