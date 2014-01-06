@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 
 namespace BDHero.Plugin.DiscReader.Transformer
 {
@@ -145,19 +146,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
     {
         public static Size GetDimensions(this JacketSize jacketSize)
         {
-            var type = typeof(JacketSize);
-            var info = type.GetMember(jacketSize.ToString());
-
-            if (!info.Any())
-                return default(Size);
-
-            var attr = info[0].GetCustomAttributes(typeof(SizeAttribute), false);
-
-            if (!attr.Any())
-                return default(Size);
-
-            var description = ((SizeAttribute)attr[0]).Size;
-            return description;
+            return jacketSize.GetAttributeProperty<SizeAttribute, Size>(attribute => attribute.Size);
         }
     }
 }

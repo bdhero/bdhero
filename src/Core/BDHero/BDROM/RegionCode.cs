@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using DotNetUtils.Extensions;
 
 namespace BDHero.BDROM
 {
@@ -78,19 +79,7 @@ namespace BDHero.BDROM
 
         public static string GetDescription(this RegionCode regionCode)
         {
-            var type = typeof(RegionCode);
-            var info = type.GetMember(regionCode.ToString());
-
-            if (!info.Any())
-                return null;
-
-            var attr = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-            if (!attr.Any())
-                return null;
-
-            var description = ((DescriptionAttribute)attr[0]).Description;
-            return description;
+            return regionCode.GetAttributeProperty<DescriptionAttribute, string>(attribute => attribute.Description);
         }
     }
 }
