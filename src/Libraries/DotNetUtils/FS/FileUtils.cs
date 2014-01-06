@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -12,6 +11,9 @@ using DotNetUtils.Annotations;
 
 namespace DotNetUtils.FS
 {
+    /// <summary>
+    ///     Utility methods for working with the filesystem.
+    /// </summary>
     public static class FileUtils
     {
         /// <summary>
@@ -102,18 +104,16 @@ namespace DotNetUtils.FS
             //////////////// First check the low hanging fruit by checking if a
             //////////////// BOM/signature exists (sourced from http://www.unicode.org/faq/utf_bom.html#bom4)
             if (b.Length >= 4 && b[0] == 0x00 && b[1] == 0x00 && b[2] == 0xFE && b[3] == 0xFF) { text = Encoding.GetEncoding("utf-32BE").GetString(b, 4, b.Length - 4); return Encoding.GetEncoding("utf-32BE"); }  // UTF-32, big-endian 
-            else if (b.Length >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0x00 && b[3] == 0x00) { text = Encoding.UTF32.GetString(b, 4, b.Length - 4); return Encoding.UTF32; }    // UTF-32, little-endian
-            else if (b.Length >= 2 && b[0] == 0xFE && b[1] == 0xFF) { text = Encoding.BigEndianUnicode.GetString(b, 2, b.Length - 2); return Encoding.BigEndianUnicode; }     // UTF-16, big-endian
-            else if (b.Length >= 2 && b[0] == 0xFF && b[1] == 0xFE) { text = Encoding.Unicode.GetString(b, 2, b.Length - 2); return Encoding.Unicode; }              // UTF-16, little-endian
-            else if (b.Length >= 3 && b[0] == 0xEF && b[1] == 0xBB && b[2] == 0xBF) { text = Encoding.UTF8.GetString(b, 3, b.Length - 3); return Encoding.UTF8; } // UTF-8
-            else if (b.Length >= 3 && b[0] == 0x2b && b[1] == 0x2f && b[2] == 0x76) { text = Encoding.UTF7.GetString(b, 3, b.Length - 3); return Encoding.UTF7; } // UTF-7
-
+            if (b.Length >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0x00 && b[3] == 0x00) { text = Encoding.UTF32.GetString(b, 4, b.Length - 4); return Encoding.UTF32; }    // UTF-32, little-endian
+            if (b.Length >= 2 && b[0] == 0xFE && b[1] == 0xFF) { text = Encoding.BigEndianUnicode.GetString(b, 2, b.Length - 2); return Encoding.BigEndianUnicode; }     // UTF-16, big-endian
+            if (b.Length >= 2 && b[0] == 0xFF && b[1] == 0xFE) { text = Encoding.Unicode.GetString(b, 2, b.Length - 2); return Encoding.Unicode; }              // UTF-16, little-endian
+            if (b.Length >= 3 && b[0] == 0xEF && b[1] == 0xBB && b[2] == 0xBF) { text = Encoding.UTF8.GetString(b, 3, b.Length - 3); return Encoding.UTF8; } // UTF-8
+            if (b.Length >= 3 && b[0] == 0x2b && b[1] == 0x2f && b[2] == 0x76) { text = Encoding.UTF7.GetString(b, 3, b.Length - 3); return Encoding.UTF7; } // UTF-7
 
             //////////// If the code reaches here, no BOM/signature was found, so now
             //////////// we need to 'taste' the file to see if can manually discover
             //////////// the encoding. A high taster value is desired for UTF-8
             if (taster == 0 || taster > b.Length) taster = b.Length;    // Taster size can't be bigger than the filesize obviously.
-
 
             // Some text files are encoded in UTF8, but have no BOM/signature. Hence
             // the below manually checks for a UTF8 pattern. This code is based off
@@ -133,24 +133,22 @@ namespace DotNetUtils.FS
                 if (b[i] >= 0xF0 && b[i] <= 0xF4 && b[i + 1] >= 0x80 && b[i + 1] < 0xC0 && b[i + 2] >= 0x80 && b[i + 2] < 0xC0 && b[i + 3] >= 0x80 && b[i + 3] < 0xC0) { i += 4; utf8 = true; continue; }
                 utf8 = false; break;
             }
-            if (utf8 == true)
+            if (utf8)
             {
                 text = Encoding.UTF8.GetString(b);
                 return Encoding.UTF8;
             }
 
-
             // The next check is a heuristic attempt to detect UTF-16 without a BOM.
             // We simply look for zeroes in odd or even byte places, and if a certain
             // threshold is reached, the code is 'probably' UF-16.
-            double threshold = 0.1; // proportion of chars step 2 which must be zeroed to be diagnosed as utf-16. 0.1 = 10%
+            const double threshold = 0.1; // proportion of chars step 2 which must be zeroed to be diagnosed as utf-16. 0.1 = 10%
             int count = 0;
             for (int n = 0; n < taster; n += 2) if (b[n] == 0) count++;
             if (((double)count) / taster > threshold) { text = Encoding.BigEndianUnicode.GetString(b); return Encoding.BigEndianUnicode; }
             count = 0;
             for (int n = 1; n < taster; n += 2) if (b[n] == 0) count++;
             if (((double)count) / taster > threshold) { text = Encoding.Unicode.GetString(b); return Encoding.Unicode; } // (little-endian)
-
 
             // Finally, a long shot - let's see if we can find "charset=xyz" or
             // "encoding=xyz" to identify the encoding:
@@ -178,7 +176,6 @@ namespace DotNetUtils.FS
                 }
             }
 
-
             // If all else fails, the encoding is probably (though certainly not
             // definitely) the user's local codepage! One might present to the user a
             // list of alternative encodings as shown here: http://stackoverflow.com/questions/8509339/what-is-the-most-common-encoding-of-each-language
@@ -187,12 +184,26 @@ namespace DotNetUtils.FS
             return Encoding.Default;
         }
 
+        /// <summary>
+        ///     Generates a human-friendly file size string (e.g., <c>"2.1 GiB"</c>).
+        /// </summary>
+        /// <param name="byteCount">File size in bytes.</param>
+        /// <returns>
+        ///     Human-friendly string representation of the file size specified by <paramref name="byteCount"/>.
+        /// </returns>
         public static string HumanFriendlyFileSize(long byteCount)
         {
             return HumanFriendlyFileSize((ulong) byteCount);
         }
 
-        /// <see cref="http://stackoverflow.com/a/4975942/467582"/>
+        /// <summary>
+        ///     Generates a human-friendly file size string (e.g., <c>"2.1 GiB"</c>).
+        /// </summary>
+        /// <param name="byteCount">File size in bytes.</param>
+        /// <returns>
+        ///     Human-friendly string representation of the file size specified by <paramref name="byteCount"/>.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/a/4975942/467582"/>
         public static string HumanFriendlyFileSize(ulong byteCount)
         {
             string[] suf = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" }; // Longs run out around EB
@@ -204,39 +215,7 @@ namespace DotNetUtils.FS
             return string.Format("{0} {1}", num.ToString(fmt), suf[place]);
         }
 
-        /// <summary>Reads an entire stream into memory and returns it as an array of bytes.</summary>
-        /// <see cref="http://stackoverflow.com/a/6586039/467582"/>
-        public static byte[] ReadStream(Stream input)
-        {
-            using (var ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Creates an <see cref="Image"/> object without locking the source file.
-        /// </summary>
-        /// <param name="path">Path to the image file</param>
-        /// <returns><see cref="Image"/> object</returns>
-        /// <see cref="http://stackoverflow.com/a/1105330/467582"/>
-        public static Image ImageFromFile(string path)
-        {
-            return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
-        }
-
-        public static bool IsFile(string path)
-        {
-            return !IsDirectory(path);
-        }
-
-        public static bool IsDirectory(string path)
-        {
-            return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
-        }
-
-        public static string FormatFileSize(long filesize, ushort maxFractionalDigits = 2)
+        public static string FormatFileSize(long filesize, ushort maxFractionalDigits = 1)
         {
             string[] sizes = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB" };
             double len = filesize;
@@ -255,10 +234,68 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        /// Creates all directories in the specified path hierarchy if they do not already exist.
-        /// If the path contains a file name with an extension, the file's parent directory will be created.
+        ///     Reads an entire stream into memory and returns it as an array of bytes.
         /// </summary>
-        /// <param name="path">Path to a file or directory</param>
+        /// <seealso cref="http://stackoverflow.com/a/6586039/467582" />
+        public static byte[] ReadStream(Stream input)
+        {
+            using (var ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        ///     Creates an <see cref="Image" /> object without locking the source file.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to the image file.
+        /// </param>
+        /// <returns>
+        ///     An image object.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
+        public static Image ImageFromFile(string path)
+        {
+            return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
+        }
+
+        /// <summary>
+        ///     Determines if the given <paramref name="path"/> is a file.
+        /// </summary>
+        /// <param name="path">
+        ///     Relative or absolute path to a file or directory.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="path"/> is a file; otherwise <c>false</c>.
+        /// </returns>
+        public static bool IsFile(string path)
+        {
+            return !IsDirectory(path);
+        }
+
+        /// <summary>
+        ///     Determines if the given <paramref name="path"/> is a directory.
+        /// </summary>
+        /// <param name="path">
+        ///     Relative or absolute path to a file or directory.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="path"/> is a directory; otherwise <c>false</c>.
+        /// </returns>
+        public static bool IsDirectory(string path)
+        {
+            return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
+        }
+
+        /// <summary>
+        ///     Creates all directories in the specified path hierarchy if they do not already exist.
+        ///     If the path contains a file name with an extension, the file's parent directory will be created.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to a file or directory.
+        /// </param>
         public static void CreateDirectory(string path)
         {
             // TODO: Does this check make sense?
@@ -284,32 +321,55 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        /// Determines whether the given path <em>likely</em> contains (ends with) a standard Windows filename (i.e., one that has an extension).
+        ///     Determines whether the given path <em>likely</em> contains (ends with) a standard Windows filename (i.e., one that
+        ///     has an extension).
         /// </summary>
         /// <param name="path">Relative or absolute path to a file or directory</param>
         /// <returns><c>true</c> if the path ends in a period followed by at least one letter; otherwise <c>false</c></returns>
-        /// <example>"C:\some\dir\a.out" => true</example>
-        /// <example>"a.out" => true</example>
-        /// <example>"file.c" => true</example>
-        /// <example>"file.php3" => true</example>
-        /// <example>"file.3" => true</example>
-        /// <example>"file" => false</example>
-        /// <example>"C:\some\dir\file" => false</example>
-        /// <example>"C:\some\dir" => false</example>
-        /// <example>"C:\" => false</example>
-        /// <example>"" => false</example>
+        /// <example>
+        ///     <code>
+        /// "C:\some\dir\a.out" => true
+        /// "a.out" => true
+        /// "file.c" => true
+        /// "file.php3" => true
+        /// "file.3" => true
+        /// "file" => false
+        /// "C:\some\dir\file" => false
+        /// "C:\some\dir" => false
+        /// "C:\" => false
+        /// "" => false
+        /// </code>
+        /// </example>
         public static bool ContainsFileName([NotNull] string path)
         {
             return new Regex(@"[^/\\]\.\w+$").IsMatch(path);
         }
 
-        /// <see cref="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
-        public static bool IsValidFilename(string testName)
+        /// <summary>
+        ///     Determines if the given <paramref name="fileName"/> is a valid filename under the current operating system.
+        /// </summary>
+        /// <param name="fileName">
+        ///     Filename to validate.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="fileName"/> is a valid file name; otherwise <c>false</c>.
+        /// </returns>
+        /// <seealso cref="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
+        public static bool IsValidFilename(string fileName)
         {
             var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
-            return !containsABadCharacter.IsMatch(testName);
+            return !containsABadCharacter.IsMatch(fileName);
         }
 
+        /// <summary>
+        ///     Sanitizes the given <paramref name="fileName"/> by removing all invalid characters.
+        /// </summary>
+        /// <param name="fileName">
+        ///     Filename to sanitize.
+        /// </param>
+        /// <returns>
+        ///     <paramref name="fileName"/> with all invalid characters removed.
+        /// </returns>
         public static string SanitizeFileName(string fileName)
         {
             var badCharRegex = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]+");
@@ -325,14 +385,22 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        /// Converts the extension to lowercase and ensures that it starts with a period.
+        ///     Converts a file extension to lowercase and ensures that it starts with a period.
         /// </summary>
-        /// <example><c>"ext" => ".ext"</c></example>
-        /// <example><c>"EXT" => ".ext"</c></example>
-        /// <example><c>".ext" => ".ext"</c></example>
-        /// <example><c>".EXT" => ".ext"</c></example>
-        /// <param name="ext">File extension, with or without a leading period, in any mix of upper or lower case</param>
-        /// <returns><paramref name="ext"/> normalized to lowercase with a leading period</returns>
+        /// <example>
+        ///     <code>
+        /// "ext" => ".ext"
+        /// "EXT" => ".ext"
+        /// ".ext" => ".ext"
+        /// ".EXT" => ".ext"
+        /// </code>
+        /// </example>
+        /// <param name="ext">
+        ///     File extension, with or without a leading period, in any mix of upper or lower case.
+        /// </param>
+        /// <returns>
+        ///     <paramref name="ext" /> normalized to lowercase with a leading period.
+        /// </returns>
         public static string NormalizeFileExtension([NotNull] string ext)
         {
             // Make sure every extension starts with a period (e.g., ".ext")
@@ -343,19 +411,41 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        /// Converts the extensions to lowercase and ensures that they start with a period.
+        ///     Converts a collection of file extensions to lowercase and ensures that they start with a period.
         /// </summary>
-        /// <example><code>"ext" => ".ext"</code></example>
-        /// <example><code>"EXT" => ".ext"</code></example>
-        /// <example><code>".ext" => ".ext"</code></example>
-        /// <example><code>".EXT" => ".ext"</code></example>
-        /// <param name="extensions">File extensions, with or without leading periods, in any mix of upper or lower case</param>
-        /// <returns><paramref name="extensions"/> normalized to lowercase with leading periods</returns>
+        /// <example>
+        ///     <code>
+        /// "ext" => ".ext"
+        /// "EXT" => ".ext"
+        /// ".ext" => ".ext"
+        /// ".EXT" => ".ext"
+        /// </code>
+        /// </example>
+        /// <param name="extensions">
+        ///     File extensions, with or without leading periods, in any mix of upper or lower case.
+        /// </param>
+        /// <returns>
+        ///     <paramref name="extensions" /> normalized to lowercase with leading periods.
+        /// </returns>
         public static ICollection<string> NormalizeFileExtensions(IEnumerable<string> extensions)
         {
             return extensions.Select(NormalizeFileExtension).ToList();
         }
 
+        /// <summary>
+        ///     Determines if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />.
+        /// </summary>
+        /// <param name="path">
+        ///     Relative or absolute path to a file or directory.
+        /// </param>
+        /// <param name="extensions">
+        ///     Zero or more file extensions (will be automatically normalized).
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />; otherwise <c>false</c>.
+        /// </returns>
         public static bool FileHasExtension(string path, IEnumerable<string> extensions)
         {
             var extension = Path.GetExtension(path);
@@ -363,6 +453,12 @@ namespace DotNetUtils.FS
             return extension != null && normalized.Contains(NormalizeFileExtension(extension));
         }
 
+        /// <summary>
+        ///     Creates and returns a path to a random temporary directory
+        /// </summary>
+        /// <returns>
+        ///     Path to a random temporary directory.
+        /// </returns>
         public static string CreateTemporaryDirectory()
         {
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -370,40 +466,54 @@ namespace DotNetUtils.FS
             return tempDirectory;
         }
 
-        public static bool IsEmpty(DirectoryInfo dir)
+        /// <summary>
+        ///     Determines if the given <paramref name="directory"/> contains any files or subdirectories.
+        /// </summary>
+        /// <param name="directory">
+        ///     Parent directory to test.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="directory"/> contains at least one file or subdirectory;
+        ///     otherwise <c>false</c>.
+        /// </returns>
+        public static bool IsEmpty(DirectoryInfo directory)
         {
-            return dir.GetFiles().Length == 0 && dir.GetDirectories().Length == 0;
-        }
-
-        private static bool Exists([NotNull] FileSystemInfo info, [CanBeNull] Control parentControl = null)
-        {
-            if (!info.Exists && parentControl != null)
-            {
-                var form = (parentControl as Form) ?? parentControl.FindForm();
-                var type = (info is DirectoryInfo) ? "Directory" : "File";
-                var message = string.Format("{0} \"{1}\" does not exist", type, info.FullName);
-                var title = string.Format("{0} Not Found", type);
-                MessageBox.Show(form, message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            return info.Exists;
+            return directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0;
         }
 
         /// <summary>
         ///     Opens the given file in its default program as if the user had double-clicked on it in Windows Explorer.
         /// </summary>
-        /// <param name="filePath">Relative or absolute path to a file to open</param>
-        /// <param name="parentControl"></param>
-        public static void OpenFile([NotNull] string filePath, [CanBeNull] Control parentControl = null)
+        /// <param name="filePath">
+        ///     Relative or absolute path to a file to open.
+        /// </param>
+        /// <param name="control">
+        ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
+        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     the owner.
+        /// </param>
+        public static void OpenFile([NotNull] string filePath, [CanBeNull] Control control = null)
         {
-            if (!Exists(new FileInfo(filePath), parentControl))
+            if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
             Process.Start(filePath);
         }
 
-        public static void ShowInFolder([NotNull] string filePath, [CanBeNull] Control parentControl = null)
+        /// <summary>
+        ///     Opens the given file's parent folder and highlights (selects) the file in Windows Explorer.
+        /// </summary>
+        /// <param name="filePath">
+        ///     Relative or absolute path to a file.
+        /// </param>
+        /// <param name="control">
+        ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
+        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     the owner.
+        /// </param>
+        public static void ShowInFolder([NotNull] string filePath, [CanBeNull] Control control = null)
         {
-            if (!Exists(new FileInfo(filePath), parentControl))
+            if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
             // combine the arguments together
@@ -413,17 +523,47 @@ namespace DotNetUtils.FS
             Process.Start("explorer.exe", argument);
         }
 
-        public static void OpenFolder([NotNull] string folderPath, [CanBeNull] Control parentControl = null)
+        /// <summary>
+        ///     Opens the given file's folder in Windows Explorer.
+        /// </summary>
+        /// <param name="folderPath">
+        ///     Relative or absolute path to a folder.
+        /// </param>
+        /// <param name="control">
+        ///     Optional Windows form control.  If specified and the given <paramref name="folderPath" /> does not exist,
+        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     the owner.
+        /// </param>
+        public static void OpenFolder([NotNull] string folderPath, [CanBeNull] Control control = null)
         {
-            if (!Exists(new DirectoryInfo(folderPath), parentControl))
+            if (!EnsureExists(new DirectoryInfo(folderPath), control))
                 return;
 
             Process.Start(folderPath);
         }
 
+        /// <summary>
+        ///     Launches the given <paramref name="url"/> in the user's default Web browser.
+        /// </summary>
+        /// <param name="url">
+        ///     Web address to launch.
+        /// </param>
         public static void OpenUrl(string url)
         {
             Process.Start(url);
+        }
+
+        private static bool EnsureExists([NotNull] FileSystemInfo info, [CanBeNull] Control control = null)
+        {
+            if (!info.Exists && control != null)
+            {
+                var form = (control as Form) ?? control.FindForm();
+                var type = (info is DirectoryInfo) ? "Directory" : "File";
+                var message = string.Format("{0} \"{1}\" does not exist", type, info.FullName);
+                var title = string.Format("{0} Not Found", type);
+                MessageBox.Show(form, message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return info.Exists;
         }
     }
 }
