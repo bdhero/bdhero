@@ -22,19 +22,34 @@ namespace BDHeroGUI.Components
         public void SetDisc(Disc disc)
         {
             var fs = disc.FileSystem;
-            var metadata = disc.Metadata;
-            var raw = metadata.Raw;
-            var der = metadata.Derived;
+            var meta = disc.Metadata;
+            var raw = meta.Raw;
+            var der = meta.Derived;
+            var inf = raw.DiscInf;
+
+            string discInfVolumeLabel = null;
+            string regionName = null;
+            string regionDesc = null;
+
+            if (inf != null)
+            {
+                discInfVolumeLabel = inf.VolumeLabel;
+                regionName = inf.Region.GetLongName();
+                regionDesc = inf.Region.GetDescription();
+            }
+
+            new ToolTip().SetToolTip(textBoxAnyDVDDiscInfSanitized, regionDesc);
 
             // textboxes
 
             InitTextAndIcon(iconHardwareVolumeLabel, textBoxHardwareVolumeLabel, raw.HardwareVolumeLabel);
-            InitTextAndIcon(iconAnyDVDDiscInf, textBoxAnyDVDDiscInf, raw.DiscInf != null ? raw.DiscInf.ToString() : null);
+            InitTextAndIcon(iconAnyDVDDiscInf, textBoxAnyDVDDiscInf, discInfVolumeLabel);
             InitTextAndIcon(iconDboxTitle, textBoxDboxTitle, raw.DboxTitle);
             InitTextAndIcon(iconVISAN, textBoxVISAN, GetIsanText(raw.V_ISAN));
             InitTextAndIcon(iconAllBdmtTitles, textBoxAllBdmtTitles, GetBdmtTitles(raw.AllBdmtTitles));
 
             InitText(textBoxVolumeLabelSanitized, der.VolumeLabelSanitized);
+            InitText(textBoxAnyDVDDiscInfSanitized, regionName);
             InitText(textBoxDboxTitleSanitized, der.DboxTitleSanitized);
             InitText(textBoxIsan, GetIsanText(raw.ISAN));
             InitText(textBoxValidBdmtTitles, GetBdmtTitles(der.ValidBdmtTitles));
@@ -42,6 +57,7 @@ namespace BDHeroGUI.Components
             // buttons
 
             InitButton(buttonVolumeLabelSanitized, fs.Directories.Root);
+            InitButton(buttonAnyDVDDiscInfSanitized, fs.Files.AnyDVDDiscInf);
             InitButton(buttonDboxTitleSanitized, fs.Files.DBox);
             InitButton(buttonIsan, fs.Files.MCMF);
             InitButton(buttonValidBdmtTitles, fs.Directories.BDMT);
@@ -51,13 +67,14 @@ namespace BDHeroGUI.Components
         {
             var hasText = !string.IsNullOrWhiteSpace(text);
             textBox.Text = hasText ? text : NotFound;
+            textBox.Enabled = hasText;
         }
 
         private static void InitTextAndIcon(PictureBox icon, TextBox textBox, string text)
         {
             var hasText = !string.IsNullOrWhiteSpace(text);
             icon.Image = hasText ? Resources.tick : Resources.cross_red;
-            textBox.Text = hasText ? text : NotFound;
+            InitText(textBox, text);
         }
 
         private static void InitButton(Button button, FileSystemInfo info)
@@ -68,36 +85,18 @@ namespace BDHeroGUI.Components
                 return;
             }
 
-            string path = info.FullName;
-
-            var menu = new ContextMenuStrip();
-
-            menu.Items.Add(new ToolStripMenuItem(path) { Enabled = false });
-
-            var showFile = new Action<string>(FileUtils.ShowInFolder);
-            var showFolder = new Action<string>(FileUtils.OpenFolder);
-            var showInExplorer = (info is FileInfo) ? showFile : showFolder;
+            FileSystemContextMenuStrip menu = null;
 
             if (info is FileInfo)
-            {
-                var assoc = new FileAssociation(path);
-                var text = assoc.HasAssociation
-                               ? string.Format("&Open with {0}", assoc.AppName)
-                               : "&Open with...";
-                menu.Items.Add(new ToolStripMenuItem(text, assoc.GetProgramImage(16),
-                                                     (sender, args) => FileUtils.OpenFile(path)));
-            }
+                menu = new FileContextMenuStrip(info);
 
-            menu.Items.Add(new ToolStripMenuItem("&Show in Explorer", Resources.folder_open,
-                                                 (sender, args) => showInExplorer(path)));
+            if (info is DirectoryInfo)
+                menu = new DirectoryContextMenuStrip(info);
 
-            menu.Items.Add(new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow,
-                                                 (sender, args) => Clipboard.SetText(path)));
+            if (menu == null)
+                return;
 
-            button.Click += delegate
-                {
-                    menu.Show(button, 0, button.Height);
-                };
+            button.Click += (sender, args) => menu.Show(button, 0, button.Height);
         }
 
         private static string GetIsanText(Isan isan)
@@ -125,6 +124,103 @@ namespace BDHeroGUI.Components
                        ? null
                        : string.Join(Environment.NewLine,
                                      bdmtTitles.Select(pair => string.Format("{0}: {1}", pair.Key.ISO_639_2, pair.Value)));
+        }
+    }
+
+    abstract class FileSystemContextMenuStrip : ContextMenuStrip
+    {
+        protected readonly FileSystemInfo Info;
+        protected readonly string Path;
+
+        protected FileSystemContextMenuStrip(FileSystemInfo info)
+        {
+            Info = info;
+            Path = Info.FullName;
+        }
+
+        protected ToolStripMenuItem CreatePath()
+        {
+            return new ToolStripMenuItem(Path) { Enabled = false };
+        }
+
+        protected ToolStripMenuItem CreateCopyToClipboard()
+        {
+            return new ToolStripMenuItem("&Copy path to clipboard", Resources.clipboard_arrow, CopyToClipboard);
+        }
+
+        private void CopyToClipboard(object sender, EventArgs args)
+        {
+            Clipboard.SetText(Path);
+        }
+    }
+
+    sealed class FileContextMenuStrip : FileSystemContextMenuStrip
+    {
+        private readonly FileAssociation _association;
+
+        public FileContextMenuStrip(FileSystemInfo info)
+            : base(info)
+        {
+            _association = new FileAssociation(Path);
+
+            // Common
+            Items.Add(CreatePath());
+
+            // File-specific
+            Items.Add(CreateOpenFile());
+            Items.Add(CreateShowInExplorer());
+
+            // Common
+            Items.Add(CreateCopyToClipboard());
+        }
+
+        private ToolStripMenuItem CreateOpenFile()
+        {
+            var text = _association.HasAssociation
+                           ? string.Format("&Open with {0}", _association.AppName)
+                           : "&Open with...";
+            return new ToolStripMenuItem(text, _association.GetProgramImage(16), OpenFile);
+        }
+
+        private ToolStripMenuItem CreateShowInExplorer()
+        {
+            return new ToolStripMenuItem("Show in &Explorer", Resources.folder_open, ShowInExplorer);
+        }
+
+        private void OpenFile(object sender, EventArgs args)
+        {
+            FileUtils.OpenFile(Path);
+        }
+
+        private void ShowInExplorer(object sender, EventArgs args)
+        {
+            FileUtils.ShowInFolder(Path);
+        }
+    }
+
+    sealed class DirectoryContextMenuStrip : FileSystemContextMenuStrip
+    {
+        public DirectoryContextMenuStrip(FileSystemInfo info)
+            : base(info)
+        {
+            // Common
+            Items.Add(CreatePath());
+
+            // Directory-specific
+            Items.Add(CreateExplore());
+
+            // Common
+            Items.Add(CreateCopyToClipboard());
+        }
+
+        private ToolStripMenuItem CreateExplore()
+        {
+            return new ToolStripMenuItem("&Explore", Resources.folder_open, Explore);
+        }
+
+        private void Explore(object sender, EventArgs args)
+        {
+            FileUtils.OpenFolder(Path);
         }
     }
 }

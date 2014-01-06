@@ -36,10 +36,8 @@ namespace BDHero.BDROM
 
         public override string ToString()
         {
-            return string.Format("{0} (region {1})",
-                                 VolumeLabel,
-                                 Region
-                );
+            var regionName = Region == RegionCode.Free ? "region-free" : "region " + Region.GetName();
+            return string.Format("{0} ({1})", VolumeLabel, regionName);
         }
     }
 }

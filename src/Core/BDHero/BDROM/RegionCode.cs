@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq;
 
 namespace BDHero.BDROM
 {
@@ -9,9 +11,10 @@ namespace BDHero.BDROM
     public enum RegionCode
     {
         /// <summary>
-        /// No region code is present.
+        /// No region code is present (region-free).
         /// </summary>
-        None = -1,
+        [Description("No region code is present (region-free).")]
+        Free = -1,
 
         /// <summary>
         /// A/1: Includes most North, Central, and South American and Southeast Asian countries plus Taiwan, Japan, Hong Kong, Macau, and Korea.
@@ -19,6 +22,7 @@ namespace BDHero.BDROM
         /// <remarks>
         /// The Americas (except Greenland) and their dependencies, East Asia (except mainland China and Mongolia), and Southeast Asia.
         /// </remarks>
+        [Description("The Americas (except Greenland) and their dependencies, East Asia (except mainland China and Mongolia), and Southeast Asia.")]
         A = 1,
 
         /// <summary>
@@ -27,6 +31,7 @@ namespace BDHero.BDROM
         /// <remarks>
         /// Africa, Middle East, Southwest Asia, Europe (except Belarus, Russia, Ukraine and Kazakhstan), Australia, New Zealand, and their dependencies.
         /// </remarks>
+        [Description("Africa, Middle East, Southwest Asia, Europe (except Belarus, Russia, Ukraine and Kazakhstan), Australia, New Zealand, and their dependencies.")]
         B = 2,
 
         /// <summary>
@@ -35,6 +40,7 @@ namespace BDHero.BDROM
         /// <remarks>
         /// Central Asia, East Asia (mainland China and Mongolia only), South Asia, Eastern Europe (Belarus, Russia, Ukraine and Kazakhstan only), and their dependencies.
         /// </remarks>
+        [Description("Central Asia, East Asia (mainland China and Mongolia only), South Asia, Eastern Europe (Belarus, Russia, Ukraine and Kazakhstan only), and their dependencies.")]
         C = 3
     }
 
@@ -50,6 +56,41 @@ namespace BDHero.BDROM
             RegionCode code;
             Enum.TryParse(str, out code);
             return code;
+        }
+
+        /// <summary>
+        ///     Gets the region code's short name (e.g., <c>"A"</c>, <c>"B"</c>, <c>"C"</c>, <c>"Free"</c>).
+        /// </summary>
+        public static string GetName(this RegionCode regionCode)
+        {
+            return string.Format("{0}", Enum.GetName(regionCode.GetType(), regionCode));
+        }
+
+        /// <summary>
+        ///     Gets the region code's long name (e.g., <c>"Region A"</c>, <c>"Region B"</c>, <c>"Region C"</c>, <c>"Region-free"</c>).
+        /// </summary>
+        public static string GetLongName(this RegionCode regionCode)
+        {
+            return regionCode == RegionCode.Free
+                       ? "Region-free"
+                       : string.Format("Region {0}", regionCode.GetName());
+        }
+
+        public static string GetDescription(this RegionCode regionCode)
+        {
+            var type = typeof(RegionCode);
+            var info = type.GetMember(regionCode.ToString());
+
+            if (!info.Any())
+                return null;
+
+            var attr = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (!attr.Any())
+                return null;
+
+            var description = ((DescriptionAttribute)attr[0]).Description;
+            return description;
         }
     }
 }
