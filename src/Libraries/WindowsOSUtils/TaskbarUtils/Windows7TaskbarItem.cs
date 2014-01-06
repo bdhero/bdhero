@@ -2,6 +2,7 @@
 using System.Drawing;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using OSUtils;
+using OSUtils.Info;
 using OSUtils.TaskbarUtils;
 
 namespace WindowsOSUtils.TaskbarUtils

@@ -7,6 +7,7 @@ using DotNetUtils.FS;
 using Ninject;
 using Ninject.Modules;
 using OSUtils;
+using OSUtils.Info;
 using UpdateLib;
 using log4net;
 

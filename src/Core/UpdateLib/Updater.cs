@@ -11,6 +11,7 @@ using DotNetUtils.Net;
 using Newtonsoft.Json;
 using OSUtils;
 using log4net;
+using OSUtils.Info;
 
 namespace UpdateLib
 {

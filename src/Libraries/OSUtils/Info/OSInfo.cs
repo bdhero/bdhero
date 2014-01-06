@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 
-namespace OSUtils
+namespace OSUtils.Info
 {
-    public class OS
+    public class OSInfo
     {
         /// <summary>
         /// Gets the high-level operating system type (e.g., Windows, Mac, Linux, Unix).
@@ -34,12 +31,12 @@ namespace OSUtils
         [UsedImplicitly]
         public readonly bool Is64Bit;
 
-        public OS(OSType type, Version versionNumber, string versionString, bool is64Bit)
+        public OSInfo(OSType type)
         {
             Type = type;
-            VersionNumber = versionNumber;
-            VersionString = versionString;
-            Is64Bit = is64Bit;
+            VersionNumber = Environment.OSVersion.Version;
+            VersionString = Environment.OSVersion.VersionString;
+            Is64Bit = Environment.Is64BitOperatingSystem;
         }
 
         public override string ToString()
