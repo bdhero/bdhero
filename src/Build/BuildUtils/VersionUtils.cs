@@ -14,9 +14,9 @@ namespace BuildUtils
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string InnoSetupScriptPath = @"Build\InnoSetup\setup.iss";
-        private const string BDHeroAssemblyInfoPath = @"BDHero\Properties\AssemblyInfo.cs";
-        private const string BDHeroCLIAssemblyInfoPath = @"BDHeroCLI\Properties\AssemblyInfo.cs";
-        private const string BDHeroGUIAssemblyInfoPath = @"BDHeroGUI\Properties\AssemblyInfo.cs";
+        private const string BDHeroAssemblyInfoPath = @"Core\BDHero\Properties\AssemblyInfo.cs";
+        private const string BDHeroCLIAssemblyInfoPath = @"Core\BDHeroCLI\Properties\AssemblyInfo.cs";
+        private const string BDHeroGUIAssemblyInfoPath = @"Core\BDHeroGUI\Properties\AssemblyInfo.cs";
 
         /*
 [assembly: AssemblyVersion("0.7.5.7")]
