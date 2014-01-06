@@ -7,6 +7,7 @@ using System.Text;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
+using DotNetUtils.FS;
 
 namespace BDHero.Plugin.DiscReader.Transformer
 {
@@ -108,7 +109,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
         {
             var size = jacketSize.GetDimensions();
             var files = dir.GetFiles("*.jpg", SearchOption.AllDirectories)
-                           .Where(info => Image.FromFile(info.FullName).Size.Equals(size))
+                           .Where(info => FileUtils.ImageFromFile(info.FullName).Size.Equals(size))
                            .ToArray();
             return files.FirstOrDefault();
         }
