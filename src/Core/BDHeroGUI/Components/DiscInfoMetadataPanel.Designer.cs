@@ -108,6 +108,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
             this.groupBox1.Size = new System.Drawing.Size(446, 374);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
@@ -137,7 +138,7 @@
             this.tableLayoutPanel1.Controls.Add(this.textBoxHardwareVolumeLabel, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.iconHardwareVolumeLabel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 3);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 23);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -145,7 +146,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(437, 352);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(423, 338);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel4
@@ -154,7 +155,7 @@
             this.panel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel4.Controls.Add(this.label9);
             this.panel4.Controls.Add(this.label6);
-            this.panel4.Location = new System.Drawing.Point(33, 197);
+            this.panel4.Location = new System.Drawing.Point(33, 192);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(120, 27);
             this.panel4.TabIndex = 18;
@@ -253,7 +254,7 @@
             // iconAllBdmtTitles
             // 
             this.iconAllBdmtTitles.Image = global::BDHeroGUI.Properties.Resources.tick;
-            this.iconAllBdmtTitles.Location = new System.Drawing.Point(3, 197);
+            this.iconAllBdmtTitles.Location = new System.Drawing.Point(3, 192);
             this.iconAllBdmtTitles.Name = "iconAllBdmtTitles";
             this.iconAllBdmtTitles.Size = new System.Drawing.Size(24, 24);
             this.iconAllBdmtTitles.TabIndex = 14;
@@ -289,12 +290,12 @@
             // textBoxAllBdmtTitles
             // 
             this.textBoxAllBdmtTitles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAllBdmtTitles.Location = new System.Drawing.Point(159, 197);
+            this.textBoxAllBdmtTitles.Location = new System.Drawing.Point(159, 192);
             this.textBoxAllBdmtTitles.Multiline = true;
             this.textBoxAllBdmtTitles.Name = "textBoxAllBdmtTitles";
             this.textBoxAllBdmtTitles.ReadOnly = true;
             this.textBoxAllBdmtTitles.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxAllBdmtTitles.Size = new System.Drawing.Size(275, 152);
+            this.textBoxAllBdmtTitles.Size = new System.Drawing.Size(261, 143);
             this.textBoxAllBdmtTitles.TabIndex = 8;
             // 
             // textBoxVISAN
@@ -305,7 +306,7 @@
             this.textBoxVISAN.Name = "textBoxVISAN";
             this.textBoxVISAN.ReadOnly = true;
             this.textBoxVISAN.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxVISAN.Size = new System.Drawing.Size(275, 98);
+            this.textBoxVISAN.Size = new System.Drawing.Size(261, 93);
             this.textBoxVISAN.TabIndex = 6;
             // 
             // textBoxDboxTitle
@@ -314,7 +315,7 @@
             this.textBoxDboxTitle.Location = new System.Drawing.Point(159, 63);
             this.textBoxDboxTitle.Name = "textBoxDboxTitle";
             this.textBoxDboxTitle.ReadOnly = true;
-            this.textBoxDboxTitle.Size = new System.Drawing.Size(275, 20);
+            this.textBoxDboxTitle.Size = new System.Drawing.Size(261, 20);
             this.textBoxDboxTitle.TabIndex = 4;
             // 
             // textBoxAnyDVDDiscInf
@@ -323,7 +324,7 @@
             this.textBoxAnyDVDDiscInf.Location = new System.Drawing.Point(159, 33);
             this.textBoxAnyDVDDiscInf.Name = "textBoxAnyDVDDiscInf";
             this.textBoxAnyDVDDiscInf.ReadOnly = true;
-            this.textBoxAnyDVDDiscInf.Size = new System.Drawing.Size(275, 20);
+            this.textBoxAnyDVDDiscInf.Size = new System.Drawing.Size(261, 20);
             this.textBoxAnyDVDDiscInf.TabIndex = 2;
             // 
             // label3
@@ -343,7 +344,7 @@
             this.textBoxHardwareVolumeLabel.Location = new System.Drawing.Point(159, 3);
             this.textBoxHardwareVolumeLabel.Name = "textBoxHardwareVolumeLabel";
             this.textBoxHardwareVolumeLabel.ReadOnly = true;
-            this.textBoxHardwareVolumeLabel.Size = new System.Drawing.Size(275, 20);
+            this.textBoxHardwareVolumeLabel.Size = new System.Drawing.Size(261, 20);
             this.textBoxHardwareVolumeLabel.TabIndex = 0;
             // 
             // iconHardwareVolumeLabel
@@ -395,6 +396,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(10);
             this.groupBox2.Size = new System.Drawing.Size(449, 374);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
@@ -419,7 +421,7 @@
             this.tableLayoutPanel2.Controls.Add(this.textBoxDboxTitleSanitized, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.textBoxVolumeLabelSanitized, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.buttonAnyDVDDiscInfSanitized, 2, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(10, 23);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 5;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -427,7 +429,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(440, 352);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(426, 338);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // textBoxAnyDVDDiscInfSanitized
@@ -436,12 +438,12 @@
             this.textBoxAnyDVDDiscInfSanitized.Location = new System.Drawing.Point(3, 33);
             this.textBoxAnyDVDDiscInfSanitized.Name = "textBoxAnyDVDDiscInfSanitized";
             this.textBoxAnyDVDDiscInfSanitized.ReadOnly = true;
-            this.textBoxAnyDVDDiscInfSanitized.Size = new System.Drawing.Size(374, 20);
+            this.textBoxAnyDVDDiscInfSanitized.Size = new System.Drawing.Size(360, 20);
             this.textBoxAnyDVDDiscInfSanitized.TabIndex = 2;
             // 
             // buttonValidBdmtTitles
             // 
-            this.buttonValidBdmtTitles.Location = new System.Drawing.Point(383, 197);
+            this.buttonValidBdmtTitles.Location = new System.Drawing.Point(369, 192);
             this.buttonValidBdmtTitles.Name = "buttonValidBdmtTitles";
             this.buttonValidBdmtTitles.Size = new System.Drawing.Size(54, 23);
             this.buttonValidBdmtTitles.TabIndex = 9;
@@ -450,7 +452,7 @@
             // 
             // buttonIsan
             // 
-            this.buttonIsan.Location = new System.Drawing.Point(383, 93);
+            this.buttonIsan.Location = new System.Drawing.Point(369, 93);
             this.buttonIsan.Name = "buttonIsan";
             this.buttonIsan.Size = new System.Drawing.Size(54, 23);
             this.buttonIsan.TabIndex = 7;
@@ -459,7 +461,7 @@
             // 
             // buttonDboxTitleSanitized
             // 
-            this.buttonDboxTitleSanitized.Location = new System.Drawing.Point(383, 63);
+            this.buttonDboxTitleSanitized.Location = new System.Drawing.Point(369, 63);
             this.buttonDboxTitleSanitized.Name = "buttonDboxTitleSanitized";
             this.buttonDboxTitleSanitized.Size = new System.Drawing.Size(54, 23);
             this.buttonDboxTitleSanitized.TabIndex = 5;
@@ -468,7 +470,7 @@
             // 
             // buttonVolumeLabelSanitized
             // 
-            this.buttonVolumeLabelSanitized.Location = new System.Drawing.Point(383, 3);
+            this.buttonVolumeLabelSanitized.Location = new System.Drawing.Point(369, 3);
             this.buttonVolumeLabelSanitized.Name = "buttonVolumeLabelSanitized";
             this.buttonVolumeLabelSanitized.Size = new System.Drawing.Size(54, 23);
             this.buttonVolumeLabelSanitized.TabIndex = 1;
@@ -478,12 +480,12 @@
             // textBoxValidBdmtTitles
             // 
             this.textBoxValidBdmtTitles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxValidBdmtTitles.Location = new System.Drawing.Point(3, 197);
+            this.textBoxValidBdmtTitles.Location = new System.Drawing.Point(3, 192);
             this.textBoxValidBdmtTitles.Multiline = true;
             this.textBoxValidBdmtTitles.Name = "textBoxValidBdmtTitles";
             this.textBoxValidBdmtTitles.ReadOnly = true;
             this.textBoxValidBdmtTitles.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxValidBdmtTitles.Size = new System.Drawing.Size(374, 152);
+            this.textBoxValidBdmtTitles.Size = new System.Drawing.Size(360, 143);
             this.textBoxValidBdmtTitles.TabIndex = 8;
             // 
             // textBoxIsan
@@ -494,7 +496,7 @@
             this.textBoxIsan.Name = "textBoxIsan";
             this.textBoxIsan.ReadOnly = true;
             this.textBoxIsan.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxIsan.Size = new System.Drawing.Size(374, 98);
+            this.textBoxIsan.Size = new System.Drawing.Size(360, 93);
             this.textBoxIsan.TabIndex = 6;
             // 
             // textBoxDboxTitleSanitized
@@ -503,7 +505,7 @@
             this.textBoxDboxTitleSanitized.Location = new System.Drawing.Point(3, 63);
             this.textBoxDboxTitleSanitized.Name = "textBoxDboxTitleSanitized";
             this.textBoxDboxTitleSanitized.ReadOnly = true;
-            this.textBoxDboxTitleSanitized.Size = new System.Drawing.Size(374, 20);
+            this.textBoxDboxTitleSanitized.Size = new System.Drawing.Size(360, 20);
             this.textBoxDboxTitleSanitized.TabIndex = 4;
             // 
             // textBoxVolumeLabelSanitized
@@ -512,12 +514,12 @@
             this.textBoxVolumeLabelSanitized.Location = new System.Drawing.Point(3, 3);
             this.textBoxVolumeLabelSanitized.Name = "textBoxVolumeLabelSanitized";
             this.textBoxVolumeLabelSanitized.ReadOnly = true;
-            this.textBoxVolumeLabelSanitized.Size = new System.Drawing.Size(374, 20);
+            this.textBoxVolumeLabelSanitized.Size = new System.Drawing.Size(360, 20);
             this.textBoxVolumeLabelSanitized.TabIndex = 0;
             // 
             // buttonAnyDVDDiscInfSanitized
             // 
-            this.buttonAnyDVDDiscInfSanitized.Location = new System.Drawing.Point(383, 33);
+            this.buttonAnyDVDDiscInfSanitized.Location = new System.Drawing.Point(369, 33);
             this.buttonAnyDVDDiscInfSanitized.Name = "buttonAnyDVDDiscInfSanitized";
             this.buttonAnyDVDDiscInfSanitized.Size = new System.Drawing.Size(54, 23);
             this.buttonAnyDVDDiscInfSanitized.TabIndex = 3;
