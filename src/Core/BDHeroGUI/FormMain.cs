@@ -981,6 +981,7 @@ namespace BDHeroGUI
 
         private void FormMain_DragDrop(object sender, DragEventArgs e)
         {
+            textBoxInput.UnHighlight();
             if (!AcceptBDROMDrop(e)) return;
             Scan(GetFirstBDROMDirectory(e));
         }
