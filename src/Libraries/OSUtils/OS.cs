@@ -32,14 +32,14 @@ namespace OSUtils
         /// Gets whether the operating system supports 64-bit instructions and memory addresses.
         /// </summary>
         [UsedImplicitly]
-        public readonly bool Is64BitOS;
+        public readonly bool Is64Bit;
 
         public OS(OSType type, Version versionNumber, string versionString, bool is64Bit)
         {
             Type = type;
             VersionNumber = versionNumber;
             VersionString = versionString;
-            Is64BitOS = is64Bit;
+            Is64Bit = is64Bit;
         }
 
         public override string ToString()
