@@ -215,7 +215,7 @@ namespace BDHeroGUI.Components
 
         private ToolStripMenuItem CreateExplore()
         {
-            return new ToolStripMenuItem("&Explore", Resources.folder_open, Explore);
+            return new ToolStripMenuItem("&Open folder", Resources.folder_open, Explore);
         }
 
         private void Explore(object sender, EventArgs args)
