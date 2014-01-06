@@ -70,6 +70,7 @@
     <Compile Include="TaskbarUtils\WindowsTaskbarItemFactory.cs" />
     <Compile Include="Win32\ExtendedWindowStyles.cs" />
     <Compile Include="Win32\SystemMenu.cs" />
+    <Compile Include="Win32\SystemMenuWin32API.cs" />
     <Compile Include="WindowsInjectorFactory.cs" />
     <Compile Include="WMI\Classes\DiskDrive.cs" />
     <Compile Include="WMI\Classes\DiskPartition.cs" />
