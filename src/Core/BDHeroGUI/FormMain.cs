@@ -413,12 +413,12 @@ namespace BDHeroGUI
 
             var alwaysOnTopMenuItem = systemMenu.CreateMenuItem("Always on &top");
             alwaysOnTopMenuItem.Clicked += delegate
-                                     {
-                                         var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
-                                         TopMost = alwaysOnTop;
-                                         alwaysOnTopMenuItem.Checked = alwaysOnTop;
-                                         systemMenu.UpdateMenu(alwaysOnTopMenuItem);
-                                     };
+                                           {
+                                               var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
+                                               TopMost = alwaysOnTop;
+                                               alwaysOnTopMenuItem.Checked = alwaysOnTop;
+                                               systemMenu.UpdateMenu(alwaysOnTopMenuItem);
+                                           };
 
             uint pos = 5;
             systemMenu.InsertSeparator(pos++);
