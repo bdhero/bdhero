@@ -134,6 +134,12 @@
     <Compile Include="Forms\FormMediaCustom.Designer.cs">
       <DependentUpon>FormMediaCustom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormResizeWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormResizeWindow.Designer.cs">
+      <DependentUpon>FormResizeWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\FormMainUpdateObserver.cs" />
     <Compile Include="Components\VideoTrackListView.cs">
       <SubType>UserControl</SubType>
@@ -250,6 +256,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPlaylistFilter.resx">
       <DependentUpon>FormPlaylistFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormResizeWindow.resx">
+      <DependentUpon>FormResizeWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormTrackFilter.resx">
       <DependentUpon>FormTrackFilter.cs</DependentUpon>
