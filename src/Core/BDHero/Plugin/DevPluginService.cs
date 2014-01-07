@@ -76,7 +76,7 @@ namespace BDHero.Plugin
 
         private static string GetSolutionDirPath()
         {
-            var curDir = Directory.GetCurrentDirectory();
+            var curDir = AssemblyUtils.GetInstallDir();
             DirectoryInfo parent;
             while (!SolutionFileExists(curDir) && (parent = new DirectoryInfo(curDir).Parent) != null)
             {
