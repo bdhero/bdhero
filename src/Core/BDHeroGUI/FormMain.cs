@@ -423,6 +423,12 @@ namespace BDHeroGUI
         {
             var systemMenu = new SystemMenu(this, this);
 
+            var resizeMenuItem = systemMenu.CreateMenuItem("&Resize...");
+            resizeMenuItem.Clicked += delegate
+                                      {
+                                          new FormResizeWindow(this).ShowDialog(this);
+                                      };
+
             var alwaysOnTopMenuItem = systemMenu.CreateMenuItem("Always on &top");
             alwaysOnTopMenuItem.Clicked += delegate
                                            {
@@ -434,6 +440,7 @@ namespace BDHeroGUI
 
             uint pos = 5;
             systemMenu.InsertSeparator(pos++);
+            systemMenu.InsertMenu(pos++, resizeMenuItem);
             systemMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
         }
 
