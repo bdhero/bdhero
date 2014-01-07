@@ -164,6 +164,7 @@
             this.Controls.Add(this.discInfoFeaturesPanel);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.label1);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "FormDiscInfo";
             this.ShowIcon = false;
