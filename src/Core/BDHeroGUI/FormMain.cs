@@ -53,6 +53,8 @@ namespace BDHeroGUI
         private ProgressProviderState _state = ProgressProviderState.Ready;
         private Stage _stage = Stage.None;
 
+        public string[] Args = new string[0];
+
         public event WndProcEventHandler WndProcMessage;
 
         #region Properties
@@ -193,6 +195,16 @@ namespace BDHeroGUI
 
             // TODO: Uncomment (if feasible) w/ setting to enable/disable
 //            var monitor = new NetworkStatusMonitor(null, SetIsOnline);
+
+            ScanOnStartup();
+        }
+
+        private void ScanOnStartup()
+        {
+            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
+            if (path == null)
+                return;
+            Scan(path);
         }
 
         private void SetIsOnline(bool isOnline)
