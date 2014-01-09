@@ -78,7 +78,7 @@ namespace BDHero.BDROM
     /// TODO: Add language(s), alternate title(s), and additional information
     public class Isan
     {
-        private static readonly string[] InvalidRoots = {"000000000000", "FFFFFFFFFFFF"};
+        private static readonly string[] InvalidSegments = { "0000", "FFFF" };
 
         /// <summary>
         /// Matches any valid ISAN number <em>without dashes</em> at word boundaries.
@@ -156,7 +156,10 @@ namespace BDHero.BDROM
         /// <summary>
         /// Gets a value indicating whether the ISAN's <see cref="Root"/> is valid and searchable (i.e., is not all zeros or Fs).
         /// </summary>
-        public bool IsSearchable { get { return !InvalidRoots.Contains(Root); } }
+        public bool IsSearchable
+        {
+            get { return !NumberFormatted.Split('-').All(segment => InvalidSegments.Contains(segment)); }
+        }
 
         protected Isan(string n1, string n2, string n3, string n4, string n5, string n6)
         {
