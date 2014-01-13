@@ -83,14 +83,28 @@ namespace BDHero.Plugin.AutoDetector
 
             var dups = (from key in bdinfoDuplicateMap.Keys
                         where bdinfoDuplicateMap[key].Count > 1
-                        select bdinfoDuplicateMap[key].OrderBy(playlist => playlist.Tracks.Count(track => track.IsHidden)))
-                .SelectMany(sortedFiles => sortedFiles.Skip(1));
+                        select bdinfoDuplicateMap[key].OrderBy(GetDupSortValue))
+                .SelectMany(SkipBestDup);
 
             foreach (var playlist in dups)
             {
                 playlist.IsDuplicate = true;
                 bdamPlaylistMap[playlist.FileName].IsDuplicate = true;
             }
+        }
+
+        private static int GetDupSortValue(Playlist playlist)
+        {
+            return (playlist.IsBogusFoSho ? 1 : 0) + playlist.Tracks.Count(track => track.IsHidden);
+        }
+
+        private static IEnumerable<Playlist> SkipBestDup(IEnumerable<Playlist> playlistsEnumerable)
+        {
+            var playlists = playlistsEnumerable.ToArray();
+            var nonBogus = playlists.Where(playlist => !playlist.IsBogusFoSho).ToArray();
+            if (nonBogus.Any())
+                return nonBogus.Except(new[] { nonBogus.First() });
+            return playlists.Skip(1);
         }
 
         private static string GetPlaylistDupKey(Playlist playlist)
@@ -113,18 +127,23 @@ namespace BDHero.Plugin.AutoDetector
 
         private void TransformPlaylistQuality(Disc disc)
         {
-            // TODO: ONLY LOOK AT MAIN MOVIE PLAYLISTS
+            // TODO: Fix or remove quality detection
 
-            var bestAudioPlaylist = disc.Playlists.OrderByDescending(p => p.MaxAudioChannels).FirstOrDefault();
+            // Only consider feature-length playlists when searching for highest quality tracks
+            var maxLength = GetMaxPlaylistLength(disc);
+            var allPlaylists = disc.Playlists;
+            var featureLengthPlaylists = allPlaylists.Where(playlist => playlist.IsFeatureLength(maxLength)).ToArray();
+
+            var bestAudioPlaylist = featureLengthPlaylists.OrderByDescending(p => p.MaxAudioChannels).FirstOrDefault();
             if (bestAudioPlaylist == null) return;
 
-            var bestVideoPlaylist = disc.Playlists.OrderByDescending(p => p.MaxAvailableVideoResolution).FirstOrDefault();
+            var bestVideoPlaylist = featureLengthPlaylists.OrderByDescending(p => p.MaxAvailableVideoResolution).FirstOrDefault();
             if (bestVideoPlaylist == null) return;
 
             var maxChannels = bestAudioPlaylist.MaxAudioChannels;
             var maxHeight = bestVideoPlaylist.MaxAvailableVideoResolution;
 
-            var maxQualityPlaylists = disc.Playlists.Where(playlist => playlist.MaxAudioChannels == maxChannels && playlist.MaxAvailableVideoResolution == maxHeight);
+            var maxQualityPlaylists = allPlaylists.Where(playlist => IsMaxQualityPlaylist(playlist, maxChannels, maxHeight)).ToArray();
 
             foreach (var playlist in maxQualityPlaylists)
             {
@@ -132,18 +151,27 @@ namespace BDHero.Plugin.AutoDetector
             }
         }
 
+        private static bool IsMaxQualityPlaylist(Playlist playlist, double maxChannels, int maxHeight)
+        {
+            return playlist.MaxAudioChannels >= maxChannels && playlist.MaxAvailableVideoResolution == maxHeight;
+        }
+
         #endregion
+
+        private static TimeSpan GetMaxPlaylistLength(Disc disc)
+        {
+            return disc.Playlists
+                       .Where(playlist => playlist.IsPossibleMainFeature && !playlist.IsBogus)
+                       .Select(playlist => playlist.Length)
+                       .OrderByDescending(length => length)
+                       .FirstOrDefault();
+        }
 
         #region Auto Detection
 
         private static void DetectPlaylistTypes(Disc disc)
         {
-            var maxLength =
-                disc.Playlists
-                    .OrderByDescending(p => p.Length)
-                    .Where(playlist => !playlist.IsBogus && playlist.IsMaxQuality)
-                    .Select(playlist => playlist.Length)
-                    .FirstOrDefault();
+            var maxLength = GetMaxPlaylistLength(disc);
 
             foreach (var playlist in disc.Playlists)
             {
@@ -179,10 +207,10 @@ namespace BDHero.Plugin.AutoDetector
                     {
                         var audioTrack = audioTracksWithLang[i];
 
-                        if (IsMainFeatureAudioTrack(audioTrack))
+                        if (IsMainFeatureAudioTrack(audioTrack, i))
                             audioTrack.Type = TrackType.MainFeature;
 
-                        if (IsCommentaryAudioTrack(audioTrack))
+                        if (IsCommentaryAudioTrack(audioTrack, i))
                             audioTrack.Type = TrackType.Commentary;
                     }
                 }
@@ -211,15 +239,15 @@ namespace BDHero.Plugin.AutoDetector
             }
         }
 
-        private static bool IsMainFeatureAudioTrack(Track track)
+        private static bool IsMainFeatureAudioTrack(Track track, int indexOfTypeWithSameLanguage)
         {
-            return track.Index == 0 ||
-                   track.Index >= 1 && track.ChannelCount > 2;
+            return indexOfTypeWithSameLanguage == 0 ||
+                   indexOfTypeWithSameLanguage >= 1 && track.ChannelCount > 2;
         }
 
-        private static bool IsCommentaryAudioTrack(Track track)
+        private static bool IsCommentaryAudioTrack(Track track, int indexOfTypeWithSameLanguage)
         {
-            return track.Index >= 1 && track.ChannelCount <= 2;
+            return indexOfTypeWithSameLanguage >= 1 && track.ChannelCount <= 2;
         }
 
         private static void DetectCommentaryPlaylistTrackTypes(Disc disc)

@@ -24,6 +24,16 @@ namespace BDHero.BDROM
         /// </summary>
         private const int MinLengthSec = 120;
 
+        /// <summary>
+        /// Minimum number of chapters for a playlist to be considered a "Main Feature."
+        /// </summary>
+        private const int MinChapterCount = 2;
+
+        /// <summary>
+        /// Maximum number of chapters for a playlist to be considered a "Main Feature."
+        /// </summary>
+        private const int MaxChapterCount = 90;
+
         #endregion
 
         #region Private static properties
@@ -153,7 +163,16 @@ namespace BDHero.BDROM
         [JsonIgnore]
         public bool IsBogus
         {
-            get { return IsDuplicate || HasDuplicateStreamClips || HasLoops || HasHiddenFirstTracks; }
+            get { return IsDuplicate || IsBogusFoSho; }
+        }
+
+        /// <summary>
+        /// Has repeated stream clips (.M2TS files), contains loops, or has hidden primary audio/video tracks.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsBogusFoSho
+        {
+            get { return HasDuplicateStreamClips || HasLoops || HasHiddenFirstTracks; }
         }
 
         /// <summary>
@@ -164,7 +183,7 @@ namespace BDHero.BDROM
 
         #endregion
 
-        #region Non-DB Public properties (full path, stream clips, video language)
+        #region Non-DB Public properties (full path, stream clips, video language, main feature properties)
 
         /// <summary>
         /// Full absolute path to the .MPLS file.
@@ -186,6 +205,25 @@ namespace BDHero.BDROM
         {
             get { return VideoTracks.Any() ? VideoTracks.First().Language : Language.Undetermined; }
             set { if (VideoTracks.Any()) { VideoTracks.First().Language = value; } }
+        }
+
+        /// <summary>
+        /// Gets whether this playlist has at least one audio/video/subtitle track, a reasonable chapter count, and
+        /// a minimum length.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsPossibleMainFeature
+        {
+            get
+            {
+                return VideoTracks.Count >= 1 &&
+                       AudioTracks.Count >= 1 &&
+                       // TODO: Keep/remove?  Or make user preference?
+//                       SubtitleTracks.Count >= 1 &&
+                       ChapterCount >= MinChapterCount &&
+                       ChapterCount <= MaxChapterCount &&
+                       Length > MinLength;
+            }
         }
 
         #endregion
@@ -381,19 +419,21 @@ namespace BDHero.BDROM
         public bool IsMainFeaturePlaylist(TimeSpan maxPlaylistLength)
         {
             return
-                IsMaxQuality &&
                 IsFeatureLength(maxPlaylistLength) &&
-                VideoTracks.Count >= 1 &&
-                AudioTracks.Count >= 1 &&
-                SubtitleTracks.Count >= 1 &&
-                Chapters.Count >= 2 &&
-                Length > MinLength;
+                IsPossibleMainFeature;
         }
 
         public bool IsSpecialFeaturePlaylist(TimeSpan maxPlaylistLength)
         {
-            return (IsMaxQuality && !IsFeatureLength(maxPlaylistLength) && AudioTracks.Count == 1 && Length > MinLength) ||
-                   (!IsMaxQuality && IsFeatureLength(maxPlaylistLength) && AudioTracks.Count == 1 && Length > MinLength);
+            if (ChapterCount < MinChapterCount ||
+                ChapterCount > MaxChapterCount ||
+                Length < MinLength ||
+                AudioTracks.Count != 1)
+            {
+                return false;
+            }
+            return (IsMaxQuality && !IsFeatureLength(maxPlaylistLength)) ||
+                   (!IsMaxQuality && IsFeatureLength(maxPlaylistLength));
         }
 
         public bool IsFeatureLength(TimeSpan maxPlaylistLength)
