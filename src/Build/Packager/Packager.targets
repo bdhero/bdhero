@@ -85,13 +85,13 @@
         <FFmpegSourceFiles Include="$(FFmpegSourceDir)\FFmpegMuxerPlugin.dll;$(FFmpegSourceDir)\*.exe" />
     </ItemGroup>
 
-    <Target Name="Clean">
+    <Target Name="PackagerClean" AfterTargets="Clean">
         <!-- Delete old artifacts -->
         <Delete Files="$(ArtifactsDir)\**\*.*" />
         <RemoveDir Directories="$(ArtifactsDir)" />
     </Target>
 
-    <Target Name="Compile">
+    <Target Name="PackagerAfterBuild" AfterTargets="Compile">
         <!-- Delete old artifacts -->
         <Delete Files="$(PortableDir)\**\*.*;$(InstallerDir)\**\*.*" />
         <RemoveDir Directories="$(PortableDir);$(InstallerDir)" />
