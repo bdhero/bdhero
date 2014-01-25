@@ -25,6 +25,8 @@ Chores
 Bugs
 ====
 
+[ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
+
 [ ] Deception (2008): Metadata search is not using year from ISAN
     V:\BD\Uncategorized\DECEPTION
 
@@ -41,8 +43,21 @@ Bugs
 Features
 ========
 
+[ ] Cache folder?
+
+[ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
+
 [ ] Centralize cover art dimensions
+    [ ] Download larger cover art as necessary when window is resized
+    [ ] Be smart about downloading smallest sizes first
+    [ ] Cache images on disk?  (w/ user preference?)
 [ ] Finish FormMediaCustom.cs (incl. drag-n-drop from browsers)
+
+[ ] Decide whether to keep or remove subtitle track count in Playlist.IsPossibleMainFeature
+
+[ ] "Resize Window" form: handle maximized/aero snap
+
+[ ] Allow user to cancel HTTP requests (e.g., TMDb is taking too long)
 
 [ ] Revamp "Disc Info" dialog
 [ ] Add "Disc Info" icons to main form
