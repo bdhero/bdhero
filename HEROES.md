@@ -6,14 +6,16 @@ Projects without which BDHero would not be possible:
 *  [CinemaSquid BDInfo](http://www.cinemasquid.com/blu-ray/tools/bdinfo): Blu-ray analysis tool 
 *  [FFmpeg](http://ffmpeg.org/): Cross-platform audio/video converter
 *  [MKVToolNix](http://www.bunkus.org/videotools/mkvtoolnix/): Cross-platform tool suite for the [Matroska](http://matroska.org/) media container format (MKV)
-*  [AnyDVD HD](http://www.slysoft.com/en/anydvdhd.html): Removes restrictions from Blu-ray media (Windows only)
 
 Inspiration
 ===========
 
-*  VidCoder
-*  tsMuxeR
-*  MakeMKV
+Tools that helped guide the features and interface of BDHero:
+
+*  [HandBrake](http://handbrake.fr/): Cross-platform video transcoder
+*  [VidCoder](http://vidcoder.codeplex.com/): HandBrake-based video transcoder for Windows
+*  [tsMuxeR](http://www.videohelp.com/tools/tsMuxeR/): Abandoned MPEG Transport Stream and Matroska muxer
+*  [MakeMKV](http://makemkv.com/‎): Cross-platform Blu-ray™/DVD to MKV muxer
 
 Databases
 =========
@@ -27,7 +29,7 @@ Open community-driven databases used by BDHero:
 Libraries and Frameworks
 ========================
 
-Projects that make programming more enjoyable and less tedious:
+Projects that make programming more enjoyable:
 
 *  [Ninject](http://www.ninject.org/): [Dependency Injection](http://stackoverflow.com/q/130794/467582) <abbr title="Inversion of Control">[IoC](http://en.wikipedia.org/wiki/Inversion_of_control)</abbr> container
 *  [Apache log4net](http://logging.apache.org/log4net/): Logging framework
@@ -38,7 +40,7 @@ Projects that make programming more enjoyable and less tedious:
 Development Tools
 =================
 
-The best of the best of the best, sir!
+The best of the best of the best, _**sir**_!
 
 *  [Git](http://git-scm.com/): Blazing fast cross-platform distributed version control system (VCS)
 *  [Microsoft Visual Studio 2013](http://www.microsoft.com/visualstudio/)
