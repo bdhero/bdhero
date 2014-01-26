@@ -1,0 +1,351 @@
+{
+    "originals": [
+        {
+            "name": "BDInfo",
+            "description": "Blu-ray video and audio analysis tool",
+            "authors": [
+                {
+                    "years": [ 2008, 2009, 2010, 2011 ],
+                    "name": "Chris Thoman"
+                }
+            ],
+            "urls": {
+                "source": "http://www.cinemasquid.com/blu-ray/tools/bdinfo"
+            },
+            "license": "lgpl_2_1"
+        }
+    ],
+    "derivatives": [
+        {
+            "name": "BDHero",
+            "description": "An intelligent, automatic Blu-ray™ to MKV muxer and analysis tool",
+            "authors": [
+                {
+                    "years": [ 2012, 2013, 2014 ],
+                    "name":  "Andrew C. Dvorak",
+                    "email": "andy@andydvorak.net",
+                    "url":   "http://andydvorak.net/"
+                }
+            ],
+            "urls": {
+                "project": "http://bdhero.org/",
+                "source":  "https://github.com/bdhero/bdhero"
+            }
+        }
+    ],
+    "snippets": [
+        {
+            "name": "Plug-ins in C#",
+            "authors": [
+                {
+                    "years": [ 2004 ],
+                    "name": "Jon Dick",
+                    "url":  "http://redth.info/"
+                }
+            ],
+            "urls": {
+                "article": "http://www.codeproject.com/Articles/6334/Plug-ins-in-C",
+                "source":  "http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=6334&zep=PluginPrototype%2fHost%2fPluginServices.cs&rzp=%2fKB%2fcs%2fpluginsincsharp%2f%2fpluginsincsharp_source.zip"
+            }
+        },
+        {
+            "name": "Detecting USB Drive Removal in a C# Program",
+            "authors": [
+                {
+                    "years": [ 2007 ],
+                    "name": "Jan Dolinay"
+                }
+            ],
+            "urls": {
+                "article": "http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program",
+                "source":  "http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=18062&zep=DriveDetector.cs&rzp=%2fKB%2fsystem%2fDriveDetector%2f%2fdrivedetector_src.zip"
+            },
+            "license": "cpol_1_02"
+        },
+        {
+            "name": "Platform.cs",
+            "description": "Cross-platform OS detection for .NET and Mono",
+            "authors": [
+                {
+                    "years": [ 2010 ],
+                    "name": "Jürgen Obernolte",
+                    "url":  "https://github.com/jobernolte"
+                }
+            ],
+            "urls": {
+                "source": "https://github.com/PintaProject/Pinta/blob/30d7a70178d2958fbd4fe8a1991a60aa7201873b/Pinta/Platform.cs"
+            },
+            "license": "mit"
+        },
+        {
+            "name": "JobObject.cs",
+            "description": "Native interop with the Win32 Job Object API via P/Invoke in .NET",
+            "authors": [
+                {
+                    "years": [ 2012 ],
+                    "name":  "Leszek Ciesielski",
+                    "email": "skolima@gmail.com",
+                    "url":   "http://profiles.google.com/skolima"
+                }
+            ],
+            "urls": {
+                "article": "http://skolima.blogspot.com/2012/09/handling-native-api-in-managed.html",
+                "source":  "https://gist.github.com/skolima/3808452"
+            }
+        },
+        {
+            "name": "JobObjects.cs",
+            "description": "Native interop with the Win32 Job Object API via P/Invoke in .NET",
+            "authors": [
+                {
+                    "years": [ 2009 ],
+                    "name":  "Matthew Hope",
+                    "email": "matthew.hope@gmail.com"
+                }
+            ],
+            "urls": {
+                "source": "https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml"
+            },
+            "license": "apache_2_0"
+        }
+    ],
+    "packages": [
+        {
+            "name": "CsQuery",
+            "description": "C# jQuery port for .NET",
+            "authors": [
+                {
+                    "years": [ 2013 ],
+                    "name": "James Treworgy",
+                    "email": "jamie@outsharked.com",
+                    "url": "http://blog.outsharked.com/"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/csquery/",
+                "source":  "https://github.com/jamietre/CsQuery"
+            },
+            "license": "mit"
+        },
+        {
+            "name": "INI Parser",
+            "description": "Mono-compatible .NET library for reading/writing INI data",
+            "authors": [
+                {
+                    "years": [ 2014 ],
+                    "name": "Ricardo Amores Hernández",
+                    "email": "ricardo.amores@gmail.com"
+                },
+                {
+                    "years": [ 2014 ],
+                    "name": "Anthony Mastrean",
+                    "email": "anthony.mastrean@gmail.com",
+                    "url": "http://about.me/anthony.mastrean"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/ini-parser/",
+                "source":  "https://github.com/rickyah/ini-parser"
+            },
+            "license": "mit"
+        },
+        {
+            "name": "log4net",
+            "description": ".NET port of the log4j logging framework",
+            "authors": [
+                {
+                    "years": [ 2013 ],
+                    "organization": "Apache Software Foundation"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/log4net/",
+                "project": "http://logging.apache.org/log4net/",
+                "source":  "http://logging.apache.org/log4net/source-repository.html"
+            },
+            "license": "apache_2_0"
+        },
+        {
+            "name": "Mono.Options",
+            "description": "Callback-based program option parser for C#",
+            "authors": [
+                {
+                    "years": [ 2008, 2009, 2010, 2011, 2013 ],
+                    "name": "Jonathan Pryor",
+                    "email": "jpryor@novell.com",
+                    "organization": "Novell",
+                    "url": "http://www.novell.com/"
+                },
+                {
+                    "years": [ 2009 ],
+                    "name": "Federico Di Gregorio",
+                    "email": "fog@initd.org",
+                    "url": ""
+                },
+                {
+                    "years": [ 2012 ],
+                    "name": "Rolf Bjarne Kvinge",
+                    "email": "rolf@xamarin.com",
+                    "organization": "Xamarin",
+                    "url": "http://www.xamarin.com/"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/Mono.Options/",
+                "source":  "https://github.com/mono/mono/blob/a699e7444e8ff4426197d4bd3a9607d204ee7b0f/mcs/class/Mono.Options/Mono.Options/Options.cs"
+            },
+            "license": "mit"
+        },
+        {
+            "name": "Json.NET",
+            "description": "High-performance JSON framework for .NET",
+            "authors": [
+                {
+                    "years": [ 2007, 2008, 2009, 2010, 2011, 2012, 2013 ],
+                    "name": "James Newton-King",
+                    "url": "http://james.newtonking.com/"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/log4net/",
+                "project": "http://james.newtonking.com/json",
+                "source":  "https://github.com/JamesNK/Newtonsoft.Json"
+            },
+            "license": "mit"
+        },
+        {
+            "name": "Ninject",
+            "description": "Dependency injection framework for .NET",
+            "authors": [
+                {
+                    "years": [ 2011, 2012, 2013 ],
+                    "name": "Remo Gloor",
+                    "email": "remo.gloor@gmail.com",
+                    "url": "http://www.planetgeek.ch/author/remo-gloor"
+                },
+                {
+                    "years": [ 2009, 2010, 2011, 2012, 2013 ],
+                    "name": "Ninject Project Contributors"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/Ninject/",
+                "project": "http://www.ninject.org/",
+                "source":  "https://github.com/ninject/ninject"
+            },
+            "license": "apache_2_0"
+        },
+        {
+            "name": "RestSharp",
+            "description": "Simple REST and HTTP client for .NET",
+            "authors": [
+                {
+                    "years": [ 2009, 2010, 2011, 2012 ],
+                    "name": "John Sheehan",
+                    "email": "johnsheehan@gmail.com"
+                },
+                {
+                    "years": [ 2009, 2010, 2011, 2012, 2013, 2014 ],
+                    "name": "RestSharp Project Contributors"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/RestSharp/",
+                "project": "http://restsharp.org/",
+                "source":  "https://github.com/restsharp/RestSharp"
+            },
+            "license": "apache_2_0"
+        },
+        {
+            "name": "MarkdownSharp",
+            "description": "Open source C# implementation of Markdown processor, as featured on Stack Overflow",
+            "authors": [
+                {
+                    "years": [ 2004 ],
+                    "name": "John Gruber"
+                },
+                {
+                    "years": [ 2004, 2005, 2006, 2007, 2008, 2009 ],
+                    "name": "Milan Negovan"
+                },
+                {
+                    "years": [ 2009, 2010, 2011 ],
+                    "name": "Jeff Atwood",
+                    "url": "http://www.codinghorror.com/blog/"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/MarkdownSharp/",
+                "project": "https://code.google.com/p/markdownsharp/",
+                "source":  "https://code.google.com/p/markdownsharp/source/browse/"
+            },
+            "license": "mit"
+        }
+    ],
+    "libraries": [
+        {
+            "name": "Windows® API Code Pack for Microsoft® .NET Framework",
+            "description": "Provides access to Windows 7 taskbar and shell features in .NET",
+            "authors": [
+                {
+                    "years": [ 2009, 2010 ],
+                    "organization": "Microsoft Corporation"
+                }
+            ],
+            "urls": {
+                "project": "http://archive.msdn.microsoft.com/WindowsAPICodePack",
+                "source":  "http://archive.msdn.microsoft.com/WindowsAPICodePack/Release/ProjectReleases.aspx"
+            },
+            "license": "ms_winapi_custom"
+        },
+        {
+            "name": "IconLib",
+            "description": "Powerful .NET icon extractor for .ico, .icl, .dll, and .exe files",
+            "authors": [
+                {
+                    "years": [ 2008 ],
+                    "name": "Castor Tiu"
+                }
+            ],
+            "urls": {
+                "article": "http://www.codeproject.com/Articles/16178/IconLib-Icons-Unfolded-MultiIcon-and-Windows-Vista",
+                "source":  "http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=16178",
+            },
+            "license": "cc_sa_2_5"
+        }
+    ],
+    "binaries": [
+        {
+            "name": "FFmpeg",
+            "description": "Fast video and audio converter",
+            "authors": [
+                {
+                    "years": [ 2010, 2011, 2012, 2013 ],
+                    "name": "FFmpeg Developers"
+                }
+            ],
+            "urls": {
+                "project": "http://ffmpeg.org/",
+                "source":  "https://github.com/FFmpeg/FFmpeg"
+            },
+            "license": "gpl_3"
+        },
+        {
+            "name": "MKVToolNix",
+            "description": "Cross-platform tools for Matroska",
+            "authors": [
+                {
+                    "years": [ 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 ],
+                    "name": "Moritz Bunkus",
+                    "email": "moritz@bunkus.org",
+                    "url": "http://www.bunkus.org/"
+                }
+            ],
+            "urls": {
+                "project": "http://www.bunkus.org/videotools/mkvtoolnix/",
+                "source":  "https://github.com/mbunkus/mkvtoolnix"
+            },
+            "license": "gpl_2_0"
+        }
+    ]
+}
