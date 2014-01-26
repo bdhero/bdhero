@@ -1,0 +1,71 @@
+﻿using DotNetUtils.Annotations;
+using Newtonsoft.Json;
+
+namespace LicenseUtils
+{
+    /// <summary>
+    ///     A software license agreement.
+    /// </summary>
+    [UsedImplicitly]
+    public class License
+    {
+        /// <summary>
+        ///     The machine-readable name of the license.  Appending <c>".html"</c> or <c>".txt"</c> to this value
+        ///     will produce the filename needed to load the contents of <see cref="Html"/> and <see cref="Text"/>,
+        ///     respectively.
+        /// </summary>
+        /// <example>
+        ///     <c>"cc_sa_2.5"</c>
+        /// </example>
+        [JsonIgnore]
+        public string Id;
+
+        /// <summary>
+        ///     The full human-readable name of the license.
+        /// </summary>
+        /// <example>
+        ///     <c>"GNU General Public License"</c>
+        /// </example>
+        [JsonProperty("name")]
+        public string Name;
+
+        /// <summary>
+        ///     Abbreviation of <see cref="Name"/>, if applicable.
+        /// </summary>
+        /// <example>
+        ///     <c>"GPL"</c>
+        /// </example>
+        [JsonProperty("abbr")]
+        public string Abbreviation;
+
+        /// <summary>
+        ///     The specific version number of the license agreement, if applicable.
+        /// </summary>
+        /// <example>
+        ///     <c>2</c>, <c>2.1</c>, <c>3</c>
+        /// </example>
+        [JsonProperty("version")]
+        public float? Version;
+
+        /// <summary>
+        ///     The primary URL of the website where users should go to view or learn more about the license agreement.
+        /// </summary>
+        /// <example>
+        ///     <c>"http://www.gnu.org/licenses/gpl-2.0.html"</c>
+        /// </example>
+        [JsonProperty("url")]
+        public string Url;
+
+        /// <summary>
+        ///     The full HTML markup of the license agreement.  This is the formatted equivalent of <see cref="Text"/>.
+        /// </summary>
+        [JsonIgnore]
+        public string Html;
+
+        /// <summary>
+        ///     The plain text contents of the license agreement.  This is the unformatted equivalent of <see cref="Html"/>.
+        /// </summary>
+        [JsonIgnore]
+        public string Text;
+    }
+}
