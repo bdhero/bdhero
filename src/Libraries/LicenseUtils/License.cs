@@ -10,9 +10,8 @@ namespace LicenseUtils
     public class License
     {
         /// <summary>
-        ///     The machine-readable name of the license.  Appending <c>".html"</c> or <c>".txt"</c> to this value
-        ///     will produce the filename needed to load the contents of <see cref="Html"/> and <see cref="Text"/>,
-        ///     respectively.
+        ///     The machine-readable name of the license.  Appending <c>".md"</c> to this value will produce the
+        ///     filename needed to load the contents of <see cref="Text"/>.
         /// </summary>
         /// <example>
         ///     <c>"cc_sa_2.5"</c>
