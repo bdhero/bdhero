@@ -300,6 +300,31 @@
                 "source":  "https://github.com/restsharp/RestSharp"
             },
             "license": "apache_2.0"
+        },
+        {
+            "name": "MarkdownSharp",
+            "description": "Open source C# implementation of Markdown processor, as featured on Stack Overflow",
+            "authors": [
+                {
+                    "years": [ 2004 ],
+                    "name": "John Gruber"
+                },
+                {
+                    "years": [ 2004, 2005, 2006, 2007, 2008, 2009 ],
+                    "name": "Milan Negovan"
+                },
+                {
+                    "years": [ 2009, 2010, 2011 ],
+                    "name": "Jeff Atwood",
+                    "url": "http://www.codinghorror.com/blog/"
+                }
+            ],
+            "urls": {
+                "package": "http://www.nuget.org/packages/MarkdownSharp/",
+                "project": "https://code.google.com/p/markdownsharp/",
+                "source":  "https://code.google.com/p/markdownsharp/source/browse/"
+            },
+            "license": "mit"
         }
     ],
     "libraries": [
