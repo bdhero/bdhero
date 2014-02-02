@@ -16,6 +16,7 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -65,6 +66,12 @@ namespace DotNetUtils
                     return fileSizeAttr.Format((long) value);
                 if (value is ulong)
                     return fileSizeAttr.Format((ulong) value);
+            }
+
+            var collection = value as ICollection<Object>;
+            if (collection != null)
+            {
+                return string.Format("[ {0} ]", string.Join(", ", collection));
             }
 
             var str = value.ToString();
