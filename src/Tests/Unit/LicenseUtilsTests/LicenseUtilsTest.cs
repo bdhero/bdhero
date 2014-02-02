@@ -13,7 +13,7 @@ namespace LicenseUtilsTests
         [Test]
         public void Test()
         {
-            new LicenseImporter().Import();
+            LicenseImporter.Import();
         }
     }
 }

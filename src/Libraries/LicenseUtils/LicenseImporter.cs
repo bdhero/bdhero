@@ -10,9 +10,16 @@ using Newtonsoft.Json;
 
 namespace LicenseUtils
 {
-    public class LicenseImporter
+    public static class LicenseImporter
     {
-        public void Import()
+        private static Works _works;
+
+        public static Works Works
+        {
+            get { return _works ?? (_works = Import()); }
+        }
+
+        public static Works Import()
         {
             var licenseMap = JsonConvert.DeserializeObject<Dictionary<string, License>>(GetResource("licenses"));
             var licenses = new List<License>();
@@ -31,9 +38,10 @@ namespace LicenseUtils
                 Console.WriteLine(work);
                 Console.WriteLine();
             }
+            return works;
         }
 
-        private string GetResource(string name)
+        private static string GetResource(string name)
         {
             var bytes = (byte[]) Resources.ResourceManager.GetObject(name, Resources.Culture);
             return Encoding.UTF8.GetString(bytes);
