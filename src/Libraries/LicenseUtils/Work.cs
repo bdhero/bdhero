@@ -1,4 +1,6 @@
-﻿using DotNetUtils.Annotations;
+﻿using System.Linq;
+using DotNetUtils;
+using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 
 namespace LicenseUtils
@@ -35,5 +37,25 @@ namespace LicenseUtils
         /// </summary>
         [JsonProperty("urls")]
         public Urls Urls;
+
+        /// <summary>
+        ///     <see cref="LicenseUtils.License.Id"/>.
+        /// </summary>
+        [JsonProperty("license_id")]
+        public string LicenseId;
+
+        /// <summary>
+        ///     The license under which this work is released.
+        /// </summary>
+        [JsonIgnore]
+        public License License;
+
+        public override string ToString()
+        {
+            var authors = string.Join<Author>(", ", Authors);
+            var license = License != null ? " under " + License.ToStringDescriptive() : "";
+            return string.Format("{0}: © {1}{2}",
+                                 Name, authors, license);
+        }
     }
 }

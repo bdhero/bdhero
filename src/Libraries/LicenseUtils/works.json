@@ -1,20 +1,4 @@
 {
-    "originals": [
-        {
-            "name": "BDInfo",
-            "description": "Blu-ray video and audio analysis tool",
-            "authors": [
-                {
-                    "years": [ 2008, 2009, 2010, 2011 ],
-                    "name": "Chris Thoman"
-                }
-            ],
-            "urls": {
-                "source": "http://www.cinemasquid.com/blu-ray/tools/bdinfo"
-            },
-            "license": "lgpl_2_1"
-        }
-    ],
     "derivatives": [
         {
             "name": "BDHero",
@@ -31,6 +15,22 @@
                 "project": "http://bdhero.org/",
                 "source":  "https://github.com/bdhero/bdhero"
             }
+        }
+    ],
+    "originals": [
+        {
+            "name": "BDInfo",
+            "description": "Blu-ray video and audio analysis tool",
+            "authors": [
+                {
+                    "years": [ 2008, 2009, 2010, 2011 ],
+                    "name": "Chris Thoman"
+                }
+            ],
+            "urls": {
+                "source": "http://www.cinemasquid.com/blu-ray/tools/bdinfo"
+            },
+            "license_id": "lgpl_2_1"
         }
     ],
     "snippets": [
@@ -60,7 +60,7 @@
                 "article": "http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program",
                 "source":  "http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=18062&zep=DriveDetector.cs&rzp=%2fKB%2fsystem%2fDriveDetector%2f%2fdrivedetector_src.zip"
             },
-            "license": "cpol_1_02"
+            "license_id": "cpol_1_02"
         },
         {
             "name": "Platform.cs",
@@ -75,7 +75,7 @@
             "urls": {
                 "source": "https://github.com/PintaProject/Pinta/blob/30d7a70178d2958fbd4fe8a1991a60aa7201873b/Pinta/Platform.cs"
             },
-            "license": "mit"
+            "license_id": "mit"
         },
         {
             "name": "JobObject.cs",
@@ -106,7 +106,7 @@
             "urls": {
                 "source": "https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml"
             },
-            "license": "apache_2_0"
+            "license_id": "apache_2_0"
         }
     ],
     "packages": [
@@ -125,7 +125,7 @@
                 "package": "http://www.nuget.org/packages/csquery/",
                 "source":  "https://github.com/jamietre/CsQuery"
             },
-            "license": "mit"
+            "license_id": "mit"
         },
         {
             "name": "INI Parser",
@@ -147,7 +147,7 @@
                 "package": "http://www.nuget.org/packages/ini-parser/",
                 "source":  "https://github.com/rickyah/ini-parser"
             },
-            "license": "mit"
+            "license_id": "mit"
         },
         {
             "name": "log4net",
@@ -163,7 +163,7 @@
                 "project": "http://logging.apache.org/log4net/",
                 "source":  "http://logging.apache.org/log4net/source-repository.html"
             },
-            "license": "apache_2_0"
+            "license_id": "apache_2_0"
         },
         {
             "name": "Mono.Options",
@@ -194,7 +194,7 @@
                 "package": "http://www.nuget.org/packages/Mono.Options/",
                 "source":  "https://github.com/mono/mono/blob/a699e7444e8ff4426197d4bd3a9607d204ee7b0f/mcs/class/Mono.Options/Mono.Options/Options.cs"
             },
-            "license": "mit"
+            "license_id": "mit"
         },
         {
             "name": "Json.NET",
@@ -211,7 +211,7 @@
                 "project": "http://james.newtonking.com/json",
                 "source":  "https://github.com/JamesNK/Newtonsoft.Json"
             },
-            "license": "mit"
+            "license_id": "mit"
         },
         {
             "name": "Ninject",
@@ -233,7 +233,7 @@
                 "project": "http://www.ninject.org/",
                 "source":  "https://github.com/ninject/ninject"
             },
-            "license": "apache_2_0"
+            "license_id": "apache_2_0"
         },
         {
             "name": "RestSharp",
@@ -254,7 +254,7 @@
                 "project": "http://restsharp.org/",
                 "source":  "https://github.com/restsharp/RestSharp"
             },
-            "license": "apache_2_0"
+            "license_id": "apache_2_0"
         },
         {
             "name": "MarkdownSharp",
@@ -279,7 +279,7 @@
                 "project": "https://code.google.com/p/markdownsharp/",
                 "source":  "https://code.google.com/p/markdownsharp/source/browse/"
             },
-            "license": "mit"
+            "license_id": "mit"
         }
     ],
     "libraries": [
@@ -296,7 +296,7 @@
                 "project": "http://archive.msdn.microsoft.com/WindowsAPICodePack",
                 "source":  "http://archive.msdn.microsoft.com/WindowsAPICodePack/Release/ProjectReleases.aspx"
             },
-            "license": "ms_winapi_custom"
+            "license_id": "ms_winapi_custom"
         },
         {
             "name": "IconLib",
@@ -311,7 +311,7 @@
                 "article": "http://www.codeproject.com/Articles/16178/IconLib-Icons-Unfolded-MultiIcon-and-Windows-Vista",
                 "source":  "http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=16178",
             },
-            "license": "cc_sa_2_5"
+            "license_id": "cc_sa_2_5"
         }
     ],
     "binaries": [
@@ -328,7 +328,7 @@
                 "project": "http://ffmpeg.org/",
                 "source":  "https://github.com/FFmpeg/FFmpeg"
             },
-            "license": "gpl_3"
+            "license_id": "gpl_3"
         },
         {
             "name": "MKVToolNix",
@@ -345,7 +345,7 @@
                 "project": "http://www.bunkus.org/videotools/mkvtoolnix/",
                 "source":  "https://github.com/mbunkus/mkvtoolnix"
             },
-            "license": "gpl_2_0"
+            "license_id": "gpl_2_0"
         }
     ]
 }

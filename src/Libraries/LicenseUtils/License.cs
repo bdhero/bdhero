@@ -1,4 +1,6 @@
-﻿using DotNetUtils.Annotations;
+﻿using System.Text;
+using DotNetUtils;
+using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 
 namespace LicenseUtils
@@ -56,6 +58,13 @@ namespace LicenseUtils
         public string Url;
 
         /// <summary>
+        ///     Gets whether the license is a custom, project-specific license (<c>true</c>)
+        ///     or a standard, general-purpose license (<c>false</c>).
+        /// </summary>
+        [JsonProperty("isCustom")]
+        public bool IsCustom;
+
+        /// <summary>
         ///     The full HTML markup of the license agreement.  This is the formatted equivalent of <see cref="Text"/>.
         /// </summary>
         [JsonIgnore]
@@ -66,5 +75,27 @@ namespace LicenseUtils
         /// </summary>
         [JsonIgnore]
         public string Text;
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            // Name
+            if (!string.IsNullOrEmpty(Abbreviation))
+                sb.Append(Abbreviation);
+            else
+                sb.Append(Name);
+
+            // Version
+            if (Version.HasValue)
+                sb.Append(" v" + Version.Value);
+
+            return sb.ToString();
+        }
+
+        public string ToStringDescriptive()
+        {
+            return string.Format(IsCustom ? "a {0}" : "the {0} license", ToString());
+        }
     }
 }

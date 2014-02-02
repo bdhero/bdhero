@@ -1,4 +1,5 @@
-﻿using DotNetUtils.Annotations;
+﻿using DotNetUtils;
+using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 
 namespace LicenseUtils
@@ -44,5 +45,15 @@ namespace LicenseUtils
         /// </example>
         [JsonProperty("source")]
         public string Source;
+
+        public override string ToString()
+        {
+            return new ToStringBuilder<Urls>(this)
+                .Append(urls => urls.Article)
+                .Append(urls => urls.Package)
+                .Append(urls => urls.Project)
+                .Append(urls => urls.Source)
+                .ToString();
+        }
     }
 }

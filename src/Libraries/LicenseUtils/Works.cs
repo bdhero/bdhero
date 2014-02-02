@@ -1,20 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using DotNetUtils;
+using DotNetUtils.Annotations;
+using Newtonsoft.Json;
 
 namespace LicenseUtils
 {
     /// <summary>
     ///     Collection of <see cref="Work"/>s distributed with BDHero.
     /// </summary>
+    [UsedImplicitly]
     public class Works
     {
         /// <summary>
-        ///     Original works that were not derived from another source.
+        ///     Gets the concatenation of <see cref="Derivatives"/>, <see cref="Originals"/>, <see cref="Snippets"/>,
+        ///     <see cref="Packages"/>, <see cref="Libraries"/>, and <see cref="Binaries"/>.
         /// </summary>
-        /// <example>
-        ///     BDInfo.
-        /// </example>
-        [JsonProperty("originals")]
-        public Work[] Originals;
+        [JsonIgnore]
+        public Work[] All
+        {
+            get
+            {
+                var works = new List<Work>();
+                works.AddRange(Derivatives);
+                works.AddRange(Originals);
+                works.AddRange(Snippets);
+                works.AddRange(Packages);
+                works.AddRange(Libraries);
+                works.AddRange(Binaries);
+                return works.ToArray();
+            }
+        }
 
         /// <summary>
         ///     Works derived from <see cref="Originals"/>.
@@ -24,6 +39,15 @@ namespace LicenseUtils
         /// </example>
         [JsonProperty("derivatives")]
         public Work[] Derivatives;
+
+        /// <summary>
+        ///     Original works that were not derived from another source.
+        /// </summary>
+        /// <example>
+        ///     BDInfo.
+        /// </example>
+        [JsonProperty("originals")]
+        public Work[] Originals;
 
         /// <summary>
         ///     Short code snippets or individual standalone source files.
@@ -60,5 +84,10 @@ namespace LicenseUtils
         /// </example>
         [JsonProperty("binaries")]
         public Work[] Binaries;
+
+        public override string ToString()
+        {
+            return ReflectionUtils.ToString(this);
+        }
     }
 }

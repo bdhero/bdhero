@@ -25,6 +25,12 @@ namespace LicenseUtils
                 licenses.Add(license);
             }
             var works = JsonConvert.DeserializeObject<Works>(GetResource("works"));
+            foreach (var work in works.All.Where(work => work.LicenseId != null))
+            {
+                work.License = licenseMap[work.LicenseId];
+                Console.WriteLine(work);
+                Console.WriteLine();
+            }
         }
 
         private string GetResource(string name)
