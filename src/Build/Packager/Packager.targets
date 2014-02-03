@@ -155,5 +155,12 @@
         <!-- FFmpeg Muxer -->
         <Copy SourceFiles="@(FFmpegSourceFiles)" DestinationFolder="$(PortablePluginDir)\FFmpegMuxer" />
         <Copy SourceFiles="@(FFmpegSourceFiles)" DestinationFolder="$(InstallerPluginDir)\FFmpegMuxer" />
+
+        <!--
+            Package it up!
+        -->
+
+        <Exec Command="Build\Scripts\zip-src.bat" WorkingDirectory="$(SolutionDir)" />
+        <Exec Command="Build\Scripts\package.bat" WorkingDirectory="$(SolutionDir)" />
     </Target>
 </Project>
