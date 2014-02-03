@@ -36,9 +36,17 @@
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
@@ -86,11 +94,6 @@
     <Compile Include="WMI\WMIInstanceWatcher.cs" />
     <Compile Include="WMI\WMIUtils.cs" />
     <Compile Include="WMI\WMIWatcher.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Libraries\Microsoft.WindowsAPICodePack.dll" />
-    <Content Include="Libraries\Microsoft.WindowsAPICodePack.Shell.dll" />
-    <Content Include="Libraries\Microsoft.WindowsAPICodePack.ShellExtensions.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
