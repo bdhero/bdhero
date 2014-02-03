@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CinemaSquid")]
 [assembly: AssemblyProduct("BDInfo")]
-[assembly: AssemblyCopyright("Copyright © 2011 CinemaSquid; Copyright © 2012-2013 BDHero")]
+[assembly: AssemblyCopyright("Copyright © 2008-2011 Chris Thoman; Copyright © 2012-2013 Andrew C. Dvorak")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
