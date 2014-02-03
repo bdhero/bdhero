@@ -46,41 +46,39 @@ namespace BDHeroGUI.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.buttonOk = new System.Windows.Forms.Button();
+            this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
-            this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
-            this.labelVersion = new DotNetUtils.Controls.SelectableLabel();
             this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
-            this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.creditPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.textBoxLicense = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxLogo
             // 
             this.pictureBoxLogo.Image = global::BDHeroGUI.Properties.Resources.bdhero_gui_128;
             this.pictureBoxLogo.Location = new System.Drawing.Point(12, 12);
+            this.pictureBoxLogo.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.pictureBoxLogo.Name = "pictureBoxLogo";
             this.pictureBoxLogo.Size = new System.Drawing.Size(128, 128);
             this.pictureBoxLogo.TabIndex = 0;
             this.pictureBoxLogo.TabStop = false;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(143, 111);
-            this.label1.Margin = new System.Windows.Forms.Padding(3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "System Information:";
-            // 
             // buttonOk
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonOk.Location = new System.Drawing.Point(497, 326);
+            this.buttonOk.Location = new System.Drawing.Point(647, 476);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 0;
@@ -88,13 +86,67 @@ namespace BDHeroGUI.Forms
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
+            // textBoxSystemInfo
+            // 
+            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSystemInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxSystemInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxSystemInfo.Font = new System.Drawing.Font("Courier New", 8F);
+            this.textBoxSystemInfo.HideSelection = false;
+            this.textBoxSystemInfo.Location = new System.Drawing.Point(6, 6);
+            this.textBoxSystemInfo.Multiline = true;
+            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
+            this.textBoxSystemInfo.ReadOnly = true;
+            this.textBoxSystemInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxSystemInfo.Size = new System.Drawing.Size(547, 361);
+            this.textBoxSystemInfo.TabIndex = 8;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Location = new System.Drawing.Point(155, 71);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(567, 399);
+            this.tabControl1.TabIndex = 9;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.textBoxLicense);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(559, 373);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "License";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.textBoxSystemInfo);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(559, 373);
+            this.tabPage3.TabIndex = 1;
+            this.tabPage3.Text = "System Info";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
             // linkLabelSourceCode
             // 
+            this.linkLabelSourceCode.Cursor = System.Windows.Forms.Cursors.Default;
             this.linkLabelSourceCode.DisabledColor = System.Drawing.Color.Empty;
             this.linkLabelSourceCode.Enabled = false;
             this.linkLabelSourceCode.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelSourceCode.HoverColor = System.Drawing.Color.Empty;
-            this.linkLabelSourceCode.Location = new System.Drawing.Point(143, 91);
+            this.linkLabelSourceCode.Location = new System.Drawing.Point(152, 51);
             this.linkLabelSourceCode.Name = "linkLabelSourceCode";
             this.linkLabelSourceCode.RegularColor = System.Drawing.Color.Empty;
             this.linkLabelSourceCode.Size = new System.Drawing.Size(77, 14);
@@ -106,61 +158,65 @@ namespace BDHeroGUI.Forms
             this.labelCopyright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCopyright.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelCopyright.Location = new System.Drawing.Point(146, 71);
+            this.labelCopyright.Location = new System.Drawing.Point(155, 31);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.ReadOnly = true;
-            this.labelCopyright.Size = new System.Drawing.Size(426, 13);
+            this.labelCopyright.Size = new System.Drawing.Size(567, 13);
             this.labelCopyright.TabIndex = 4;
             this.labelCopyright.Text = "Copyright";
-            // 
-            // labelBuildDate
-            // 
-            this.labelBuildDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBuildDate.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelBuildDate.Location = new System.Drawing.Point(146, 51);
-            this.labelBuildDate.Name = "labelBuildDate";
-            this.labelBuildDate.ReadOnly = true;
-            this.labelBuildDate.Size = new System.Drawing.Size(426, 13);
-            this.labelBuildDate.TabIndex = 3;
-            this.labelBuildDate.Text = "Build Date";
-            // 
-            // labelVersion
-            // 
-            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelVersion.Location = new System.Drawing.Point(146, 31);
-            this.labelVersion.Name = "labelVersion";
-            this.labelVersion.ReadOnly = true;
-            this.labelVersion.Size = new System.Drawing.Size(426, 13);
-            this.labelVersion.TabIndex = 2;
-            this.labelVersion.Text = "Version";
             // 
             // labelProductName
             // 
             this.labelProductName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelProductName.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelProductName.Location = new System.Drawing.Point(146, 12);
+            this.labelProductName.Location = new System.Drawing.Point(155, 12);
             this.labelProductName.Name = "labelProductName";
             this.labelProductName.ReadOnly = true;
-            this.labelProductName.Size = new System.Drawing.Size(426, 13);
+            this.labelProductName.Size = new System.Drawing.Size(567, 13);
             this.labelProductName.TabIndex = 1;
             this.labelProductName.Text = "Product Name";
             // 
-            // textBoxSystemInfo
+            // tabPage2
             // 
-            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabPage2.Controls.Add(this.creditPanel);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(559, 373);
+            this.tabPage2.TabIndex = 2;
+            this.tabPage2.Text = "Credit";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // creditPanel
+            // 
+            this.creditPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSystemInfo.HideSelection = false;
-            this.textBoxSystemInfo.Location = new System.Drawing.Point(146, 130);
-            this.textBoxSystemInfo.Multiline = true;
-            this.textBoxSystemInfo.Name = "textBoxSystemInfo";
-            this.textBoxSystemInfo.ReadOnly = true;
-            this.textBoxSystemInfo.Size = new System.Drawing.Size(426, 190);
-            this.textBoxSystemInfo.TabIndex = 8;
+            this.creditPanel.AutoScroll = true;
+            this.creditPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.creditPanel.Location = new System.Drawing.Point(6, 6);
+            this.creditPanel.Name = "creditPanel";
+            this.creditPanel.Size = new System.Drawing.Size(547, 361);
+            this.creditPanel.TabIndex = 2;
+            this.creditPanel.WrapContents = false;
+            // 
+            // textBoxLicense
+            // 
+            this.textBoxLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLicense.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxLicense.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxLicense.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLicense.HideSelection = false;
+            this.textBoxLicense.Location = new System.Drawing.Point(6, 6);
+            this.textBoxLicense.Multiline = true;
+            this.textBoxLicense.Name = "textBoxLicense";
+            this.textBoxLicense.ReadOnly = true;
+            this.textBoxLicense.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxLicense.Size = new System.Drawing.Size(547, 361);
+            this.textBoxLicense.TabIndex = 9;
             // 
             // AboutBox
             // 
@@ -168,14 +224,11 @@ namespace BDHeroGUI.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonOk;
-            this.ClientSize = new System.Drawing.Size(584, 361);
-            this.Controls.Add(this.textBoxSystemInfo);
+            this.ClientSize = new System.Drawing.Size(734, 511);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.linkLabelSourceCode);
             this.Controls.Add(this.buttonOk);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.labelCopyright);
-            this.Controls.Add(this.labelBuildDate);
-            this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelProductName);
             this.Controls.Add(this.pictureBoxLogo);
             this.MaximizeBox = false;
@@ -188,8 +241,13 @@ namespace BDHeroGUI.Forms
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
-            this.Load += new System.EventHandler(this.AboutBox_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,13 +257,16 @@ namespace BDHeroGUI.Forms
 
         private System.Windows.Forms.PictureBox pictureBoxLogo;
         private DotNetUtils.Controls.SelectableLabel labelProductName;
-        private DotNetUtils.Controls.SelectableLabel labelVersion;
-        private DotNetUtils.Controls.SelectableLabel labelBuildDate;
         private DotNetUtils.Controls.SelectableLabel labelCopyright;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonOk;
         private DotNetUtils.Controls.HyperlinkLabel linkLabelSourceCode;
         private System.Windows.Forms.TextBox textBoxSystemInfo;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TextBox textBoxLicense;
+        private System.Windows.Forms.FlowLayoutPanel creditPanel;
 
     }
 }

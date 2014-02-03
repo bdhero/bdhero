@@ -22,6 +22,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsOSUtils.Win32;
 using BDHero;
@@ -38,6 +39,7 @@ using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
+using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
 using OSUtils.DriveDetector;
@@ -55,6 +57,7 @@ namespace BDHeroGUI
         private readonly IDirectoryLocator _directoryLocator;
         private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
+        private readonly IPluginRepository _pluginRepository;
         private readonly IController _controller;
         private readonly IDriveDetector _driveDetector;
         private readonly ITaskbarItem _taskbarItem;
@@ -86,8 +89,8 @@ namespace BDHeroGUI
         #region Constructor and OnLoad
 
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
-                        PluginLoader pluginLoader, IController controller, IDriveDetector driveDetector,
-                        ITaskbarItemFactory taskbarItemFactory, Updater updater)
+                        PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
+                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, Updater updater)
         {
             InitializeComponent();
 
@@ -97,6 +100,7 @@ namespace BDHeroGUI
             _directoryLocator = directoryLocator;
             _preferenceManager = preferenceManager;
             _pluginLoader = pluginLoader;
+            _pluginRepository = pluginRepository;
             _controller = controller;
             _driveDetector = driveDetector;
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
@@ -214,6 +218,8 @@ namespace BDHeroGUI
 //            var monitor = new NetworkStatusMonitor(null, SetIsOnline);
 
             ScanOnStartup();
+
+            InitAboutBox();
         }
 
         private void ScanOnStartup()
@@ -222,6 +228,16 @@ namespace BDHeroGUI
             if (path == null)
                 return;
             Scan(path);
+        }
+
+        /// <summary>
+        ///     The <see cref="AboutBox"/> takes several seconds to initialize the first time
+        ///     it is constructed, so preemptively instantiate it in a
+        ///     background thread to speed up loading when the user actually opens it.
+        /// </summary>
+        private void InitAboutBox()
+        {
+            Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
         }
 
         private void SetIsOnline(bool isOnline)
@@ -904,7 +920,7 @@ namespace BDHeroGUI
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AboutBox().ShowDialog(this);
+            new AboutBox(_pluginRepository).ShowDialog(this);
         }
 
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
