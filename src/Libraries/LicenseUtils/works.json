@@ -14,7 +14,8 @@
             "urls": {
                 "project": "http://bdhero.org/",
                 "source":  "https://github.com/bdhero/bdhero"
-            }
+            },
+            "license_id": "gpl_3"
         }
     ],
     "originals": [
