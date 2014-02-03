@@ -43,6 +43,19 @@ Bugs
 Features
 ========
 
+[ ] Use more features from WinAPI Code Pack:
+    [ ] CommonOpenFileDialog
+            Windows API Code Pack 1.1\source\Samples\Shell\CommonFileDialogsDemo\CS\CommonFileDialogsDemo\Form1.cs, line 266
+    [ ] TaskDialog
+            Windows API Code Pack 1.1\source\Samples\TaskDialogDemo\CS\TaskDialogDemo\
+            Windows API Code Pack 1.1\source\Samples\Shell\TabbedThumbnailDemo\CS\Winforms\Form1.cs, line 107
+    [ ] NetworkListManager
+            Windows API Code Pack 1.1\source\Samples\NetworkDemo\CS\Window1.xaml, line 20
+    [ ] StockIcons
+            Windows API Code Pack 1.1\source\Samples\Shell\StockIconsDemo\CS\StockIconsDemo\Window1.xaml.cs, line 23
+
+[ ] Allow to save as .MKA / .MKS
+
 [ ] Cache folder?
 
 [ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
