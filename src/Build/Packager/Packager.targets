@@ -68,11 +68,11 @@
     </PropertyGroup>
 
     <!-- Core files -->
-    <ItemGroup>
-        <CoreBinaries Include="$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll" />
-        <ConfigFiles Include="$(PackagerTargetDir)\Config\**\*.*" />
-        <ProgramFiles Include="$(ProgramFilesDir)\*.*" />
-    </ItemGroup>
+    <PropertyGroup>
+        <CoreBinariesStr>$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll</CoreBinariesStr>
+        <ConfigFilesStr>$(PackagerTargetDir)\Config\**\*.*</ConfigFilesStr>
+        <ProgramFilesStr>$(ProgramFilesDir)\*.*</ProgramFilesStr>
+    </PropertyGroup>
 
     <!-- Plugin files -->
     <ItemGroup>
@@ -91,7 +91,14 @@
         <RemoveDir Directories="$(ArtifactsDir)" />
     </Target>
 
-    <Target Name="PackagerAfterBuild" AfterTargets="Compile">
+    <Target Name="PackagerAfterBuild" AfterTargets="AfterBuild">
+        <!-- <ItemGroup> MUST be inside a <Target> element or it will be evaluated too early and return blank strings. -->
+        <ItemGroup>
+            <CoreBinaries Include="$(CoreBinariesStr)" />
+            <ConfigFiles Include="$(ConfigFilesStr)" />
+            <ProgramFiles Include="$(ProgramFilesStr)" />
+        </ItemGroup>
+
         <!-- Delete old artifacts -->
         <Delete Files="$(PortableDir)\**\*.*;$(InstallerDir)\**\*.*" />
         <RemoveDir Directories="$(PortableDir);$(InstallerDir)" />
