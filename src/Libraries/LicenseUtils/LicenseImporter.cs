@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LicenseUtils.Properties;
@@ -33,8 +32,6 @@ namespace LicenseUtils
             foreach (var work in works.All.Where(work => work.LicenseId != null))
             {
                 work.License = licenseMap[work.LicenseId];
-                Console.WriteLine(work);
-                Console.WriteLine();
             }
             return works;
         }

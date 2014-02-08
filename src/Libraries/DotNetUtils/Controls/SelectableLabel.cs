@@ -17,6 +17,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -26,6 +28,24 @@ namespace DotNetUtils.Controls
 {
     public class SelectableLabel : TextBox
     {
+        /// <summary>
+        /// Gets or sets whether the label should resize itself to fit its text.
+        /// </summary>
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DefaultValue(false)]
+        public bool AutoSize
+        {
+            get { return _autoSize; }
+            set
+            {
+                _autoSize = value;
+                ResizeAuto();
+            }
+        }
+
+        private bool _autoSize;
+
         public SelectableLabel()
         {
             ReadOnly = true;
@@ -41,13 +61,42 @@ namespace DotNetUtils.Controls
 
         private void UpdateBackgroundColor()
         {
+            UpdateBackgroundColor(Parent);
+        }
+
+        private void UpdateBackgroundColor(Control parent)
+        {
+            if (parent == null)
+                return;
+
+            if (parent.BackColor == Color.Transparent)
+            {
+                if (parent is TabPage)
+                {
+                    BackColor = SystemColors.Window;
+                    return;
+                }
+
+                UpdateBackgroundColor(parent.Parent);
+                return;
+            }
+
             try
             {
-                BackColor = Parent.BackColor;
+                BackColor = parent.BackColor;
             }
             catch
             {
+                UpdateBackgroundColor(parent.Parent);
             }
+        }
+
+        private void ResizeAuto()
+        {
+            if (!AutoSize)
+                return;
+
+            Width += this.GetAutoSizeDelta().Width;
         }
     }
 }

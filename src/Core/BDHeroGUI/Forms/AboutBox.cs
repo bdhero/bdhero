@@ -23,6 +23,7 @@ using BDHero.Utils;
 using DotNetUtils;
 using DotNetUtils.Controls;
 using LicenseUtils;
+using LicenseUtils.Controls;
 using OSUtils.Info;
 
 namespace BDHeroGUI.Forms
@@ -48,25 +49,27 @@ namespace BDHeroGUI.Forms
 
             // License
             var works = LicenseImporter.Works;
-            textBoxLicense.Text = works.Derivatives.First().License.Text;
+//            textBoxLicense.Text = works.Derivatives.First().License.Text;
+
+            var top = 0;
+
+            SuspendLayout();
 
             // Credit
             foreach (var work in works.All)
             {
-                var authors = string.Join<Author>(", ", work.Authors);
-                var workPanel = new FlowLayoutPanel();
-                var workNameLabel = new Label {Text = work.Name};
-                var workAuthorsLabel = new Label {Text = "(c) " + authors};
-                workPanel.Controls.Add(workNameLabel);
-                workPanel.Controls.Add(workAuthorsLabel);
-                if (work.License != null)
-                {
-                    workPanel.Controls.Add(new Label {Text = " under "});
-                    var licenseLabel = new LinkLabel2 {Text = work.License.ToStringDescriptive()};
-                    workPanel.Controls.Add(licenseLabel);
-                }
-                creditPanel.Controls.Add(workPanel);
+                var workPanel = new WorkPanel(work);
+                continue;
+                workPanel.Top = top;
+                workPanel.Left = 0;
+                workPanel.Width = creditPanel.Width;
+                workPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+//                creditPanel.Controls.Add(workPanel);
+                top += workPanel.Height;
             }
+
+            ResumeLayout(false);
+            PerformLayout();
 
             // System Info
             var newline = Environment.NewLine;

@@ -49,19 +49,16 @@ namespace BDHeroGUI.Forms
             this.buttonOk = new System.Windows.Forms.Button();
             this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
             this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.creditPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.textBoxLicense = new System.Windows.Forms.TextBox();
+            this.creditPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxLogo
@@ -108,7 +105,6 @@ namespace BDHeroGUI.Forms
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(155, 71);
@@ -117,16 +113,16 @@ namespace BDHeroGUI.Forms
             this.tabControl1.Size = new System.Drawing.Size(567, 399);
             this.tabControl1.TabIndex = 9;
             // 
-            // tabPage1
+            // tabPage2
             // 
-            this.tabPage1.Controls.Add(this.textBoxLicense);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(559, 373);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "License";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage2.Controls.Add(this.creditPanel);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(559, 373);
+            this.tabPage2.TabIndex = 2;
+            this.tabPage2.Text = "Credit";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
@@ -177,46 +173,14 @@ namespace BDHeroGUI.Forms
             this.labelProductName.TabIndex = 1;
             this.labelProductName.Text = "Product Name";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.creditPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(559, 373);
-            this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "Credit";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // creditPanel
             // 
-            this.creditPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.creditPanel.AutoScroll = true;
-            this.creditPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.creditPanel.Location = new System.Drawing.Point(6, 6);
+            this.creditPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.creditPanel.Location = new System.Drawing.Point(3, 3);
             this.creditPanel.Name = "creditPanel";
-            this.creditPanel.Size = new System.Drawing.Size(547, 361);
-            this.creditPanel.TabIndex = 2;
-            this.creditPanel.WrapContents = false;
-            // 
-            // textBoxLicense
-            // 
-            this.textBoxLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLicense.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxLicense.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxLicense.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLicense.HideSelection = false;
-            this.textBoxLicense.Location = new System.Drawing.Point(6, 6);
-            this.textBoxLicense.Multiline = true;
-            this.textBoxLicense.Name = "textBoxLicense";
-            this.textBoxLicense.ReadOnly = true;
-            this.textBoxLicense.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLicense.Size = new System.Drawing.Size(547, 361);
-            this.textBoxLicense.TabIndex = 9;
+            this.creditPanel.Size = new System.Drawing.Size(553, 367);
+            this.creditPanel.TabIndex = 0;
             // 
             // AboutBox
             // 
@@ -243,11 +207,9 @@ namespace BDHeroGUI.Forms
             this.Text = "About";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,11 +224,9 @@ namespace BDHeroGUI.Forms
         private DotNetUtils.Controls.HyperlinkLabel linkLabelSourceCode;
         private System.Windows.Forms.TextBox textBoxSystemInfo;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TextBox textBoxLicense;
-        private System.Windows.Forms.FlowLayoutPanel creditPanel;
+        private System.Windows.Forms.Panel creditPanel;
 
     }
 }

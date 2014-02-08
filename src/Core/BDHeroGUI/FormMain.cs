@@ -237,7 +237,7 @@ namespace BDHeroGUI
         /// </summary>
         private void InitAboutBox()
         {
-            Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
+//            Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
         }
 
         private void SetIsOnline(bool isOnline)

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -35,6 +36,35 @@ namespace DotNetUtils.Extensions
         /// CTRL + A
         /// </summary>
         private const char CTRL_A = '\x1';
+
+        public static Size GetAutoSizeDelta(this Control control, int numPaddingChars = 0)
+        {
+            var maxWidth = Screen.FromControl(control).WorkingArea.Width / 2;
+            var maxHeight = Screen.FromControl(control).WorkingArea.Height / 2;
+
+            var widthBefore = control.Width;
+            var heightBefore = control.Height;
+
+            var text = control.Text + new string('M', numPaddingChars);
+
+            SizeF size;
+
+            using (Graphics g = control.CreateGraphics())
+            {
+                size = g.MeasureString(text, control.Font);
+            }
+
+            var widthAfter = (int)Math.Ceiling(size.Width);
+            var heightAfter = (int)Math.Ceiling(size.Height);
+
+            var widthAfterBounded = Math.Min(widthAfter, maxWidth);
+            var heightAfterBounded = Math.Min(heightAfter, maxHeight);
+
+            var widthDelta = widthAfterBounded - widthBefore;
+            var heightDelta = heightAfterBounded - heightBefore;
+
+            return new Size(widthDelta, heightDelta);
+        }
 
         /// <summary>
         /// Turns this control into a hyperlink by changing its cursor to a hand, launching the default browser

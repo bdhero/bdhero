@@ -16,15 +16,11 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using BDHero.JobQueue;
+using DotNetUtils.Extensions;
 
 namespace BDHeroGUI.Forms
 {
@@ -34,11 +30,6 @@ namespace BDHeroGUI.Forms
         /// Gets the user's input.
         /// </summary>
         public readonly SearchQuery SearchQuery = new SearchQuery();
-
-        /// <summary>
-        /// Maximum width to auto-resize.
-        /// </summary>
-        private int _maxAutoResizeWidth;
 
         /// <summary>
         /// Determines whether the form should auto-resize itself when the value of the TextBox changes due to user input.
@@ -72,8 +63,6 @@ namespace BDHeroGUI.Forms
 
         private void OnLoad(object sender, EventArgs eventArgs)
         {
-            _maxAutoResizeWidth = Screen.FromControl(this).WorkingArea.Width / 2;
-
             AutoResize();
 
             MinimumSize = new Size(Width, Height);
@@ -104,16 +93,7 @@ namespace BDHeroGUI.Forms
 
             _ignoreResize = true;
 
-            using (Graphics g = CreateGraphics())
-            {
-                var before = textBoxSearchQuery.Width;
-                var text = textBoxSearchQuery.Text + "MM"; // add 2 letters for padding
-                var size = g.MeasureString(text, textBoxSearchQuery.Font);
-                var after = (int)Math.Ceiling(size.Width);
-                var delta = after - before;
-                var width = Width + delta;
-                Width = Math.Min(width, _maxAutoResizeWidth);
-            }
+            Width += textBoxSearchQuery.GetAutoSizeDelta(2).Width;
         }
 
         private void TextBoxSearchQueryOnTextChanged(object sender, EventArgs eventArgs)
