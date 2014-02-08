@@ -70,6 +70,10 @@
     <Compile Include="Controls\FileTextBox.Designer.cs">
       <DependentUpon>FileTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EmailLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\EmailAddress.cs" />
     <Compile Include="Controls\HyperlinkLabel.cs">
       <SubType>Component</SubType>
     </Compile>
