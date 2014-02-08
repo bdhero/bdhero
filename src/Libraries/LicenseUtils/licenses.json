@@ -39,7 +39,7 @@
         "url": "http://creativecommons.org/licenses/by-sa/2.5/"
     },
     "ms_winapi_custom": {
-        "name": "Custom License",
+        "name": "Custom",
         "url": "http://archive.msdn.microsoft.com/WindowsAPICodePack/Project/License.aspx",
         "isCustom": true
     }
