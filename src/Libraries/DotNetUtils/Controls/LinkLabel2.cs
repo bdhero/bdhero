@@ -22,7 +22,6 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-
 namespace DotNetUtils.Controls
 {
     /// <summary>
@@ -34,6 +33,9 @@ namespace DotNetUtils.Controls
     /// </remarks>
     public class LinkLabel2 : Control
     {
+        private const TextFormatFlags TextFlags = TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix;
+
+        private Rectangle _textRect;
         private Font _hoverFont;
 
         private Image _image;
@@ -41,8 +43,7 @@ namespace DotNetUtils.Controls
 
         private bool _isEnabled = true;
         private bool _isHovered;
-        private bool _keyAlreadyProcessed;
-        private Rectangle _textRect;
+        private bool _isKeyHandled;
 
         /// <summary>
         ///     Constructs a new <see cref="LinkLabel2"/> instance.
@@ -59,14 +60,20 @@ namespace DotNetUtils.Controls
 
             SetStyle(ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, false);
 
-            _hoverFont = new Font(Font, FontStyle.Underline);
+            _hoverFont = new Font(base.Font, FontStyle.Underline);
 
-            ForeColor = SystemColors.HotTrack;
+            base.ForeColor = SystemColors.HotTrack;
 
             UseSystemColor = true;
             HoverUnderline = true;
         }
 
+        #region Editor properties
+
+        /// <summary>
+        ///     Gets or sets the amount of padding (in pixels) to place between
+        ///     the text and the right side of the <see cref="Image"/>.
+        /// </summary>
         [DefaultValue(8)]
         public int ImageRightPad
         {
@@ -80,6 +87,10 @@ namespace DotNetUtils.Controls
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the image to display on the left side of the text.
+        ///     A value of <c>null</c> indicates that no image should be displayed.
+        /// </summary>
         [DefaultValue(null)]
         public Image Image
         {
@@ -93,17 +104,32 @@ namespace DotNetUtils.Controls
             }
         }
 
+        /// <summary>
+        ///     Gets or sets whether the link should be underlined when the mouse hovers over it.
+        /// </summary>
         [DefaultValue(true)]
         public bool HoverUnderline { get; set; }
 
+        /// <summary>
+        ///     Gets or sets whether the link should use standard system colors (<c>true</c>)
+        ///     or custom colors (<c>false</c>).
+        /// </summary>
         [DefaultValue(true)]
         public bool UseSystemColor { get; set; }
 
-
+        /// <summary>
+        ///     Gets or sets the color of the link when it is enabled and the mouse is not hovered over it.
+        /// </summary>
         public Color RegularColor { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the color of the link when it is enabled and the mouse hovers over it.
+        /// </summary>
         public Color HoverColor { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the color of the link when it is disabled.
+        /// </summary>
         public Color DisabledColor { get; set; }
 
         public override string Text
@@ -119,11 +145,33 @@ namespace DotNetUtils.Controls
             }
         }
 
-        [DllImport("user32.dll")]
-        private static extern int LoadCursor(int hInstance, int lpCursorName);
+        #endregion
 
-        [DllImport("user32.dll")]
-        private static extern int SetCursor(int hCursor);
+        #region Color properties/methods
+
+        private Color ForeColorAuto
+        {
+            get
+            {
+                if (UseSystemColor)
+                    return ForeColor;
+                if (!_isEnabled)
+                    return DisabledColor;
+                if (_isHovered)
+                    return HoverColor;
+                return RegularColor;
+            }
+        }
+
+        private void SetEnabledForeColor()
+        {
+            _isEnabled = Enabled && (Parent == null || Parent.Enabled);
+            ForeColor = _isEnabled ? SystemColors.HotTrack : SystemColors.GrayText;
+        }
+
+        #endregion
+
+        #region Enable/disable events
 
         protected override void OnEnabledChanged(EventArgs e)
         {
@@ -137,11 +185,9 @@ namespace DotNetUtils.Controls
             base.OnParentEnabledChanged(e);
         }
 
-        private void SetEnabledForeColor()
-        {
-            _isEnabled = Enabled && (Parent == null || Parent.Enabled);
-            ForeColor = _isEnabled ? SystemColors.HotTrack : SystemColors.GrayText;
-        }
+        #endregion
+
+        #region Mouse events
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -151,76 +197,6 @@ namespace DotNetUtils.Controls
             }
 
             base.OnMouseDown(e);
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            _isHovered = true;
-            Invalidate();
-
-            base.OnMouseEnter(e);
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            _isHovered = false;
-            Invalidate();
-
-            base.OnMouseLeave(e);
-        }
-
-        protected override void OnMouseMove(MouseEventArgs mevent)
-        {
-            base.OnMouseMove(mevent);
-            if (mevent.Button != MouseButtons.None)
-            {
-                if (!ClientRectangle.Contains(mevent.Location))
-                {
-                    if (_isHovered)
-                    {
-                        _isHovered = false;
-                        Invalidate();
-                    }
-                }
-                else if (!_isHovered)
-                {
-                    _isHovered = true;
-                    Invalidate();
-                }
-            }
-        }
-
-        protected override void OnGotFocus(EventArgs e)
-        {
-            Invalidate();
-
-            base.OnGotFocus(e);
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            _keyAlreadyProcessed = false;
-            Invalidate();
-
-            base.OnLostFocus(e);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            if (!_keyAlreadyProcessed && e.KeyCode == Keys.Enter)
-            {
-                _keyAlreadyProcessed = true;
-                OnClick(e);
-            }
-
-            base.OnKeyDown(e);
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            _keyAlreadyProcessed = false;
-
-            base.OnKeyUp(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -233,28 +209,111 @@ namespace DotNetUtils.Controls
             base.OnMouseUp(e);
         }
 
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            SetHovered(true);
+
+            base.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            SetHovered(false);
+
+            base.OnMouseLeave(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs mevent)
+        {
+            base.OnMouseMove(mevent);
+
+            if (mevent.Button == MouseButtons.None)
+                return;
+
+            if (!ClientRectangle.Contains(mevent.Location))
+            {
+                if (!_isHovered)
+                    return;
+
+                SetHovered(false);
+            }
+            else if (!_isHovered)
+            {
+                SetHovered(true);
+            }
+        }
+
+        private void SetHovered(bool isHovered)
+        {
+            _isHovered = isHovered;
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Focus events
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            Invalidate();
+
+            base.OnGotFocus(e);
+        }
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            _isKeyHandled = false;
+            Invalidate();
+
+            base.OnLostFocus(e);
+        }
+
+        #endregion
+
+        #region Keyboard events
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (!_isKeyHandled && e.KeyCode == Keys.Enter)
+            {
+                _isKeyHandled = true;
+                OnClick(e);
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            _isKeyHandled = false;
+
+            base.OnKeyUp(e);
+        }
+
+        #endregion
+
+        #region Paint events
+
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
             e.Graphics.InterpolationMode = InterpolationMode.Low;
 
-            // image
+            // Image
             if (_image != null)
             {
-                e.Graphics.DrawImage(_image, new Rectangle(0, 0, _image.Width, _image.Height),
-                                     new Rectangle(0, 0, _image.Width, _image.Height), GraphicsUnit.Pixel);
+                var imageRect = new Rectangle(0, 0, _image.Width, _image.Height);
+                e.Graphics.DrawImage(_image, imageRect, imageRect, GraphicsUnit.Pixel);
             }
 
-            //text
-            TextRenderer.DrawText(e.Graphics, Text,
-                                  _isHovered && HoverUnderline ? _hoverFont : Font,
-                                  _textRect,
-                                  UseSystemColor
-                                      ? ForeColor
-                                      : (!_isEnabled ? DisabledColor : _isHovered ? HoverColor : RegularColor),
-                                  TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+            // Text
+            var font = _isHovered && HoverUnderline ? _hoverFont : Font;
+            var foreColor = ForeColorAuto;
+            TextRenderer.DrawText(e.Graphics, Text, font, _textRect,
+                                  foreColor,
+                                  TextFlags);
 
-            // draw the focus rectangle.
+            // Draw the focus rectangle.
             if (Focused && ShowFocusCues)
             {
                 ControlPaint.DrawFocusRectangle(e.Graphics, ClientRectangle);
@@ -264,6 +323,7 @@ namespace DotNetUtils.Controls
         protected override void OnFontChanged(EventArgs e)
         {
             _hoverFont = new Font(Font, Font.Style | FontStyle.Underline);
+
             RefreshTextRect();
 
             base.OnFontChanged(e);
@@ -271,9 +331,10 @@ namespace DotNetUtils.Controls
 
         private void RefreshTextRect()
         {
-            _textRect = new Rectangle(Point.Empty,
-                                      TextRenderer.MeasureText(Text, Font, Size,
-                                                               TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix));
+
+            var size = TextRenderer.MeasureText(Text, Font, Size, TextFlags);
+            _textRect = new Rectangle(Point.Empty, size);
+
             int width = _textRect.Width + 1,
                 height = _textRect.Height + 1;
 
@@ -281,14 +342,14 @@ namespace DotNetUtils.Controls
             {
                 width = _textRect.Width + 1 + _image.Width + _imageRightPad;
 
-                //adjust the x position of the text
+                // Adjust the X position of the text
                 _textRect.X += _image.Width + _imageRightPad;
 
                 if (_image.Height > _textRect.Height)
                 {
                     height = _image.Height + 1;
 
-                    // adjust the y-position of the text
+                    // Adjust the Y position of the text
                     _textRect.Y += (_image.Height - _textRect.Height) / 2;
                 }
             }
@@ -296,17 +357,19 @@ namespace DotNetUtils.Controls
             Size = new Size(width, height);
         }
 
+        #endregion
+
+        #region Windows messages
+
         protected override void WndProc(ref Message m)
         {
-            //WM_SETCURSOR == 32
-            if (m.Msg == 32)
+            if (m.Msg == WM_SETCURSOR)
             {
                 try
                 {
-                    //IDC_HAND == 32649
-                    SetCursor(LoadCursor(0, 32649));
+                    SetCursor(LoadCursor(0, IDC_HAND));
                 }
-                catch (DllNotFoundException e)
+                catch (DllNotFoundException)
                 {
                     // Mono
                     Cursor = Cursors.Hand;
@@ -320,5 +383,22 @@ namespace DotNetUtils.Controls
 
             base.WndProc(ref m);
         }
+
+        #endregion
+
+        #region Native Win32 API interop
+        // ReSharper disable InconsistentNaming
+
+        private const int WM_SETCURSOR = 32;
+        private const int IDC_HAND = 32649;
+
+        [DllImport("user32.dll")]
+        private static extern int LoadCursor(int hInstance, int lpCursorName);
+
+        [DllImport("user32.dll")]
+        private static extern int SetCursor(int hCursor);
+
+        // ReSharper restore InconsistentNaming
+        #endregion
     }
 }
