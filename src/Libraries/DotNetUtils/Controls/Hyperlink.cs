@@ -25,9 +25,9 @@ using WebBrowserUtils;
 namespace DotNetUtils.Controls
 {
     /// <summary>
-    ///     Turns a <see cref="Control"/> into a hyperlink by changing its cursor to a hand, launching the default browser
-    ///     when the user clicks on the control, and adding a context menu that includes options to open the link
-    ///     or copy the URL to the clipboard.
+    ///     Turns a <see cref="Control"/> into a hyperlink by changing its cursor to a hand, launching the system's
+    ///     default Web browser when the user clicks on the control, and adding a context menu that includes options
+    ///     to open the link or copy the URL to the clipboard.
     /// </summary>
     public class Hyperlink
     {
@@ -69,12 +69,18 @@ namespace DotNetUtils.Controls
             _control = control;
 
             control.Click += OnClick;
-            control.ContextMenuStrip = new ContextMenuStrip();
-            control.ContextMenuStrip.Items.Add(CreateOpenMenuItem());
-            control.ContextMenuStrip.Items.Add(CreateCopyMenuItem());
-            control.ContextMenuStrip.Opening += ContextMenuStripOnOpening;
+            control.ContextMenuStrip = CreateContextMenu();
 
             Url = url;
+        }
+
+        private ContextMenuStrip CreateContextMenu()
+        {
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(CreateOpenMenuItem());
+            menu.Items.Add(CreateCopyMenuItem());
+            menu.Opening += ContextMenuStripOnOpening;
+            return menu;
         }
 
         private void ContextMenuStripOnOpening(object sender, CancelEventArgs cancelEventArgs)
@@ -107,6 +113,11 @@ namespace DotNetUtils.Controls
             Clipboard.SetText(_url);
         }
 
+        /// <summary>
+        ///     Turns the given <paramref name="control"/> into a hyperlink by changing its cursor to a hand,
+        ///     launching the system's default Web browser when the user clicks on the control, and adding a context menu
+        ///     that includes options to open the link or copy the URL to the clipboard.
+        /// </summary>
         public static Hyperlink MakeHyperlink(Control control, string url = null)
         {
             return new Hyperlink(control, url);
