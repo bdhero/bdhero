@@ -21,63 +21,80 @@ using System.Windows.Forms;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;
-using DotNetUtils.Controls;
 using LicenseUtils;
 using LicenseUtils.Controls;
 using OSUtils.Info;
 
 namespace BDHeroGUI.Forms
 {
-    sealed partial class AboutBox : Form
+    partial class AboutBox : Form
     {
+        private readonly string _nameVersionDate
+            = string.Format("{0} v{1} ({2})",
+                            AppUtils.AppName,
+                            AppUtils.AppVersion,
+                            AppUtils.BuildDate);
+
         public AboutBox(IPluginRepository pluginRepository)
         {
             InitializeComponent();
 
-            var nameVersionDate = String.Format("{0} v{1} ({2})",
-                                                AppUtils.AppName,
-                                                AppUtils.AppVersion,
-                                                AppUtils.BuildDate);
+            SetWindowTitle();
+            PopulateHeader();
+            PopulateLicenses();
+            PopulateSystemInfo(pluginRepository);
+        }
 
-            // Window title
+        private void SetWindowTitle()
+        {
             Text = String.Format("About {0}", AppUtils.AppName);
+        }
 
-            // Header
-            labelProductName.Text = nameVersionDate;
+        private void PopulateHeader()
+        {
+            labelProductName.Text = _nameVersionDate;
             labelCopyright.Text = AppUtils.Copyright;
             linkLabelSourceCode.Url = AppConstants.SourceCodeUrl;
+        }
 
-            // License
-            var works = LicenseImporter.Works;
-
+        private void PopulateLicenses()
+        {
             var top = 0;
 
             SuspendLayout();
 
-            // Credit
-            foreach (var work in works.All)
+            foreach (var work in LicenseImporter.Works.All)
             {
-                var workPanel = new WorkPanel(work);
-                workPanel.Top = top;
-                workPanel.Left = 0;
-                workPanel.Width = creditPanel.Width;
-                workPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                var workPanel = CreateWorkPanel(work, top);
                 creditPanel.Controls.Add(workPanel);
                 top += workPanel.Height;
             }
 
             ResumeLayout(false);
             PerformLayout();
+        }
 
-            // System Info
+        private void PopulateSystemInfo(IPluginRepository pluginRepository)
+        {
             var newline = Environment.NewLine;
             var plugins = string.Join(newline, pluginRepository.PluginsByType.Select(ToString));
 
             textBoxSystemInfo.Text = string.Format("{1} {0}{0}Plugins:{0}{2}{0}{0}{3}",
-                newline,
-                nameVersionDate,
-                plugins,
-                SystemInfo.Instance);
+                                                   newline,
+                                                   _nameVersionDate,
+                                                   plugins,
+                                                   SystemInfo.Instance);
+        }
+
+        private WorkPanel CreateWorkPanel(Work work, int top)
+        {
+            return new WorkPanel(work)
+                   {
+                       Top = top,
+                       Left = 0,
+                       Width = creditPanel.Width,
+                       Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                   };
         }
 
         private static string ToString(IPlugin plugin)
