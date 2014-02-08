@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using DotNetUtils.Controls;
-using DotNetUtils.Extensions;
 
 namespace LicenseUtils.Controls
 {

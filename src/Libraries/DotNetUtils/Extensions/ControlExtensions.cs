@@ -21,7 +21,6 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using DotNetUtils.Controls;
 
