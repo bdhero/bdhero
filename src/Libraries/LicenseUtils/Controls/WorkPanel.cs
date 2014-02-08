@@ -19,10 +19,7 @@ namespace LicenseUtils.Controls
             InitHyperlinkLabel(labelPackage, work.Urls.Package);
             InitHyperlinkLabel(labelArticle, work.Urls.Article);
 
-            var authors = work.Authors.Select(author => "© " + author.ToStringDescriptive()).ToArray();
-            textBoxAuthors.Text = string.Join(Environment.NewLine, authors);
-            var delta = textBoxAuthors.GetAutoSizeDelta();
-            Height += delta.Height;
+            PopulateAuthors(work);
 
             if (work.License == null)
             {
@@ -43,6 +40,33 @@ namespace LicenseUtils.Controls
             }
 
             label.Url = url;
+        }
+
+        private void PopulateAuthors(Work work)
+        {
+            var top = 0;
+            foreach (var author in work.Authors)
+            {
+                var authorPanel = CreateAuthorPanel(author, top);
+                panelAuthors.Controls.Add(authorPanel);
+                top += authorPanel.Height;
+            }
+
+            var oldHeight = panelAuthors.Height;
+            var newHeight = top;
+
+            Height += (newHeight - oldHeight);
+        }
+
+        private AuthorPanel CreateAuthorPanel(Author author, int top)
+        {
+            return new AuthorPanel(author)
+                   {
+                       Top = top,
+                       Left = 0,
+                       Width = panelAuthors.Width,
+                       Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                   };
         }
     }
 }

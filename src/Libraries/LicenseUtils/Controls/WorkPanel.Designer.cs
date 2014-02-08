@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelNoLicense = new System.Windows.Forms.Label();
-            this.labelLicense = new DotNetUtils.Controls.LinkLabel2();
-            this.textBoxAuthors = new DotNetUtils.Controls.SelectableLabel();
             this.labelProject = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelSource = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelPackage = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelArticle = new DotNetUtils.Controls.HyperlinkLabel();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.labelLicense = new DotNetUtils.Controls.LinkLabel2();
+            this.labelNoLicense = new System.Windows.Forms.Label();
+            this.panelAuthors = new System.Windows.Forms.Panel();
             this.labelWorkName = new DotNetUtils.Controls.SelectableLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -54,55 +54,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 27);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(410, 20);
-            this.flowLayoutPanel1.TabIndex = 2;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel2.Controls.Add(this.labelLicense);
-            this.flowLayoutPanel2.Controls.Add(this.labelNoLicense);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 166);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(410, 24);
-            this.flowLayoutPanel2.TabIndex = 4;
-            // 
-            // labelNoLicense
-            // 
-            this.labelNoLicense.AutoSize = true;
-            this.labelNoLicense.Location = new System.Drawing.Point(54, 3);
-            this.labelNoLicense.Margin = new System.Windows.Forms.Padding(3);
-            this.labelNoLicense.Name = "labelNoLicense";
-            this.labelNoLicense.Size = new System.Drawing.Size(57, 13);
-            this.labelNoLicense.TabIndex = 3;
-            this.labelNoLicense.Text = "No license";
-            // 
-            // labelLicense
-            // 
-            this.labelLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelLicense.DisabledColor = System.Drawing.Color.Empty;
-            this.labelLicense.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.labelLicense.HoverColor = System.Drawing.Color.Empty;
-            this.labelLicense.Location = new System.Drawing.Point(3, 3);
-            this.labelLicense.Name = "labelLicense";
-            this.labelLicense.RegularColor = System.Drawing.Color.Empty;
-            this.labelLicense.Size = new System.Drawing.Size(45, 14);
-            this.labelLicense.TabIndex = 2;
-            this.labelLicense.Text = "License";
-            // 
-            // textBoxAuthors
-            // 
-            this.textBoxAuthors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAuthors.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxAuthors.Location = new System.Drawing.Point(7, 54);
-            this.textBoxAuthors.Multiline = true;
-            this.textBoxAuthors.Name = "textBoxAuthors";
-            this.textBoxAuthors.ReadOnly = true;
-            this.textBoxAuthors.Size = new System.Drawing.Size(403, 106);
-            this.textBoxAuthors.TabIndex = 3;
-            this.textBoxAuthors.Text = "(C) 2014 Authors";
+            this.flowLayoutPanel1.TabIndex = 1;
             // 
             // labelProject
             // 
@@ -156,11 +108,52 @@
             this.labelArticle.TabIndex = 3;
             this.labelArticle.Text = "Article";
             // 
-            // labelWorkName
+            // flowLayoutPanel2
             // 
-            this.labelWorkName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.flowLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel2.Controls.Add(this.labelLicense);
+            this.flowLayoutPanel2.Controls.Add(this.labelNoLicense);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 166);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(410, 24);
+            this.flowLayoutPanel2.TabIndex = 3;
+            // 
+            // labelLicense
+            // 
+            this.labelLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelLicense.DisabledColor = System.Drawing.Color.Empty;
+            this.labelLicense.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.labelLicense.HoverColor = System.Drawing.Color.Empty;
+            this.labelLicense.Location = new System.Drawing.Point(3, 3);
+            this.labelLicense.Name = "labelLicense";
+            this.labelLicense.RegularColor = System.Drawing.Color.Empty;
+            this.labelLicense.Size = new System.Drawing.Size(45, 14);
+            this.labelLicense.TabIndex = 0;
+            this.labelLicense.Text = "License";
+            // 
+            // labelNoLicense
+            // 
+            this.labelNoLicense.AutoSize = true;
+            this.labelNoLicense.Location = new System.Drawing.Point(54, 3);
+            this.labelNoLicense.Margin = new System.Windows.Forms.Padding(3);
+            this.labelNoLicense.Name = "labelNoLicense";
+            this.labelNoLicense.Size = new System.Drawing.Size(57, 13);
+            this.labelNoLicense.TabIndex = 1;
+            this.labelNoLicense.Text = "No license";
+            // 
+            // panelAuthors
+            // 
+            this.panelAuthors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelAuthors.Location = new System.Drawing.Point(4, 53);
+            this.panelAuthors.Name = "panelAuthors";
+            this.panelAuthors.Size = new System.Drawing.Size(406, 107);
+            this.panelAuthors.TabIndex = 2;
+            // 
+            // labelWorkName
+            // 
             this.labelWorkName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.labelWorkName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelWorkName.Location = new System.Drawing.Point(4, 4);
@@ -174,31 +167,30 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.flowLayoutPanel2);
-            this.Controls.Add(this.textBoxAuthors);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.labelWorkName);
+            this.Controls.Add(this.panelAuthors);
+            this.Controls.Add(this.flowLayoutPanel2);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "WorkPanel";
             this.Size = new System.Drawing.Size(413, 193);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private DotNetUtils.Controls.SelectableLabel labelWorkName;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private DotNetUtils.Controls.HyperlinkLabel labelProject;
         private DotNetUtils.Controls.HyperlinkLabel labelSource;
         private DotNetUtils.Controls.HyperlinkLabel labelPackage;
         private DotNetUtils.Controls.HyperlinkLabel labelArticle;
-        private DotNetUtils.Controls.SelectableLabel textBoxAuthors;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private DotNetUtils.Controls.LinkLabel2 labelLicense;
         private System.Windows.Forms.Label labelNoLicense;
+        private System.Windows.Forms.Panel panelAuthors;
+        private DotNetUtils.Controls.SelectableLabel labelWorkName;
     }
 }
