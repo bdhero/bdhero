@@ -15,15 +15,7 @@ namespace LicenseUtils.Controls
     {
         public WorkPanel(Work work)
         {
-            var startTime = DateTime.Now;
-
             InitializeComponent();
-
-            var endTime = DateTime.Now;
-            var time = endTime - startTime;
-//            Console.WriteLine("{0}: {1}", time.ToStringLong(), work);
-
-            return;
 
             labelWorkName.Text = work.Name;
 

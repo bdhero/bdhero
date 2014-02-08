@@ -49,7 +49,6 @@ namespace BDHeroGUI.Forms
 
             // License
             var works = LicenseImporter.Works;
-//            textBoxLicense.Text = works.Derivatives.First().License.Text;
 
             var top = 0;
 
@@ -59,12 +58,11 @@ namespace BDHeroGUI.Forms
             foreach (var work in works.All)
             {
                 var workPanel = new WorkPanel(work);
-                continue;
                 workPanel.Top = top;
                 workPanel.Left = 0;
                 workPanel.Width = creditPanel.Width;
                 workPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-//                creditPanel.Controls.Add(workPanel);
+                creditPanel.Controls.Add(workPanel);
                 top += workPanel.Height;
             }
 
