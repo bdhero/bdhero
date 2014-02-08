@@ -19,7 +19,7 @@ namespace LicenseUtils.Controls
             InitHyperlinkLabel(labelPackage, work.Urls.Package);
             InitHyperlinkLabel(labelArticle, work.Urls.Article);
 
-            var authors = work.Authors.Select(author => "(C) " + author.ToStringDescriptive()).ToArray();
+            var authors = work.Authors.Select(author => "© " + author.ToStringDescriptive()).ToArray();
             textBoxAuthors.Text = string.Join(Environment.NewLine, authors);
             var delta = textBoxAuthors.GetAutoSizeDelta();
             Height += delta.Height;
