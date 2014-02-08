@@ -16,11 +16,13 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;
+using DotNetUtils.Extensions;
 using LicenseUtils;
 using LicenseUtils.Controls;
 using OSUtils.Info;
@@ -29,11 +31,12 @@ namespace BDHeroGUI.Forms
 {
     partial class AboutBox : Form
     {
-        private readonly string _nameVersionDate
-            = string.Format("{0} v{1} ({2})",
+        private readonly string _nameAndVersion
+            = string.Format("{0} v{1}",
                             AppUtils.AppName,
-                            AppUtils.AppVersion,
-                            AppUtils.BuildDate);
+                            AppUtils.AppVersion);
+
+        private int _workY;
 
         public AboutBox(IPluginRepository pluginRepository)
         {
@@ -52,38 +55,34 @@ namespace BDHeroGUI.Forms
 
         private void PopulateHeader()
         {
-            labelProductName.Text = _nameVersionDate;
+            labelProductName.Text = _nameAndVersion;
+            labelBuildDate.Text = string.Format("Built on {0:G}", AppUtils.BuildDate);
             labelCopyright.Text = AppUtils.Copyright;
             linkLabelSourceCode.Url = AppConstants.SourceCodeUrl;
         }
 
         private void PopulateLicenses()
         {
-            var top = 0;
-
             SuspendLayout();
 
-            foreach (var work in LicenseImporter.Works.All)
-            {
-                var workPanel = CreateWorkPanel(work, top);
-                creditPanel.Controls.Add(workPanel);
-                top += workPanel.Height;
-            }
+            LicenseImporter.Works.All.ForEach(AddWork);
 
             ResumeLayout(false);
             PerformLayout();
         }
 
-        private void PopulateSystemInfo(IPluginRepository pluginRepository)
+        private void AddWork(Work work, bool isLast)
         {
-            var newline = Environment.NewLine;
-            var plugins = string.Join(newline, pluginRepository.PluginsByType.Select(ToString));
+            var workPanel = CreateWorkPanel(work, _workY);
+            creditPanel.Controls.Add(workPanel);
+            _workY += workPanel.Height;
 
-            textBoxSystemInfo.Text = string.Format("{1} {0}{0}Plugins:{0}{2}{0}{0}{3}",
-                                                   newline,
-                                                   _nameVersionDate,
-                                                   plugins,
-                                                   SystemInfo.Instance);
+            if (isLast)
+                return;
+
+            var divider = CreateDivider(_workY);
+            creditPanel.Controls.Add(divider);
+            _workY += divider.Height;
         }
 
         private WorkPanel CreateWorkPanel(Work work, int top)
@@ -95,6 +94,39 @@ namespace BDHeroGUI.Forms
                        Width = creditPanel.Width,
                        Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
                    };
+        }
+
+        private Control CreateDivider(int top)
+        {
+            var margin = new Padding(2, 10, 2, 10);
+            var width = creditPanel.Width
+                        - creditPanel.Padding.Left
+                        - creditPanel.Padding.Right
+                        - margin.Left
+                        - margin.Right
+                ;
+            return new Panel
+                   {
+                       Top = top,
+                       Left = 0,
+                       Width = width,
+                       Height = 1,
+                       Margin = margin,
+                       BackColor = SystemColors.MenuBar,
+                       Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                   };
+        }
+
+        private void PopulateSystemInfo(IPluginRepository pluginRepository)
+        {
+            var newline = Environment.NewLine;
+            var plugins = string.Join(newline, pluginRepository.PluginsByType.Select(ToString));
+
+            textBoxSystemInfo.Text = string.Format("{1} {0}{0}Plugins:{0}{2}{0}{0}{3}",
+                                                   newline,
+                                                   _nameAndVersion,
+                                                   plugins,
+                                                   SystemInfo.Instance);
         }
 
         private static string ToString(IPlugin plugin)

@@ -50,11 +50,12 @@ namespace BDHeroGUI.Forms
             this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.creditPanel = new System.Windows.Forms.Panel();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
             this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
-            this.creditPanel = new System.Windows.Forms.Panel();
+            this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -85,19 +86,17 @@ namespace BDHeroGUI.Forms
             // 
             // textBoxSystemInfo
             // 
-            this.textBoxSystemInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxSystemInfo.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxSystemInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxSystemInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxSystemInfo.Font = new System.Drawing.Font("Courier New", 8F);
             this.textBoxSystemInfo.HideSelection = false;
-            this.textBoxSystemInfo.Location = new System.Drawing.Point(6, 6);
+            this.textBoxSystemInfo.Location = new System.Drawing.Point(3, 3);
             this.textBoxSystemInfo.Multiline = true;
             this.textBoxSystemInfo.Name = "textBoxSystemInfo";
             this.textBoxSystemInfo.ReadOnly = true;
             this.textBoxSystemInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxSystemInfo.Size = new System.Drawing.Size(547, 361);
+            this.textBoxSystemInfo.Size = new System.Drawing.Size(553, 347);
             this.textBoxSystemInfo.TabIndex = 8;
             // 
             // tabControl1
@@ -107,11 +106,11 @@ namespace BDHeroGUI.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(155, 71);
+            this.tabControl1.Location = new System.Drawing.Point(155, 91);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(567, 399);
-            this.tabControl1.TabIndex = 9;
+            this.tabControl1.Size = new System.Drawing.Size(567, 379);
+            this.tabControl1.TabIndex = 5;
             // 
             // tabPage2
             // 
@@ -119,10 +118,19 @@ namespace BDHeroGUI.Forms
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(559, 373);
+            this.tabPage2.Size = new System.Drawing.Size(559, 353);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Credit";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // creditPanel
+            // 
+            this.creditPanel.AutoScroll = true;
+            this.creditPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.creditPanel.Location = new System.Drawing.Point(3, 3);
+            this.creditPanel.Name = "creditPanel";
+            this.creditPanel.Size = new System.Drawing.Size(553, 347);
+            this.creditPanel.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -130,7 +138,7 @@ namespace BDHeroGUI.Forms
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(559, 373);
+            this.tabPage3.Size = new System.Drawing.Size(559, 353);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "System Info";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -142,11 +150,11 @@ namespace BDHeroGUI.Forms
             this.linkLabelSourceCode.Enabled = false;
             this.linkLabelSourceCode.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelSourceCode.HoverColor = System.Drawing.Color.Empty;
-            this.linkLabelSourceCode.Location = new System.Drawing.Point(152, 51);
+            this.linkLabelSourceCode.Location = new System.Drawing.Point(152, 71);
             this.linkLabelSourceCode.Name = "linkLabelSourceCode";
             this.linkLabelSourceCode.RegularColor = System.Drawing.Color.Empty;
             this.linkLabelSourceCode.Size = new System.Drawing.Size(77, 14);
-            this.linkLabelSourceCode.TabIndex = 5;
+            this.linkLabelSourceCode.TabIndex = 4;
             this.linkLabelSourceCode.Text = "GitHub Project";
             // 
             // labelCopyright
@@ -154,11 +162,11 @@ namespace BDHeroGUI.Forms
             this.labelCopyright.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCopyright.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelCopyright.Location = new System.Drawing.Point(155, 31);
+            this.labelCopyright.Location = new System.Drawing.Point(155, 51);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.ReadOnly = true;
             this.labelCopyright.Size = new System.Drawing.Size(567, 13);
-            this.labelCopyright.TabIndex = 4;
+            this.labelCopyright.TabIndex = 3;
             this.labelCopyright.Text = "Copyright";
             // 
             // labelProductName
@@ -173,14 +181,17 @@ namespace BDHeroGUI.Forms
             this.labelProductName.TabIndex = 1;
             this.labelProductName.Text = "Product Name";
             // 
-            // creditPanel
+            // labelBuildDate
             // 
-            this.creditPanel.AutoScroll = true;
-            this.creditPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.creditPanel.Location = new System.Drawing.Point(3, 3);
-            this.creditPanel.Name = "creditPanel";
-            this.creditPanel.Size = new System.Drawing.Size(553, 367);
-            this.creditPanel.TabIndex = 0;
+            this.labelBuildDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBuildDate.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelBuildDate.Location = new System.Drawing.Point(155, 32);
+            this.labelBuildDate.Name = "labelBuildDate";
+            this.labelBuildDate.ReadOnly = true;
+            this.labelBuildDate.Size = new System.Drawing.Size(567, 13);
+            this.labelBuildDate.TabIndex = 2;
+            this.labelBuildDate.Text = "Built on";
             // 
             // AboutBox
             // 
@@ -189,6 +200,7 @@ namespace BDHeroGUI.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonOk;
             this.ClientSize = new System.Drawing.Size(734, 511);
+            this.Controls.Add(this.labelBuildDate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.linkLabelSourceCode);
             this.Controls.Add(this.buttonOk);
@@ -227,6 +239,7 @@ namespace BDHeroGUI.Forms
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Panel creditPanel;
+        private DotNetUtils.Controls.SelectableLabel labelBuildDate;
 
     }
 }
