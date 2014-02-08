@@ -31,7 +31,7 @@ namespace LicenseUtils.Controls
             }
 
             labelNoLicense.Visible = false;
-            labelLicense.Text = work.License.ToStringDescriptive();
+            labelLicense.Text = string.Format("{0} license", work.License);
         }
 
         private void InitHyperlinkLabel(HyperlinkLabel label, string url)
