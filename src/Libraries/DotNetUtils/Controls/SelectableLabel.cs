@@ -34,7 +34,7 @@ namespace DotNetUtils.Controls
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DefaultValue(false)]
-        public bool AutoSize
+        public override bool AutoSize
         {
             get { return _autoSize; }
             set
@@ -51,6 +51,20 @@ namespace DotNetUtils.Controls
             ReadOnly = true;
             BorderStyle = BorderStyle.None;
             this.EnableSelectAll();
+            TextChanged += OnTextChanged;
+        }
+
+        private void OnTextChanged(object sender, EventArgs eventArgs)
+        {
+            ResizeAuto();
+        }
+
+        private void ResizeAuto()
+        {
+            if (!AutoSize)
+                return;
+
+            Width += this.GetAutoSizeDelta().Width;
         }
 
         protected override void OnParentBackColorChanged(EventArgs e)
@@ -89,14 +103,6 @@ namespace DotNetUtils.Controls
             {
                 UpdateBackgroundColor(parent.Parent);
             }
-        }
-
-        private void ResizeAuto()
-        {
-            if (!AutoSize)
-                return;
-
-            Width += this.GetAutoSizeDelta().Width;
         }
     }
 }
