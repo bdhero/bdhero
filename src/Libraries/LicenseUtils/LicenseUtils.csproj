@@ -52,11 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Author.cs" />
-    <Compile Include="Controls\AuthorLabel.cs">
+    <Compile Include="Controls\AuthorPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\AuthorLabel.Designer.cs">
-      <DependentUpon>AuthorLabel.cs</DependentUpon>
+    <Compile Include="Controls\AuthorPanel.Designer.cs">
+      <DependentUpon>AuthorPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\WorkPanel.cs">
       <SubType>UserControl</SubType>
@@ -96,8 +96,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\AuthorLabel.resx">
-      <DependentUpon>AuthorLabel.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AuthorPanel.resx">
+      <DependentUpon>AuthorPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\WorkPanel.resx">
       <DependentUpon>WorkPanel.cs</DependentUpon>
