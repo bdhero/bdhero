@@ -24,18 +24,22 @@ namespace WebBrowserUtils
 {
     public static class DefaultWebBrowser
     {
+        private static IWebBrowser _instance;
+
         public static IWebBrowser Instance
         {
-            get
+            get { return _instance ?? (_instance = CreateInstance()); }
+        }
+
+        private static IWebBrowser CreateInstance()
+        {
+            try
             {
-                try
-                {
-                    return WindowsWebBrowser.Default;
-                }
-                catch
-                {
-                    return new UnknownWebBrowser();
-                }
+                return WindowsWebBrowser.Default;
+            }
+            catch
+            {
+                return new UnknownWebBrowser();
             }
         }
     }

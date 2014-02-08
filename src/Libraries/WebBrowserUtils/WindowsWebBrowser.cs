@@ -24,22 +24,26 @@ namespace WebBrowserUtils
     /// <seealso cref="http://stackoverflow.com/a/17599201/467582"/>
     public class WindowsWebBrowser : BaseWebBrowser
     {
+        private static WindowsWebBrowser _instance;
+
+        public static WindowsWebBrowser Default
+        {
+            get { return _instance ?? (_instance = CreateInstance()); }
+        }
+
+        private static WindowsWebBrowser CreateInstance()
+        {
+            return new Builder()
+                .UseDefaultProgId()
+                .GetExePath()
+                .LoadIcon()
+                .Build();
+        }
+
         private WindowsWebBrowser(string exePath, MultiIcon multiIcon)
         {
             ExePath = exePath;
             MultiIcon = multiIcon;
-        }
-
-        public static WindowsWebBrowser Default
-        {
-            get
-            {
-                return new Builder()
-                    .UseDefaultProgId()
-                    .GetExePath()
-                    .LoadIcon()
-                    .Build();
-            }
         }
 
         private class Builder

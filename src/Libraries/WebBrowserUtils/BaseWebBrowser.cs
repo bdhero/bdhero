@@ -16,6 +16,7 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.IconLib;
@@ -30,7 +31,21 @@ namespace WebBrowserUtils
 
         public string ExePath { get; protected set; }
 
+        private readonly ConcurrentDictionary<int, IconImage> _iconImages =
+            new ConcurrentDictionary<int, IconImage>();
+
+        private readonly ConcurrentDictionary<int, Icon> _icons =
+            new ConcurrentDictionary<int, Icon>();
+
+        private readonly ConcurrentDictionary<int, Image> _images =
+            new ConcurrentDictionary<int, Image>();
+
         private IconImage GetIconImage(int size)
+        {
+            return _iconImages.GetOrAdd(size, GetIconImageImpl);
+        }
+
+        private IconImage GetIconImageImpl(int size)
         {
             if (MultiIcon == null || !MultiIcon.Any())
             {
@@ -44,11 +59,21 @@ namespace WebBrowserUtils
 
         public Icon GetIcon(int size)
         {
+            return _icons.GetOrAdd(size, GetIconImpl);
+        }
+
+        private Icon GetIconImpl(int size)
+        {
             var iconImage = GetIconImage(size);
             return iconImage == null ? null : iconImage.Icon;
         }
 
         public Image GetIconAsBitmap(int size)
+        {
+            return _images.GetOrAdd(size, GetIconAsBitmapImpl);
+        }
+
+        private Image GetIconAsBitmapImpl(int size)
         {
             var iconImage = GetIconImage(size);
             return iconImage == null ? null : iconImage.Transparent;
