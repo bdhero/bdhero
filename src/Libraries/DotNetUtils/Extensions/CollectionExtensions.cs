@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetUtils.Extensions
 {
@@ -73,12 +74,47 @@ namespace DotNetUtils.Extensions
         /// <param name="collection"></param>
         /// <param name="action">Operation to invoke on each item in the collection</param>
         /// <typeparam name="T"></typeparam>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T, bool> action)
+        {
+            var items = collection as T[] ?? collection.ToArray();
+            var i = 0;
+            var len = items.Count();
+            foreach (T item in items)
+            {
+                var isLast = ++i == len;
+                action(item, isLast);
+            }
+        }
+
+        /// <summary>
+        /// Iterates over each item in the collection and applies the specified action to it.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="action">Operation to invoke on each item in the collection</param>
+        /// <typeparam name="T"></typeparam>
         public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int> action)
         {
             var i = 0;
             foreach (T item in collection)
             {
                 action(item, i++);
+            }
+        }
+
+        /// <summary>
+        /// Iterates over each item in the collection and applies the specified action to it.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="action">Operation to invoke on each item in the collection</param>
+        /// <typeparam name="T"></typeparam>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int, int> action)
+        {
+            var items = collection as T[] ?? collection.ToArray();
+            var i = 0;
+            var len = items.Count();
+            foreach (T item in items)
+            {
+                action(item, i++, len);
             }
         }
 
