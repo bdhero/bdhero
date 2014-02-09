@@ -1,12 +1,16 @@
 ﻿using System.Windows.Forms;
 using DotNetUtils.Controls;
+using LicenseUtils.Forms;
 
 namespace LicenseUtils.Controls
 {
     public partial class WorkPanel : UserControl
     {
+        private readonly Work _work;
+
         public WorkPanel(Work work)
         {
+            _work = work;
             InitializeComponent();
 
             labelWorkName.Text = work.Name;
@@ -64,6 +68,11 @@ namespace LicenseUtils.Controls
                        Width = panelAuthors.Width,
                        Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
                    };
+        }
+
+        private void labelLicense_Click(object sender, System.EventArgs e)
+        {
+            new LicenseForm(_work.License).ShowDialog(this);
         }
     }
 }

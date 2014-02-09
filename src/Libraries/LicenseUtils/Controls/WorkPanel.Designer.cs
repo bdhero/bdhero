@@ -131,6 +131,7 @@
             this.labelLicense.Size = new System.Drawing.Size(45, 14);
             this.labelLicense.TabIndex = 0;
             this.labelLicense.Text = "License";
+            this.labelLicense.Click += new System.EventHandler(this.labelLicense_Click);
             // 
             // labelNoLicense
             // 

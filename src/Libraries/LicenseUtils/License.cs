@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using Newtonsoft.Json;
@@ -58,6 +59,15 @@ namespace LicenseUtils
         public string Url;
 
         /// <summary>
+        ///     URL of a short summary of the license on TLDRLegal
+        /// </summary>
+        /// <example>
+        ///     <c>"http://www.gnu.org/licenses/gpl-2.0.html"</c>
+        /// </example>
+        [JsonProperty("tldr_url")]
+        public string TlDrUrl;
+
+        /// <summary>
         ///     Gets whether the license is a custom, project-specific license (<c>true</c>)
         ///     or a standard, general-purpose license (<c>false</c>).
         /// </summary>
@@ -96,6 +106,30 @@ namespace LicenseUtils
         public string ToStringDescriptive()
         {
             return string.Format(IsCustom ? "a {0}" : "the {0} license", ToString());
+        }
+
+        public string ToStringFull()
+        {
+            var items = new List<string>();
+
+            items.Add(Name);
+
+            // Version
+            if (Version.HasValue)
+                items.Add(Version.Value + "");
+
+            // Abbreviation
+            if (!string.IsNullOrEmpty(Abbreviation))
+            {
+                var abbr = Abbreviation;
+
+                if (Version.HasValue)
+                    abbr += "-" + Version.Value;
+
+                items.Add(string.Format("({0})", abbr));
+            }
+
+            return string.Join(" ", items);
         }
     }
 }

@@ -7,30 +7,35 @@
     },
     "mit": {
         "name": "MIT",
-        "url": "http://opensource.org/licenses/MIT"
+        "url": "http://opensource.org/licenses/MIT",
+        "tldr_url": "https://tldrlegal.com/license/mit-license"
     },
     "apache_2_0": {
         "name": "Apache",
         "version": 2,
-        "url": "http://www.apache.org/licenses/LICENSE-2.0"
+        "url": "http://www.apache.org/licenses/LICENSE-2.0",
+        "tldr_url": "https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)"
     },
     "lgpl_2_1": {
         "name": "GNU Lesser General Public License",
         "abbr": "LGPL",
         "version": 2.1,
-        "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
+        "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html",
+        "tldr_url": "https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)"
     },
     "gpl_2_0": {
         "name": "GNU General Public License",
         "abbr": "GPL",
         "version": 2,
-        "url": "http://www.gnu.org/licenses/gpl-2.0.html"
+        "url": "http://www.gnu.org/licenses/gpl-2.0.html",
+        "tldr_url": "https://tldrlegal.com/license/gnu-general-public-license-v2"
     },
     "gpl_3": {
         "name": "GNU General Public License",
         "abbr": "GPL",
         "version": 3,
-        "url": "http://www.gnu.org/licenses/gpl.html"
+        "url": "http://www.gnu.org/licenses/gpl.html",
+        "tldr_url": "https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)"
     },
     "cc_sa_2_5": {
         "name": "Creative Commons Attribution-ShareAlike",

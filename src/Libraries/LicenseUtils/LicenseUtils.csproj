@@ -64,6 +64,12 @@
     <Compile Include="Controls\WorkPanel.Designer.cs">
       <DependentUpon>WorkPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LicenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LicenseForm.Designer.cs">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="License.cs" />
     <Compile Include="LicenseImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,11 +108,17 @@
     <EmbeddedResource Include="Controls\WorkPanel.resx">
       <DependentUpon>WorkPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LicenseForm.resx">
+      <DependentUpon>LicenseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
