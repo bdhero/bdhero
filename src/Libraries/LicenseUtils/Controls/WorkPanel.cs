@@ -11,6 +11,7 @@ namespace LicenseUtils.Controls
         public WorkPanel(Work work)
         {
             _work = work;
+
             InitializeComponent();
 
             labelWorkName.Text = work.Name;
@@ -72,7 +73,7 @@ namespace LicenseUtils.Controls
 
         private void labelLicense_Click(object sender, System.EventArgs e)
         {
-            new LicenseForm(_work.License).ShowDialog(this);
+            new LicenseForm(_work).ShowDialog(this);
         }
     }
 }

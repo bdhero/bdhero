@@ -39,6 +39,7 @@
             this.labelNoLicense = new System.Windows.Forms.Label();
             this.panelAuthors = new System.Windows.Forms.Panel();
             this.labelWorkName = new DotNetUtils.Controls.SelectableLabel();
+            this.toolTipLicenseLink = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -131,6 +132,7 @@
             this.labelLicense.Size = new System.Drawing.Size(45, 14);
             this.labelLicense.TabIndex = 0;
             this.labelLicense.Text = "License";
+            this.toolTipLicenseLink.SetToolTip(this.labelLicense, "View the software\'s license terms");
             this.labelLicense.Click += new System.EventHandler(this.labelLicense_Click);
             // 
             // labelNoLicense
@@ -193,5 +195,6 @@
         private System.Windows.Forms.Label labelNoLicense;
         private System.Windows.Forms.Panel panelAuthors;
         private DotNetUtils.Controls.SelectableLabel labelWorkName;
+        private System.Windows.Forms.ToolTip toolTipLicenseLink;
     }
 }

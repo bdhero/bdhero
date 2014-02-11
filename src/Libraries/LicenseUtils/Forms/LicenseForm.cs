@@ -11,12 +11,16 @@ namespace LicenseUtils.Forms
 {
     public partial class LicenseForm : Form
     {
-        public LicenseForm(License license)
+        public LicenseForm(Work work)
         {
             InitializeComponent();
 
-            Text = license.ToString();
-            labelName.Text = string.Format("{0}", license.ToStringFull());
+            var license = work.License;
+
+            Text = string.Format("{0}: {1} license", work.Name, license);
+
+            labelWorkName.Text = string.Format("{0}", work.Name);
+            labelLicenseName.Text = string.Format("{0}", license.ToStringFull());
 
             hyperlinkLabelUrl.Url = license.Url;
             hyperlinkLabelUrl.Visible = !string.IsNullOrEmpty(license.Url);
@@ -28,6 +32,7 @@ namespace LicenseUtils.Forms
                             "<html>" +
                             "<head>" +
                             "<title>{0}</title>" +
+                            "<style>body {{ font-family: 'Microsoft Sans Serif', Arial, Helvetica, sans-serif; }}</style>" +
                             "</head>" +
                             "<body>{1}</body>" +
                             "</html>";
@@ -37,9 +42,29 @@ namespace LicenseUtils.Forms
             textBoxPlainText.Text = license.Text;
         }
 
+        private void ShowPrintPreview()
+        {
+            webBrowser.ShowPrintPreviewDialog();
+        }
+
         private void buttonOk_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void buttonPrint_Click(object sender, EventArgs e)
+        {
+            ShowPrintPreview();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.P))
+            {
+                ShowPrintPreview();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
