@@ -18,6 +18,7 @@
 using System;
 using System.Net.NetworkInformation;
 using System.Threading;
+using DotNetUtils.Annotations;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Net;
 using OSUtils.Net;
@@ -28,6 +29,7 @@ namespace WindowsOSUtils.Net
     ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.
     ///     Faster and more accurate than <see cref="GenericNetworkStatusMonitor"/>.
     /// </summary>
+    [UsedImplicitly]
     public class Windows7NetworkStatusMonitor : INetworkStatusMonitor
     {
         /// <summary>

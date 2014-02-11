@@ -19,6 +19,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
 using DotNetUtils;
+using DotNetUtils.Annotations;
 using DotNetUtils.TaskUtils;
 
 namespace OSUtils.Net
@@ -27,6 +28,7 @@ namespace OSUtils.Net
     ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports all OSes,
     ///     though is likely slower and less accurate than <c>Windows7NetworkStatusMonitor</c>.
     /// </summary>
+    [UsedImplicitly]
     public class GenericNetworkStatusMonitor : INetworkStatusMonitor
     {
 #pragma warning disable 1591
