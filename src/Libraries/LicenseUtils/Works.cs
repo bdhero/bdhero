@@ -23,10 +23,10 @@ namespace LicenseUtils
                 var works = new List<Work>();
                 works.AddRange(Derivatives);
                 works.AddRange(Originals);
-                works.AddRange(Snippets);
-                works.AddRange(Packages);
-                works.AddRange(Libraries);
                 works.AddRange(Binaries);
+                works.AddRange(Libraries);
+                works.AddRange(Packages);
+                works.AddRange(Snippets);
                 return works.ToArray();
             }
         }
