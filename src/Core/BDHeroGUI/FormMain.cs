@@ -207,9 +207,9 @@ namespace BDHeroGUI
 
             this.EnableSelectAll();
 
-            textBoxOutput.FileExtensions = new[]
+            textBoxOutput.FileTypes = new[]
                 {
-                    new FileExtension
+                    new FileType
                         {
                             Description = "Matroska video file",
                             Extensions = new[] {".mkv"}

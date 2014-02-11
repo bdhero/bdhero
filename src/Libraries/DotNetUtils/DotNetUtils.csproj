@@ -79,6 +79,10 @@
     <Compile Include="Concurrency\IPromise.cs" />
     <Compile Include="Concurrency\TimerPromise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
+    <Compile Include="FS\FileType.cs" />
+    <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
+    <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />
+    <Compile Include="Extensions\CommonFileDialogResultExtensions.cs" />
     <Compile Include="Controls\FileTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,9 +93,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\EmailAddress.cs" />
+    <Compile Include="Dialogs\FS\FolderBrowserDialog2.cs" />
     <Compile Include="Controls\HyperlinkLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Dialogs\FS\SaveFileDialog2.cs" />
+    <Compile Include="Dialogs\FS\OpenFileDialog2.cs" />
+    <Compile Include="Dialogs\FS\IFileSystemDialog.cs" />
     <Compile Include="Controls\ListView2.cs">
       <SubType>Component</SubType>
     </Compile>

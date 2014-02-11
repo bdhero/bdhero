@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using DotNetUtils.Dialogs.FS;
+
 namespace BDHero.Plugin.FileNamer
 {
     partial class FormFileNamerPreferences
@@ -171,8 +173,8 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxMovieDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxMovieDirectory.DialogTitle = null;
-            this.textBoxMovieDirectory.DialogType = DotNetUtils.Controls.DialogType.OpenDirectory;
-            this.textBoxMovieDirectory.FileExtensions = null;
+            this.textBoxMovieDirectory.DialogType = FileSystemDialogType.OpenDirectory;
+            this.textBoxMovieDirectory.FileTypes = null;
             this.textBoxMovieDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxMovieDirectory.Name = "textBoxMovieDirectory";
             this.textBoxMovieDirectory.OverwritePrompt = false;
@@ -362,8 +364,8 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTVShowDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxTVShowDirectory.DialogTitle = null;
-            this.textBoxTVShowDirectory.DialogType = DotNetUtils.Controls.DialogType.OpenDirectory;
-            this.textBoxTVShowDirectory.FileExtensions = null;
+            this.textBoxTVShowDirectory.DialogType = FileSystemDialogType.OpenDirectory;
+            this.textBoxTVShowDirectory.FileTypes = null;
             this.textBoxTVShowDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxTVShowDirectory.Name = "textBoxTVShowDirectory";
             this.textBoxTVShowDirectory.OverwritePrompt = false;

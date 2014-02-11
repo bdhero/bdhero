@@ -17,13 +17,10 @@
 
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
+using DotNetUtils.Dialogs.FS;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using Microsoft.WindowsAPICodePack.Shell;
 
 namespace DotNetUtils.Controls
 {
@@ -88,8 +85,8 @@ namespace DotNetUtils.Controls
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
-        [DefaultValue(DialogType.OpenFile)]
-        public DialogType DialogType { get; set; }
+        [DefaultValue(FileSystemDialogType.OpenFile)]
+        public FileSystemDialogType DialogType { get; set; }
 
         /// <summary>
         /// Gets or sets the text that will be displayed in the dialog's title.
@@ -101,7 +98,7 @@ namespace DotNetUtils.Controls
 
         /// <summary>
         /// Gets or sets whether the "New folder" button will be visible in the dialog.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="Controls.DialogType.OpenDirectory"/>.
+        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenDirectory"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -110,7 +107,7 @@ namespace DotNetUtils.Controls
 
         /// <summary>
         /// Gets or sets whether the user can select multiple files or directories.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="Controls.DialogType.OpenFile"/> or <see cref="Controls.DialogType.OpenDirectory"/>.
+        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenFile"/> or <see cref="FileSystemDialogType.OpenDirectory"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -119,7 +116,7 @@ namespace DotNetUtils.Controls
 
         /// <summary>
         /// Gets or sets whether the user should be prompted to overwrite an existing file.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="Controls.DialogType.SaveFile"/>.
+        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.SaveFile"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -129,12 +126,12 @@ namespace DotNetUtils.Controls
         /// <summary>
         /// Gets or sets a list of file extensions to allow the user to open/save.
         /// </summary>
-        public FileExtension[] FileExtensions { get; set; }
+        public FileType[] FileTypes { get; set; }
 
         /// <summary>
         /// Gets or sets whether the "Browse" file dialog should allow the user to open/save files with any file extension (*.*),
-        /// even if the extension is not in the list of <see cref="FileExtensions"/>.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="Controls.DialogType.OpenFile"/> or <see cref="Controls.DialogType.SaveFile"/>.
+        /// even if the extension is not in the list of <see cref="FileTypes"/>.
+        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenFile"/> or <see cref="FileSystemDialogType.SaveFile"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -236,22 +233,22 @@ namespace DotNetUtils.Controls
                 OnSelectedPathChanged(EventArgs.Empty);
         }
 
-        private IDialog CreateDialog()
+        private IFileSystemDialog CreateDialog()
         {
             switch (DialogType)
             {
-                case DialogType.OpenFile:
+                case FileSystemDialogType.OpenFile:
                     return new OpenFileDialog2
                         {
                             AllowAnyExtension = AllowAnyExtension,
-                            FileExtensions = FileExtensions,
+                            FileTypes = FileTypes,
                             Title = DialogTitle
                         };
-                case DialogType.SaveFile:
+                case FileSystemDialogType.SaveFile:
                     return new SaveFileDialog2
                         {
                             AllowAnyExtension = AllowAnyExtension,
-                            FileExtensions = FileExtensions,
+                            FileTypes = FileTypes,
                             OverwritePrompt = OverwritePrompt,
                             Title = DialogTitle
                         };
@@ -275,257 +272,6 @@ namespace DotNetUtils.Controls
                                };
                     }
             }
-        }
-    }
-
-    public interface IDialog
-    {
-        string Title { get; set; }
-        string SelectedPath { get; set; }
-        DialogResult ShowDialog();
-        DialogResult ShowDialog(IWin32Window owner);
-    }
-
-    public class OpenFileDialog2 : IDialog
-    {
-        private readonly OpenFileDialog _dialog = new OpenFileDialog();
-        private FileExtension[] _fileExtensions;
-
-        public OpenFileDialog2()
-        {
-            _dialog.AutoUpgradeEnabled = true;
-            _dialog.CheckPathExists = true;
-            _dialog.DereferenceLinks = true;
-            _dialog.Multiselect = false;
-        }
-
-        public FileExtension[] FileExtensions
-        {
-            get { return _fileExtensions; }
-            set
-            {
-                _fileExtensions = value;
-                SetFilter();
-            }
-        }
-
-        public bool AllowAnyExtension { get; set; }
-
-        private void SetFilter()
-        {
-            var exts = FileExtensions.ToList();
-            if (AllowAnyExtension)
-            {
-                exts.Add(new FileExtension
-                    {
-                        Description = "Any file",
-                        Extensions = new[] {".*"}
-                    });
-            }
-            _dialog.Filter = string.Join("|", exts);
-        }
-
-        public string Title
-        {
-            get { return _dialog.Title; }
-            set { _dialog.Title = value; }
-        }
-
-        public string SelectedPath
-        {
-            get { return _dialog.FileName; }
-            set { _dialog.FileName = value; }
-        }
-
-        public DialogResult ShowDialog()
-        {
-            return _dialog.ShowDialog();
-        }
-
-        public DialogResult ShowDialog(IWin32Window owner)
-        {
-            return _dialog.ShowDialog(owner);
-        }
-    }
-
-    public class SaveFileDialog2 : IDialog
-    {
-        private readonly SaveFileDialog _dialog = new SaveFileDialog();
-        private FileExtension[] _fileExtensions;
-
-        public SaveFileDialog2()
-        {
-            _dialog.AutoUpgradeEnabled = true;
-            _dialog.CheckPathExists = true;
-            _dialog.DereferenceLinks = true;
-            _dialog.Title = Title;
-//            _dialog.Filter = "Image Files (*.BMP; *.JPG; *.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
-        }
-
-        public bool OverwritePrompt
-        {
-            get { return _dialog.OverwritePrompt; }
-            set { _dialog.OverwritePrompt = value; }
-        }
-
-        public FileExtension[] FileExtensions
-        {
-            get { return _fileExtensions; }
-            set
-            {
-                _fileExtensions = value;
-                SetFilter();
-            }
-        }
-
-        public bool AllowAnyExtension { get; set; }
-
-        private void SetFilter()
-        {
-            var exts = FileExtensions.ToList();
-            if (AllowAnyExtension)
-            {
-                exts.Add(new FileExtension
-                {
-                    Description = "Any file",
-                    Extensions = new[] { ".*" }
-                });
-            }
-            _dialog.Filter = string.Join("|", exts);
-        }
-
-        public string Title
-        {
-            get { return _dialog.Title; }
-            set { _dialog.Title = value; }
-        }
-
-        public string SelectedPath
-        {
-            get { return _dialog.FileName; }
-            set
-            {
-                _dialog.InitialDirectory = Path.GetDirectoryName(value);
-                _dialog.FileName = Path.GetFileName(value);
-            }
-        }
-
-        public DialogResult ShowDialog()
-        {
-            return _dialog.ShowDialog();
-        }
-
-        public DialogResult ShowDialog(IWin32Window owner)
-        {
-            return _dialog.ShowDialog(owner);
-        }
-    }
-
-    public class FolderBrowserDialog2 : IDialog
-    {
-        private readonly FolderBrowserDialog _dialog = new FolderBrowserDialog();
-
-        public bool ShowNewFolderButton
-        {
-            get { return _dialog.ShowNewFolderButton; }
-            set { _dialog.ShowNewFolderButton = value; }
-        }
-
-        public string Title
-        {
-            get { return _dialog.Description; }
-            set { _dialog.Description = value; }
-        }
-
-        public string SelectedPath
-        {
-            get { return _dialog.SelectedPath; }
-            set { _dialog.SelectedPath = value; }
-        }
-
-        public DialogResult ShowDialog()
-        {
-            return _dialog.ShowDialog();
-        }
-
-        public DialogResult ShowDialog(IWin32Window owner)
-        {
-            return _dialog.ShowDialog(owner);
-        }
-    }
-
-    internal static class CommonFileDialogResultExtensions
-    {
-        public static DialogResult ToDialogResult(this CommonFileDialogResult cfdr)
-        {
-            if (cfdr == CommonFileDialogResult.Ok)
-                return DialogResult.OK;
-
-            if (cfdr == CommonFileDialogResult.Cancel)
-                return DialogResult.Cancel;
-
-            return DialogResult.None;
-        }
-    }
-
-    public class FolderBrowserDialog3 : IDialog
-    {
-        private readonly CommonOpenFileDialog _dialog = new CommonOpenFileDialog
-                                                        {
-                                                            EnsureReadOnly = true,
-                                                            IsFolderPicker = true,
-                                                            AllowNonFileSystemItems = false
-                                                        };
-
-        public bool ShowNewFolderButton
-        {
-            get { return false; }
-            set {  }
-        }
-
-        public string Title
-        {
-            get { return _dialog.Title; }
-            set { _dialog.Title = value; }
-        }
-
-        public string SelectedPath
-        {
-            get { return (_dialog.FileAsShellObject as ShellContainer).ParsingName; }
-            set { _dialog.InitialDirectory = value; }
-        }
-
-        public DialogResult ShowDialog()
-        {
-            return _dialog.ShowDialog().ToDialogResult();
-        }
-
-        public DialogResult ShowDialog(IWin32Window owner)
-        {
-            return _dialog.ShowDialog(owner.Handle).ToDialogResult();
-        }
-    }
-
-    public enum DialogType
-    {
-        OpenFile,
-        SaveFile,
-        OpenDirectory
-    }
-
-    public struct FileExtension
-    {
-        public string[] Extensions;
-        public string Description;
-        public bool IsDefault;
-
-        public override string ToString()
-        {
-            var exts =
-                FileUtils.NormalizeFileExtensions(Extensions)
-                         .Select(ext => string.Format("*{0}", ext))
-                         .ToArray();
-            return string.Format("{0} ({1})|{2}", Description, string.Join("; ", exts), string.Join(";", exts));
         }
     }
 }

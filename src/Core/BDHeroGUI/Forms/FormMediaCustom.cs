@@ -16,13 +16,12 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.JobQueue;
 using BDHeroGUI.Helpers;
-using DotNetUtils.Controls;
+using DotNetUtils.Dialogs.FS;
+using DotNetUtils.FS;
 using I18N;
 
 namespace BDHeroGUI.Forms
@@ -91,28 +90,27 @@ namespace BDHeroGUI.Forms
 
         private static OpenFileDialog2 CreateOpenFileDialog()
         {
-            var all = new FileExtension
+            var all = new FileType
             {
                 Description = "All Supported Formats",
-                Extensions = AllExtensions,
-                IsDefault = true
+                Extensions = AllExtensions
             };
-            var jpeg = new FileExtension
+            var jpeg = new FileType
             {
                 Description = "JPEG Images",
                 Extensions = JpegExtensions
             };
-            var png = new FileExtension
+            var png = new FileType
             {
                 Description = "PNG Images",
                 Extensions = PngExtensions
             };
-            var gif = new FileExtension
+            var gif = new FileType
             {
                 Description = "GIF Images",
                 Extensions = GifExtensions
             };
-            var bmp = new FileExtension
+            var bmp = new FileType
             {
                 Description = "Bitmap Images",
                 Extensions = BitmapExtensions
@@ -121,7 +119,7 @@ namespace BDHeroGUI.Forms
             return new OpenFileDialog2
             {
                 Title = "Select Poster Image File",
-                FileExtensions = extensions,
+                FileTypes = extensions,
             };
         }
 
