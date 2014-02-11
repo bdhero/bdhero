@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="Crypto\CryptoHashAlgorithm.cs" />
     <Compile Include="Crypto\CryptoHashInput.cs" />
+    <Compile Include="DebugTimer.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ColumnHeaderExtensions.cs" />
     <Compile Include="Extensions\ControlExtensions.cs" />
