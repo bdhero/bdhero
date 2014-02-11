@@ -259,7 +259,7 @@ namespace BDHeroGUI
             this.textBoxInput.Location = new System.Drawing.Point(93, 3);
             this.textBoxInput.Name = "textBoxInput";
             this.textBoxInput.OverwritePrompt = false;
-            this.textBoxInput.SelectedPath = "V:\\BD\\49123204_BLACK_HAWK_DOWN";
+            this.textBoxInput.SelectedPath = "D:\\";
             this.textBoxInput.ShowNewFolderButton = false;
             this.textBoxInput.Size = new System.Drawing.Size(896, 24);
             this.textBoxInput.TabIndex = 0;
