@@ -49,17 +49,17 @@ namespace BDHeroGUI.Forms
             this.buttonOk = new System.Windows.Forms.Button();
             this.textBoxSystemInfo = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageCredit = new System.Windows.Forms.TabPage();
             this.creditPanel = new System.Windows.Forms.Panel();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPageSysInfo = new System.Windows.Forms.TabPage();
             this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
             this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
             this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
             this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPageCredit.SuspendLayout();
+            this.tabPageSysInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxLogo
@@ -104,24 +104,24 @@ namespace BDHeroGUI.Forms
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPageCredit);
+            this.tabControl1.Controls.Add(this.tabPageSysInfo);
             this.tabControl1.Location = new System.Drawing.Point(155, 91);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(567, 379);
             this.tabControl1.TabIndex = 5;
             // 
-            // tabPage2
+            // tabPageCredit
             // 
-            this.tabPage2.Controls.Add(this.creditPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(559, 353);
-            this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "Credit";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageCredit.Controls.Add(this.creditPanel);
+            this.tabPageCredit.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCredit.Name = "tabPageCredit";
+            this.tabPageCredit.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCredit.Size = new System.Drawing.Size(559, 353);
+            this.tabPageCredit.TabIndex = 2;
+            this.tabPageCredit.Text = "Credit";
+            this.tabPageCredit.UseVisualStyleBackColor = true;
             // 
             // creditPanel
             // 
@@ -132,16 +132,16 @@ namespace BDHeroGUI.Forms
             this.creditPanel.Size = new System.Drawing.Size(553, 347);
             this.creditPanel.TabIndex = 0;
             // 
-            // tabPage3
+            // tabPageSysInfo
             // 
-            this.tabPage3.Controls.Add(this.textBoxSystemInfo);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(559, 353);
-            this.tabPage3.TabIndex = 1;
-            this.tabPage3.Text = "System Info";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPageSysInfo.Controls.Add(this.textBoxSystemInfo);
+            this.tabPageSysInfo.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSysInfo.Name = "tabPageSysInfo";
+            this.tabPageSysInfo.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSysInfo.Size = new System.Drawing.Size(559, 353);
+            this.tabPageSysInfo.TabIndex = 1;
+            this.tabPageSysInfo.Text = "System Info";
+            this.tabPageSysInfo.UseVisualStyleBackColor = true;
             // 
             // linkLabelSourceCode
             // 
@@ -219,11 +219,10 @@ namespace BDHeroGUI.Forms
             this.Text = "About";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tabPageCredit.ResumeLayout(false);
+            this.tabPageSysInfo.ResumeLayout(false);
+            this.tabPageSysInfo.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -236,8 +235,8 @@ namespace BDHeroGUI.Forms
         private DotNetUtils.Controls.HyperlinkLabel linkLabelSourceCode;
         private System.Windows.Forms.TextBox textBoxSystemInfo;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageSysInfo;
+        private System.Windows.Forms.TabPage tabPageCredit;
         private System.Windows.Forms.Panel creditPanel;
         private DotNetUtils.Controls.SelectableLabel labelBuildDate;
 
