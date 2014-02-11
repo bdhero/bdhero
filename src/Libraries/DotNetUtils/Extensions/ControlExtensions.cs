@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using DotNetUtils.Controls;
 
 namespace DotNetUtils.Extensions
 {
@@ -31,22 +32,10 @@ namespace DotNetUtils.Extensions
     public static class ControlExtensions
     {
         /// <summary>
-        ///     <kbd>CTRL</kbd> + <kbd>A</kbd> character.
+        /// CTRL + A
         /// </summary>
-        // ReSharper disable once InconsistentNaming
         private const char CTRL_A = '\x1';
 
-        /// <summary>
-        ///     Gets the difference between the given <paramref name="control"/>'s "ideal" size
-        ///     (i.e., the minimum width and height required to fit all text without scrollbars)
-        ///     and its actual current size.
-        /// </summary>
-        /// <param name="control"></param>
-        /// <param name="numPaddingChars">
-        ///     Number of characters of padding to add to the end of the <paramref name="control"/>'s text
-        ///     when computing its "ideal" size.
-        /// </param>
-        /// <returns></returns>
         public static Size GetAutoSizeDelta(this Control control, int numPaddingChars = 0)
         {
             var maxWidth = Screen.FromControl(control).WorkingArea.Width / 2;
@@ -77,8 +66,21 @@ namespace DotNetUtils.Extensions
         }
 
         /// <summary>
+        /// Turns this control into a hyperlink by changing its cursor to a hand, launching the default browser
+        /// when the user clicks on the control, and adding a context menu that includes options to open the link
+        /// or copy the URL to the clipboard.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="url"></param>
+        public static void MakeHyperlink(this Control control, string url)
+        {
+            Hyperlink.MakeHyperlink(control, url);
+        }
+
+        /// <summary>
         /// Recursively iterates over the control's child controls and returns a collection of all descendant controls.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
         /// <returns></returns>
         /// <seealso cref="http://stackoverflow.com/a/2735242/467582"/>
@@ -95,7 +97,7 @@ namespace DotNetUtils.Extensions
         /// <param name="control"></param>
         /// <returns></returns>
         /// <seealso cref="http://stackoverflow.com/a/2735242/467582"/>
-        public static IEnumerable<T> Descendants<T>(this Control control) where T : Control
+        public static IEnumerable<T> Descendants<T>(this Control control) where T : class
         {
             foreach (Control child in control.Controls)
             {
@@ -265,7 +267,6 @@ namespace DotNetUtils.Extensions
         [DllImport("user32.dll")]
         private static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
 
-        // ReSharper disable once InconsistentNaming
         private const int WM_SETREDRAW = 11;
 
         /// <summary>
