@@ -44,6 +44,7 @@ using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
 using OSUtils.DriveDetector;
+using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using UpdateLib;
 
@@ -62,6 +63,7 @@ namespace BDHeroGUI
         private readonly IController _controller;
         private readonly IDriveDetector _driveDetector;
         private readonly ITaskbarItem _taskbarItem;
+        private readonly INetworkStatusMonitor _networkStatusMonitor;
 
         private readonly Updater _updater;
         private readonly UpdateHelper _updateHelper;
@@ -92,7 +94,8 @@ namespace BDHeroGUI
 
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
-                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, Updater updater)
+                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory,
+                        INetworkStatusMonitor networkStatusMonitor, Updater updater)
         {
             InitializeComponent();
 
@@ -106,6 +109,7 @@ namespace BDHeroGUI
             _controller = controller;
             _driveDetector = driveDetector;
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
+            _networkStatusMonitor = networkStatusMonitor;
 
             _updater = updater;
             _updater.IsPortable = _directoryLocator.IsPortable;
@@ -226,9 +230,8 @@ namespace BDHeroGUI
 
         private void InitNetworkStatusMonitor()
         {
-            var monitor = new GenericNetworkStatusMonitor();
-            monitor.NetworkStatusChanged += SetIsOnline;
-            monitor.TestConnectionAsync();
+            _networkStatusMonitor.NetworkStatusChanged += SetIsOnline;
+            _networkStatusMonitor.TestConnectionAsync();
         }
 
         private void ScanOnStartup()

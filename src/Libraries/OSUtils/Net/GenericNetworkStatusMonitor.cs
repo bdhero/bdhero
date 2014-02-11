@@ -18,13 +18,14 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
+using DotNetUtils;
 using DotNetUtils.TaskUtils;
 
-namespace DotNetUtils.Net
+namespace OSUtils.Net
 {
     /// <summary>
     ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports all OSes,
-    ///     though is likely slower and less accurate than <see cref="Windows7NetworkStatusMonitor"/>.
+    ///     though is likely slower and less accurate than <c>Windows7NetworkStatusMonitor</c>.
     /// </summary>
     public class GenericNetworkStatusMonitor : INetworkStatusMonitor
     {
@@ -42,7 +43,7 @@ namespace DotNetUtils.Net
 #pragma warning restore 1591
 
         /// <summary>
-        ///     Constructs a new <see cref="Windows7NetworkStatusMonitor"/> object.
+        ///     Constructs a new <c>Windows7NetworkStatusMonitor</c> object.
         /// </summary>
         public GenericNetworkStatusMonitor()
         {

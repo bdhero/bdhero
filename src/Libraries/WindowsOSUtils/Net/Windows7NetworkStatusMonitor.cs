@@ -19,8 +19,9 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Net;
+using OSUtils.Net;
 
-namespace DotNetUtils.Net
+namespace WindowsOSUtils.Net
 {
     /// <summary>
     ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.

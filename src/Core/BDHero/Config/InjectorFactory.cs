@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using WindowsOSUtils;
+using WindowsOSUtils.Net;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
@@ -25,6 +26,7 @@ using Ninject;
 using Ninject.Modules;
 using OSUtils;
 using OSUtils.Info;
+using OSUtils.Net;
 using UpdateLib;
 using log4net;
 
@@ -37,6 +39,7 @@ namespace BDHero.Config
             var modules = new List<INinjectModule>();
             modules.Add(new LoggingModule());
             modules.Add(new BDHeroMainModule());
+            modules.Add(new NetworkModule());
             modules.AddRange(CreateOSMainModules());
             return new StandardKernel(modules.ToArray());
         }
@@ -47,6 +50,17 @@ namespace BDHero.Config
             return osType == OSType.Windows
                        ? WindowsInjectorFactory.CreateMainModules()
                        : MockOSInjectorFactory.CreateMainModules();
+        }
+    }
+
+    internal class NetworkModule : NinjectModule
+    {
+        public override void Load()
+        {
+            if (Windows7NetworkStatusMonitor.IsPlatformSupported)
+                Bind<INetworkStatusMonitor>().To<Windows7NetworkStatusMonitor>().InSingletonScope();
+            else
+                Bind<INetworkStatusMonitor>().To<GenericNetworkStatusMonitor>().InSingletonScope();
         }
     }
 

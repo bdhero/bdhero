@@ -60,6 +60,9 @@
     <Compile Include="JobObjects\IJobObjectManager.cs" />
     <Compile Include="MockOSInjectorFactory.cs" />
     <Compile Include="Info\OSInfo.cs" />
+    <Compile Include="Net\GenericNetworkStatusMonitor.cs" />
+    <Compile Include="Net\INetworkStatusMonitor.cs" />
+    <Compile Include="Net\NetworkStatusChangedEventHandler.cs" />
     <Compile Include="OSType.cs" />
     <Compile Include="PInvokeUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
