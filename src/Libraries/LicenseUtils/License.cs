@@ -116,7 +116,7 @@ namespace LicenseUtils
 
             // Version
             if (Version.HasValue)
-                items.Add(Version.Value + "");
+                items.Add("version " + Version.Value + "");
 
             // Abbreviation
             if (!string.IsNullOrEmpty(Abbreviation))
