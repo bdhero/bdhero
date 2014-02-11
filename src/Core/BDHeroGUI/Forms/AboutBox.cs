@@ -46,6 +46,8 @@ namespace BDHeroGUI.Forms
             PopulateHeader();
             PopulateLicenses();
             PopulateSystemInfo(pluginRepository);
+
+            creditPanel.EnableVerticalKeyboardScroll();
         }
 
         private void SetWindowTitle()
