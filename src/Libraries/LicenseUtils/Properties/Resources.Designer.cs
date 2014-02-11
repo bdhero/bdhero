@@ -61,11 +61,222 @@ namespace LicenseUtils.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;apache_2.0&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;Apache License&lt;/h1&gt;
+        ///
+        ///&lt;h2&gt;Version 2.0, January 2004&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;http://www.apache.org/licenses/&lt;/p&gt;
+        ///
+        ///&lt;h1&gt;TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION&lt;/h1&gt;
+        ///
+        ///&lt;ol&gt;
+        ///&lt;li&gt;&lt;p&gt;Definitions.&lt;/p&gt;
+        ///
+        ///&lt;p&gt;&quot;License&quot; shall mean the terms and conditions for use, r [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string apache_2_0_html {
+            get {
+                return ResourceManager.GetString("apache_2_0_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] apache_2_0 {
+        internal static byte[] apache_2_0_md {
             get {
-                object obj = ResourceManager.GetObject("apache_2_0", resourceCulture);
+                object obj = ResourceManager.GetObject("apache_2_0_md", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;cc_sa_2.5&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;Creative Commons&lt;/h1&gt;
+        ///
+        ///&lt;h2&gt;Attribution-ShareAlike 2.5&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL SERVICES. DISTRIBUTION OF THIS LICENSE DOES NOT CREATE AN ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS IN [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string cc_sa_2_5_html {
+            get {
+                return ResourceManager.GetString("cc_sa_2_5_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] cc_sa_2_5_md {
+            get {
+                object obj = ResourceManager.GetObject("cc_sa_2_5_md", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;cpol_1.02&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;Preamble&lt;/h1&gt;
+        ///
+        ///&lt;p&gt;This License governs Your use of the Work. This License is intended to allow developers to use the Source Code and Executable Files provided as part of the Work in any application in any form. &lt;/p&gt;
+        ///
+        ///&lt;p&gt;The main points subject to the terms o [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string cpol_1_02_html {
+            get {
+                return ResourceManager.GetString("cpol_1_02_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] cpol_1_02_md {
+            get {
+                object obj = ResourceManager.GetObject("cpol_1_02_md", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;gpl_2.0&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;GNU GENERAL PUBLIC LICENSE&lt;/h1&gt;
+        ///
+        ///&lt;h2&gt;Version 2, June 1991&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+        ///51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+        ///Everyone is permitted to copy and distribute verbatim copies
+        ///of this license  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string gpl_2_0_html {
+            get {
+                return ResourceManager.GetString("gpl_2_0_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] gpl_2_0_md {
+            get {
+                object obj = ResourceManager.GetObject("gpl_2_0_md", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;gpl_3&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;GNU GENERAL PUBLIC LICENSE&lt;/h1&gt;
+        ///
+        ///&lt;h2&gt;Version 3, 29 June 2007&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;Copyright (C) 2007 Free Software Foundation, Inc. (http://fsf.org/)
+        ///Everyone is permitted to copy and distribute verbatim copies
+        ///of this license document, but changing it is not allowed.&lt;/p&gt;
+        ///
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string gpl_3_html {
+            get {
+                return ResourceManager.GetString("gpl_3_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] gpl_3_md {
+            get {
+                object obj = ResourceManager.GetObject("gpl_3_md", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;lgpl_2.1&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;GNU LESSER GENERAL PUBLIC LICENSE&lt;/h1&gt;
+        ///
+        ///&lt;h2&gt;Version 2.1, February 1999&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+        ///51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+        ///Everyone is permitted to copy and distribute verbatim copies
+        ///o [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string lgpl_2_1_html {
+            get {
+                return ResourceManager.GetString("lgpl_2_1_html", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] lgpl_2_1_md {
+            get {
+                object obj = ResourceManager.GetObject("lgpl_2_1_md", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,79 +284,76 @@ namespace LicenseUtils.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] cc_sa_2_5 {
+        internal static byte[] licenses_json {
             get {
-                object obj = ResourceManager.GetObject("cc_sa_2_5", resourceCulture);
+                object obj = ResourceManager.GetObject("licenses_json", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;mit&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;p&gt;Permission is hereby granted, free of charge, to any person obtaining a copy
+        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
+        ///in the Software without restriction, including without limitation the rights
+        ///to use, copy, modify, merge, publ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string mit_html {
+            get {
+                return ResourceManager.GetString("mit_html", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] cpol_1_02 {
+        internal static byte[] mit_md {
             get {
-                object obj = ResourceManager.GetObject("cpol_1_02", resourceCulture);
+                object obj = ResourceManager.GetObject("mit_md", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!doctype html&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;title&gt;ms_winapi_custom&lt;/title&gt;
+        ///        &lt;style&gt;
+        ///            body {
+        ///                font-family: &apos;Microsoft Sans Serif&apos;, Arial, Helvetica, sans-serif;
+        ///            }
+        ///        &lt;/style&gt;
+        ///    &lt;/head&gt;
+        ///    &lt;body&gt;
+        ///&lt;h1&gt;MICROSOFT SOFTWARE LICENSE TERMS&lt;/h1&gt;
+        ///
+        ///&lt;h1&gt;MICROSOFT WINDOWS API CODE PACK FOR MICROSOFT .NET FRAMEWORK&lt;/h1&gt;
+        ///
+        ///&lt;p&gt;These license terms are an agreement between Microsoft Corporation (or based on where you live, one of its affiliates) and you. Please rea [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ms_winapi_custom_html {
+            get {
+                return ResourceManager.GetString("ms_winapi_custom_html", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] gpl_2_0 {
+        internal static byte[] ms_winapi_custom_md {
             get {
-                object obj = ResourceManager.GetObject("gpl_2_0", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] gpl_3 {
-            get {
-                object obj = ResourceManager.GetObject("gpl_3", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] lgpl_2_1 {
-            get {
-                object obj = ResourceManager.GetObject("lgpl_2_1", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] licenses {
-            get {
-                object obj = ResourceManager.GetObject("licenses", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] mit {
-            get {
-                object obj = ResourceManager.GetObject("mit", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] ms_winapi_custom {
-            get {
-                object obj = ResourceManager.GetObject("ms_winapi_custom", resourceCulture);
+                object obj = ResourceManager.GetObject("ms_winapi_custom_md", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -163,9 +371,9 @@ namespace LicenseUtils.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] works {
+        internal static byte[] works_json {
             get {
-                object obj = ResourceManager.GetObject("works", resourceCulture);
+                object obj = ResourceManager.GetObject("works_json", resourceCulture);
                 return ((byte[])(obj));
             }
         }

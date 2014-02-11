@@ -118,37 +118,61 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="apache_2_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="apache_2_0_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\apache_2.0.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="apache_2_0_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\apache_2.0.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="cc_sa_2_5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="cc_sa_2_5_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\cc_sa_2.5.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="cc_sa_2_5_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\cc_sa_2.5.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="cpol_1_02" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="cpol_1_02_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\cpol_1.02.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="cpol_1_02_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\cpol_1.02.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="gpl_2_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="gpl_2_0_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\gpl_2.0.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="gpl_2_0_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\gpl_2.0.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="gpl_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="gpl_3_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\gpl_3.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="gpl_3_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\gpl_3.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lgpl_2_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="lgpl_2_1_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\lgpl_2.1.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="lgpl_2_1_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\lgpl_2.1.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="licenses" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="licenses_json" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\licenses.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="mit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="mit_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\mit.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="mit_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\mit.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="ms_winapi_custom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="ms_winapi_custom_html" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Licenses\ms_winapi_custom.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ms_winapi_custom_md" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Licenses\ms_winapi_custom.md;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="printer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\printer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="works" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="works_json" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\works.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
