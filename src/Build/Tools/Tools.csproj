@@ -62,6 +62,7 @@
     <Content Include="InnoSetup\islzma32.exe" />
     <Content Include="InnoSetup\islzma64.exe" />
     <Content Include="InnoSetup\ISPP.dll" />
+    <Content Include="InnoSetup\ISPPBuiltins.iss" />
     <Content Include="InnoSetup\isscint.dll" />
     <Content Include="InnoSetup\isunzlib.dll" />
     <Content Include="InnoSetup\iszlib.dll" />
@@ -70,6 +71,7 @@
     <Content Include="InnoSetup\WizModernImage.bmp" />
     <Content Include="InnoSetup\WizModernSmallImage-IS.bmp" />
     <Content Include="InnoSetup\WizModernSmallImage.bmp" />
+    <Content Include="Markdowner.exe" />
     <Content Include="Restorer.exe" />
     <Content Include="SignTool\signtool.exe" />
     <Content Include="UMGen.exe" />
@@ -101,7 +103,6 @@
     <None Include="InnoSetup\Default.isl" />
     <None Include="InnoSetup\ISetup.chm" />
     <None Include="InnoSetup\ISPP.chm" />
-    <None Include="InnoSetup\ISPPBuiltins.iss" />
     <None Include="InnoSetup\Languages\BrazilianPortuguese.isl" />
     <None Include="InnoSetup\Languages\Catalan.isl" />
     <None Include="InnoSetup\Languages\Corsican.isl" />
