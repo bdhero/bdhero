@@ -1,4 +1,4 @@
-// Copyright 2012, 2013, 2014 Andrew C. Dvorak
+// Copyright 2012-2014 Andrew C. Dvorak
 //
 // This file is part of BDHero.
 //
