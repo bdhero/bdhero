@@ -16,13 +16,9 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using DotNetUtils.Annotations;
-using OSUtils;
 using OSUtils.JobObjects;
 
 namespace WindowsOSUtils.JobObjects
