@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Net.NetworkInformation;
 using System.Threading;
 using DotNetUtils.TaskUtils;
@@ -38,13 +39,11 @@ namespace WindowsOSUtils.Net
             {
                 try
                 {
-                    // If this statement succeeds without throwing an exception, the platform is probably supported.
                     // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     return NetworkListManager.IsConnectedToInternet || true;
                 }
-                catch
+                catch (PlatformNotSupportedException)
                 {
-                    // If an exception is thrown, the platform is probably not supported.
                     return false;
                 }
             }
