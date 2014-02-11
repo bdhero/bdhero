@@ -22,6 +22,8 @@ using System.Linq;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.WindowsAPICodePack.Shell;
 
 namespace DotNetUtils.Controls
 {
@@ -254,11 +256,24 @@ namespace DotNetUtils.Controls
                             Title = DialogTitle
                         };
                 default:
-                    return new FolderBrowserDialog2
-                        {
-                            Title = DialogTitle,
-                            ShowNewFolderButton = ShowNewFolderButton
-                        };
+                    try
+                    {
+                        // Vista or higher
+                        return new FolderBrowserDialog3
+                               {
+                                   Title = DialogTitle,
+                                   ShowNewFolderButton = ShowNewFolderButton
+                               };
+                    }
+                    catch (PlatformNotSupportedException)
+                    {
+                        // XP or Mono
+                        return new FolderBrowserDialog2
+                               {
+                                   Title = DialogTitle,
+                                   ShowNewFolderButton = ShowNewFolderButton
+                               };
+                    }
             }
         }
     }
@@ -436,6 +451,58 @@ namespace DotNetUtils.Controls
         public DialogResult ShowDialog(IWin32Window owner)
         {
             return _dialog.ShowDialog(owner);
+        }
+    }
+
+    internal static class CommonFileDialogResultExtensions
+    {
+        public static DialogResult ToDialogResult(this CommonFileDialogResult cfdr)
+        {
+            if (cfdr == CommonFileDialogResult.Ok)
+                return DialogResult.OK;
+
+            if (cfdr == CommonFileDialogResult.Cancel)
+                return DialogResult.Cancel;
+
+            return DialogResult.None;
+        }
+    }
+
+    public class FolderBrowserDialog3 : IDialog
+    {
+        private readonly CommonOpenFileDialog _dialog = new CommonOpenFileDialog
+                                                        {
+                                                            EnsureReadOnly = true,
+                                                            IsFolderPicker = true,
+                                                            AllowNonFileSystemItems = false
+                                                        };
+
+        public bool ShowNewFolderButton
+        {
+            get { return false; }
+            set {  }
+        }
+
+        public string Title
+        {
+            get { return _dialog.Title; }
+            set { _dialog.Title = value; }
+        }
+
+        public string SelectedPath
+        {
+            get { return (_dialog.FileAsShellObject as ShellContainer).ParsingName; }
+            set { _dialog.InitialDirectory = value; }
+        }
+
+        public DialogResult ShowDialog()
+        {
+            return _dialog.ShowDialog().ToDialogResult();
+        }
+
+        public DialogResult ShowDialog(IWin32Window owner)
+        {
+            return _dialog.ShowDialog(owner.Handle).ToDialogResult();
         }
     }
 
