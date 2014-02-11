@@ -1,0 +1,16 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<!doctype html>
+<html>
+    <head>
+        <title><#= _title #></title>
+        <style>
+            body {
+                font-family: 'Microsoft Sans Serif', Arial, Helvetica, sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+<#= _body #>
+    </body>
+</html>
