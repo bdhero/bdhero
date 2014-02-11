@@ -23,10 +23,13 @@ using DotNetUtils.Extensions;
 
 namespace DotNetUtils.Controls
 {
+    /// <summary>
+    ///     Emulates a <see cref="Label"/> control that allows its text to be selected with a mouse or keyboard.
+    /// </summary>
     public class SelectableLabel : TextBox
     {
         /// <summary>
-        /// Gets or sets whether the label should resize itself to fit its text.
+        ///     Gets or sets whether the label should resize itself to fit its text.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -43,6 +46,9 @@ namespace DotNetUtils.Controls
 
         private bool _autoSize;
 
+        /// <summary>
+        ///     Constructs a new <see cref="SelectableLabel"/> control.
+        /// </summary>
         public SelectableLabel()
         {
             ReadOnly = true;
