@@ -240,6 +240,11 @@ namespace BDHeroGUI
             Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
         }
 
+        private void ShowAboutBox()
+        {
+            new AboutBox(_pluginRepository).ShowDialog(this);
+        }
+
         private void SetIsOnline(bool isOnline)
         {
             toolStripStatusLabelOffline.Visible = !isOnline;
@@ -920,7 +925,7 @@ namespace BDHeroGUI
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AboutBox(_pluginRepository).ShowDialog(this);
+            ShowAboutBox();
         }
 
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
