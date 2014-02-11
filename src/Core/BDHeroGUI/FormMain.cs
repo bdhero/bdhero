@@ -39,6 +39,7 @@ using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
+using DotNetUtils.Net;
 using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
@@ -64,6 +65,7 @@ namespace BDHeroGUI
 
         private readonly Updater _updater;
         private readonly UpdateHelper _updateHelper;
+        private bool _hasCheckedForUpdateOnStartup;
 
         private readonly ToolTip _progressBarToolTip;
 
@@ -214,12 +216,19 @@ namespace BDHeroGUI
 
             toolStripStatusLabelOffline.Visible = false;
 
-            // TODO: Uncomment (if feasible) w/ setting to enable/disable
-//            var monitor = new NetworkStatusMonitor(null, SetIsOnline);
+            // TODO: Add setting to enable/disable
+            InitNetworkStatusMonitor();
 
             ScanOnStartup();
 
             InitAboutBox();
+        }
+
+        private void InitNetworkStatusMonitor()
+        {
+            var monitor = new GenericNetworkStatusMonitor();
+            monitor.NetworkStatusChanged += SetIsOnline;
+            monitor.TestConnectionAsync();
         }
 
         private void ScanOnStartup()
@@ -248,6 +257,12 @@ namespace BDHeroGUI
         private void SetIsOnline(bool isOnline)
         {
             toolStripStatusLabelOffline.Visible = !isOnline;
+
+            if (!isOnline || _hasCheckedForUpdateOnStartup)
+                return;
+
+            _updateHelper.Click();
+            _hasCheckedForUpdateOnStartup = true;
         }
 
         #endregion
@@ -434,7 +449,6 @@ namespace BDHeroGUI
         private void InitUpdateCheck()
         {
             Disposed += (sender, args) => InstallUpdateIfAvailable(true);
-            _updateHelper.Click();
         }
 
         private void InstallUpdateIfAvailable(bool silent)
