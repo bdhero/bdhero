@@ -19,6 +19,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using WindowsOSUtils.Win32;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;
@@ -48,6 +49,21 @@ namespace BDHeroGUI.Forms
             PopulateSystemInfo(pluginRepository);
 
             creditPanel.EnableVerticalKeyboardScroll();
+        }
+
+        /// <summary>
+        ///     Reduce flickering.
+        /// </summary>
+        /// <seealso cref="http://stackoverflow.com/a/89125/467582"/>
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                if (!SystemInformation.TerminalServerSession)
+                    cp.ExStyle |= ExtendedWindowStyles.WS_EX_COMPOSITED;
+                return cp;
+            }
         }
 
         private void SetWindowTitle()
