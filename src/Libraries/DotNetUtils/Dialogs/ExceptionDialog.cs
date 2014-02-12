@@ -58,9 +58,9 @@ namespace DotNetUtils.Dialogs
                                         .OnCurrentThread()
                                         .DoWork((invoker, token) => reportAction())
                                         .Fail(args => ReportExceptionFail(owner, args))
-                                        .Finally(dialog.Close)
                                         .Build()
                                         .Start();
+                                    dialog.Close();
                                 };
 
             var dontSendButton = new TaskDialogCommandLink("dontSendButton", "&No Thanks\nI don't feel like being helpful");
@@ -80,11 +80,28 @@ namespace DotNetUtils.Dialogs
 
         private static void ReportExceptionFail(IWin32Window owner, ExceptionEventArgs args)
         {
-            MessageBox.Show(owner,
-                            "Error Reporting Failed",
-                            args.Exception.ToString(),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+            if (args.Exception == null)
+                return;
+
+            var title = "Error Reporting Failed";
+            var stackTrace = args.Exception.ToString();
+
+            var control = Control.FromHandle(owner.Handle);
+            if (control == null || control.IsDisposed)
+            {
+                MessageBox.Show(stackTrace,
+                                title,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(owner,
+                                stackTrace,
+                                title,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
