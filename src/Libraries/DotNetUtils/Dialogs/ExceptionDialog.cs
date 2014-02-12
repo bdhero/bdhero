@@ -27,7 +27,7 @@ namespace DotNetUtils.Dialogs
             _exception = exception;
         }
 
-        public void ShowDialog(IWin32Window owner, Action reportAction)
+        public DialogResult ShowDialog(IWin32Window owner, Action reportAction)
         {
             var isLogicError = !IsID10TError(_exception);
 
@@ -60,13 +60,13 @@ namespace DotNetUtils.Dialogs
                                         .Fail(args => ReportExceptionFail(owner, args))
                                         .Build()
                                         .Start();
-                                    dialog.Close();
+                                    dialog.Close(TaskDialogResult.Yes);
                                 };
 
             var dontSendButton = new TaskDialogCommandLink("dontSendButton", "&No Thanks\nI don't feel like being helpful");
             dontSendButton.Click += delegate
                                     {
-                                        dialog.Close();
+                                        dialog.Close(TaskDialogResult.No);
                                     };
 
             if (isLogicError)
@@ -75,7 +75,7 @@ namespace DotNetUtils.Dialogs
                 dialog.Controls.Add(dontSendButton);
             }
 
-            dialog.Show();
+            return dialog.Show().ToDialogResult();
         }
 
         private static void ReportExceptionFail(IWin32Window owner, ExceptionEventArgs args)
