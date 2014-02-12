@@ -31,8 +31,20 @@ namespace DotNetUtils.Dialogs.FS
         private readonly CommonOpenFileDialog _dialog;
 
         /// <summary>
+        ///     Indicates whether this feature is supported on the current platform.
+        /// </summary>
+        public static bool IsPlatformSupported
+        {
+            get { return CommonFileDialog.IsPlatformSupported; }
+        }
+
+        /// <summary>
         ///     Constructs a new <see cref="FolderBrowserDialog3"/> instance.
         /// </summary>
+        /// <exception cref="TypeInitializationException">
+        ///     Thrown if the operating system is not Windows Vista or newer
+        ///     or if the user is running Mono.
+        /// </exception>
         /// <exception cref="PlatformNotSupportedException">
         ///     Thrown if the operating system is not Windows Vista or newer
         ///     or if the user is running Mono.

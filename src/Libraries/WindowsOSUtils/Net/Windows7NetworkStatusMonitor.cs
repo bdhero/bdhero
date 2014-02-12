@@ -44,6 +44,10 @@ namespace WindowsOSUtils.Net
                     // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     return NetworkListManager.IsConnectedToInternet || true;
                 }
+                catch (TypeInitializationException)
+                {
+                    return false;
+                }
                 catch (PlatformNotSupportedException)
                 {
                     return false;

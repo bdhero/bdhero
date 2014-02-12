@@ -253,24 +253,22 @@ namespace DotNetUtils.Controls
                             Title = DialogTitle
                         };
                 default:
-                    try
+                    // Vista or higher
+                    if (FolderBrowserDialog3.IsPlatformSupported)
                     {
-                        // Vista or higher
                         return new FolderBrowserDialog3
                                {
                                    Title = DialogTitle,
                                    ShowNewFolderButton = ShowNewFolderButton
                                };
                     }
-                    catch (PlatformNotSupportedException)
-                    {
-                        // XP or Mono
-                        return new FolderBrowserDialog2
-                               {
-                                   Title = DialogTitle,
-                                   ShowNewFolderButton = ShowNewFolderButton
-                               };
-                    }
+
+                    // XP or Mono
+                    return new FolderBrowserDialog2
+                           {
+                               Title = DialogTitle,
+                               ShowNewFolderButton = ShowNewFolderButton
+                           };
             }
         }
     }
