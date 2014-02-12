@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DotNetUtils.Dialogs
@@ -26,7 +27,7 @@ namespace DotNetUtils.Dialogs
             _exception = exception;
         }
 
-        public void ShowDialog(IWin32Window owner)
+        public void ShowDialog(IWin32Window owner, Action reportAction)
         {
             var isLogicError = !IsID10TError(_exception);
 
@@ -50,19 +51,40 @@ namespace DotNetUtils.Dialogs
                              OwnerWindowHandle = owner.Handle
                          };
 
-            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nNo email or typing required");
-//            sendButton.Click += new EventHandler(sendButton_Click);
+            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nQuick and painless - promise!");
+            sendButton.Click += delegate
+                                {
+                                    new TaskBuilder()
+                                        .OnCurrentThread()
+                                        .DoWork((invoker, token) => reportAction())
+                                        .Fail(args => ReportExceptionFail(owner, args))
+                                        .Finally(dialog.Close)
+                                        .Build()
+                                        .Start();
+                                };
 
             var dontSendButton = new TaskDialogCommandLink("dontSendButton", "&No Thanks\nI don't feel like being helpful");
-//            dontSendButton.Click += new EventHandler(dontSendButton_Click);
+            dontSendButton.Click += delegate
+                                    {
+                                        dialog.Close();
+                                    };
 
-            if (false && isLogicError)
+            if (isLogicError)
             {
                 dialog.Controls.Add(sendButton);
                 dialog.Controls.Add(dontSendButton);
             }
 
             dialog.Show();
+        }
+
+        private static void ReportExceptionFail(IWin32Window owner, ExceptionEventArgs args)
+        {
+            MessageBox.Show(owner,
+                            "Error Reporting Failed",
+                            args.Exception.ToString(),
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
         }
 
         /// <summary>
