@@ -20,7 +20,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DotNetUtils.Extensions
 {
-    internal static class CommonFileDialogResultExtensions
+    public static class CommonFileDialogResultExtensions
     {
         public static DialogResult ToDialogResult(this CommonFileDialogResult cfdr)
         {
