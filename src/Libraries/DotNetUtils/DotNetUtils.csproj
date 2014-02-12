@@ -80,6 +80,7 @@
     <Compile Include="Concurrency\IPromise.cs" />
     <Compile Include="Concurrency\TimerPromise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
+    <Compile Include="Dialogs\ExceptionDialog.cs" />
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
     <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />

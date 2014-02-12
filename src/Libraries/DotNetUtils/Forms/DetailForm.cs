@@ -24,6 +24,7 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.Dialogs;
 
 namespace DotNetUtils.Forms
 {
@@ -172,7 +173,10 @@ namespace DotNetUtils.Forms
             {
                 exception = aggregate.GetBaseException();
             }
-            new DetailForm(title, exception.Message, exception.ToString(), MessageBoxIcon.Error).ShowDialog(window);
+            if (ExceptionDialog.IsPlatformSupported)
+                new ExceptionDialog(title, exception).ShowDialog(window);
+            else
+                new DetailForm(title, exception.Message, exception.ToString(), MessageBoxIcon.Error).ShowDialog(window);
         }
 
         #region UI Events
