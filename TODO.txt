@@ -1,6 +1,8 @@
 Chores
 ======
 
+[ ] Break up DotNetUtils into separate projects
+
 [ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
 
 [ ] Test silent installs and updates
@@ -43,6 +45,8 @@ Bugs
 Features
 ========
 
+[ ] Compile custom FFmpeg and/or MKVToolNix builds
+
 [ ] Use more features from WinAPI Code Pack:
     [ ] CommonOpenFileDialog
             Windows API Code Pack 1.1\source\Samples\Shell\CommonFileDialogsDemo\CS\CommonFileDialogsDemo\Form1.cs, line 266
@@ -77,6 +81,7 @@ Features
 [ ] Context menu for Playlist listitems: add "Language" option
 
 [ ] Add "use last folder" option to File Namer preference dialog
+[ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
 
 [ ] Fix or remove "low quality" playlist detection
 [ ] Consider chapter count and timestamps when looking for duplicate playlists (playlists w/ identical streams but different chapters are not dups)
