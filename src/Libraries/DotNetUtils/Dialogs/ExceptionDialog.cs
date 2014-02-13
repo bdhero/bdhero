@@ -32,6 +32,8 @@ namespace DotNetUtils.Dialogs
         {
             var isLogicError = !IsID10TError(_exception);
 
+            var editReportLinkHref = "edit_report";
+
             var dialog = new TaskDialog
                          {
                              Cancelable = true,
@@ -49,16 +51,19 @@ namespace DotNetUtils.Dialogs
                              DetailsCollapsedLabel = "Show &details",
                              DetailsExpandedLabel = "Hide &details",
 
+                             FooterText = string.Format("<a href=\"{0}\">Edit report contents</a>", editReportLinkHref),
+
                              OwnerWindowHandle = owner.Handle
                          };
 
-            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nQuick and painless - promise!");
+            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nFast and painless - I promise!");
             sendButton.Click += delegate
                                 {
                                     new TaskBuilder()
                                         .OnCurrentThread()
                                         .DoWork((invoker, token) => reportAction())
                                         .Fail(args => ReportExceptionFail(owner, args))
+                                        .Succeed(() => ReportExceptionSucceed(owner))
                                         .Build()
                                         .Start();
                                     dialog.Close(TaskDialogResult.Yes);
@@ -70,7 +75,9 @@ namespace DotNetUtils.Dialogs
                                         dialog.Close(TaskDialogResult.No);
                                     };
 
-            if (isLogicError)
+            dialog.HyperlinkClick += (sender, args) => MessageBox.Show(owner, args.LinkText);
+
+            if (true || isLogicError)
             {
                 dialog.Controls.Add(sendButton);
                 dialog.Controls.Add(dontSendButton);
@@ -79,29 +86,66 @@ namespace DotNetUtils.Dialogs
             return dialog.Show().ToDialogResult();
         }
 
+        private static void ReportExceptionSucceed(IWin32Window owner)
+        {
+            var dialog = new TaskDialog
+                         {
+                             Cancelable = true,
+                             StartupLocation = TaskDialogStartupLocation.CenterOwner,
+
+                             Icon = TaskDialogStandardIcon.Information,
+                             Caption = "Cool!",
+                             InstructionText = "Thanks for submitting an error report!",
+
+                            FooterCheckBoxChecked = false,
+                            FooterCheckBoxText = "&Don't show this message again"
+                         };
+
+            if (IsFormValid(owner))
+                dialog.OwnerWindowHandle = owner.Handle;
+
+            dialog.Show();
+
+            if (dialog.FooterCheckBoxChecked.GetValueOrDefault())
+                MessageBox.Show(owner, "OK, we won't show this again");
+            else
+                MessageBox.Show(owner, "Prepare to see more of me, bitch!");
+        }
+
+        private static bool IsFormValid(IWin32Window owner)
+        {
+            var control = Control.FromHandle(owner.Handle);
+            return !(control == null || control.IsDisposed);
+        }
+
         private static void ReportExceptionFail(IWin32Window owner, ExceptionEventArgs args)
         {
             if (args.Exception == null)
                 return;
 
+            var icon = MessageBoxIcon.Error;
             var title = "Error Reporting Failed";
             var stackTrace = args.Exception.ToString();
 
-            var control = Control.FromHandle(owner.Handle);
-            if (control == null || control.IsDisposed)
+            ShowResultMessage(owner, title, stackTrace, icon);
+        }
+
+        private static void ShowResultMessage(IWin32Window owner, string title, string message, MessageBoxIcon icon)
+        {
+            if (IsFormValid(owner))
             {
-                MessageBox.Show(stackTrace,
+                MessageBox.Show(owner,
+                                message,
                                 title,
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                                icon);
             }
             else
             {
-                MessageBox.Show(owner,
-                                stackTrace,
+                MessageBox.Show(message,
                                 title,
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                                icon);
             }
         }
 
