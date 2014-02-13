@@ -31,11 +31,13 @@ using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
 using BDHero.Utils;
+using BDHeroGUI.DIalogs;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Controls;
+using DotNetUtils.Dialogs;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
@@ -270,9 +272,12 @@ namespace BDHeroGUI
 
         #endregion
 
-        private void ShowExceptionDetail(string caption, Exception exception)
+        private void ShowExceptionDetail(string title, Exception exception)
         {
-            DetailForm.ShowExceptionDetail(this, caption, exception, () => ErrorReporter.Report(exception));
+            if (ExceptionDialog.IsPlatformSupported)
+                new ExceptionDialog(title, exception).ShowDialog(this);
+            else
+                DetailForm.ShowExceptionDetail(this, title, exception);
         }
 
         #region Win32 Window message handling

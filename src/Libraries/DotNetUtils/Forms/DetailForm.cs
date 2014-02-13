@@ -166,16 +166,13 @@ namespace DotNetUtils.Forms
 
         #endregion
 
-        public static DialogResult ShowExceptionDetail(IWin32Window window, string title, Exception exception, Action reportAction)
+        public static DialogResult ShowExceptionDetail(IWin32Window window, string title, Exception exception)
         {
             var aggregate = exception as AggregateException;
             if (aggregate != null)
             {
                 exception = aggregate.GetBaseException();
             }
-
-            if (ExceptionDialog.IsPlatformSupported)
-                return new ExceptionDialog(title, exception).ShowDialog(window, reportAction);
             return new DetailForm(title, exception.Message, exception.ToString(), MessageBoxIcon.Error).ShowDialog(window);
         }
 

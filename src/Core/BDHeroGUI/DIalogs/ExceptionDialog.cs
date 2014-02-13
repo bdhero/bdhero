@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using BDHero;
+using DotNetUtils;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace DotNetUtils.Dialogs
+namespace BDHeroGUI.DIalogs
 {
     public class ExceptionDialog
     {
@@ -28,7 +27,7 @@ namespace DotNetUtils.Dialogs
             _exception = exception;
         }
 
-        public DialogResult ShowDialog(IWin32Window owner, Action reportAction)
+        public DialogResult ShowDialog(IWin32Window owner)
         {
             var isLogicError = !IsID10TError(_exception);
 
@@ -61,7 +60,7 @@ namespace DotNetUtils.Dialogs
                                 {
                                     new TaskBuilder()
                                         .OnCurrentThread()
-                                        .DoWork((invoker, token) => reportAction())
+                                        .DoWork((invoker, token) => ErrorReporter.Report(_exception))
                                         .Fail(args => ReportExceptionFail(owner, args))
                                         .Succeed(() => ReportExceptionSucceed(owner))
                                         .Build()
