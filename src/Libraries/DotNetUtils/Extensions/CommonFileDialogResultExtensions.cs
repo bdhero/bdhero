@@ -20,14 +20,22 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DotNetUtils.Extensions
 {
+    /// <summary>
+    ///     Extension methods for the <see cref="CommonFileDialogResult"/> enum.
+    /// </summary>
     public static class CommonFileDialogResultExtensions
     {
-        public static DialogResult ToDialogResult(this CommonFileDialogResult cfdr)
+        /// <summary>
+        ///     Converts a <see cref="CommonFileDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static DialogResult ToDialogResult(this CommonFileDialogResult result)
         {
-            if (cfdr == CommonFileDialogResult.Ok)
+            if (result == CommonFileDialogResult.Ok)
                 return DialogResult.OK;
 
-            if (cfdr == CommonFileDialogResult.Cancel)
+            if (result == CommonFileDialogResult.Cancel)
                 return DialogResult.Cancel;
 
             return DialogResult.None;

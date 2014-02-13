@@ -20,23 +20,31 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DotNetUtils.Extensions
 {
+    /// <summary>
+    ///     Extension methods for the <see cref="TaskDialogResult"/> enum.
+    /// </summary>
     public static class TaskDialogResultExtensions
     {
-        public static DialogResult ToDialogResult(this TaskDialogResult tdr)
+        /// <summary>
+        ///     Converts a <see cref="TaskDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static DialogResult ToDialogResult(this TaskDialogResult result)
         {
-            if (tdr == TaskDialogResult.Ok)
+            if (result == TaskDialogResult.Ok)
                 return DialogResult.OK;
 
-            if (tdr == TaskDialogResult.Yes)
+            if (result == TaskDialogResult.Yes)
                 return DialogResult.Yes;
 
-            if (tdr == TaskDialogResult.No)
+            if (result == TaskDialogResult.No)
                 return DialogResult.No;
 
-            if (tdr == TaskDialogResult.Retry)
+            if (result == TaskDialogResult.Retry)
                 return DialogResult.Retry;
 
-            if (tdr == TaskDialogResult.Cancel)
+            if (result == TaskDialogResult.Cancel)
                 return DialogResult.Cancel;
 
             return DialogResult.None;
