@@ -13,6 +13,7 @@ namespace BDHero
 {
     public class ErrorReporter
     {
+        // TODO: Make this configurable?
 //        private const string Url = "https://api.github.com/repos/bdhero/bdhero/issues";
         private const string Url = "https://api.github.com/repos/acdvorak/bdhero-private/issues";
 
