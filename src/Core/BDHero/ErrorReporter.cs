@@ -16,7 +16,8 @@ namespace BDHero
 //        private const string Url = "https://api.github.com/repos/bdhero/bdhero/issues";
         private const string Url = "https://api.github.com/repos/acdvorak/bdhero-private/issues";
 
-        public static void Report(Exception exception)
+        [CanBeNull]
+        public static NewIssueResponse Report(Exception exception)
         {
             var headers = new List<string>
                           {
@@ -43,12 +44,13 @@ namespace BDHero
             {
                 if (responseStream == null)
                 {
-                    return;
+                    return null;
                 }
                 using (var streamReader = new StreamReader(responseStream))
                 {
                     var responseText = streamReader.ReadToEnd();
                     var newIssueResponse = JsonConvert.DeserializeObject<NewIssueResponse>(responseText);
+                    return newIssueResponse;
                 }
             }
         }
