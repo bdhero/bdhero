@@ -28,16 +28,7 @@ namespace LicenseUtils.Forms
             hyperlinkLabelTlDrUrl.Url = license.TlDrUrl;
             hyperlinkLabelTlDrUrl.Visible = !string.IsNullOrEmpty(license.TlDrUrl);
 
-            var htmlProto = "<!doctype html>" +
-                            "<html>" +
-                            "<head>" +
-                            "<title>{0}</title>" +
-                            "<style>body {{ font-family: 'Microsoft Sans Serif', Arial, Helvetica, sans-serif; }}</style>" +
-                            "</head>" +
-                            "<body>{1}</body>" +
-                            "</html>";
-
-            webBrowser.DocumentText = string.Format(htmlProto, license, license.Html);
+            webBrowser.DocumentText = license.Html;
 
             textBoxPlainText.Text = license.Text;
         }
