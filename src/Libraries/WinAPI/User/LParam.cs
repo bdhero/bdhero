@@ -38,7 +38,7 @@ namespace WinAPI.User
         /// <summary>
         ///     Null value.
         /// </summary>
-        NONE = 0x0000,
+        NULL = 0x0000,
         
         /// <summary>
         ///     Drive type is logical volume.
