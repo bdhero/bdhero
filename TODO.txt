@@ -1,6 +1,8 @@
 Chores
 ======
 
+[ ] Normalize capitalization of Win32 classes/structs/enums
+
 [ ] Break up DotNetUtils into separate projects
 
 [ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
@@ -27,6 +29,9 @@ Chores
 Bugs
 ====
 
+[ ] THREADING IN XP: FileNamerPlugin: FormMain.RenameSync() -> Controller.RunPluginSync()
+    [ ] Also: Update check throws ComponentModifiedInOtherThread exception (or w/e it's called)
+
 [ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
 
 [ ] Deception (2008): Metadata search is not using year from ISAN
@@ -44,6 +49,14 @@ Bugs
 
 Features
 ========
+
+[ ] Customizable timeout values for ISAN, ChapterDb, and TMDb plugins
+
+[ ] Error Reporting
+    [ ] Check if same exception was already reported
+    [ ] Allow user to edit report before sending
+    [ ] Include list of plugins in report
+    [ ] Allow user to use their own GitHub OAuth token
 
 [ ] Compile custom FFmpeg and/or MKVToolNix builds
 
