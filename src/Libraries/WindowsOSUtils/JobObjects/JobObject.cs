@@ -19,6 +19,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WindowsOSUtils.WinAPI.Kernel;
 using OSUtils.JobObjects;
 
 namespace WindowsOSUtils.JobObjects
@@ -46,7 +47,7 @@ namespace WindowsOSUtils.JobObjects
         /// </exception>
         public JobObject()
         {
-            _jobObjectHandle = PInvokeUtils.Try(() => WinAPI.CreateJobObject(IntPtr.Zero, null));
+            _jobObjectHandle = PInvokeUtils.Try(() => JobObjectAPI.CreateJobObject(IntPtr.Zero, null));
         }
 
         #region IDisposable Members
@@ -80,7 +81,7 @@ namespace WindowsOSUtils.JobObjects
 
                 _disposed = true;
 
-                PInvokeUtils.Try(() => WinAPI.CloseHandle(_jobObjectHandle));
+                PInvokeUtils.Try(() => JobObjectAPI.CloseHandle(_jobObjectHandle));
             }
         }
 
@@ -119,7 +120,7 @@ namespace WindowsOSUtils.JobObjects
                 throw new InvalidOperationException(
                     "Requested process already belongs to another job group.  Check http://stackoverflow.com/a/4232259/3205 for help.");
 
-            PInvokeUtils.Try(() => WinAPI.AssignProcessToJobObject(_jobObjectHandle, process.Handle));
+            PInvokeUtils.Try(() => JobObjectAPI.AssignProcessToJobObject(_jobObjectHandle, process.Handle));
         }
 
         public void KillOnClose()
@@ -128,12 +129,12 @@ namespace WindowsOSUtils.JobObjects
             var limit = CreateKillOnCloseJobObjectInfo();
             var length = GetKillOnCloseJobObjectInfoLength();
 
-            PInvokeUtils.Try(() => WinAPI.SetInformationJobObject(_jobObjectHandle, type, ref limit, length));
+            PInvokeUtils.Try(() => JobObjectAPI.SetInformationJobObject(_jobObjectHandle, type, ref limit, length));
         }
 
         private static uint GetKillOnCloseJobObjectInfoLength()
         {
-            var type = WinAPI.Is32Bit
+            var type = PInvokeUtils.Is32Bit
                            ? typeof (ExtendedLimits32)
                            : typeof (ExtendedLimits64);
             return (uint) Marshal.SizeOf(type);
@@ -141,7 +142,7 @@ namespace WindowsOSUtils.JobObjects
 
         private static JobObjectInfo CreateKillOnCloseJobObjectInfo()
         {
-            return WinAPI.Is32Bit
+            return PInvokeUtils.Is32Bit
                        ? CreateKillOnCloseJobObjectInfo32()
                        : CreateKillOnCloseJobObjectInfo64();
         }

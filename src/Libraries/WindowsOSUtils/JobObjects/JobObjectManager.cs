@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WindowsOSUtils.WinAPI.Kernel;
 using DotNetUtils.Annotations;
 using OSUtils.JobObjects;
 
@@ -28,6 +29,7 @@ namespace WindowsOSUtils.JobObjects
     ///     that accesses the Windows Job Objects API.
     /// </summary>
     /// <seealso cref="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
+    [UsedImplicitly]
     public class JobObjectManager : IJobObjectManager
     {
         private static readonly log4net.ILog Logger =
@@ -112,7 +114,7 @@ namespace WindowsOSUtils.JobObjects
         internal static bool IsProcessInJob(Process process, IntPtr jobObjectHandle)
         {
             var status = false;
-            PInvokeUtils.Try(() => WinAPI.IsProcessInJob(process.Handle, jobObjectHandle, out status));
+            PInvokeUtils.Try(() => JobObjectAPI.IsProcessInJob(process.Handle, jobObjectHandle, out status));
             return status;
         }
 
@@ -151,7 +153,7 @@ namespace WindowsOSUtils.JobObjects
             var startupInfo = new STARTUPINFO { cb = Marshal.SizeOf(typeof (STARTUPINFO)) };
             var processInformation = new PROCESS_INFORMATION();
 
-            PInvokeUtils.Try(() => WinAPI.CreateProcess(startInfo.FileName,
+            PInvokeUtils.Try(() => JobObjectAPI.CreateProcess(startInfo.FileName,
                                                         startInfo.Arguments,
                                                         ref securityAttributes,
                                                         ref securityAttributes,

@@ -25,6 +25,12 @@ namespace WindowsOSUtils
     public static class PInvokeUtils
     {
         /// <summary>
+        ///     The structures returned by Windows are different sizes depending on whether
+        ///     the operating system is running in 32-bit or 64-bit mode.
+        /// </summary>
+        public static readonly bool Is32Bit = (IntPtr.Size == 4);
+
+        /// <summary>
         ///     Invokes the specified <paramref name="pinvokeExpr"/> containing a P/Invoke call
         ///     and throws a <see cref="Win32Exception"/> if <paramref name="successCond"/> returns <c>false</c>.
         /// </summary>
@@ -82,7 +88,7 @@ namespace WindowsOSUtils
         /// </summary>
         /// <param name="apiSignature">String containing the API signature of the last P/Invoke call that failed.</param>
         /// <exception cref="Win32Exception">Always thrown.</exception>
-        public static void ThrowLastWin32Error(string apiSignature)
+        private static void ThrowLastWin32Error(string apiSignature)
         {
             var errorCode = Marshal.GetLastWin32Error();
             var message = string.Format("P/Invoke of {0} failed", apiSignature);
