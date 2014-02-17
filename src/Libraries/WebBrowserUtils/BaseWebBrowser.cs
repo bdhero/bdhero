@@ -48,10 +48,11 @@ namespace WebBrowserUtils
             {
                 return null;
             }
-            var icons = MultiIcon.First()
+            var iconImages = MultiIcon.First()
                                  .Where(image => image.Size.Width == size)
-                                 .OrderByDescending(image => image.ColorsInPalette);
-            return icons.FirstOrDefault();
+                                 .OrderByDescending(image => image.ColorsInPalette)
+                                 .ToArray();
+            return iconImages.FirstOrDefault();
         }
 
         public Icon GetIcon(int size)

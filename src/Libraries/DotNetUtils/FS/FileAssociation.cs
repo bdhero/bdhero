@@ -144,10 +144,11 @@ namespace DotNetUtils.FS
                 return null;
             }
             var sizeObj = new Size(size, size);
-            return _multiIcon.First()
-                             .Where(img => img.Size.Equals(sizeObj))
-                             .OrderByDescending(img => img.ColorsInPalette)
-                             .FirstOrDefault();
+            var iconImages = _multiIcon.First()
+                                       .Where(img => img.Size.Equals(sizeObj))
+                                       .OrderByDescending(img => img.ColorsInPalette)
+                                       .ToArray();
+            return iconImages.FirstOrDefault();
         }
 
         /// <summary>
