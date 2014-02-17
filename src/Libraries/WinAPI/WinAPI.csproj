@@ -55,6 +55,8 @@
     <Compile Include="Kernel\JobObjectInfo.cs" />
     <Compile Include="Kernel\JobObjectInfoClass.cs" />
     <Compile Include="Kernel\LimitFlags.cs" />
+    <Compile Include="Kernel\MemoryAPI.cs" />
+    <Compile Include="Kernel\MEMORYSTATUSEX.cs" />
     <Compile Include="Kernel\ProcessCreationFlags.cs" />
     <Compile Include="Kernel\PROCESS_INFORMATION.cs" />
     <Compile Include="Kernel\SECURITY_ATTRIBUTES.cs" />
