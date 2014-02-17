@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable FieldCanBeMadeReadOnly.Global
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Contains information about a menu item.
@@ -37,7 +37,7 @@ namespace WindowsOSUtils.WinAPI.User
     /// </remarks>
     /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647578(v=vs.85).aspx"/>
     [StructLayout(LayoutKind.Sequential)]
-    internal struct MENUITEMINFO
+    public struct MENUITEMINFO
     {
         /// <summary>
         ///     The size of the structure, in bytes. The caller must set this member to <c>sizeof(MENUITEMINFO)</c>.

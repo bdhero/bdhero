@@ -18,13 +18,13 @@
 using System;
 
 // ReSharper disable InconsistentNaming
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Values for <see cref="MENUITEMINFO.fState"/>.
     /// </summary>
     [Flags]
-    internal enum MenuItemState : uint
+    public enum MenuItemState : uint
     {
         /// <summary>
         ///     Checks the menu item. For more information about selected menu items, see the <c>hbmpChecked</c> member.

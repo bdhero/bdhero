@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
 // ReSharper disable MemberCanBePrivate.Global
-namespace WindowsOSUtils.WinAPI
+namespace WinAPI
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT

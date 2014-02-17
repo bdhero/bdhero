@@ -19,7 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.WinAPI.User;
+using OSUtils;
+using WinAPI.User;
 using DotNetUtils.Forms;
 
 namespace WindowsOSUtils.Windows

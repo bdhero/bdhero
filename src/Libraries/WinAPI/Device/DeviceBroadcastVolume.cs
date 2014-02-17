@@ -16,18 +16,18 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Runtime.InteropServices;
-using WindowsOSUtils.WinAPI.User;
+using WinAPI.User;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable FieldCanBeMadeReadOnly.Global
-namespace WindowsOSUtils.WinAPI.Device
+namespace WinAPI.Device
 {
     /// <summary>
     ///     Struct for parameters of the <see cref="WindowMessageType.WM_DEVICECHANGE"/> message.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    internal struct DEV_BROADCAST_VOLUME
+    public struct DEV_BROADCAST_VOLUME
     {
         public int dbcv_size;
         public int dbcv_devicetype;

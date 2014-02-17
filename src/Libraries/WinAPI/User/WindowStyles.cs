@@ -23,7 +23,7 @@ using System;
 // ReSharper disable FieldCanBeMadeReadOnly.Localx
 // ReSharper disable FieldCanBeMadeReadOnly.Globalx
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariablex
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     After the window has been created, these styles cannot be modified, except as noted.

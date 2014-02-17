@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.WinAPI.User;
+using WinAPI.User;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;

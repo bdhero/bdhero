@@ -19,7 +19,8 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WindowsOSUtils.WinAPI.User;
+using OSUtils;
+using WinAPI.User;
 
 // ReSharper disable MemberCanBePrivate.Global
 namespace WindowsOSUtils.Windows

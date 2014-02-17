@@ -18,13 +18,13 @@
 using System;
 
 // ReSharper disable InconsistentNaming
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Values for the <c>fMask</c> argument of various <see cref="SystemMenuAPI"/> API functions.
     /// </summary>
     [Flags]
-    internal enum MenuItemInfoMember : uint
+    public enum MenuItemInfoMember : uint
     {
         /// <summary>
         ///     Retrieves or sets the <c>hbmpItem</c> member.

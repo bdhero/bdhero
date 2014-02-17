@@ -19,7 +19,7 @@ using System;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     <b>LONG_PTR</b>.
@@ -33,8 +33,13 @@ namespace WindowsOSUtils.WinAPI.User
         /// <summary>
         ///     Unknown lParam value.
         /// </summary>
-        UNKNOWN = 0x0000,
+        UNKNOWN = -1,
 
+        /// <summary>
+        ///     Null value.
+        /// </summary>
+        NONE = 0x0000,
+        
         /// <summary>
         ///     Drive type is logical volume.
         /// </summary>

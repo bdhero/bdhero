@@ -20,7 +20,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-namespace WindowsOSUtils
+namespace OSUtils
 {
     public static class PInvokeUtils
     {

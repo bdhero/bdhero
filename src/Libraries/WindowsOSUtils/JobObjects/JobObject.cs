@@ -19,7 +19,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using WindowsOSUtils.WinAPI.Kernel;
+using OSUtils;
+using WinAPI.Kernel;
 using OSUtils.JobObjects;
 
 namespace WindowsOSUtils.JobObjects

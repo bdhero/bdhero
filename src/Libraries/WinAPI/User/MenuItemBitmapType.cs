@@ -18,7 +18,7 @@
 using System;
 
 // ReSharper disable InconsistentNaming
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Values for <see cref="MENUITEMINFO.hbmpItem"/>.

@@ -18,13 +18,13 @@
 using System;
 
 // ReSharper disable InconsistentNaming
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Values for the <c>uFlags</c> argument of various <see cref="SystemMenuAPI"/> API functions.
     /// </summary>
     [Flags]
-    internal enum MenuFlags : uint
+    public enum MenuFlags : uint
     {
         #region All functions
 

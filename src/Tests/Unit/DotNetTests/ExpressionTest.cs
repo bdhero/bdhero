@@ -6,8 +6,8 @@ using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using WindowsOSUtils;
-using WindowsOSUtils.WinAPI.Kernel;
+using OSUtils;
+using WinAPI.Kernel;
 using NUnit.Framework;
 
 namespace DotNetTests

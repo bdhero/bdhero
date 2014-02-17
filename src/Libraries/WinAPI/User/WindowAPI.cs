@@ -18,7 +18,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     public static class WindowAPI
     {

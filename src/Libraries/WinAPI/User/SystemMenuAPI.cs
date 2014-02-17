@@ -20,9 +20,9 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
-    internal static class SystemMenuAPI
+    public static class SystemMenuAPI
     {
         /// <summary>
         ///     Enables the application to access the window menu (also known as the system menu or the control menu)
@@ -76,7 +76,7 @@ namespace WindowsOSUtils.WinAPI.User
         ///     </para>
         /// </remarks>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
         /// <summary>
         ///     Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
@@ -120,7 +120,7 @@ namespace WindowsOSUtils.WinAPI.User
         ///     </list>
         /// </remarks>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool AppendMenu(IntPtr hMenu, [MarshalAs(UnmanagedType.U4)] MenuFlags uFlags, uint uIDNewItem, string lpNewItem);
+        public static extern bool AppendMenu(IntPtr hMenu, [MarshalAs(UnmanagedType.U4)] MenuFlags uFlags, uint uIDNewItem, string lpNewItem);
 
         /// <summary>
         ///     <para>
@@ -175,7 +175,7 @@ namespace WindowsOSUtils.WinAPI.User
         ///     </list>
         /// </remarks>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool InsertMenu(IntPtr hMenu, uint uPosition, [MarshalAs(UnmanagedType.U4)] MenuFlags uFlags, uint uIDNewItem, string lpNewItem);
+        public static extern bool InsertMenu(IntPtr hMenu, uint uPosition, [MarshalAs(UnmanagedType.U4)] MenuFlags uFlags, uint uIDNewItem, string lpNewItem);
 
         /// <summary>
         ///     Retrieves information about a menu item.
@@ -217,7 +217,7 @@ namespace WindowsOSUtils.WinAPI.User
         ///     </para>
         /// </remarks>
         [DllImport("user32.dll")]
-        internal static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, [In, Out] ref MENUITEMINFO lpmii);
+        public static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, [In, Out] ref MENUITEMINFO lpmii);
 
         /// <summary>
         ///     Changes information about a menu item.
@@ -252,7 +252,7 @@ namespace WindowsOSUtils.WinAPI.User
         ///     </para>
         /// </remarks>
         [DllImport("user32.dll")]
-        internal static extern bool SetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, [In] ref MENUITEMINFO lpmii);
+        public static extern bool SetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, [In] ref MENUITEMINFO lpmii);
 
         /// <summary>
         ///     Redraws the menu bar of the specified window. If the menu bar changes after the system has created the
@@ -266,6 +266,6 @@ namespace WindowsOSUtils.WinAPI.User
         ///     To get extended error information, use the <c>GetLastError</c> function.
         /// </returns>
         [DllImport("user32.dll")]
-        internal static extern bool DrawMenuBar(IntPtr hWnd);
+        public static extern bool DrawMenuBar(IntPtr hWnd);
     }
 }

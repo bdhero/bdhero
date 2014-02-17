@@ -19,11 +19,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.WinAPI.Device;
-using WindowsOSUtils.WinAPI.User;
 using WindowsOSUtils.Windows;
 using DotNetUtils.Annotations;
 using OSUtils.DriveDetector;
+using WinAPI.Device;
+using WinAPI.User;
 
 namespace WindowsOSUtils.DriveDetector
 {

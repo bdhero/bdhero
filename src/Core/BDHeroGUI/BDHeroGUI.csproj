@@ -314,6 +314,10 @@
       <Project>{DB13678F-8815-4BEC-8198-2BAC286A3BAF}</Project>
       <Name>WebBrowserUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\WinAPI\WinAPI.csproj">
+      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
+      <Name>WinAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
       <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
       <Name>WindowsOSUtils</Name>

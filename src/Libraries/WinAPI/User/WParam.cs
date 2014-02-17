@@ -19,7 +19,7 @@ using System;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     <b>UINT_PTR</b>.
@@ -33,7 +33,12 @@ namespace WindowsOSUtils.WinAPI.User
         /// <summary>
         ///     Unknown wParam value.
         /// </summary>
-        UNKNOWN = 0x0000,
+        UNKNOWN = uint.MaxValue,
+
+        /// <summary>
+        ///     Null value.
+        /// </summary>
+        NONE = 0x0000,
 
         /// <summary>
         ///     A device or piece of media has been inserted and is now available.

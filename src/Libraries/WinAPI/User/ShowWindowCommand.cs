@@ -16,7 +16,7 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 // ReSharper disable InconsistentNaming
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Commands for <see cref="WindowAPI.ShowWindow"/> and <see cref="WindowAPI.ShowWindowAsync"/>.

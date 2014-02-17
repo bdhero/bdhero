@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
-namespace WindowsOSUtils.WinAPI.User
+namespace WinAPI.User
 {
     /// <summary>
     ///     Contains window information.

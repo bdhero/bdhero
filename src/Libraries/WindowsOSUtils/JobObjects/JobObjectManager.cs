@@ -18,7 +18,8 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using WindowsOSUtils.WinAPI.Kernel;
+using OSUtils;
+using WinAPI.Kernel;
 using DotNetUtils.Annotations;
 using OSUtils.JobObjects;
 
