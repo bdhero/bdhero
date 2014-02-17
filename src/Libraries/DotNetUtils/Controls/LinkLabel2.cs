@@ -19,8 +19,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WinAPI.User;
 
 namespace DotNetUtils.Controls
 {
@@ -363,11 +363,11 @@ namespace DotNetUtils.Controls
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_SETCURSOR)
+            if (m.Msg == WindowMessageType.WM_SETCURSOR.ToInt32())
             {
                 try
                 {
-                    SetCursor(LoadCursor(0, IDC_HAND));
+                    CursorAPI.SetCursor(CursorAPI.LoadCursor(IntPtr.Zero, CursorType.IDC_HAND));
                 }
                 catch (DllNotFoundException)
                 {
@@ -384,21 +384,6 @@ namespace DotNetUtils.Controls
             base.WndProc(ref m);
         }
 
-        #endregion
-
-        #region Native Win32 API interop
-        // ReSharper disable InconsistentNaming
-
-        private const int WM_SETCURSOR = 32;
-        private const int IDC_HAND = 32649;
-
-        [DllImport("user32.dll")]
-        private static extern int LoadCursor(int hInstance, int lpCursorName);
-
-        [DllImport("user32.dll")]
-        private static extern int SetCursor(int hCursor);
-
-        // ReSharper restore InconsistentNaming
         #endregion
     }
 }

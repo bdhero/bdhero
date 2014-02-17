@@ -202,6 +202,10 @@
       <Project>{db13678f-8815-4bec-8198-2bac286a3baf}</Project>
       <Name>WebBrowserUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
+      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
+      <Name>WinAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\network.png" />

@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WinAPI.User;
 
 namespace DotNetUtils.Extensions
 {
@@ -264,8 +265,6 @@ namespace DotNetUtils.Extensions
 
 #else
 
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
 
         // ReSharper disable once InconsistentNaming
         private const int WM_SETREDRAW = 11;
@@ -277,7 +276,8 @@ namespace DotNetUtils.Extensions
         /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
         public static void SuspendDrawing(this Control parent)
         {
-            SendMessage(parent.Handle, WM_SETREDRAW, false, 0);
+            var falsePtr = IntPtr.Zero;
+            WindowAPI.SendMessage(parent.Handle, WM_SETREDRAW, falsePtr, IntPtr.Zero);
         }
 
         /// <summary>
@@ -287,7 +287,8 @@ namespace DotNetUtils.Extensions
         /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
         public static void ResumeDrawing(this Control parent)
         {
-            SendMessage(parent.Handle, WM_SETREDRAW, true, 0);
+            var truePtr = new IntPtr(1);
+            WindowAPI.SendMessage(parent.Handle, WM_SETREDRAW, truePtr, IntPtr.Zero);
             parent.Refresh();
         }
 

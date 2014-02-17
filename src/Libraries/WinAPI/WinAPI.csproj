@@ -56,8 +56,12 @@
     <Compile Include="Kernel\SECURITY_ATTRIBUTES.cs" />
     <Compile Include="Kernel\STARTF.cs" />
     <Compile Include="Kernel\STARTUPINFO.cs" />
+    <Compile Include="Kernel\ThreadAccess.cs" />
+    <Compile Include="Kernel\ThreadAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rect.cs" />
+    <Compile Include="User\CursorAPI.cs" />
+    <Compile Include="User\CursorType.cs" />
     <Compile Include="User\ExtendedWindowStyles.cs" />
     <Compile Include="User\LParam.cs" />
     <Compile Include="User\MenuFlags.cs" />

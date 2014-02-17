@@ -40,6 +40,36 @@ namespace WinAPI.User
         /// </summary>
         WM_DEVICECHANGE = 0x0219,
 
+        /// <summary>
+        ///     Sent to a window if the mouse causes the cursor to move within a window and mouse input is not captured.
+        /// </summary>
+        /// <param name="wParam">
+        ///     A handle to the window that contains the cursor.
+        /// </param>
+        /// <param name="lParam">
+        ///     The low-order word of <c>lParam</c> specifies the hit-test code.
+        ///     The high-order word of <c>lParam</c> specifies the identifier of the mouse message.
+        /// </param>
+        /// <returns>
+        ///     If an application processes this message, it should return <c>TRUE</c> to halt further processing or <c>FALSE</c> to continue.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         The high-order word of <paramref name="lParam"/> is zero when the window enters menu mode.
+        ///     </para>
+        ///     <para>
+        ///         The <c>DefWindowProc</c> function passes the <see cref="WM_SETCURSOR"/> message to a parent window before processing.
+        ///         If the parent window returns <c>TRUE</c>, further processing is halted. Passing the message to a window's
+        ///         parent window gives the parent window control over the cursor's setting in a child window.
+        ///         The <c>DefWindowProc</c> function also uses this message to set the cursor to an arrow if it is not in
+        ///         the client area, or to the registered class cursor if it is in the client area. If the low-order
+        ///         word of the <paramref name="lParam"/> parameter is <c>HTERROR</c> and the high-order word of
+        ///         <paramref name="lParam"/> specifies that one of the mouse buttons is pressed, <c>DefWindowProc</c> calls
+        ///         the <c>MessageBeep</c> function.
+        ///     </para>
+        /// </remarks>
+        WM_SETCURSOR = 0x0020,
+
         WM_NULL = 0x0000,
         WM_CREATE = 0x0001,
         WM_DESTROY = 0x0002,
@@ -69,7 +99,6 @@ namespace WinAPI.User
         WM_FONTCHANGE = 0x001d,
         WM_TIMECHANGE = 0x001e,
         WM_CANCELMODE = 0x001f,
-        WM_SETCURSOR = 0x0020,
         WM_MOUSEACTIVATE = 0x0021,
         WM_CHILDACTIVATE = 0x0022,
         WM_QUEUESYNC = 0x0023,

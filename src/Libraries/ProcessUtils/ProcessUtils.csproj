@@ -65,6 +65,10 @@
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
+      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
+      <Name>WinAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsOSUtils\WindowsOSUtils.csproj">
       <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
       <Name>WindowsOSUtils</Name>
