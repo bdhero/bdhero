@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonControls\HeaderItem.cs" />
+    <Compile Include="CommonControls\HeaderItemFormat.cs" />
+    <Compile Include="CommonControls\HeaderItemMask.cs" />
     <Compile Include="Device\DeviceBroadcastVolume.cs" />
     <Compile Include="Kernel\BasicLimits.cs" />
     <Compile Include="Kernel\ExtendedLimits.cs" />

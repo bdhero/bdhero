@@ -265,10 +265,6 @@ namespace DotNetUtils.Extensions
 
 #else
 
-
-        // ReSharper disable once InconsistentNaming
-        private const int WM_SETREDRAW = 11;
-
         /// <summary>
         /// Prevents controls from repainting.
         /// </summary>
@@ -276,8 +272,7 @@ namespace DotNetUtils.Extensions
         /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
         public static void SuspendDrawing(this Control parent)
         {
-            var falsePtr = IntPtr.Zero;
-            WindowAPI.SendMessage(parent.Handle, WM_SETREDRAW, falsePtr, IntPtr.Zero);
+            WindowAPI.SendMessage(parent.Handle, WindowMessageType.WM_SETREDRAW, false, IntPtr.Zero);
         }
 
         /// <summary>
@@ -287,8 +282,7 @@ namespace DotNetUtils.Extensions
         /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
         public static void ResumeDrawing(this Control parent)
         {
-            var truePtr = new IntPtr(1);
-            WindowAPI.SendMessage(parent.Handle, WM_SETREDRAW, truePtr, IntPtr.Zero);
+            WindowAPI.SendMessage(parent.Handle, WindowMessageType.WM_SETREDRAW, true, IntPtr.Zero);
             parent.Refresh();
         }
 
