@@ -21,11 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using I18N;
+using WinAPI.Kernel;
 
 namespace BDInfo
 {
@@ -609,14 +609,14 @@ namespace BDInfo
         {
             uint serialNumber = 0;
             uint maxLength = 0;
-            uint volumeFlags = new uint();
-            StringBuilder volumeLabel = new StringBuilder(256);
-            StringBuilder fileSystemName = new StringBuilder(256);
-            string label = "";
+            var volumeFlags = FileSystemFlags.NULL;
+            var volumeLabel = new StringBuilder(256);
+            var fileSystemName = new StringBuilder(256);
+            var label = "";
 
             try
             {
-                long result = GetVolumeInformation(
+                var result = VolumeAPI.GetVolumeInformation(
                     dir.Name,
                     volumeLabel,
                     (uint)volumeLabel.Capacity,
@@ -672,17 +672,6 @@ namespace BDInfo
                 }
             }
         }
-
-        [DllImport("kernel32.dll")]
-        private static extern long GetVolumeInformation(
-            string PathName, 
-            StringBuilder VolumeNameBuffer, 
-            uint VolumeNameSize,
-            ref uint VolumeSerialNumber,
-            ref uint MaximumComponentLength,
-            ref uint FileSystemFlags, 
-            StringBuilder FileSystemNameBuffer,
-            uint FileSystemNameSize);
     }
 
     public class BDROMScanProgressState

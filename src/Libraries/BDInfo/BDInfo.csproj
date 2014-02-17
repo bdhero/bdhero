@@ -75,6 +75,10 @@
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
+      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
+      <Name>WinAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
