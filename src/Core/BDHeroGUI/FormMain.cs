@@ -31,6 +31,7 @@ using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
 using BDHero.Utils;
+using BDHeroGUI.Components;
 using BDHeroGUI.DIalogs;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
@@ -49,7 +50,7 @@ using UpdateLib;
 namespace BDHeroGUI
 {
     [UsedImplicitly]
-    public partial class FormMain : Form, IWndProcObservable
+    public partial class FormMain : WndProcObservableForm
     {
         private const string PluginEnabledMenuItemName = "enabled";
 
@@ -76,8 +77,6 @@ namespace BDHeroGUI
         private Stage _stage = Stage.None;
 
         public string[] Args = new string[0];
-
-        public event WndProcEventHandler WndProcMessage;
 
         #region Properties
 
@@ -276,25 +275,6 @@ namespace BDHeroGUI
                 DetailForm.ShowExceptionDetail(this, title, exception);
         }
 
-        #region Win32 Window message handling
-
-        /// <summary>
-        /// This function receives all the windows messages for this window (form).
-        /// We call the IDriveDetector from here so that is can pick up the messages about
-        /// drives arrived and removed.
-        /// </summary>
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-
-            if (WndProcMessage != null)
-            {
-                WndProcMessage(ref m);
-            }
-        }
-
-        #endregion
-
         #region Initialization
 
         private void LogDirectoryPaths()
@@ -482,27 +462,9 @@ namespace BDHeroGUI
 
         private void InitSystemMenu()
         {
-            var windowMenu = new WindowMenu(this, this);
-
-            var resizeMenuItem = windowMenu.CreateMenuItem("&Resize...");
-            resizeMenuItem.Clicked += delegate
-                                      {
-                                          new FormResizeWindow(this).ShowDialog(this);
-                                      };
-
-            var alwaysOnTopMenuItem = windowMenu.CreateMenuItem("Always on &top");
-            alwaysOnTopMenuItem.Clicked += delegate
-                                           {
-                                               var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
-                                               TopMost = alwaysOnTop;
-                                               alwaysOnTopMenuItem.Checked = alwaysOnTop;
-                                               windowMenu.UpdateMenu(alwaysOnTopMenuItem);
-                                           };
-
-            uint pos = 5;
-            windowMenu.InsertSeparator(pos++);
-            windowMenu.InsertMenu(pos++, resizeMenuItem);
-            windowMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
+            new StandardWindowMenuBuilder(this)
+                .Resize()
+                .AlwaysOnTop();
         }
 
         #endregion

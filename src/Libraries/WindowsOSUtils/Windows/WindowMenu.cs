@@ -43,12 +43,12 @@ namespace WindowsOSUtils.Windows
 
         #endregion
 
-        public WindowMenu(Form form, IWndProcObservable wndProcObservable)
+        public WindowMenu(WndProcObservableForm form)
         {
             _form = form;
             _hSysMenu = SystemMenuAPI.GetSystemMenu(_form.Handle, false);
 
-            wndProcObservable.WndProcMessage += OnWndProcMessage;
+            form.WndProcMessage += OnWndProcMessage;
         }
 
         #region Window message handling
@@ -142,29 +142,5 @@ namespace WindowsOSUtils.Windows
         }
 
         #endregion
-    }
-
-    public class WindowMenuItem
-    {
-        public readonly uint Id;
-
-        public string Text;
-        public bool Enabled = true;
-        public bool Checked = false;
-
-        public event EventHandler Clicked;
-
-        internal WindowMenuItem(uint id)
-        {
-            Id = id;
-        }
-
-        public void Click(EventArgs e)
-        {
-            if (Clicked != null)
-            {
-                Clicked(this, e);
-            }
-        }
     }
 }

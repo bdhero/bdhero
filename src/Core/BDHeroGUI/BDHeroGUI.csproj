@@ -120,6 +120,7 @@
     <Compile Include="Components\MediaPanel.Designer.cs">
       <DependentUpon>MediaPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\StandardWindowMenuBuilder.cs" />
     <Compile Include="Components\SubtitleTrackListView.cs">
       <SubType>UserControl</SubType>
     </Compile>

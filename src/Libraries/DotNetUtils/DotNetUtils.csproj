@@ -81,6 +81,9 @@
     <Compile Include="Concurrency\TimerPromise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
     <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
+    <Compile Include="Forms\WndProcObservableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
     <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />

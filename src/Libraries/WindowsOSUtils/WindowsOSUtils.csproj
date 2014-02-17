@@ -80,6 +80,7 @@
     <Compile Include="Windows\Window.cs" />
     <Compile Include="Windows\WindowMenu.cs" />
     <Compile Include="WindowsInjectorFactory.cs" />
+    <Compile Include="Windows\WindowMenuItem.cs" />
     <Compile Include="Windows\WindowMessage.cs" />
     <Compile Include="WMI\Classes\DiskDrive.cs" />
     <Compile Include="WMI\Classes\DiskPartition.cs" />
