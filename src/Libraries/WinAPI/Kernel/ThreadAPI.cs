@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace WinAPI.Kernel
 {
+    /// <summary>
+    ///     Windows API functions for interrogating and manipulating process threads.
+    /// </summary>
     public static class ThreadAPI
     {
         /// <summary>

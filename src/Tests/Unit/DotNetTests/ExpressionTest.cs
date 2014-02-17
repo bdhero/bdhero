@@ -19,7 +19,8 @@ namespace DotNetTests
         }
 
         [Test]
-        public void TestReturnsResult() {
+        public void TestReturnsResult()
+        {
             var jobObjectHandle = IntPtr.Zero;
 
             try

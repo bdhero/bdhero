@@ -1,6 +1,9 @@
 ﻿// ReSharper disable InconsistentNaming
 namespace WinAPI.User
 {
+    /// <summary>
+    ///     Enum containing the standard Windows cursors.
+    /// </summary>
     public enum CursorType
     {
         /// <summary>

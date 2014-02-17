@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace WinAPI.User
 {
+    /// <summary>
+    ///     Windows API functions for interrogating and manipulating the cursor.
+    /// </summary>
     public static class CursorAPI
     {
         /// <summary>
