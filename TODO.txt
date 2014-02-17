@@ -3,6 +3,8 @@ Chores
 
 [ ] Normalize capitalization of Win32 classes/structs/enums
 
+[ ] Missing XML comment for publicly visible type or member ...
+
 [ ] Break up DotNetUtils into separate projects
 
 [ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
