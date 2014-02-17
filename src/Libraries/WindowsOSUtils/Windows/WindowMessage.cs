@@ -101,7 +101,7 @@ namespace WindowsOSUtils.Windows
 
         #endregion
 
-        #region Marshaling
+        #region Marshalling
 
         public T GetLParamAsStruct<T>() where T : struct
         {
