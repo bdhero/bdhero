@@ -21,9 +21,9 @@ using System.Drawing;
 using System.Drawing.IconLib;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using DotNetUtils.Annotations;
+using WinAPI.ShellLightWeight;
 
 namespace DotNetUtils.FS
 {
@@ -263,48 +263,12 @@ namespace DotNetUtils.FS
         private static string FileExtentionInfo(AssocStr assocStr, string doctype)
         {
             uint pcchOut = 0;
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, null, ref pcchOut);
+            AssociationAPI.AssocQueryString(AssocF.Verify, assocStr, doctype, null, null, ref pcchOut);
 
             var pszOut = new StringBuilder((int)pcchOut);
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, pszOut, ref pcchOut);
+            AssociationAPI.AssocQueryString(AssocF.Verify, assocStr, doctype, null, pszOut, ref pcchOut);
             return pszOut.ToString();
         }
-
-        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern uint AssocQueryString(AssocF flags, AssocStr str, string pszAssoc, string pszExtra, [Out] StringBuilder pszOut, [In][Out] ref uint pcchOut);
-
-        [Flags]
-        private enum AssocF
-        {
-            InitNoRemapCLSID    = 0x1,
-            InitByExeName       = 0x2,
-            OpenByExeName       = 0x2,
-            InitDefaultToStar   = 0x4,
-            InitDefaultToFolder = 0x8,
-            NoUserSettings      = 0x10,
-            NoTruncate          = 0x20,
-            Verify              = 0x40,
-            RemapRunDll         = 0x80,
-            NoFixUps            = 0x100,
-            IgnoreBaseClass     = 0x200
-        }
-
-        private enum AssocStr
-        {
-            Command = 1,
-            Executable,
-            FriendlyDocName,
-            FriendlyAppName,
-            NoOpen,
-            ShellNewValue,
-            DDECommand,
-            DDEIfExec,
-            DDEApplication,
-            DDETopic
-        }
-
-        // ReSharper restore UnusedMember.Local
-        // ReSharper restore InconsistentNaming
 
         #endregion
     }
