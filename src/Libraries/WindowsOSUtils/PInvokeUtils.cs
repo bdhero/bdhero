@@ -88,5 +88,43 @@ namespace WindowsOSUtils
             var message = string.Format("P/Invoke of {0} failed", apiSignature);
             throw new Win32Exception(errorCode, message);
         }
+
+        /// <summary>
+        ///     Convenience wrapper around <see cref="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
+        ///     Marshals data from an unmanaged block of memory to a newly allocated managed object of the specified type.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The type of object to be created. This object must represent a formatted class or a structure.
+        /// </typeparam>
+        /// <param name="ptr">
+        ///     A pointer to an unmanaged block of memory.
+        /// </param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">
+        ///     The parameter layout of <typeparamref name="T"/> is not sequential or explicit.-or-The <typeparamref name="T"/> parameter is a generic type. 
+        /// </exception>
+        public static T MarshalPtrToStruct<T>(IntPtr ptr) where T : struct
+        {
+            return (T) Marshal.PtrToStructure(ptr, typeof (T));
+        }
+
+        /// <summary>
+        ///     Convenience wrapper around <see cref="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
+        ///     Marshals data from an unmanaged block of memory to a newly allocated managed object of the specified type.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The type of object to be created. This object must represent a formatted class or a structure.
+        /// </typeparam>
+        /// <param name="ptr">
+        ///     A pointer to an unmanaged block of memory.
+        /// </param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">
+        ///     The parameter layout of <typeparamref name="T"/> is not sequential or explicit.-or-The <typeparamref name="T"/> parameter is a generic type. 
+        /// </exception>
+        public static T MarshalPtrToObject<T>(IntPtr ptr) where T : class
+        {
+            return (T) Marshal.PtrToStructure(ptr, typeof (T));
+        }
     }
 }
