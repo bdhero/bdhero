@@ -24,7 +24,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsOSUtils.Win32;
+using WindowsOSUtils.Windows;
 using BDHero;
 using BDHero.BDROM;
 using BDHero.Plugin;
@@ -36,13 +36,9 @@ using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using DotNetUtils.Controls;
-using DotNetUtils.Dialogs;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
-using DotNetUtils.Net;
-using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
 using OSUtils.DriveDetector;
@@ -486,27 +482,27 @@ namespace BDHeroGUI
 
         private void InitSystemMenu()
         {
-            var systemMenu = new SystemMenu(this, this);
+            var windowMenu = new WindowMenu(this, this);
 
-            var resizeMenuItem = systemMenu.CreateMenuItem("&Resize...");
+            var resizeMenuItem = windowMenu.CreateMenuItem("&Resize...");
             resizeMenuItem.Clicked += delegate
                                       {
                                           new FormResizeWindow(this).ShowDialog(this);
                                       };
 
-            var alwaysOnTopMenuItem = systemMenu.CreateMenuItem("Always on &top");
+            var alwaysOnTopMenuItem = windowMenu.CreateMenuItem("Always on &top");
             alwaysOnTopMenuItem.Clicked += delegate
                                            {
                                                var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
                                                TopMost = alwaysOnTop;
                                                alwaysOnTopMenuItem.Checked = alwaysOnTop;
-                                               systemMenu.UpdateMenu(alwaysOnTopMenuItem);
+                                               windowMenu.UpdateMenu(alwaysOnTopMenuItem);
                                            };
 
             uint pos = 5;
-            systemMenu.InsertSeparator(pos++);
-            systemMenu.InsertMenu(pos++, resizeMenuItem);
-            systemMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
+            windowMenu.InsertSeparator(pos++);
+            windowMenu.InsertMenu(pos++, resizeMenuItem);
+            windowMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
         }
 
         #endregion

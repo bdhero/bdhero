@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.Win32;
+using WindowsOSUtils.WinAPI.User;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;
@@ -61,7 +61,7 @@ namespace BDHeroGUI.Forms
             {
                 var cp = base.CreateParams;
                 if (!SystemInformation.TerminalServerSession)
-                    cp.ExStyle |= ExtendedWindowStyles.WS_EX_COMPOSITED;
+                    cp.ExStyle |= ExtendedWindowStyles.WS_EX_COMPOSITED.ToInt32();
                 return cp;
             }
         }

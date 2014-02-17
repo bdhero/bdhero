@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2014 Andrew C. Dvorak
+﻿// Copyright 2013-2014 Andrew C. Dvorak
 //
 // This file is part of BDHero.
 //
@@ -18,14 +18,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WindowsOSUtils.WinAPI.User;
 using DotNetUtils.Forms;
 
-namespace WindowsOSUtils.Win32
+namespace WindowsOSUtils.Windows
 {
     /// <seealso cref="http://stackoverflow.com/a/4616637/467582"/>
-    public partial class SystemMenu
+    public class WindowMenu
     {
         #region Fields (private)
 
@@ -36,26 +36,28 @@ namespace WindowsOSUtils.Win32
         /// </summary>
         private readonly IntPtr _hSysMenu;
 
-        private readonly IList<SystemMenuItem> _items = new List<SystemMenuItem>();
+        private readonly IList<WindowMenuItem> _items = new List<WindowMenuItem>();
 
         private uint _menuItemIdCounter = 0x1;
 
         #endregion
 
-        public SystemMenu(Form form, IWndProcObservable wndProcObservable)
+        public WindowMenu(Form form, IWndProcObservable wndProcObservable)
         {
             _form = form;
-            _hSysMenu = GetSystemMenu(_form.Handle, false);
+            _hSysMenu = SystemMenuAPI.GetSystemMenu(_form.Handle, false);
 
             wndProcObservable.WndProcMessage += OnWndProcMessage;
         }
 
-        #region Win32 message handling
+        #region Window message handling
 
         private void OnWndProcMessage(ref Message m)
         {
+            WindowMessage msg = m;
+
             // Test if the About item was selected from the system menu
-            if (m.Msg != WM_SYSCOMMAND)
+            if (!msg.Is(WindowMessageType.WM_SYSCOMMAND))
                 return;
 
             var itemId = (int) m.WParam;
@@ -71,60 +73,64 @@ namespace WindowsOSUtils.Win32
 
         #region Public API
 
-        public void AppendMenu(SystemMenuItem menuItem)
+        public void AppendMenu(WindowMenuItem menuItem)
         {
-            PInvokeUtils.Try(() => AppendMenu(_hSysMenu, MF_STRING, menuItem.Id, menuItem.Text));
+            PInvokeUtils.Try(() => SystemMenuAPI.AppendMenu(_hSysMenu, MenuFlags.MF_STRING, menuItem.Id, menuItem.Text));
             _items.Add(menuItem);
         }
 
         public void AppendSeparator()
         {
-            PInvokeUtils.Try(() => AppendMenu(_hSysMenu, MF_SEPARATOR, 0, string.Empty));
+            PInvokeUtils.Try(() => SystemMenuAPI.AppendMenu(_hSysMenu, MenuFlags.MF_SEPARATOR, 0, string.Empty));
         }
 
-        public void InsertMenu(uint position, SystemMenuItem menuItem)
+        public void InsertMenu(uint position, WindowMenuItem menuItem)
         {
-            PInvokeUtils.Try(() => InsertMenu(_hSysMenu, position, MF_BYPOSITION | MF_STRING, menuItem.Id, menuItem.Text));
+            PInvokeUtils.Try(() => SystemMenuAPI.InsertMenu(_hSysMenu, position, MenuFlags.MF_BYPOSITION | MenuFlags.MF_STRING, menuItem.Id, menuItem.Text));
             _items.Add(menuItem);
         }
 
         public void InsertSeparator(uint position)
         {
-            PInvokeUtils.Try(() => InsertMenu(_hSysMenu, position, MF_BYPOSITION | MF_SEPARATOR, 0, string.Empty));
+            PInvokeUtils.Try(() => SystemMenuAPI.InsertMenu(_hSysMenu, position, MenuFlags.MF_BYPOSITION | MenuFlags.MF_SEPARATOR, 0, string.Empty));
         }
 
-        public void UpdateMenu(SystemMenuItem menuItem)
+        public void UpdateMenu(WindowMenuItem menuItem)
         {
-            var mii = new MENUITEMINFO
+            var mii = new MENUITEMINFO(null)
                       {
-                          fMask = MIIM_CHECKMARKS | MIIM_DATA | MIIM_FTYPE | MIIM_ID | MIIM_STATE | MIIM_STRING
+                          fMask = MenuItemInfoMember.MIIM_CHECKMARKS |
+                                  MenuItemInfoMember.MIIM_DATA |
+                                  MenuItemInfoMember.MIIM_FTYPE |
+                                  MenuItemInfoMember.MIIM_ID |
+                                  MenuItemInfoMember.MIIM_STATE |
+                                  MenuItemInfoMember.MIIM_STRING
                       };
-            mii.cbSize = (uint) Marshal.SizeOf(mii);
 
-            PInvokeUtils.Try(() => GetMenuItemInfo(_hSysMenu, menuItem.Id, false, ref mii));
+            PInvokeUtils.Try(() => SystemMenuAPI.GetMenuItemInfo(_hSysMenu, menuItem.Id, false, ref mii));
 
             if (menuItem.Enabled)
-                mii.fState &= (~MFS_DISABLED); // clear "disabled" flag
+                mii.fState &= (~MenuItemState.MFS_DISABLED); // clear "disabled" flag
             else
-                mii.fState |= MFS_DISABLED;    // set "disabled" flag
+                mii.fState |= MenuItemState.MFS_DISABLED;    // set "disabled" flag
 
             if (menuItem.Checked)
-                mii.fState |= MFS_CHECKED;    // set "checked" flag
+                mii.fState |= MenuItemState.MFS_CHECKED;     // set "checked" flag
             else
-                mii.fState &= (~MFS_CHECKED); // clear "checked" flag
+                mii.fState &= (~MenuItemState.MFS_CHECKED);  // clear "checked" flag
 
-            mii.fMask = MIIM_STATE;
+            mii.fMask = MenuItemInfoMember.MIIM_STATE;
 
-            PInvokeUtils.Try(() => SetMenuItemInfo(_hSysMenu, menuItem.Id, false, ref mii));
+            PInvokeUtils.Try(() => SystemMenuAPI.SetMenuItemInfo(_hSysMenu, menuItem.Id, false, ref mii));
 
             // TODO: From my observations, this function always returns false, even though it appears to succeed.
             //       Am I using it incorrectly?
-            DrawMenuBar(_hSysMenu);
+            SystemMenuAPI.DrawMenuBar(_hSysMenu);
         }
 
-        public SystemMenuItem CreateMenuItem(string text = null, EventHandler clickHandler = null)
+        public WindowMenuItem CreateMenuItem(string text = null, EventHandler clickHandler = null)
         {
-            var menuItem = new SystemMenuItem(_menuItemIdCounter++) { Text = text };
+            var menuItem = new WindowMenuItem(_menuItemIdCounter++) { Text = text };
 
             if (clickHandler != null)
             {
@@ -137,7 +143,7 @@ namespace WindowsOSUtils.Win32
         #endregion
     }
 
-    public class SystemMenuItem
+    public class WindowMenuItem
     {
         public readonly uint Id;
 
@@ -147,7 +153,7 @@ namespace WindowsOSUtils.Win32
 
         public event EventHandler Clicked;
 
-        internal SystemMenuItem(uint id)
+        internal WindowMenuItem(uint id)
         {
             Id = id;
         }
