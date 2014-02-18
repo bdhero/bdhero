@@ -313,7 +313,8 @@ namespace BDHeroGUI.Components
         private ToolStripItem CreateMenuItem(DriveInfo driveInfo)
         {
             var driveLetter = driveInfo.Name;
-            var text = string.Format("{0} {1}", driveLetter, driveInfo.VolumeLabel);
+            var volumeLabel = driveInfo.VolumeLabel;
+            var text = driveLetter == volumeLabel ? volumeLabel : string.Format("{0} {1}", driveLetter, volumeLabel);
             var menuItem = new ToolStripMenuItem(text) { Tag = driveInfo };
             menuItem.Click += MenuItemOnClick;
             return menuItem;
