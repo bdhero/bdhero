@@ -17,15 +17,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using NativeAPI;
 
 namespace WinAPI.Kernel
 {
     public static class VolumeAPI
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public class Volume
         {
             public string Label;
@@ -50,6 +55,9 @@ namespace WinAPI.Kernel
 //        [CanBeNull] // TODO
         public static Volume GetVolumeInformation(DirectoryInfo dir)
         {
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                return null;
+
             uint serialNumber = 0;
             uint maxLength = 0;
             var volumeFlags = FileSystemFlags.NULL;
@@ -58,32 +66,39 @@ namespace WinAPI.Kernel
 
             try
             {
-                var result = GetVolumeInformation(
-                    dir.Root.FullName,
-                    volumeLabel,
-                    (uint)volumeLabel.Capacity,
-                    ref serialNumber,
-                    ref maxLength,
-                    ref volumeFlags,
-                    fileSystemName,
-                    (uint)fileSystemName.Capacity);
+                PInvokeUtils.Try(() => GetVolumeInformation(dir.Root.FullName,
+                                                            volumeLabel,
+                                                            (uint) volumeLabel.Capacity,
+                                                            ref serialNumber,
+                                                            ref maxLength,
+                                                            ref volumeFlags,
+                                                            fileSystemName,
+                                                            (uint) fileSystemName.Capacity));
 
-                if (result)
-                {
-                    return new Volume
-                           {
-                               Label = volumeLabel.ToString(),
-                               FileSystem = new FileSystem
-                                            {
-                                                Name = fileSystemName.ToString(),
-                                                Flags = volumeFlags
-                                            },
-                               SerialNumber = serialNumber,
-                               MaxFileNameLength = maxLength
-                           };
-                }
+                return new Volume
+                       {
+                           Label = volumeLabel.ToString(),
+                           FileSystem = new FileSystem
+                                        {
+                                            Name = fileSystemName.ToString(),
+                                            Flags = volumeFlags
+                                        },
+                           SerialNumber = serialNumber,
+                           MaxFileNameLength = maxLength
+                       };
             }
-            catch { }
+            catch (Win32Exception e)
+            {
+                Logger.Error("Invocation of native GetVolumeInformation() function threw a Win32 exception", e);
+            }
+            catch (DllNotFoundException e)
+            {
+                Logger.Warn("Unable to locate kernel32.dll - OS is probably not Windows", e);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("GetVolumeInformation() threw an exception", e);
+            }
 
             return null;
         }
