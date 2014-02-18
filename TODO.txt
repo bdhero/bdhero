@@ -1,6 +1,8 @@
 Chores
 ======
 
+[ ] Remove Mono compile-time checks (via #if __MonoCS__) and use runtime checks instead: http://stackoverflow.com/a/329072/467582.  Don't compile w/ Xamarin Studio - only use Visual Studio.
+
 [ ] Normalize capitalization of Win32 classes/structs/enums
 
 [ ] Missing XML comment for publicly visible type or member ...
