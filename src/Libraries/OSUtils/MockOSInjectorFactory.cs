@@ -21,10 +21,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
+using DotNetUtils.Forms;
 using Ninject.Modules;
 using OSUtils.DriveDetector;
 using OSUtils.JobObjects;
 using OSUtils.TaskbarUtils;
+using OSUtils.Windows;
 
 namespace OSUtils
 {
@@ -36,7 +38,8 @@ namespace OSUtils
                    {
                        new MockJobObjectModule(),
                        new MockDriveDetectorModule(),
-                       new MockTaskbarModule()
+                       new MockTaskbarModule(),
+                       new MockWindowMenuModule()
                    };
         }
     }
@@ -135,6 +138,83 @@ namespace OSUtils
             private static ITaskbarItem ValueFactory(IntPtr windowHandle)
             {
                 return new MockTaskbarItem();
+            }
+        }
+
+        #endregion
+    }
+
+    internal class MockWindowMenuModule : NinjectModule
+    {
+        public override void Load()
+        {
+            Bind<IWindowMenuFactory>().To<MockWindowMenuFactory>();
+        }
+
+        #region Mock interface implementations
+
+        [UsedImplicitly]
+        private class MockWindowMenuFactory : IWindowMenuFactory
+        {
+            private uint _menuItemIdCounter = 0x1;
+
+            public IWindowMenu CreateMenu(WndProcObservableForm form)
+            {
+                return new MockWindowMenu();
+            }
+
+            public IWindowMenuItem CreateMenuItem(string text = null, EventHandler clickHandler = null)
+            {
+                return new MockWindowMenuItem(_menuItemIdCounter++) { Text = text };
+            }
+        }
+
+        [UsedImplicitly]
+        private class MockWindowMenu : IWindowMenu
+        {
+            public void AppendMenu(IWindowMenuItem menuItem)
+            {
+            }
+
+            public void AppendSeparator()
+            {
+            }
+
+            public void InsertMenu(uint position, IWindowMenuItem menuItem)
+            {
+            }
+
+            public void InsertSeparator(uint position)
+            {
+            }
+
+            public void UpdateMenu(IWindowMenuItem menuItem)
+            {
+            }
+        }
+
+        [UsedImplicitly]
+        private class MockWindowMenuItem : IWindowMenuItem
+        {
+            public uint Id { get; private set; }
+            
+            public string Text { get; set; }
+            
+            public bool Enabled { get; set; }
+            
+            public bool Checked { get; set; }
+            
+            public event EventHandler Clicked;
+
+            public MockWindowMenuItem(uint id)
+            {
+                Id = id;
+                Enabled = true;
+                Checked = false;
+            }
+
+            public void Click(EventArgs eventArgs)
+            {
             }
         }
 

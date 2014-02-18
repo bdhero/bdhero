@@ -1,27 +1,32 @@
 ﻿using System;
+using OSUtils.Windows;
 
 namespace WindowsOSUtils.Windows
 {
-    public class WindowMenuItem
+    public class WindowMenuItem : IWindowMenuItem
     {
-        public readonly uint Id;
+        public uint Id { get; private set; }
 
-        public string Text;
-        public bool Enabled = true;
-        public bool Checked = false;
+        public string Text { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public bool Checked { get; set; }
 
         public event EventHandler Clicked;
 
         internal WindowMenuItem(uint id)
         {
             Id = id;
+            Enabled = true;
+            Checked = false;
         }
 
-        public void Click(EventArgs e)
+        public void Click(EventArgs eventArgs)
         {
             if (Clicked != null)
             {
-                Clicked(this, e);
+                Clicked(this, eventArgs);
             }
         }
     }

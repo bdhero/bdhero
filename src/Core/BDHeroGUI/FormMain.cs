@@ -45,6 +45,7 @@ using Microsoft.Win32;
 using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
+using OSUtils.Windows;
 using UpdateLib;
 
 namespace BDHeroGUI
@@ -62,6 +63,7 @@ namespace BDHeroGUI
         private readonly IController _controller;
         private readonly IDriveDetector _driveDetector;
         private readonly ITaskbarItem _taskbarItem;
+        private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
 
         private readonly Updater _updater;
@@ -91,7 +93,7 @@ namespace BDHeroGUI
 
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
-                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory,
+                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
                         INetworkStatusMonitor networkStatusMonitor, Updater updater)
         {
             InitializeComponent();
@@ -106,6 +108,7 @@ namespace BDHeroGUI
             _controller = controller;
             _driveDetector = driveDetector;
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
+            _windowMenuFactory = windowMenuFactory;
             _networkStatusMonitor = networkStatusMonitor;
 
             _updater = updater;
@@ -462,7 +465,7 @@ namespace BDHeroGUI
 
         private void InitSystemMenu()
         {
-            new StandardWindowMenuBuilder(this)
+            new StandardWindowMenuBuilder(this, _windowMenuFactory)
                 .Resize()
                 .AlwaysOnTop();
         }
@@ -854,7 +857,7 @@ namespace BDHeroGUI
         {
             if (_controller.Job != null)
             {
-                new FormDiscInfo(_controller.Job.Disc).ShowDialog(this);
+                new FormDiscInfo(_controller.Job.Disc, _windowMenuFactory).ShowDialog(this);
             }
         }
 

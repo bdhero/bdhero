@@ -69,6 +69,9 @@
     <Compile Include="TaskbarUtils\ITaskbarItem.cs" />
     <Compile Include="TaskbarUtils\ITaskbarItemFactory.cs" />
     <Compile Include="TaskbarUtils\MockTaskbarItem.cs" />
+    <Compile Include="Windows\IWindowMenu.cs" />
+    <Compile Include="Windows\IWindowMenuFactory.cs" />
+    <Compile Include="Windows\IWindowMenuItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

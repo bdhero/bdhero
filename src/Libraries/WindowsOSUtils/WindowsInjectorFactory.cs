@@ -19,10 +19,12 @@ using System.Collections.Generic;
 using WindowsOSUtils.DriveDetector;
 using WindowsOSUtils.JobObjects;
 using WindowsOSUtils.TaskbarUtils;
+using WindowsOSUtils.Windows;
 using Ninject.Modules;
 using OSUtils.DriveDetector;
 using OSUtils.JobObjects;
 using OSUtils.TaskbarUtils;
+using OSUtils.Windows;
 
 namespace WindowsOSUtils
 {
@@ -34,7 +36,8 @@ namespace WindowsOSUtils
                    {
                        new BDHeroModule(),
                        new DriveDetectorModule(),
-                       new TaskbarModule()
+                       new TaskbarModule(),
+                       new WindowMenuModule()
                    };
         }
     }
@@ -61,6 +64,14 @@ namespace WindowsOSUtils
         public override void Load()
         {
             Bind<ITaskbarItemFactory>().To<WindowsTaskbarItemFactory>();
+        }
+    }
+
+    internal class WindowMenuModule : NinjectModule
+    {
+        public override void Load()
+        {
+            Bind<IWindowMenuFactory>().To<WindowMenuFactory>();
         }
     }
 }

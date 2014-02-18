@@ -22,6 +22,7 @@ using BDHeroGUI.Components;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
+using OSUtils.Windows;
 
 namespace BDHeroGUI.Forms
 {
@@ -32,7 +33,7 @@ namespace BDHeroGUI.Forms
         private readonly bool _hasSmallJacketImage;
         private readonly string _smallJacketImagePath;
 
-        public FormDiscInfo(Disc disc)
+        public FormDiscInfo(Disc disc, IWindowMenuFactory windowMenuFactory)
         {
             InitializeComponent();
 
@@ -59,7 +60,7 @@ namespace BDHeroGUI.Forms
 
             this.EnableSelectAll();
 
-            new StandardWindowMenuBuilder(this).Resize();
+            new StandardWindowMenuBuilder(this, windowMenuFactory).Resize();
         }
 
         private static string GenerateQuickSummary(DiscMetadata metadata, DiscFileSystem fs)

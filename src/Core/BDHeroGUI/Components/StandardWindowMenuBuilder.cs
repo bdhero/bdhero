@@ -3,13 +3,15 @@ using System.Windows.Forms;
 using WindowsOSUtils.Windows;
 using BDHeroGUI.Forms;
 using DotNetUtils.Forms;
+using OSUtils.Windows;
 
 namespace BDHeroGUI.Components
 {
     class StandardWindowMenuBuilder
     {
         private readonly WndProcObservableForm _form;
-        private readonly WindowMenu _menu;
+        private readonly IWindowMenuFactory _factory;
+        private readonly IWindowMenu _menu;
 
         /// <summary>
         ///     Position of the divider between the "Maximize" and "Close" menu items.
@@ -23,10 +25,11 @@ namespace BDHeroGUI.Components
 
         private bool _isSeparatorAdded;
 
-        public StandardWindowMenuBuilder(WndProcObservableForm form)
+        public StandardWindowMenuBuilder(WndProcObservableForm form, IWindowMenuFactory factory)
         {
             _form = form;
-            _menu = new WindowMenu(form);
+            _factory = factory;
+            _menu = factory.CreateMenu(form);
         }
 
         private void EnsureSeparatorExists()
@@ -43,7 +46,7 @@ namespace BDHeroGUI.Components
         {
             EnsureSeparatorExists();
 
-            var resizeMenuItem = _menu.CreateMenuItem("&Resize...");
+            var resizeMenuItem = _factory.CreateMenuItem("&Resize...");
             resizeMenuItem.Clicked += delegate { new FormResizeWindow(_form).ShowDialog(_form); };
             _menu.InsertMenu(_pos++, resizeMenuItem);
 
@@ -54,7 +57,7 @@ namespace BDHeroGUI.Components
         {
             EnsureSeparatorExists();
 
-            var alwaysOnTopMenuItem = _menu.CreateMenuItem("Always on &top");
+            var alwaysOnTopMenuItem = _factory.CreateMenuItem("Always on &top");
             alwaysOnTopMenuItem.Clicked += delegate
                                            {
                                                var alwaysOnTop = !alwaysOnTopMenuItem.Checked;

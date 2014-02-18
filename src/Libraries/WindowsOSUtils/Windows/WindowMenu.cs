@@ -20,34 +20,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using NativeAPI;
+using OSUtils.Windows;
 using WinAPI.User;
 using DotNetUtils.Forms;
 
 namespace WindowsOSUtils.Windows
 {
     /// <seealso cref="http://stackoverflow.com/a/4616637/467582"/>
-    public class WindowMenu
+    public class WindowMenu : IWindowMenu
     {
         #region Fields (private)
-
-        private readonly Form _form;
 
         /// <summary>
         ///     Handle to a copy of the form's system (window) menu.
         /// </summary>
         private readonly IntPtr _hSysMenu;
 
-        private readonly IList<WindowMenuItem> _items = new List<WindowMenuItem>();
-
-        private uint _menuItemIdCounter = 0x1;
+        private readonly IList<IWindowMenuItem> _items = new List<IWindowMenuItem>();
 
         #endregion
 
-        public WindowMenu(WndProcObservableForm form)
+        internal WindowMenu(WndProcObservableForm form)
         {
-            _form = form;
-            _hSysMenu = SystemMenuAPI.GetSystemMenu(_form.Handle, false);
-
+            _hSysMenu = SystemMenuAPI.GetSystemMenu(form.Handle, false);
             form.WndProcMessage += OnWndProcMessage;
         }
 
@@ -74,7 +69,7 @@ namespace WindowsOSUtils.Windows
 
         #region Public API
 
-        public void AppendMenu(WindowMenuItem menuItem)
+        public void AppendMenu(IWindowMenuItem menuItem)
         {
             PInvokeUtils.Try(() => SystemMenuAPI.AppendMenu(_hSysMenu, MenuFlags.MF_STRING, menuItem.Id, menuItem.Text));
             _items.Add(menuItem);
@@ -85,7 +80,7 @@ namespace WindowsOSUtils.Windows
             PInvokeUtils.Try(() => SystemMenuAPI.AppendMenu(_hSysMenu, MenuFlags.MF_SEPARATOR, 0, string.Empty));
         }
 
-        public void InsertMenu(uint position, WindowMenuItem menuItem)
+        public void InsertMenu(uint position, IWindowMenuItem menuItem)
         {
             PInvokeUtils.Try(() => SystemMenuAPI.InsertMenu(_hSysMenu, position, MenuFlags.MF_BYPOSITION | MenuFlags.MF_STRING, menuItem.Id, menuItem.Text));
             _items.Add(menuItem);
@@ -96,7 +91,7 @@ namespace WindowsOSUtils.Windows
             PInvokeUtils.Try(() => SystemMenuAPI.InsertMenu(_hSysMenu, position, MenuFlags.MF_BYPOSITION | MenuFlags.MF_SEPARATOR, 0, string.Empty));
         }
 
-        public void UpdateMenu(WindowMenuItem menuItem)
+        public void UpdateMenu(IWindowMenuItem menuItem)
         {
             var mii = new MENUITEMINFO(null)
                       {
@@ -127,18 +122,6 @@ namespace WindowsOSUtils.Windows
             // TODO: From my observations, this function always returns false, even though it appears to succeed.
             //       Am I using it incorrectly?
             SystemMenuAPI.DrawMenuBar(_hSysMenu);
-        }
-
-        public WindowMenuItem CreateMenuItem(string text = null, EventHandler clickHandler = null)
-        {
-            var menuItem = new WindowMenuItem(_menuItemIdCounter++) { Text = text };
-
-            if (clickHandler != null)
-            {
-                menuItem.Clicked += clickHandler;
-            }
-
-            return menuItem;
         }
 
         #endregion
