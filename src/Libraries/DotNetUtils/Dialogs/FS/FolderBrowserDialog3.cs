@@ -35,7 +35,11 @@ namespace DotNetUtils.Dialogs.FS
         /// </summary>
         public static bool IsPlatformSupported
         {
+#if !__MonoCS__
             get { return CommonFileDialog.IsPlatformSupported; }
+#else
+            get { return false; }
+#endif
         }
 
         /// <summary>
@@ -87,7 +91,11 @@ namespace DotNetUtils.Dialogs.FS
 
         public DialogResult ShowDialog(IWin32Window owner)
         {
+#if !__MonoCS__
             return _dialog.ShowDialog(owner.Handle).ToDialogResult();
+#else
+            return DialogResult.Cancel;
+#endif
         }
     }
 }
