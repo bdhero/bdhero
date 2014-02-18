@@ -558,7 +558,11 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
+#if __MonoCS__
+            OpenUtility(filePath);
+#else
             Process.Start(filePath);
+#endif
         }
 
         /// <summary>
@@ -577,11 +581,13 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
+#if !__MonoCS__
+            OpenUtility("-R", filePath);
+#else
             // combine the arguments together
             // it doesn't matter if there is a space after ','
-            string argument = "/select, \"" + filePath + "\"";
-
-            Process.Start("explorer.exe", argument);
+            Process.Start("explorer.exe", "/select, \"" + filePath + "\"");
+#endif
         }
 
         /// <summary>
@@ -600,7 +606,26 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new DirectoryInfo(folderPath), control))
                 return;
 
+#if __MonoCS__
+            OpenUtility("-R", folderPath);
+#else
             Process.Start(folderPath);
+#endif
+        }
+
+        private static void OpenUtility(string filePath)
+        {
+            OpenUtility("", filePath);
+        }
+
+        private static void OpenUtility(string leadingArgs, string filePath)
+        {
+            // Abort if we're not on Mac OS X
+            if (!File.Exists("/usr/bin/open")) return;
+
+            // http://stackoverflow.com/a/2283716/467582
+            var filePathEscaped = filePath.Replace("'", @"\'");
+            Process.Start(new ProcessStartInfo("open", string.Format("{0} '{1}'", leadingArgs, filePathEscaped)) { UseShellExecute = false });
         }
 
         /// <summary>

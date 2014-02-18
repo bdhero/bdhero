@@ -46,8 +46,8 @@ namespace LicenseUtils.Forms
             hyperlinkLabelTlDrUrl.Visible = !string.IsNullOrEmpty(license.TlDrUrl);
 
 #if __MonoCS__
-            tabPageFormatted.Hide();
-            buttonPrint.Hide();
+            tabPageFormatted.Parent.Controls.Remove(tabPageFormatted);
+            buttonPrint.Parent.Controls.Remove(buttonPrint);
 #else
             webBrowser.DocumentText = license.Html;
 #endif
