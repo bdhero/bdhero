@@ -581,7 +581,7 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
-#if !__MonoCS__
+#if __MonoCS__
             OpenUtility("-R", filePath);
 #else
             // combine the arguments together
