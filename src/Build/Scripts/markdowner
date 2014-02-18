@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# $PWD = bdhero/src
+
+cd Libraries/LicenseUtils/Licenses
+
+for file in *.md; do
+    echo $file
+    ../../../Build/Tools/Markdowner.exe "$file"
+done
