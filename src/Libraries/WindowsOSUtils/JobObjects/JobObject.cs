@@ -19,7 +19,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using OSUtils;
+using NativeAPI;
 using WinAPI.Kernel;
 using OSUtils.JobObjects;
 

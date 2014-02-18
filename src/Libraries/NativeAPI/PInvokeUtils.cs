@@ -20,7 +20,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-namespace OSUtils
+namespace NativeAPI
 {
     public static class PInvokeUtils
     {
@@ -92,7 +92,12 @@ namespace OSUtils
         {
             var errorCode = Marshal.GetLastWin32Error();
             var message = string.Format("P/Invoke of {0} failed", apiSignature);
-            throw new Win32Exception(errorCode, message);
+
+            // The no-arg Win32Exception() constructor automatically populates the Message property with an appropriate
+            // native error message from the OS, which we can then append to our own custom error message.
+            var nativeException = new Win32Exception();
+
+            throw new Win32Exception(errorCode, string.Format("{0}: {1}", message, nativeException.Message));
         }
 
         /// <summary>

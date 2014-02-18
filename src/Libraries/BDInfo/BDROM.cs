@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using I18N;
@@ -605,37 +604,13 @@ namespace BDInfo
             return discName;
         }
 
-        private string GetVolumeLabel(DirectoryInfo dir)
+        private static string GetVolumeLabel(DirectoryInfo dir)
         {
-            uint serialNumber = 0;
-            uint maxLength = 0;
-            var volumeFlags = FileSystemFlags.NULL;
-            var volumeLabel = new StringBuilder(256);
-            var fileSystemName = new StringBuilder(256);
-            var label = "";
-
-            try
-            {
-                var result = VolumeAPI.GetVolumeInformation(
-                    dir.Name,
-                    volumeLabel,
-                    (uint)volumeLabel.Capacity,
-                    ref serialNumber,
-                    ref maxLength,
-                    ref volumeFlags,
-                    fileSystemName,
-                    (uint)fileSystemName.Capacity);
-
-                label = volumeLabel.ToString();
-            }
-            catch { }
-
-            if (label.Length == 0)
-            {
-                label = dir.Name;
-            }
-
-            return label;
+            var volume = VolumeAPI.GetVolumeInformation(dir);
+            var isRoot = dir.FullName == dir.Root.FullName;
+            if (isRoot && !string.IsNullOrEmpty(volume.Label))
+                return volume.Label;
+            return dir.Name;
         }
 
         public static int CompareStreamFiles(

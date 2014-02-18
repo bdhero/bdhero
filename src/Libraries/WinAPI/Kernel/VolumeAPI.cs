@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -25,6 +26,68 @@ namespace WinAPI.Kernel
 {
     public static class VolumeAPI
     {
+        public class Volume
+        {
+            public string Label;
+
+            public FileSystem FileSystem;
+
+            public uint SerialNumber;
+
+            /// <summary>
+            ///     The maximum length, in <c>TCHAR</c>s, of a file name component that a specified file system supports.
+            /// </summary>
+            public uint MaxFileNameLength;
+        }
+
+        public class FileSystem
+        {
+            public string Name;
+
+            public FileSystemFlags Flags;
+        }
+
+//        [CanBeNull] // TODO
+        public static Volume GetVolumeInformation(DirectoryInfo dir)
+        {
+            uint serialNumber = 0;
+            uint maxLength = 0;
+            var volumeFlags = FileSystemFlags.NULL;
+            var volumeLabel = new StringBuilder(256);
+            var fileSystemName = new StringBuilder(256);
+
+            try
+            {
+                var result = GetVolumeInformation(
+                    dir.Root.FullName,
+                    volumeLabel,
+                    (uint)volumeLabel.Capacity,
+                    ref serialNumber,
+                    ref maxLength,
+                    ref volumeFlags,
+                    fileSystemName,
+                    (uint)fileSystemName.Capacity);
+
+                if (result)
+                {
+                    return new Volume
+                           {
+                               Label = volumeLabel.ToString(),
+                               FileSystem = new FileSystem
+                                            {
+                                                Name = fileSystemName.ToString(),
+                                                Flags = volumeFlags
+                                            },
+                               SerialNumber = serialNumber,
+                               MaxFileNameLength = maxLength
+                           };
+                }
+            }
+            catch { }
+
+            return null;
+        }
+
         /// <summary>
         ///     <para>
         ///         Retrieves information about the file system and volume associated with the specified root directory.

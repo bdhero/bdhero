@@ -18,11 +18,13 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Attributes;
 using DotNetUtils.Extensions;
+using MacAPI.Memory;
 using WinAPI.Kernel;
 
 namespace OSUtils.Info
@@ -59,33 +61,6 @@ namespace OSUtils.Info
 
         #region Native interop
 
-        #region Available memory
-
-        private static ulong GetAvailableMemory()
-        {
-            ulong free = 0;
-            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
-            catch { }
-            try { free = GetAvailableMemoryOSX(); if (free > 0) { return free; } }
-            catch { }
-            return free;
-        }
-
-        private static ulong GetAvailableMemoryWin()
-        {
-            using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
-            {
-                return (ulong)counter.NextValue();
-            }
-        }
-
-        private static ulong GetAvailableMemoryOSX()
-        {
-            return GetTotalPhysicalMemoryOSX() - GetMemoryOSX(MemPropOSX.Used);
-        }
-
-        #endregion
-
         #region Total physical memory
 
         /// <summary>
@@ -101,7 +76,11 @@ namespace OSUtils.Info
             catch { }
             try { total = GetTotalPhysicalMemoryNix(); if (total > 0) { return total; } }
             catch { }
-            try { total = GetTotalPhysicalMemoryOSX(); if (total > 0) { return total; } }
+            try { total = GetTotalPhysicalMemoryOSX1(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryOSX2(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryOSX3(); if (total > 0) { return total; } }
             catch { }
             return total;
         }
@@ -129,20 +108,95 @@ namespace OSUtils.Info
         /// On Mac OS X, gets the total amount of installed physical memory.
         /// </summary>
         /// <returns>The total amount of installed physical memory on the system.</returns>
-        private static ulong GetTotalPhysicalMemoryOSX()
+        private static ulong GetTotalPhysicalMemoryOSX1()
         {
-            return GetMemoryOSX(MemPropOSX.Total);
+            return MacMemoryAPI.GetPhysicalMemory();
+        }
+
+        /// <summary>
+        /// On Mac OS X, gets the total amount of installed physical memory.
+        /// </summary>
+        /// <returns>The total amount of installed physical memory on the system.</returns>
+        private static ulong GetTotalPhysicalMemoryOSX2()
+        {
+            // TODO
+            // /usr/bin/vm_stat
+            return GetMemoryOSX2(MemPropOSX.Total);
+        }
+
+        /// <summary>
+        /// On Mac OS X, gets the total amount of installed physical memory.
+        /// </summary>
+        /// <returns>The total amount of installed physical memory on the system.</returns>
+        private static ulong GetTotalPhysicalMemoryOSX3()
+        {
+            return GetMemoryOSX3(MemPropOSX.Total);
+        }
+
+        #endregion
+
+        #region Available memory
+
+        private static ulong GetAvailableMemory()
+        {
+            ulong free = 0;
+            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX1(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX2(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX3(); if (free > 0) { return free; } }
+            catch { }
+            return free;
+        }
+
+        private static ulong GetAvailableMemoryWin()
+        {
+            using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
+            {
+                return (ulong)counter.NextValue();
+            }
+        }
+
+        private static ulong GetAvailableMemoryOSX1()
+        {
+            return MacMemoryAPI.GetAvailableMemory();
+        }
+
+        private static ulong GetAvailableMemoryOSX2()
+        {
+            return GetMemoryOSX2(MemPropOSX.Free);
+        }
+
+        private static ulong GetAvailableMemoryOSX3()
+        {
+            return GetTotalPhysicalMemory() - GetMemoryOSX3(MemPropOSX.Used);
         }
 
         #endregion
 
         #region Mac-specific memory
 
-        private static ulong GetMemoryOSX(MemPropOSX prop)
+        /// <seealso cref="http://stackoverflow.com/a/8782351/467582"/>
+        private static ulong GetMemoryOSX2(MemPropOSX prop)
+        {
+            var output = GetProcessOutput("/usr/bin/vm_stat");
+//            var pageSize = Regex.Match(output, @"page size of (\d+) bytes");
+            return 0;
+        }
+
+        private static ulong GetMemoryOSX3(MemPropOSX prop)
+        {
+            var output = GetProcessOutput("sysctl", "-a");
+            return SysctlPropertyNameAttribute.GetProperty(prop, output);
+        }
+
+        private static string GetProcessOutput(string fileName, string arguments = "")
         {
             using (var process = new Process())
             {
-                process.StartInfo = new ProcessStartInfo("sysctl", "-a")
+                process.StartInfo = new ProcessStartInfo(fileName, arguments)
                                     {
                                         UseShellExecute = false,
                                         RedirectStandardOutput = true,
@@ -151,10 +205,8 @@ namespace OSUtils.Info
                                         WindowStyle = ProcessWindowStyle.Hidden,
                                     };
                 process.Start();
-                var propName = prop.GetAttributeProperty<DescriptionAttribute, string>(attribute => attribute.Description);
                 var output = process.StandardOutput.ReadToEnd();
-                var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
-                return match.Success ? UInt64.Parse(match.Groups[propName].Value) : 0;
+                return output;
             }
         }
 
@@ -164,14 +216,38 @@ namespace OSUtils.Info
 
         private enum MemPropOSX
         {
-            [Description("memsize")]
+            [SysctlPropertyName("hw.memsize")]
             Total,
 
-            [Description("usermem")]
+            [SysctlPropertyName("hw.usermem")]
             Used,
 
-            [Description("physmem")]
+            [SysctlPropertyName("hw.physmem")]
             Free
+        }
+
+        private abstract class NameAttribute : Attribute
+        {
+            public readonly string Name;
+
+            protected NameAttribute(string name)
+            {
+                Name = name;
+            }
+        }
+
+        private class SysctlPropertyNameAttribute : NameAttribute
+        {
+            public SysctlPropertyNameAttribute(string name) : base(name)
+            {
+            }
+
+            public static UInt64 GetProperty(MemPropOSX prop, string output)
+            {
+                var propName = Regex.Escape(prop.GetAttributeProperty<SysctlPropertyNameAttribute, string>(attribute => attribute.Name));
+                var match = new Regex(propName + @"\s*?[=:]\s*?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
+                return match.Success ? UInt64.Parse(match.Groups[propName].Value) : 0;
+            }
         }
 
         #endregion

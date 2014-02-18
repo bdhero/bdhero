@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using OSUtils;
+using NativeAPI;
 using WinAPI.Kernel;
 using NUnit.Framework;
 
