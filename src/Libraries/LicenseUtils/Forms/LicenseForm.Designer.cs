@@ -34,17 +34,17 @@
             this.hyperlinkLabelUrl = new DotNetUtils.Controls.HyperlinkLabel();
             this.hyperlinkLabelTlDrUrl = new DotNetUtils.Controls.HyperlinkLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.buttonOk = new System.Windows.Forms.Button();
+            this.tabPageFormatted = new System.Windows.Forms.TabPage();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.tabPagePlainText = new System.Windows.Forms.TabPage();
             this.textBoxPlainText = new System.Windows.Forms.RichTextBox();
+            this.buttonOk = new System.Windows.Forms.Button();
             this.labelWorkName = new DotNetUtils.Controls.SelectableLabel();
             this.buttonPrint = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabPageFormatted.SuspendLayout();
+            this.tabPagePlainText.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelLicenseName
@@ -104,47 +104,24 @@
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPageFormatted);
+            this.tabControl1.Controls.Add(this.tabPagePlainText);
             this.tabControl1.Location = new System.Drawing.Point(13, 84);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(654, 326);
             this.tabControl1.TabIndex = 4;
             // 
-            // tabPage1
+            // tabPageFormatted
             // 
-            this.tabPage1.Controls.Add(this.webBrowser);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(646, 300);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Formatted";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.textBoxPlainText);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(646, 300);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Plain Text";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // buttonOk
-            // 
-            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(592, 416);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(75, 23);
-            this.buttonOk.TabIndex = 0;
-            this.buttonOk.Text = "&OK";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
+            this.tabPageFormatted.Controls.Add(this.webBrowser);
+            this.tabPageFormatted.Location = new System.Drawing.Point(4, 22);
+            this.tabPageFormatted.Name = "tabPageFormatted";
+            this.tabPageFormatted.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageFormatted.Size = new System.Drawing.Size(646, 300);
+            this.tabPageFormatted.TabIndex = 0;
+            this.tabPageFormatted.Text = "Formatted";
+            this.tabPageFormatted.UseVisualStyleBackColor = true;
             // 
             // webBrowser
             // 
@@ -160,6 +137,17 @@
             this.webBrowser.TabIndex = 0;
             this.webBrowser.WebBrowserShortcutsEnabled = false;
             // 
+            // tabPagePlainText
+            // 
+            this.tabPagePlainText.Controls.Add(this.textBoxPlainText);
+            this.tabPagePlainText.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePlainText.Name = "tabPagePlainText";
+            this.tabPagePlainText.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePlainText.Size = new System.Drawing.Size(646, 300);
+            this.tabPagePlainText.TabIndex = 1;
+            this.tabPagePlainText.Text = "Plain Text";
+            this.tabPagePlainText.UseVisualStyleBackColor = true;
+            // 
             // textBoxPlainText
             // 
             this.textBoxPlainText.BackColor = System.Drawing.SystemColors.Window;
@@ -174,6 +162,18 @@
             this.textBoxPlainText.TabIndex = 0;
             this.textBoxPlainText.Text = "";
             this.textBoxPlainText.WordWrap = false;
+            // 
+            // buttonOk
+            // 
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOk.Location = new System.Drawing.Point(592, 416);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(75, 23);
+            this.buttonOk.TabIndex = 0;
+            this.buttonOk.Text = "&OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // labelWorkName
             // 
@@ -222,8 +222,8 @@
             this.Text = "LicenseForm";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.tabPageFormatted.ResumeLayout(false);
+            this.tabPagePlainText.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -235,8 +235,8 @@
         private DotNetUtils.Controls.HyperlinkLabel hyperlinkLabelUrl;
         private DotNetUtils.Controls.HyperlinkLabel hyperlinkLabelTlDrUrl;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageFormatted;
+        private System.Windows.Forms.TabPage tabPagePlainText;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonPrint;
         private System.Windows.Forms.WebBrowser webBrowser;

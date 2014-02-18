@@ -45,7 +45,12 @@ namespace LicenseUtils.Forms
             hyperlinkLabelTlDrUrl.Url = license.TlDrUrl;
             hyperlinkLabelTlDrUrl.Visible = !string.IsNullOrEmpty(license.TlDrUrl);
 
+#if __MonoCS__
+            tabPageFormatted.Hide();
+            buttonPrint.Hide();
+#else
             webBrowser.DocumentText = license.Html;
+#endif
 
             textBoxPlainText.Text = license.Text;
         }
