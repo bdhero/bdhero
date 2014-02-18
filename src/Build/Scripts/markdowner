@@ -2,9 +2,17 @@
 
 # $PWD = bdhero/src
 
+pwd
+
 cd Libraries/LicenseUtils/Licenses
+
+pwd
+
+MARKDOWNER=../../../Build/Tools/Markdowner.exe
+
+chmod +x "$MARKDOWNER"
 
 for file in *.md; do
     echo $file
-    ../../../Build/Tools/Markdowner.exe "$file"
+    mono "$MARKDOWNER" "$file"
 done
