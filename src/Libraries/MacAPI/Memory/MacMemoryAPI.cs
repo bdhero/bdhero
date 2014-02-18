@@ -35,7 +35,7 @@ namespace MacAPI.Memory
             var vmstat = new vm_statistics_data_t();
             uint host_priv = mach_host_self();
 
-            PInvokeUtils.Try(() => host_statistics(host_priv, HostStatsType.HOST_VM_INFO, ref vmstat, ref hostInfoCount), result => result != KERN_SUCCESS);
+            PInvokeUtils.Try(() => host_statistics(host_priv, HostStatsType.HOST_VM_INFO, ref vmstat, ref hostInfoCount), result => result == KERN_SUCCESS);
 
             ulong physicalMemory = GetPhysicalMemory();
 
