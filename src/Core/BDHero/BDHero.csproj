@@ -70,7 +70,12 @@
     <Compile Include="BDROM\Track.cs" />
     <Compile Include="Config\InjectorFactory.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="ErrorReporter.cs" />
+    <Compile Include="ErrorReporting\ErrorReporter.cs" />
+    <Compile Include="ErrorReporting\Models\Label.cs" />
+    <Compile Include="ErrorReporting\Models\Milestone.cs" />
+    <Compile Include="ErrorReporting\Models\NewIssueRequest.cs" />
+    <Compile Include="ErrorReporting\Models\NewIssueResponse.cs" />
+    <Compile Include="ErrorReporting\Models\User.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />

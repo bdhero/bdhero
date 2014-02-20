@@ -18,6 +18,7 @@
 using System;
 using System.Windows.Forms;
 using BDHero;
+using BDHero.ErrorReporting;
 using DotNetUtils;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
