@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using NativeAPI;
-using WinAPI.Kernel;
+using NativeAPI.Win.Kernel;
 using NUnit.Framework;
 
 namespace DotNetTests

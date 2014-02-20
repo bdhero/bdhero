@@ -61,13 +61,13 @@
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NativeAPI\NativeAPI.csproj">
+      <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
+      <Name>NativeAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OSUtils\OSUtils.csproj">
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
-      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
-      <Name>WinAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\WindowsOSUtils\WindowsOSUtils.csproj">
       <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>

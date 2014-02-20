@@ -16,16 +16,15 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Attributes;
 using DotNetUtils.Extensions;
-using MacAPI.Memory;
-using WinAPI.Kernel;
+using NativeAPI.Win.Kernel;
+using WinMemoryAPI = NativeAPI.Win.Kernel.MemoryAPI;
+using MacMemoryAPI = NativeAPI.Mac.Memory.MemoryAPI;
 
 namespace OSUtils.Info
 {
@@ -71,6 +70,7 @@ namespace OSUtils.Info
         /// <see cref="http://stackoverflow.com/a/105109"/>
         private static ulong GetTotalPhysicalMemory()
         {
+            // ReSharper disable EmptyGeneralCatchClause
             ulong total = 0;
             try { total = GetTotalPhysicalMemoryWin(); if (total > 0) { return total; } }
             catch { }
@@ -83,6 +83,7 @@ namespace OSUtils.Info
             try { total = GetTotalPhysicalMemoryOSX3(); if (total > 0) { return total; } }
             catch { }
             return total;
+            // ReSharper restore EmptyGeneralCatchClause
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace OSUtils.Info
         private static ulong GetTotalPhysicalMemoryWin()
         {
             var memStatus = new MEMORYSTATUSEX();
-            return MemoryAPI.GlobalMemoryStatusEx(memStatus) ? memStatus.ullTotalPhys : 0;
+            return WinMemoryAPI.GlobalMemoryStatusEx(memStatus) ? memStatus.ullTotalPhys : 0;
         }
 
         /// <summary>
@@ -139,6 +140,7 @@ namespace OSUtils.Info
 
         private static ulong GetAvailableMemory()
         {
+            // ReSharper disable EmptyGeneralCatchClause
             ulong free = 0;
             try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
             catch { }
@@ -149,6 +151,7 @@ namespace OSUtils.Info
             try { free = GetAvailableMemoryOSX3(); if (free > 0) { return free; } }
             catch { }
             return free;
+            // ReSharper restore EmptyGeneralCatchClause
         }
 
         private static ulong GetAvailableMemoryWin()

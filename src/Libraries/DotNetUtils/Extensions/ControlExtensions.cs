@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WinAPI.User;
+using NativeAPI.Win.User;
 
 namespace DotNetUtils.Extensions
 {

@@ -111,10 +111,6 @@
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
-      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
-      <Name>WinAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

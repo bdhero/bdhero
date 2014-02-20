@@ -19,8 +19,8 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using WinAPI.CommonControls;
-using WinAPI.User;
+using NativeAPI.Win.CommonControls;
+using NativeAPI.Win.User;
 
 namespace DotNetUtils.Extensions
 {

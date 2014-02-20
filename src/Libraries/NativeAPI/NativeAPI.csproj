@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\NativeAPI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,8 +45,57 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mac\ERRNO.cs" />
+    <Compile Include="Mac\Memory\HostStatsType.cs" />
+    <Compile Include="Mac\Memory\MemoryAPI.cs" />
+    <Compile Include="Mac\Memory\vm_statistics_data_t.cs" />
     <Compile Include="PInvokeUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Win\CommonControls\HeaderItem.cs" />
+    <Compile Include="Win\CommonControls\HeaderItemFormat.cs" />
+    <Compile Include="Win\CommonControls\HeaderItemMask.cs" />
+    <Compile Include="Win\Device\DeviceBroadcastVolume.cs" />
+    <Compile Include="Win\Kernel\BasicLimits.cs" />
+    <Compile Include="Win\Kernel\ExtendedLimits.cs" />
+    <Compile Include="Win\Kernel\FileSystemFlags.cs" />
+    <Compile Include="Win\Kernel\IoCounters.cs" />
+    <Compile Include="Win\Kernel\JobObjectAPI.cs" />
+    <Compile Include="Win\Kernel\JobObjectBasicLimitInformation.cs" />
+    <Compile Include="Win\Kernel\JobObjectExtendedLimitInformation.cs" />
+    <Compile Include="Win\Kernel\JobObjectInfo.cs" />
+    <Compile Include="Win\Kernel\JobObjectInfoClass.cs" />
+    <Compile Include="Win\Kernel\LimitFlags.cs" />
+    <Compile Include="Win\Kernel\MemoryAPI.cs" />
+    <Compile Include="Win\Kernel\MEMORYSTATUSEX.cs" />
+    <Compile Include="Win\Kernel\ProcessCreationFlags.cs" />
+    <Compile Include="Win\Kernel\PROCESS_INFORMATION.cs" />
+    <Compile Include="Win\Kernel\SECURITY_ATTRIBUTES.cs" />
+    <Compile Include="Win\Kernel\STARTF.cs" />
+    <Compile Include="Win\Kernel\STARTUPINFO.cs" />
+    <Compile Include="Win\Kernel\ThreadAccess.cs" />
+    <Compile Include="Win\Kernel\ThreadAPI.cs" />
+    <Compile Include="Win\Kernel\VolumeAPI.cs" />
+    <Compile Include="Win\Rect.cs" />
+    <Compile Include="Win\ShellLightWeight\AssocF.cs" />
+    <Compile Include="Win\ShellLightWeight\AssociationAPI.cs" />
+    <Compile Include="Win\ShellLightWeight\AssocStr.cs" />
+    <Compile Include="Win\User\CursorAPI.cs" />
+    <Compile Include="Win\User\CursorType.cs" />
+    <Compile Include="Win\User\ExtendedWindowStyles.cs" />
+    <Compile Include="Win\User\LParam.cs" />
+    <Compile Include="Win\User\MenuFlags.cs" />
+    <Compile Include="Win\User\MenuItemBitmapType.cs" />
+    <Compile Include="Win\User\MenuItemInfo.cs" />
+    <Compile Include="Win\User\MenuItemInfoMember.cs" />
+    <Compile Include="Win\User\MenuItemState.cs" />
+    <Compile Include="Win\User\MenuItemType.cs" />
+    <Compile Include="Win\User\ShowWindowCommand.cs" />
+    <Compile Include="Win\User\SystemMenuAPI.cs" />
+    <Compile Include="Win\User\WindowAPI.cs" />
+    <Compile Include="Win\User\WindowInfo.cs" />
+    <Compile Include="Win\User\WindowMessageType.cs" />
+    <Compile Include="Win\User\WindowStyles.cs" />
+    <Compile Include="Win\User\WParam.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using NativeAPI;
-using OSUtils.Windows;
-using WinAPI.User;
+using OSUtils.Window;
+using NativeAPI.Win.User;
 using DotNetUtils.Forms;
 
 namespace WindowsOSUtils.Windows

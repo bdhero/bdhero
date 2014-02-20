@@ -17,7 +17,7 @@
 
 using System;
 using System.Diagnostics;
-using WinAPI.User;
+using NativeAPI.Win.User;
 
 namespace WindowsOSUtils.Windows
 {

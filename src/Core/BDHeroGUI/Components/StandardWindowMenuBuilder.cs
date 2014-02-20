@@ -1,9 +1,6 @@
-﻿using System;
-using System.Windows.Forms;
-using WindowsOSUtils.Windows;
-using BDHeroGUI.Forms;
+﻿using BDHeroGUI.Forms;
 using DotNetUtils.Forms;
-using OSUtils.Windows;
+using OSUtils.Window;
 
 namespace BDHeroGUI.Components
 {

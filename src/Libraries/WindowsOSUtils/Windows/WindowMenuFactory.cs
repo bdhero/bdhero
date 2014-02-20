@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using DotNetUtils.Annotations;
 using DotNetUtils.Forms;
-using OSUtils.Windows;
+using OSUtils.Window;
 
 namespace WindowsOSUtils.Windows
 {
+    [UsedImplicitly]
     public class WindowMenuFactory : IWindowMenuFactory
     {
         private uint _menuItemIdCounter = 0x1;

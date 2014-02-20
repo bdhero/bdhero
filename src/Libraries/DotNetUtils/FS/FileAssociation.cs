@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DotNetUtils.Annotations;
-using WinAPI.ShellLightWeight;
+using NativeAPI.Win.ShellLightWeight;
 
 namespace DotNetUtils.FS
 {

@@ -20,7 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NativeAPI;
-using WinAPI.User;
+using NativeAPI.Win.User;
 
 // ReSharper disable MemberCanBePrivate.Global
 namespace WindowsOSUtils.Windows

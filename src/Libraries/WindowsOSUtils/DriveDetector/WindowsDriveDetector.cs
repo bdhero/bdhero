@@ -22,8 +22,8 @@ using System.Windows.Forms;
 using WindowsOSUtils.Windows;
 using DotNetUtils.Annotations;
 using OSUtils.DriveDetector;
-using WinAPI.Device;
-using WinAPI.User;
+using NativeAPI.Win.Device;
+using NativeAPI.Win.User;
 
 namespace WindowsOSUtils.DriveDetector
 {

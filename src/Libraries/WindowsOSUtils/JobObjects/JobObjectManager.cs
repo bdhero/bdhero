@@ -19,7 +19,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using NativeAPI;
-using WinAPI.Kernel;
+using NativeAPI.Win.Kernel;
 using DotNetUtils.Annotations;
 using OSUtils.JobObjects;
 

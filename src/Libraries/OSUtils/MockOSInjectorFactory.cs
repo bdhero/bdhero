@@ -26,7 +26,7 @@ using Ninject.Modules;
 using OSUtils.DriveDetector;
 using OSUtils.JobObjects;
 using OSUtils.TaskbarUtils;
-using OSUtils.Windows;
+using OSUtils.Window;
 
 namespace OSUtils
 {

@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using I18N;
-using WinAPI.Kernel;
+using NativeAPI.Win.Kernel;
 
 namespace BDInfo
 {

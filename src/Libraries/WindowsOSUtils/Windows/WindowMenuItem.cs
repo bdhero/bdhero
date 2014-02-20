@@ -1,5 +1,5 @@
 ﻿using System;
-using OSUtils.Windows;
+using OSUtils.Window;
 
 namespace WindowsOSUtils.Windows
 {

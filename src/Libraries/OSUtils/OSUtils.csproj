@@ -69,9 +69,9 @@
     <Compile Include="TaskbarUtils\ITaskbarItem.cs" />
     <Compile Include="TaskbarUtils\ITaskbarItemFactory.cs" />
     <Compile Include="TaskbarUtils\MockTaskbarItem.cs" />
-    <Compile Include="Windows\IWindowMenu.cs" />
-    <Compile Include="Windows\IWindowMenuFactory.cs" />
-    <Compile Include="Windows\IWindowMenuItem.cs" />
+    <Compile Include="Window\IWindowMenu.cs" />
+    <Compile Include="Window\IWindowMenuFactory.cs" />
+    <Compile Include="Window\IWindowMenuItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -81,13 +81,9 @@
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MacAPI\MacAPI.csproj">
-      <Project>{11178AC6-7EB2-4868-AE40-E20C519A2410}</Project>
-      <Name>MacAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WinAPI\WinAPI.csproj">
-      <Project>{A8BCDB98-E6EC-419A-9CC0-7A3098F15C05}</Project>
-      <Name>WinAPI</Name>
+    <ProjectReference Include="..\NativeAPI\NativeAPI.csproj">
+      <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
+      <Name>NativeAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
