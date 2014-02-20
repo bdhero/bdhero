@@ -169,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SmartJsonConvert.cs" />
     <Compile Include="TaskUtils\IThreadInvoker.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="TaskUtils\ProgressEstimator.cs" />

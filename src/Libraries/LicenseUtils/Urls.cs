@@ -33,7 +33,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.codeproject.com/Articles/6334/Plug-ins-in-C"</c>
         /// </example>
-        [JsonProperty("article")]
         public string Article;
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.nuget.org/packages/Ninject/"</c>
         /// </example>
-        [JsonProperty("package")]
         public string Package;
 
         /// <summary>
@@ -51,7 +49,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.ninject.org/"</c>
         /// </example>
-        [JsonProperty("project")]
         public string Project;
 
         /// <summary>
@@ -60,7 +57,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"https://github.com/ninject/ninject"</c>
         /// </example>
-        [JsonProperty("source")]
         public string Source;
 
         public override string ToString()

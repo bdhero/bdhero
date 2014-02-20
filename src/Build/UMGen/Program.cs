@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using BuildUtils;
+using DotNetUtils;
 using DotNetUtils.Crypto;
 using Mono.Options;
 using Newtonsoft.Json;
@@ -71,7 +72,7 @@ namespace UpdateManifestGenerator
                 Logger.WarnFormat("Warning: Unknown arguments passed; ignoring: [ \"{0}\" ]", string.Join("\", \"", extra));
             }
 
-            var json = JsonConvert.SerializeObject(update, Formatting.Indented);
+            var json = SmartJsonConvert.SerializeObject(update, Formatting.Indented);
             File.WriteAllText(outputPath, json);
         }
 

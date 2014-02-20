@@ -45,7 +45,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"GNU General Public License"</c>
         /// </example>
-        [JsonProperty("name")]
         public string Name;
 
         /// <summary>
@@ -54,7 +53,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"GPL"</c>
         /// </example>
-        [JsonProperty("abbr")]
         public string Abbreviation;
 
         /// <summary>
@@ -63,7 +61,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>2</c>, <c>2.1</c>, <c>3</c>
         /// </example>
-        [JsonProperty("version")]
         public float? Version;
 
         /// <summary>
@@ -72,7 +69,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.gnu.org/licenses/gpl-2.0.html"</c>
         /// </example>
-        [JsonProperty("url")]
         public string Url;
 
         /// <summary>
@@ -81,14 +77,12 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.gnu.org/licenses/gpl-2.0.html"</c>
         /// </example>
-        [JsonProperty("tldr_url")]
-        public string TlDrUrl;
+        public string TldrUrl;
 
         /// <summary>
         ///     Gets whether the license is a custom, project-specific license (<c>true</c>)
         ///     or a standard, general-purpose license (<c>false</c>).
         /// </summary>
-        [JsonProperty("isCustom")]
         public bool IsCustom;
 
         /// <summary>

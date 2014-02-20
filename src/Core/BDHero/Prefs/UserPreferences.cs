@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BDHero.Startup;
+using DotNetUtils;
 using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 
@@ -66,7 +67,7 @@ namespace BDHero.Prefs
 
                 var json = File.ReadAllText(PreferenceFilePath);
 
-                return JsonConvert.DeserializeObject<UserPreferences>(json);
+                return SmartJsonConvert.DeserializeObject<UserPreferences>(json);
             }
         }
         public void UpdatePreferences(UserPreferenceMutator mutator)
@@ -80,7 +81,7 @@ namespace BDHero.Prefs
                 prefs.RecentFiles.RecentBDROMPaths.Clear();
             }
 
-            var json = JsonConvert.SerializeObject(prefs, Formatting.Indented);
+            var json = SmartJsonConvert.SerializeObject(prefs, Formatting.Indented);
 
             File.WriteAllText(PreferenceFilePath, json);
         }

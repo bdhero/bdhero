@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DotNetUtils;
 using Newtonsoft.Json;
 
 namespace BDHero.Plugin
@@ -36,7 +37,7 @@ namespace BDHero.Plugin
                 try
                 {
                     var json = File.ReadAllText(assemblyInfo.ConfigFilePath);
-                    return JsonConvert.DeserializeObject<T>(json);
+                    return SmartJsonConvert.DeserializeObject<T>(json);
                 }
                 catch (Exception e)
                 {
@@ -48,7 +49,7 @@ namespace BDHero.Plugin
 
         public static void SavePreferences(PluginAssemblyInfo assemblyInfo, Object prefs)
         {
-            var json = JsonConvert.SerializeObject(prefs, Formatting.Indented);
+            var json = SmartJsonConvert.SerializeObject(prefs, Formatting.Indented);
             var directory = Path.GetDirectoryName(assemblyInfo.ConfigFilePath);
             if (directory != null)
                 Directory.CreateDirectory(directory);

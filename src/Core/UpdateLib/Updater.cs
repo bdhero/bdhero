@@ -23,6 +23,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using DotNetUtils;
 using DotNetUtils.Crypto;
 using DotNetUtils.Net;
 using Newtonsoft.Json;
@@ -184,7 +185,7 @@ namespace UpdateLib
                 _state = UpdaterClientState.Checking;
                 HttpRequest.BeforeRequestGlobal += NotifyBeforeRequest;
                 var json = HttpRequest.Get("http://update.bdhero.org/update.json");
-                var response = JsonConvert.DeserializeObject<UpdateResponse>(json);
+                var response = SmartJsonConvert.DeserializeObject<UpdateResponse>(json);
                 _latestUpdate = FromResponse(response);
                 _state = UpdaterClientState.Ready;
                 _hasChecked = true;

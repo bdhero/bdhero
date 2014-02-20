@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using BDHero.Plugin;
 using BDHero.JobQueue;
+using DotNetUtils;
 using DotNetUtils.Extensions;
 using I18N;
 using WatTmdb.V3;
@@ -408,7 +409,7 @@ namespace TmdbPlugin
             var tmdbResponse = _tmdbApi.ResponseContent;
             try
             {
-                var pluginSettings = JsonConvert.DeserializeObject<TmdbApiErrors>(tmdbResponse);
+                var pluginSettings = SmartJsonConvert.DeserializeObject<TmdbApiErrors>(tmdbResponse);
                 Logger.ErrorFormat("Error: api.themoviedb.org returned the following Status Code {0} : {1}",
                                    pluginSettings.StatusCode,
                                    pluginSettings.StatusMessage);

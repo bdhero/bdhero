@@ -54,7 +54,6 @@ namespace LicenseUtils
         /// <example>
         ///     BDHero.
         /// </example>
-        [JsonProperty("derivatives")]
         public Work[] Derivatives;
 
         /// <summary>
@@ -63,7 +62,6 @@ namespace LicenseUtils
         /// <example>
         ///     BDInfo.
         /// </example>
-        [JsonProperty("originals")]
         public Work[] Originals;
 
         /// <summary>
@@ -72,7 +70,6 @@ namespace LicenseUtils
         /// <example>
         ///     Plug-ins in C#, Detecting USB Drive Removal in a C# Program, JobObject.cs.
         /// </example>
-        [JsonProperty("snippets")]
         public Work[] Snippets;
 
         /// <summary>
@@ -81,7 +78,6 @@ namespace LicenseUtils
         /// <example>
         ///     Json.NET.
         /// </example>
-        [JsonProperty("packages")]
         public Work[] Packages;
 
         /// <summary>
@@ -90,7 +86,6 @@ namespace LicenseUtils
         /// <example>
         ///     Windows API Code Pack.
         /// </example>
-        [JsonProperty("libraries")]
         public Work[] Libraries;
 
         /// <summary>
@@ -99,7 +94,6 @@ namespace LicenseUtils
         /// <example>
         ///     FFmpeg, MKVToolNix.
         /// </example>
-        [JsonProperty("binaries")]
         public Work[] Binaries;
 
         public override string ToString()

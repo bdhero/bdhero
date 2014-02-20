@@ -46,6 +46,6 @@
     "ms_winapi_custom": {
         "name": "Custom",
         "url": "http://archive.msdn.microsoft.com/WindowsAPICodePack/Project/License.aspx",
-        "isCustom": true
+        "is_custom": true
     }
 }

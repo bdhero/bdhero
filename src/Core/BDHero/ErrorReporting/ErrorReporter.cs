@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using BDHero.ErrorReporting.Models;
+using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 using Newtonsoft.Json;
@@ -49,7 +50,8 @@ namespace BDHero.ErrorReporting
             using (var requestStream = request.GetRequestStream())
             using (var streamWriter = new StreamWriter(requestStream))
             {
-                streamWriter.Write(JsonConvert.SerializeObject(newIssueRequest));
+                var json = SmartJsonConvert.SerializeObject(newIssueRequest);
+                streamWriter.Write(json);
                 streamWriter.Flush();
                 streamWriter.Close();
             }
@@ -64,7 +66,7 @@ namespace BDHero.ErrorReporting
                 using (var streamReader = new StreamReader(responseStream))
                 {
                     var responseText = streamReader.ReadToEnd();
-                    var newIssueResponse = JsonConvert.DeserializeObject<NewIssueResponse>(responseText);
+                    var newIssueResponse = SmartJsonConvert.DeserializeObject<NewIssueResponse>(responseText);
                     return newIssueResponse;
                 }
             }

@@ -42,8 +42,8 @@ namespace LicenseUtils.Forms
             hyperlinkLabelUrl.Url = license.Url;
             hyperlinkLabelUrl.Visible = !string.IsNullOrEmpty(license.Url);
 
-            hyperlinkLabelTlDrUrl.Url = license.TlDrUrl;
-            hyperlinkLabelTlDrUrl.Visible = !string.IsNullOrEmpty(license.TlDrUrl);
+            hyperlinkLabelTlDrUrl.Url = license.TldrUrl;
+            hyperlinkLabelTlDrUrl.Visible = !string.IsNullOrEmpty(license.TldrUrl);
 
 #if __MonoCS__
             tabPageFormatted.Parent.Controls.Remove(tabPageFormatted);

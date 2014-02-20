@@ -8,13 +8,8 @@ namespace BDHero.ErrorReporting.Models
     [DebuggerDisplay("{Name}")]
     public class Label
     {
-        [JsonProperty("url")]
         public string Url;
-
-        [JsonProperty("name")]
         public string Name;
-
-        [JsonProperty("color")]
         public string Color;
     }
 }

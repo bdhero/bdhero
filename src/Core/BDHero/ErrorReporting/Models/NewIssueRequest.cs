@@ -20,25 +20,21 @@ namespace BDHero.ErrorReporting.Models
         /// <summary>
         ///     Gets or sets a brief summary of the issue.
         /// </summary>
-        [JsonProperty("title")]
         public string Title;
         
         /// <summary>
         ///     Gets or sets a detailed description of the issue.
         /// </summary>
-        [JsonProperty("body")]
         public string Body;
         
         /// <summary>
         ///     Gets or sets the login name (username) of the GitHub user to whom the issue is assigned.
         /// </summary>
-        [JsonProperty("assignee")]
         public string Assignee;
 
         /// <summary>
         ///     Gets or sets a list of labels to tag the issue with.
         /// </summary>
-        [JsonProperty("labels")]
         public List<string> Labels { get; set; }
 
         public NewIssueRequest(Exception exception)

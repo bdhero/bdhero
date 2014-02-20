@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DotNetUtils;
 using DotNetUtils.Crypto;
 using DotNetUtils.Extensions;
 using Mono.Options;
@@ -112,7 +113,7 @@ namespace Hasher
                 map.AddRange(inputs.Select(input => new KeyValuePair<string, CryptoHashInput>(input.Name, input)));
                 obj = map;
             }
-            Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
+            Console.WriteLine(SmartJsonConvert.SerializeObject(obj, Formatting.Indented));
         }
 
         private static void PrintText(List<CryptoHashInput> inputs)
