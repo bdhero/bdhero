@@ -5,6 +5,7 @@ using System.Net;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
+using GitHub.Exceptions;
 using GitHub.Models;
 
 namespace GitHub
@@ -14,6 +15,9 @@ namespace GitHub
     /// </summary>
     public class GitHubClient
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly string _repo;
         private readonly string _oauthToken;
 
@@ -46,6 +50,9 @@ namespace GitHub
         /// <exception cref="WebException">
         ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
         /// </exception>
+        /// <exception cref="RequestException">
+        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
+        /// </exception>
         [NotNull]
         public CreateIssueResponse CreateIssue(Exception exception)
         {
@@ -63,6 +70,9 @@ namespace GitHub
         /// </returns>
         /// <exception cref="WebException">
         ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        /// </exception>
+        /// <exception cref="RequestException">
+        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
         /// </exception>
         [NotNull]
         public SearchIssuesResult[] SearchIssues(Exception exception)
@@ -86,6 +96,9 @@ namespace GitHub
         /// <exception cref="WebException">
         ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
         /// </exception>
+        /// <exception cref="RequestException">
+        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
+        /// </exception>
         [NotNull]
         public CreateIssueCommentResponse CreateIssueComment(SearchIssuesResult issue, Exception exception)
         {
@@ -99,8 +112,11 @@ namespace GitHub
         /// <exception cref="WebException">
         ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
         /// </exception>
+        /// <exception cref="RequestException">
+        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
+        /// </exception>
         [NotNull]
-        private TResponse Request<TResponse>(IGitHubRequest<TResponse> requestBody)
+        private TResponse Request<TResponse>(IGitHubRequest<TResponse> request)
             where TResponse : new()
         {
             var headers = new List<string>
@@ -108,27 +124,48 @@ namespace GitHub
                               string.Format("Authorization: token {0}", _oauthToken)
                           };
 
-            var request = HttpRequest.BuildRequest(requestBody.Method, requestBody.Url, false, headers);
+            var httpRequest = HttpRequest.BuildRequest(request.Method, request.Url, false, headers);
 
             // Expected response format
-            request.Accept = "application/vnd.github.v3+json";
+            httpRequest.Accept = "application/vnd.github.v3+json";
 
-            if (requestBody.Method == HttpRequestMethod.Put || requestBody.Method == HttpRequestMethod.Post)
+            if (request.Method == HttpRequestMethod.Put || request.Method == HttpRequestMethod.Post)
             {
                 // Request body format
-                request.ContentType = "application/json";
+                httpRequest.ContentType = "application/json";
 
-                using (var requestStream = request.GetRequestStream())
+                using (var requestStream = httpRequest.GetRequestStream())
                 using (var streamWriter = new StreamWriter(requestStream))
                 {
-                    var json = SmartJsonConvert.SerializeObject(requestBody);
+                    var json = SmartJsonConvert.SerializeObject(request);
                     streamWriter.Write(json);
                     streamWriter.Flush();
                     streamWriter.Close();
                 }
             }
 
-            using (var httpResponse = request.GetResponse())
+            try
+            {
+                using (var httpResponse = httpRequest.GetResponse())
+                {
+                    return GetResponse<TResponse>(httpResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                var errorResponse = GetResponse<ErrorResponse>(ex.Response);
+
+                Logger.Error(errorResponse.ToString(), ex);
+
+                throw new RequestException(ex, errorResponse);
+            }
+        }
+
+        /// <exception cref="WebException">
+        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        /// </exception>
+        private static TResponse GetResponse<TResponse>(WebResponse httpResponse)
+        {
             using (var responseStream = httpResponse.GetResponseStream())
             {
                 if (responseStream == null)

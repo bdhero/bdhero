@@ -51,9 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\RequestException.cs" />
     <Compile Include="GitHubClient.cs" />
     <Compile Include="Models\CreateIssueCommentRequest.cs" />
     <Compile Include="Models\CreateIssueCommentResponse.cs" />
+    <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\ErrorResponse.cs" />
     <Compile Include="Models\IGitHubRequest.cs" />
     <Compile Include="Models\Label.cs" />
     <Compile Include="Models\Milestone.cs" />
