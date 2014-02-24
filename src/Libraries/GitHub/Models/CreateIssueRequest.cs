@@ -4,14 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using Newtonsoft.Json;
+using DotNetUtils.Net;
 
-namespace BDHero.ErrorReporting.Models
+namespace GitHub.Models
 {
     [UsedImplicitly]
-    [DebuggerDisplay("{Title}")]
-    internal class NewIssueRequest
+    [DebuggerDisplay("Title = {Title}")]
+    internal class CreateIssueRequest : IGitHubRequest<CreateIssueResponse>
     {
+        public const string DefaultLabel = "report";
+
         /// <summary>
         ///     Indentation to create a code block in Markdown syntax.
         /// </summary>
@@ -37,12 +39,21 @@ namespace BDHero.ErrorReporting.Models
         /// </summary>
         public List<string> Labels { get; set; }
 
-        public NewIssueRequest(Exception exception)
+        public CreateIssueRequest(string repo, Exception exception)
         {
             var stackTrace = string.Join("\n", exception.ToString().Split('\n').Select(line => CodeIndent + line));
-            Title = string.Format("Exception: {0} ({1} v{2})", exception.Message, AppUtils.AppName, AppUtils.AppVersion);
+
+            Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, exception.Message, AppUtils.AppName, AppUtils.AppVersion);
             Body = string.Format("{0} v{1}:\n\n{2}", AppUtils.AppName, AppUtils.AppVersion, stackTrace);
-            Labels = new List<string> { "report" };
+            Labels = new List<string> { DefaultLabel };
+            Url = string.Format("https://api.github.com/repos/{0}/issues", repo);
         }
+
+        public HttpRequestMethod Method
+        {
+            get { return HttpRequestMethod.Post; }
+        }
+
+        public string Url { get; private set; }
     }
 }

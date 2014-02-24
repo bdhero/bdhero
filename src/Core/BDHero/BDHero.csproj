@@ -71,11 +71,9 @@
     <Compile Include="Config\InjectorFactory.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="ErrorReporting\ErrorReporter.cs" />
-    <Compile Include="ErrorReporting\Models\Label.cs" />
-    <Compile Include="ErrorReporting\Models\Milestone.cs" />
-    <Compile Include="ErrorReporting\Models\NewIssueRequest.cs" />
-    <Compile Include="ErrorReporting\Models\NewIssueResponse.cs" />
-    <Compile Include="ErrorReporting\Models\User.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResponse.cs" />
+    <Compile Include="ErrorReporting\IErrorDialog.cs" />
+    <Compile Include="ErrorReporting\IStatusWindow.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
@@ -103,6 +101,10 @@
     <Compile Include="Utils\BDFileUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\GitHub\GitHub.csproj">
+      <Project>{290353D2-DD81-4374-9C6A-D8364D33A38C}</Project>
+      <Name>GitHub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UpdateLib\UpdateLib.csproj">
       <Project>{F39EA837-99DD-4453-AA1A-DE408D47A0A6}</Project>
       <Name>UpdateLib</Name>

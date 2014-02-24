@@ -16,59 +16,41 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using BDHero.ErrorReporting.Models;
-using DotNetUtils;
+using System.Linq;
 using DotNetUtils.Annotations;
-using DotNetUtils.Net;
-using Newtonsoft.Json;
+using GitHub;
 
 namespace BDHero.ErrorReporting
 {
-    public class ErrorReporter
+    public static class ErrorReporter
     {
-        // TODO: Make this configurable?
-//        private const string Url = "https://api.github.com/repos/bdhero/bdhero/issues";
-        private const string Url = "https://api.github.com/repos/acdvorak/bdhero-private/issues";
+        private static readonly GitHubClient Client = new GitHubClient("acdvorak/bdhero-private", "131765cc986bd5fa6d09d8633c4d973fbe6dfcf9");
 
-        [CanBeNull]
-        public static NewIssueResponse Report(Exception exception)
+        [NotNull]
+        public static ErrorReportResponse Report(Exception exception)
         {
-            var headers = new List<string>
-                          {
-                              "Authorization: token 131765cc986bd5fa6d09d8633c4d973fbe6dfcf9"
-                          };
+//            var x = new {foo = 123};
 
-            var newIssueRequest = new NewIssueRequest(exception);
+            var issues = Client.SearchIssues(exception);
 
-            var request = HttpRequest.BuildRequest(HttpRequestMethod.Post, Url, false, headers);
-
-            request.Accept = "application/vnd.github.v3+json";
-            request.ContentType = "application/json";
-
-            using (var requestStream = request.GetRequestStream())
-            using (var streamWriter = new StreamWriter(requestStream))
+            if (issues.Any())
             {
-                var json = SmartJsonConvert.SerializeObject(newIssueRequest);
-                streamWriter.Write(json);
-                streamWriter.Flush();
-                streamWriter.Close();
+                var issue = issues.First();
+                var comment = Client.CreateIssueComment(issue, exception);
+                return new ErrorReportResponse
+                       {
+                           IssueNumber = issue.Number,
+                           Url = comment.HtmlUrl
+                       };
             }
-
-            using (var httpResponse = request.GetResponse())
-            using (var responseStream = httpResponse.GetResponseStream())
+            else
             {
-                if (responseStream == null)
-                {
-                    return null;
-                }
-                using (var streamReader = new StreamReader(responseStream))
-                {
-                    var responseText = streamReader.ReadToEnd();
-                    var newIssueResponse = SmartJsonConvert.DeserializeObject<NewIssueResponse>(responseText);
-                    return newIssueResponse;
-                }
+                var issue = Client.CreateIssue(exception);
+                return new ErrorReportResponse
+                       {
+                           IssueNumber = issue.Number,
+                           Url = issue.HtmlUrl
+                       };
             }
         }
     }

@@ -1,9 +1,8 @@
 using System;
 using System.Diagnostics;
 using DotNetUtils.Annotations;
-using Newtonsoft.Json;
 
-namespace BDHero.ErrorReporting.Models
+namespace GitHub.Models
 {
     [UsedImplicitly]
     [DebuggerDisplay("{Number}: {Title}")]

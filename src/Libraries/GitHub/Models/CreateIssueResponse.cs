@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using DotNetUtils.Annotations;
-using Newtonsoft.Json;
 
-namespace BDHero.ErrorReporting.Models
+namespace GitHub.Models
 {
     [UsedImplicitly]
     [DebuggerDisplay("{Number}: {Title}")]
-    public class NewIssueResponse
+    public class CreateIssueResponse
     {
         public int Id { get; set; }
         public string Url { get; set; }
