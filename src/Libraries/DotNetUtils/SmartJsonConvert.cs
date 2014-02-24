@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DotNetUtils.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -74,27 +75,51 @@ namespace DotNetUtils
     ///     Example for a custom ContractResolver that honors <see cref="JsonPropertyAttribute"/> (shouldn't this be default?).
     /// </summary>
     /// <seealso cref="http://stackoverflow.com/questions/12749046/camelcase-only-if-propertyname-not-explicitly-set-in-json-net"/>
+    /// <seealso cref="http://stackoverflow.com/a/8877076/467582"/>
     internal class SnakeCaseContractResolver : DefaultContractResolver
     {
         private static readonly Regex PascalCaseRegex = new Regex("([a-z])([A-Z])");
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            var res = base.CreateProperty(member, memberSerialization);
-            var attrs = member.GetCustomAttributes(typeof(JsonPropertyAttribute), true);
+            var prop = base.CreateProperty(member, memberSerialization);
+            var attrs = member.GetJsonPropertyAttributes();
 
-            if (attrs.Any())
+            SetPropertyName(member, prop, attrs);
+
+            // Support [JsonIgnore] attribute on interfaces
+            foreach (var interfaceProperty in member.GetAllInterfaceProperties())
             {
-                var attr = (attrs[0] as JsonPropertyAttribute);
-                if (res.PropertyName != null && attr != null)
-                    res.PropertyName = attr.PropertyName;
+                if (interfaceProperty.GetCustomAttributes<JsonIgnoreAttribute>().Any())
+                {
+                    prop.Ignored = true;
+                    return prop;
+                }
+
+                var interfaceAttrs = interfaceProperty.GetJsonPropertyAttributes();
+                if (interfaceAttrs.Any())
+                {
+                    SetPropertyName(member, prop, interfaceAttrs);
+                    return prop;
+                }
             }
-            else
-            {
-                res.PropertyName = PascalCaseRegex.Replace(member.Name, "$1_$2").ToLower();
-            }
- 
-            return res;
+
+            return prop;
+        }
+
+        private static void SetPropertyName(MemberInfo member, JsonProperty prop, JsonPropertyAttribute[] attrs)
+        {
+            prop.PropertyName = attrs.Any() ? attrs.First().PropertyName : PascalCaseRegex.Replace(member.Name, "$1_$2").ToLower();
+        }
+    }
+
+    internal static class InternalMemberInfoExtensions
+    {
+        public static JsonPropertyAttribute[] GetJsonPropertyAttributes(this MemberInfo member, bool inherit = true)
+        {
+            return member.GetCustomAttributes<JsonPropertyAttribute>(inherit)
+                         .Where(attribute => !string.IsNullOrEmpty(attribute.PropertyName))
+                         .ToArray();
         }
     }
 }
