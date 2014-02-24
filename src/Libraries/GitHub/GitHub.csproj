@@ -59,8 +59,10 @@
     <Compile Include="Models\Milestone.cs" />
     <Compile Include="Models\CreateIssueRequest.cs" />
     <Compile Include="Models\CreateIssueResponse.cs" />
+    <Compile Include="Models\PullRequest.cs" />
     <Compile Include="Models\SearchIssuesRequest.cs" />
     <Compile Include="Models\SearchIssuesResponse.cs" />
+    <Compile Include="Models\SearchIssuesResult.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
