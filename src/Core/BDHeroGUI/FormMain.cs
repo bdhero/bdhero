@@ -276,9 +276,9 @@ namespace BDHeroGUI
 
         private void ShowExceptionDetail(string title, Exception exception)
         {
-            if (ExceptionDialog.IsPlatformSupported)
+            if (Windows7ErrorDialog.IsPlatformSupported)
             {
-                var dialog = new ExceptionDialog(title, exception, IsID10TError(exception));
+                var dialog = new Windows7ErrorDialog(title, exception, IsID10TError(exception));
                 dialog.ReportResultVisitors.Add(this);
                 dialog.ShowDialog(this);
             }
@@ -319,9 +319,9 @@ namespace BDHeroGUI
         private void ShowNonReportableExceptionDialog(Exception exception)
         {
             const string title = "Unable to submit error report";
-            if (ExceptionDialog.IsPlatformSupported)
+            if (Windows7ErrorDialog.IsPlatformSupported)
             {
-                new ExceptionDialog(title, exception, false).ShowDialog(this);
+                new Windows7ErrorDialog(title, exception, false).ShowDialog(this);
             }
             else
             {

@@ -30,7 +30,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BDHeroGUI.Dialogs
 {
-    public class ExceptionDialog
+    public class Windows7ErrorDialog
     {
         /// <summary>
         ///     Indicates whether this feature is supported on the current platform.
@@ -46,7 +46,7 @@ namespace BDHeroGUI.Dialogs
         private readonly Exception _exception;
         private readonly bool _isReportable;
 
-        public ExceptionDialog(string title, Exception exception, bool isReportable)
+        public Windows7ErrorDialog(string title, Exception exception, bool isReportable)
         {
             _title = title;
             _exception = exception;
