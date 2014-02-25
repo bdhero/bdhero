@@ -16,13 +16,9 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
-using BDHero;
 using BDHero.ErrorReporting;
-using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
