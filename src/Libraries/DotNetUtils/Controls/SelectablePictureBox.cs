@@ -67,7 +67,7 @@ namespace DotNetUtils.Controls
 
             if (IsActivateKey(e.KeyCode) && e.Modifiers == Keys.None)
             {
-                OnClick(e);
+                base.OnClick(e);
                 e.SuppressKeyPress = true;
                 e.Handled = true;
                 return;
