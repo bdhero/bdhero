@@ -105,7 +105,7 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStrip1 = new DotNetUtils.Controls.SelectableStatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -677,6 +677,7 @@ namespace BDHeroGUI
             // 
             // statusStrip1
             // 
+            this.statusStrip1.CanTabInto = false;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelOffline});
             this.statusStrip1.Location = new System.Drawing.Point(0, 579);
@@ -684,6 +685,7 @@ namespace BDHeroGUI
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1178, 22);
             this.statusStrip1.TabIndex = 15;
+            this.statusStrip1.TabStop = true;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelOffline
@@ -789,7 +791,7 @@ namespace BDHeroGUI
         private SplitContainerWithDivider splitContainerWithDivider1;
         private Components.ChaptersPanel chaptersPanel;
         private LinkLabel2 linkLabelNameProviderPreferences;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private DotNetUtils.Controls.SelectableStatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelOffline;
         private System.Windows.Forms.ToolStripMenuItem newInstanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
