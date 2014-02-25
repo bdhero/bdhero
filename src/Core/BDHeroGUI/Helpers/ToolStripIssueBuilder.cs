@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using DotNetUtils.Controls;
+using DotNetUtils.Extensions;
 
 namespace BDHeroGUI.Helpers
 {
@@ -19,27 +20,32 @@ namespace BDHeroGUI.Helpers
                                                       Margin = ZeroMargin
                                                   };
 
+        public ToolStripIssueBuilder()
+        {
+            _panel.MouseUp += OnMouseUp;
+        }
+
         #region Public API
 
         public ToolStripIssueBuilder AddImage(Image image)
         {
-            _panel.Controls.Add(new PictureBox
-                                {
-                                    Image = image,
-                                    Size = image.Size,
-                                    Margin = ZeroMargin
-                                });
+            AddControl(new PictureBox
+                       {
+                           Image = image,
+                           Size = image.Size,
+                           Margin = ZeroMargin
+                       });
             return this;
         }
 
         public ToolStripIssueBuilder AddLabel(string text)
         {
-            _panel.Controls.Add(new Label
-                                {
-                                    Text = text,
-                                    AutoSize = true,
-                                    Margin = ZeroMargin
-                                });
+            AddControl(new Label
+                       {
+                           Text = text,
+                           AutoSize = true,
+                           Margin = ZeroMargin
+                       });
             return this;
         }
 
@@ -58,22 +64,22 @@ namespace BDHeroGUI.Helpers
                                  Padding = ZeroMargin
                              };
             label.Click += clickHandler;
-            _panel.Controls.Add(label);
+            AddControl(label);
             return this;
         }
 
         public ToolStripIssueBuilder AddLink(Image image, string text, EventHandler clickHandler)
         {
             var label = new LinkLabel2
-                             {
-                                 Text = text,
-                                 Image = image,
-                                 ImageRightPad = 0,
-                                 Margin = ZeroMargin,
-                                 Padding = ZeroMargin
-                             };
+                        {
+                            Text = text,
+                            Image = image,
+                            ImageRightPad = 0,
+                            Margin = ZeroMargin,
+                            Padding = ZeroMargin
+                        };
             label.Click += clickHandler;
-            _panel.Controls.Add(label);
+            AddControl(label);
             return this;
         }
 
@@ -93,14 +99,14 @@ namespace BDHeroGUI.Helpers
             var text = string.Format("Issue #{0}", result.IssueNumber);
             var url = result.Url;
 
-            _panel.Controls.Add(new HyperlinkLabel
-                                {
-                                    Image = image,
-                                    ImageRightPad = 0,
-                                    Text = text,
-                                    Url = url,
-                                    Margin = ZeroMargin
-                                });
+            AddControl(new HyperlinkLabel
+                       {
+                           Image = image,
+                           ImageRightPad = 0,
+                           Text = text,
+                           Url = url,
+                           Margin = ZeroMargin
+                       });
         }
 
         private void AddDismissButton()
@@ -115,7 +121,20 @@ namespace BDHeroGUI.Helpers
                                   };
             closePictureBox.Click += (sender, args) => Dismiss();
             new ToolTip().SetToolTip(closePictureBox, "Dismiss");
-            _panel.Controls.Add(closePictureBox);
+            AddControl(closePictureBox);
+        }
+
+        private void AddControl(Control control)
+        {
+            control.MouseUp += OnMouseUp;
+            control.Descendants().ForEach(descendant => descendant.MouseUp += OnMouseUp);
+            _panel.Controls.Add(control);
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs args)
+        {
+            if (args.Button == MouseButtons.Middle)
+                Dismiss();
         }
 
         private void Dismiss()
