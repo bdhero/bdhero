@@ -255,7 +255,7 @@ namespace BDHeroGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxInput.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxInput.DialogTitle = "Select a BD-ROM folder:";
-            this.textBoxInput.DialogType = FileSystemDialogType.OpenDirectory;
+            this.textBoxInput.DialogType = DotNetUtils.Dialogs.FS.FileSystemDialogType.OpenDirectory;
             this.textBoxInput.FileTypes = null;
             this.textBoxInput.Location = new System.Drawing.Point(93, 3);
             this.textBoxInput.Name = "textBoxInput";
@@ -364,7 +364,7 @@ namespace BDHeroGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxOutput.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxOutput.DialogTitle = "Save MKV file:";
-            this.textBoxOutput.DialogType = FileSystemDialogType.SaveFile;
+            this.textBoxOutput.DialogType = DotNetUtils.Dialogs.FS.FileSystemDialogType.SaveFile;
             this.textBoxOutput.FileTypes = null;
             this.textBoxOutput.Location = new System.Drawing.Point(93, 407);
             this.textBoxOutput.Name = "textBoxOutput";
