@@ -21,18 +21,19 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsOSUtils.Windows;
 using BDHero;
 using BDHero.BDROM;
+using BDHero.ErrorReporting;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
 using BDHero.Utils;
 using BDHeroGUI.Components;
-using BDHeroGUI.DIalogs;
+using BDHeroGUI.Dialogs;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
 using DotNetUtils;
@@ -40,6 +41,7 @@ using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using DotNetUtils.FS;
+using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
 using OSUtils.DriveDetector;
@@ -51,7 +53,7 @@ using UpdateLib;
 namespace BDHeroGUI
 {
     [UsedImplicitly]
-    public partial class FormMain : WndProcObservableForm
+    public partial class FormMain : WndProcObservableForm, IErrorReportResultVisitor
     {
         private const string PluginEnabledMenuItemName = "enabled";
 
@@ -230,7 +232,8 @@ namespace BDHeroGUI
 
         private void InitNetworkStatusMonitor()
         {
-            _networkStatusMonitor.NetworkStatusChanged += SetIsOnline;
+            var taskBuilder = new TaskBuilder().OnCurrentThread();
+            _networkStatusMonitor.NetworkStatusChanged += isOnline => taskBuilder.Succeed(() => SetIsOnline(isOnline)).Build().Start();
             _networkStatusMonitor.TestConnectionAsync();
         }
 
@@ -270,13 +273,82 @@ namespace BDHeroGUI
 
         #endregion
 
+        #region Error Reporting
+
         private void ShowExceptionDetail(string title, Exception exception)
         {
             if (ExceptionDialog.IsPlatformSupported)
-                new ExceptionDialog(title, exception).ShowDialog(this);
+            {
+                var dialog = new ExceptionDialog(title, exception, IsID10TError(exception));
+                dialog.ReportResultVisitors.Add(this);
+                dialog.ShowDialog(this);
+            }
             else
+            {
                 DetailForm.ShowExceptionDetail(this, title, exception);
+            }
         }
+
+        public void Visit(ErrorReportResultCreated result)
+        {
+            var panel = new ToolStripIssueBuilder()
+                .AddLabel("Submitted")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultUpdated result)
+        {
+            var panel = new ToolStripIssueBuilder()
+                .AddLabel("Updated")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultFailed result)
+        {
+            var panel = new ToolStripIssueBuilder()
+                .AddImage(Properties.Resources.error_circle)
+                .AddLabel("Unable to submit error report")
+                .AddLink("(details)", (sender, args) => ShowNonReportableExceptionDialog(result.Exception))
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        private void ShowNonReportableExceptionDialog(Exception exception)
+        {
+            const string title = "Unable to submit error report";
+            if (ExceptionDialog.IsPlatformSupported)
+            {
+                new ExceptionDialog(title, exception, false).ShowDialog(this);
+            }
+            else
+            {
+                MessageBox.Show(this, exception.ToString(), title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        ///     Determines if the given exception is likely due to user error (ID10T).
+        /// </summary>
+        /// <param name="e">
+        ///     Exception that was thrown elsewhere in the application.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the given exception is likely due to user error; otherwise <c>false</c>.
+        /// </returns>
+        private static bool IsID10TError(Exception e)
+        {
+            return (e is System.IO.DirectoryNotFoundException ||
+                    e is System.IO.DriveNotFoundException ||
+                    e is System.IO.FileNotFoundException ||
+                    e is System.IO.PathTooLongException ||
+                    e is System.Net.WebException);
+        }
+
+        #endregion
 
         #region Initialization
 

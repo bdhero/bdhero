@@ -48,7 +48,7 @@ namespace GitHub
         ///     The response returned by GitHub.
         /// </returns>
         /// <exception cref="WebException">
-        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if no response is received.
         /// </exception>
         /// <exception cref="RequestException">
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
@@ -69,7 +69,7 @@ namespace GitHub
         ///     A list of search results that match the given <paramref name="exception"/>.
         /// </returns>
         /// <exception cref="WebException">
-        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if no response is received.
         /// </exception>
         /// <exception cref="RequestException">
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
@@ -94,7 +94,7 @@ namespace GitHub
         ///     A list of search results that match the given <paramref name="exception"/>.
         /// </returns>
         /// <exception cref="WebException">
-        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if no response is received.
         /// </exception>
         /// <exception cref="RequestException">
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
@@ -110,7 +110,7 @@ namespace GitHub
         #region Private implementation
 
         /// <exception cref="WebException">
-        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if no response is received.
         /// </exception>
         /// <exception cref="RequestException">
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
@@ -162,10 +162,14 @@ namespace GitHub
         }
 
         /// <exception cref="WebException">
-        ///     Thrown if <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if <paramref name="httpResponse"/> is <c>null</c> or <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
         /// </exception>
         private static TResponse GetResponse<TResponse>(WebResponse httpResponse)
         {
+            if (httpResponse == null)
+            {
+                throw new WebException("No response received");
+            }
             using (var responseStream = httpResponse.GetResponseStream())
             {
                 if (responseStream == null)

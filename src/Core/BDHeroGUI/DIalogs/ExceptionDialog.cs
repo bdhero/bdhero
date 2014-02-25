@@ -16,15 +16,19 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using BDHero;
 using BDHero.ErrorReporting;
 using DotNetUtils;
+using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace BDHeroGUI.DIalogs
+namespace BDHeroGUI.Dialogs
 {
     public class ExceptionDialog
     {
@@ -36,19 +40,22 @@ namespace BDHeroGUI.DIalogs
             get { return TaskDialog.IsPlatformSupported; }
         }
 
+        public readonly IList<IErrorReportResultVisitor> ReportResultVisitors = new List<IErrorReportResultVisitor>();
+
         private readonly string _title;
         private readonly Exception _exception;
+        private readonly bool _isReportable;
 
-        public ExceptionDialog(string title, Exception exception)
+        public ExceptionDialog(string title, Exception exception, bool isReportable)
         {
             _title = title;
             _exception = exception;
+            _isReportable = isReportable;
         }
 
         public DialogResult ShowDialog(IWin32Window owner)
         {
-            var isLogicError = !IsID10TError(_exception);
-
+            var copyDetailsLinkHref = "copy_details";
             var editReportLinkHref = "edit_report";
 
             var dialog = new TaskDialog
@@ -68,19 +75,19 @@ namespace BDHeroGUI.DIalogs
                              DetailsCollapsedLabel = "Show &details",
                              DetailsExpandedLabel = "Hide &details",
 
-                             FooterText = string.Format("<a href=\"{0}\">Edit report contents</a>", editReportLinkHref),
+                             FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", copyDetailsLinkHref),
 
                              OwnerWindowHandle = owner.Handle
                          };
 
-            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nFast and painless - I promise!");
+            IErrorReportResult result = null;
+            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nNo questions asked!");
             sendButton.Click += delegate
                                 {
                                     new TaskBuilder()
                                         .OnCurrentThread()
-                                        .DoWork((invoker, token) => ErrorReporter.Report(_exception))
-                                        .Fail(args => ReportExceptionFail(owner, args))
-                                        .Succeed(() => ReportExceptionSucceed(owner))
+                                        .DoWork((invoker, token) => result = ErrorReporter.Report(_exception))
+                                        .Succeed(() => ReportExceptionCompleted(owner, result))
                                         .Build()
                                         .Start();
                                     dialog.Close(TaskDialogResult.Yes);
@@ -92,19 +99,42 @@ namespace BDHeroGUI.DIalogs
                                         dialog.Close(TaskDialogResult.No);
                                     };
 
-            dialog.HyperlinkClick += (sender, args) => MessageBox.Show(owner, args.LinkText);
+            dialog.HyperlinkClick += delegate(object sender, TaskDialogHyperlinkClickedEventArgs args)
+                                     {
+                                         if (args.LinkText == copyDetailsLinkHref)
+                                         {
+                                             Clipboard.SetText(_exception.ToString());
+                                             MessageBox.Show(owner, "Error details copied to clipboard.", "Copied!",
+                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                             return;
+                                         }
+                                         if (args.LinkText == editReportLinkHref)
+                                         {
+                                             MessageBox.Show(owner, "Edit report contents");
+                                         }
+                                     };
 
-            if (true || isLogicError)
+            if (_isReportable)
             {
                 dialog.Controls.Add(sendButton);
                 dialog.Controls.Add(dontSendButton);
+                dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}", editReportLinkHref, dialog.FooterText);
             }
 
             return dialog.Show().ToDialogResult();
         }
 
-        private static void ReportExceptionSucceed(IWin32Window owner)
+        private void ReportExceptionCompleted(IWin32Window owner, [NotNull] IErrorReportResult result)
         {
+            if (result == null)
+                throw new ArgumentNullException("result");
+
+            foreach (var visitor in ReportResultVisitors)
+            {
+                result.Accept(visitor);
+            }
+
+#if false
             var dialog = new TaskDialog
                          {
                              Cancelable = true,
@@ -127,8 +157,10 @@ namespace BDHeroGUI.DIalogs
                 MessageBox.Show(owner, "OK, we won't show this again");
             else
                 MessageBox.Show(owner, "Prepare to see more of me, bitch!");
+#endif
         }
 
+#if false
         private static bool IsFormValid(IWin32Window owner)
         {
             var control = Control.FromHandle(owner.Handle);
@@ -165,23 +197,6 @@ namespace BDHeroGUI.DIalogs
                                 icon);
             }
         }
-
-        /// <summary>
-        ///     Determines if the given exception is likely due to user error (ID10T).
-        /// </summary>
-        /// <param name="e">
-        ///     Exception that was thrown elsewhere in the application.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the given exception is likely due to user error; otherwise <c>false</c>.
-        /// </returns>
-        private static bool IsID10TError(Exception e)
-        {
-            return (e is System.IO.DirectoryNotFoundException ||
-                    e is System.IO.DriveNotFoundException ||
-                    e is System.IO.FileNotFoundException ||
-                    e is System.IO.PathTooLongException ||
-                    e is System.Net.WebException);
-        }
+#endif
     }
 }

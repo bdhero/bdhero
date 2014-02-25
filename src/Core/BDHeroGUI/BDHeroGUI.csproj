@@ -141,7 +141,7 @@
     <Compile Include="Components\TracksPanel.Designer.cs">
       <DependentUpon>TracksPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="DIalogs\ExceptionDialog.cs" />
+    <Compile Include="Dialogs\ExceptionDialog.cs" />
     <Compile Include="Forms\FormMediaCustom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +168,7 @@
       <DependentUpon>FormDiscInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MediaDragData.cs" />
+    <Compile Include="Helpers\ToolStripIssueBuilder.cs" />
     <Compile Include="TrackFilter.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -202,6 +203,8 @@
     <Compile Include="PlaylistFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\github-mark-16.png" />
+    <None Include="Resources\cross-small-gray.png" />
     <None Include="Resources\network.png" />
     <None Include="Resources\clipboard-arrow.png" />
     <None Include="Resources\play_blue.png" />

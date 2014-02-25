@@ -30,6 +30,7 @@ namespace GitHub.Exceptions
             : base(errorResponse.ToString(), innerException)
         {
             ErrorResponse = errorResponse;
+            base.HelpLink = ErrorResponse.DocumentationUrl;
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace GitHub.Exceptions
             : base(message, innerException)
         {
             ErrorResponse = errorResponse;
+            base.HelpLink = ErrorResponse.DocumentationUrl;
         }
     }
 }

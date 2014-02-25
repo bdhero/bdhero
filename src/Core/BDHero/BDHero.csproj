@@ -71,7 +71,6 @@
     <Compile Include="Config\InjectorFactory.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="ErrorReporting\ErrorReporter.cs" />
-    <Compile Include="ErrorReporting\ErrorReportResponse.cs" />
     <Compile Include="ErrorReporting\IErrorDialog.cs" />
     <Compile Include="ErrorReporting\IStatusWindow.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />

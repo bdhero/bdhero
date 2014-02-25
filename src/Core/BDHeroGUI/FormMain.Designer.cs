@@ -688,7 +688,7 @@ namespace BDHeroGUI
             // 
             // toolStripStatusLabelOffline
             // 
-            this.toolStripStatusLabelOffline.Image = global::BDHeroGUI.Properties.Resources.error;
+            this.toolStripStatusLabelOffline.Image = global::BDHeroGUI.Properties.Resources.warning;
             this.toolStripStatusLabelOffline.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.toolStripStatusLabelOffline.Name = "toolStripStatusLabelOffline";
             this.toolStripStatusLabelOffline.Size = new System.Drawing.Size(257, 17);
