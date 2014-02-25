@@ -106,7 +106,7 @@ namespace BDHeroGUI.Helpers
         private void AddDismissButton()
         {
             var closeImage = Properties.Resources.cross_small_gray;
-            var closePictureBox = new PictureBox
+            var closePictureBox = new SelectablePictureBox
                                   {
                                       Image = closeImage,
                                       Size = closeImage.Size,
