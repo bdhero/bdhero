@@ -165,6 +165,7 @@ namespace BDHeroGUI.Components
             var playItem = new ToolStripMenuItem(assoc.HasAssociation ? string.Format("&Play with {0}", assoc.AppName) : "&Play with...");
             playItem.Click += (o, eventArgs) => FileUtils.OpenFile(playlist.FullPath, this);
             playItem.Font = new Font(playItem.Font, FontStyle.Bold);
+            playItem.Enabled = assoc.CanBeOpened;
             if (assoc.HasAssociation)
                 playItem.Image = assoc.GetProgramImage(16);
 
