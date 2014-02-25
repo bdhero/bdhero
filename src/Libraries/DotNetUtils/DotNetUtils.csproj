@@ -80,6 +80,9 @@
     <Compile Include="Concurrency\IPromise.cs" />
     <Compile Include="Concurrency\TimerPromise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
+    <Compile Include="Controls\SelectablePictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
     <Compile Include="Forms\WndProcObservableForm.cs">
