@@ -272,9 +272,22 @@ namespace DotNetUtils.Controls
 
         #region Keyboard events
 
+        private static bool IsActivateKey(Keys key)
+        {
+            return key == Keys.Space || key == Keys.Enter;
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            return IsActivateKey(keyData) || base.IsInputKey(keyData);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (!_isKeyHandled && e.KeyCode == Keys.Enter)
+            if (e.Handled)
+                return;
+
+            if (!_isKeyHandled && IsActivateKey(e.KeyCode))
             {
                 _isKeyHandled = true;
                 OnClick(e);
@@ -285,6 +298,9 @@ namespace DotNetUtils.Controls
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
+            if (e.Handled)
+                return;
+
             _isKeyHandled = false;
 
             base.OnKeyUp(e);
