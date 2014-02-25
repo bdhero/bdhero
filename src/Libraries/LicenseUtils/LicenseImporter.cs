@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DotNetUtils;
 using LicenseUtils.Properties;
 using Newtonsoft.Json;
 
@@ -34,7 +35,7 @@ namespace LicenseUtils
 
         public static Works Import()
         {
-            var licenseMap = JsonConvert.DeserializeObject<Dictionary<string, License>>(GetResource("licenses_json"));
+            var licenseMap = SmartJsonConvert.DeserializeObject<Dictionary<string, License>>(GetResource("licenses_json"));
             var licenses = new List<License>();
 
             foreach (var id in licenseMap.Keys)
@@ -46,7 +47,7 @@ namespace LicenseUtils
                 licenses.Add(license);
             }
 
-            var works = JsonConvert.DeserializeObject<Works>(GetResource("works_json"));
+            var works = SmartJsonConvert.DeserializeObject<Works>(GetResource("works_json"));
             foreach (var work in works.All.Where(work => work.LicenseId != null))
             {
                 work.License = licenseMap[work.LicenseId];
