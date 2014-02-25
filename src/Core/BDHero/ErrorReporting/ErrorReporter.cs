@@ -19,7 +19,6 @@ using System;
 using System.Linq;
 using DotNetUtils.Annotations;
 using GitHub;
-using GitHub.Models;
 
 namespace BDHero.ErrorReporting
 {
@@ -57,76 +56,6 @@ namespace BDHero.ErrorReporting
                 var issue = Client.CreateIssue(exception);
                 return new ErrorReportResultCreated(issue);
             }
-        }
-    }
-
-    public interface IErrorReportResultVisitor
-    {
-        void Visit(ErrorReportResultCreated result);
-
-        void Visit(ErrorReportResultUpdated result);
-
-        void Visit(ErrorReportResultFailed result);
-    }
-
-    public interface IErrorReportResult
-    {
-        void Accept(IErrorReportResultVisitor visitor);
-    }
-
-    public abstract class ErrorReportResultSuccess : IErrorReportResult
-    {
-        public readonly int IssueNumber;
-
-        public readonly string Url;
-
-        protected ErrorReportResultSuccess(int issueNumber, string url)
-        {
-            IssueNumber = issueNumber;
-            Url = url;
-        }
-
-        public abstract void Accept(IErrorReportResultVisitor visitor);
-    }
-
-    public class ErrorReportResultCreated : ErrorReportResultSuccess
-    {
-        public ErrorReportResultCreated(CreateIssueResponse issue)
-            : base(issue.Number, issue.HtmlUrl)
-        {
-        }
-
-        public override void Accept(IErrorReportResultVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-    }
-
-    public class ErrorReportResultUpdated : ErrorReportResultSuccess
-    {
-        public ErrorReportResultUpdated(SearchIssuesResult issue, CreateIssueCommentResponse comment)
-            : base(issue.Number, comment.HtmlUrl)
-        {
-        }
-
-        public override void Accept(IErrorReportResultVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-    }
-
-    public class ErrorReportResultFailed : IErrorReportResult
-    {
-        public readonly Exception Exception;
-
-        public ErrorReportResultFailed(Exception exception)
-        {
-            Exception = exception;
-        }
-
-        public void Accept(IErrorReportResultVisitor visitor)
-        {
-            visitor.Visit(this);
         }
     }
 }

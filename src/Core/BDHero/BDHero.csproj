@@ -71,8 +71,14 @@
     <Compile Include="Config\InjectorFactory.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="ErrorReporting\ErrorReporter.cs" />
-    <Compile Include="ErrorReporting\IErrorDialog.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultCreated.cs" />
     <Compile Include="ErrorReporting\IStatusWindow.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultFailed.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultSuccess.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultUpdated.cs" />
+    <Compile Include="ErrorReporting\IErrorDialog.cs" />
+    <Compile Include="ErrorReporting\IErrorReportResult.cs" />
+    <Compile Include="ErrorReporting\IErrorReportResultVisitor.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
