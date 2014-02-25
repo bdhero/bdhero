@@ -10,7 +10,7 @@ using DotNetUtils.Extensions;
 
 namespace BDHeroGUI.Helpers
 {
-    internal class ToolStripIssueBuilder
+    internal class ToolStripControlBuilder
     {
         private static readonly Padding ZeroMargin = new Padding(0);
 
@@ -20,14 +20,14 @@ namespace BDHeroGUI.Helpers
                                                       Margin = ZeroMargin
                                                   };
 
-        public ToolStripIssueBuilder()
+        public ToolStripControlBuilder()
         {
             _panel.MouseUp += OnMouseUp;
         }
 
         #region Public API
 
-        public ToolStripIssueBuilder AddImage(Image image)
+        public ToolStripControlBuilder AddImage(Image image)
         {
             AddControl(new PictureBox
                        {
@@ -38,7 +38,7 @@ namespace BDHeroGUI.Helpers
             return this;
         }
 
-        public ToolStripIssueBuilder AddLabel(string text)
+        public ToolStripControlBuilder AddLabel(string text)
         {
             AddControl(new Label
                        {
@@ -49,13 +49,13 @@ namespace BDHeroGUI.Helpers
             return this;
         }
 
-        public ToolStripIssueBuilder AddHyperlink(ErrorReportResultSuccess result)
+        public ToolStripControlBuilder AddHyperlink(ErrorReportResultSuccess result)
         {
             AddHyperlinkImpl(result);
             return this;
         }
 
-        public ToolStripIssueBuilder AddLink(string text, EventHandler clickHandler)
+        public ToolStripControlBuilder AddLink(string text, EventHandler clickHandler)
         {
             var label = new LinkLabel2
                              {
@@ -68,7 +68,7 @@ namespace BDHeroGUI.Helpers
             return this;
         }
 
-        public ToolStripIssueBuilder AddLink(Image image, string text, EventHandler clickHandler)
+        public ToolStripControlBuilder AddLink(Image image, string text, EventHandler clickHandler)
         {
             var label = new LinkLabel2
                         {

@@ -290,7 +290,7 @@ namespace BDHeroGUI
 
         public void Visit(ErrorReportResultCreated result)
         {
-            var panel = new ToolStripIssueBuilder()
+            var panel = new ToolStripControlBuilder()
                 .AddLabel("Submitted")
                 .AddHyperlink(result)
                 .Build();
@@ -299,7 +299,7 @@ namespace BDHeroGUI
 
         public void Visit(ErrorReportResultUpdated result)
         {
-            var panel = new ToolStripIssueBuilder()
+            var panel = new ToolStripControlBuilder()
                 .AddLabel("Updated")
                 .AddHyperlink(result)
                 .Build();
@@ -308,7 +308,7 @@ namespace BDHeroGUI
 
         public void Visit(ErrorReportResultFailed result)
         {
-            var panel = new ToolStripIssueBuilder()
+            var panel = new ToolStripControlBuilder()
                 .AddImage(Properties.Resources.error_circle)
                 .AddLabel("Unable to submit error report")
                 .AddLink("(details)", (sender, args) => ShowNonReportableExceptionDialog(result.Exception))
