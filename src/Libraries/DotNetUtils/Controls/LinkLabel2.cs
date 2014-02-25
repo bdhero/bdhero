@@ -191,11 +191,7 @@ namespace DotNetUtils.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                Focus();
-            }
-
+            Focus();
             base.OnMouseDown(e);
         }
 
