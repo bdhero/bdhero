@@ -67,6 +67,14 @@ namespace DotNetUtils.FS
             get { return ExePath != null; }
         }
 
+        /// <summary>
+        ///     Gets whether <see cref="FilePath"/> can be opened via <see cref="Process.Start(string)"/>.
+        /// </summary>
+        public bool CanBeOpened
+        {
+            get { return GetDefaultProgram(FilePath) != null; }
+        }
+
         [CanBeNull]
         private readonly MultiIcon _multiIcon;
 
