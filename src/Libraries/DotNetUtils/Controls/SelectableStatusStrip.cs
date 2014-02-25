@@ -16,7 +16,7 @@ namespace DotNetUtils.Controls
         private const string DummyName = "DUMMY";
 
         /// <summary>
-        ///     Gets or sets whether the user can tab <b><i>into</i></b> this control from outside.
+        ///     Gets or sets whether the user can tab <b><i>into</i></b> this status strip from outside.
         ///     Defaults to <c>true</c>.
         /// </summary>
         /// <remarks>
@@ -31,9 +31,12 @@ namespace DotNetUtils.Controls
         ///     </para>
         /// </remarks>
         [Browsable(true)]
-        [Description("Gets or sets whether the user can tab INTO this control from outside.  The user will still be able to tab WITHIN this control regardless of whether CanTabTo is true or false.  Defaults to true.")]
+        [Description("Gets or sets whether the user can tab into this status strip's hosted child controls from outside.  " +
+                     "Regardless of this property's value, the user will always be able to tab between hosted controls " +
+                     "within the status strip as long as TabStop is true.")]
+        [DefaultValue(true)]
         // ReSharper disable once MemberCanBePrivate.Global
-        public bool CanTabTo { get; set; }
+        public bool CanTabInto { get; set; }
 
         private ToolStripTextBox _dummy1;
         private ToolStripTextBox _dummy2;
@@ -48,7 +51,7 @@ namespace DotNetUtils.Controls
         public SelectableStatusStrip()
         {
             TabStop = true;
-            CanTabTo = true;
+            CanTabInto = true;
 
             PrependDummies();
             AppendDummies();
@@ -159,7 +162,7 @@ namespace DotNetUtils.Controls
 
         private void FocusFirstItem()
         {
-            if (!CanTabTo)
+            if (!CanTabInto)
             {
                 // Skip over this StatusStrip and focus the next sibling control
                 FocusNext();
@@ -170,7 +173,7 @@ namespace DotNetUtils.Controls
 
         private void FocusLastItem()
         {
-            if (!CanTabTo)
+            if (!CanTabInto)
             {
                 // Skip over this StatusStrip and focus the previous sibling control
                 FocusPrev();
