@@ -72,7 +72,6 @@
     <Compile Include="Controller.cs" />
     <Compile Include="ErrorReporting\ErrorReporter.cs" />
     <Compile Include="ErrorReporting\ErrorReportResultCreated.cs" />
-    <Compile Include="ErrorReporting\IStatusWindow.cs" />
     <Compile Include="ErrorReporting\ErrorReportResultFailed.cs" />
     <Compile Include="ErrorReporting\ErrorReportResultSuccess.cs" />
     <Compile Include="ErrorReporting\ErrorReportResultUpdated.cs" />
