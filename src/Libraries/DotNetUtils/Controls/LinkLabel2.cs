@@ -197,7 +197,7 @@ namespace DotNetUtils.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (_isHovered && e.Clicks == 1 && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle))
+            if (_isHovered && e.Clicks == 1 && (e.Button == MouseButtons.Left))
             {
                 OnClick(e);
             }
