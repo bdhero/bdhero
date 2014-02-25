@@ -9,6 +9,8 @@ namespace DotNetUtils.Controls
     /// <seealso cref="http://stackoverflow.com/a/2744485/467582"/>
     public class SelectablePictureBox : PictureBox
     {
+        private bool _isLeftClick;
+
         /// <summary>
         ///     Constructs a new <see cref="SelectablePictureBox"/> instance.
         /// </summary>
@@ -22,6 +24,7 @@ namespace DotNetUtils.Controls
         {
             Focus();
             base.OnMouseDown(e);
+            _isLeftClick = e.Button == MouseButtons.Left;
         }
 
         protected override void OnEnter(EventArgs e)
@@ -71,6 +74,14 @@ namespace DotNetUtils.Controls
             }
 
             base.OnKeyDown(e);
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            if (!_isLeftClick)
+                return;
+
+            base.OnClick(e);
         }
     }
 }
