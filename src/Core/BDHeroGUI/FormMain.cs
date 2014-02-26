@@ -274,18 +274,39 @@ namespace BDHeroGUI
 
         #region Error Reporting
 
-        private void ShowExceptionDetail(string title, Exception exception)
+        private void ShowErrorDialog(string title, Exception exception, bool isReportable = true)
         {
+            var report = new ErrorReport(exception);
+
+            IErrorDialog dialog;
+
             if (Windows7ErrorDialog.IsPlatformSupported)
             {
-                var dialog = new Windows7ErrorDialog(title, exception, IsID10TError(exception));
-                dialog.ReportResultVisitors.Add(this);
-                dialog.ShowDialog(this);
+                dialog = new Windows7ErrorDialog(_networkStatusMonitor, report);
             }
             else
             {
-                DetailForm.ShowExceptionDetail(this, title, exception);
+                dialog = new GenericErrorDialog(report);
             }
+
+            dialog.Title = title;
+
+            dialog.AddResultVisitor(this);
+
+            if (true || isReportable && !IsID10TError(exception))
+            {
+                dialog.ShowReportable(this);
+            }
+            else
+            {
+                dialog.ShowNonReportable(this);
+            }
+        }
+
+        private void ShowNonReportableErrorDialog(Exception exception)
+        {
+            const string title = "Unable to submit error report";
+            ShowErrorDialog(title, exception, false);
         }
 
         public void Visit(ErrorReportResultCreated result)
@@ -311,22 +332,9 @@ namespace BDHeroGUI
             var panel = new ToolStripControlBuilder()
                 .AddImage(Properties.Resources.error_circle)
                 .AddLabel("Unable to submit error report")
-                .AddLink("(details)", (sender, args) => ShowNonReportableExceptionDialog(result.Exception))
+                .AddLink("(details)", (sender, args) => ShowNonReportableErrorDialog(result.Exception))
                 .Build();
             statusStrip1.Items.Add(panel);
-        }
-
-        private void ShowNonReportableExceptionDialog(Exception exception)
-        {
-            const string title = "Unable to submit error report";
-            if (Windows7ErrorDialog.IsPlatformSupported)
-            {
-                new Windows7ErrorDialog(title, exception, false).ShowDialog(this);
-            }
-            else
-            {
-                MessageBox.Show(this, exception.ToString(), title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         /// <summary>
@@ -628,7 +636,7 @@ namespace BDHeroGUI
 
             if (args.Exception != null)
             {
-                ShowExceptionDetail("Error: Metadata Search Failed", args.Exception);
+                ShowErrorDialog("Error: Metadata Search Failed", args.Exception);
             }
 
             EnableControls(true);
@@ -786,7 +794,7 @@ namespace BDHeroGUI
             }
             if (args.Exception != null)
             {
-                ShowExceptionDetail("Error: Scan Failed", args.Exception);
+                ShowErrorDialog("Error: Scan Failed", args.Exception);
             }
         }
 
@@ -830,7 +838,7 @@ namespace BDHeroGUI
             }
             if (args.Exception != null)
             {
-                ShowExceptionDetail("Error: Convert Failed", args.Exception);
+                ShowErrorDialog("Error: Convert Failed", args.Exception);
             }
         }
 
@@ -892,7 +900,7 @@ namespace BDHeroGUI
         private void ControllerOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
             var caption = string.Format("{0} Error", AppUtils.AppName);
-            ShowExceptionDetail(caption, args.ExceptionObject as Exception);
+            ShowErrorDialog(caption, args.ExceptionObject as Exception);
         }
 
         #endregion

@@ -39,10 +39,35 @@ namespace GitHub
         #region Public API
 
         /// <summary>
+        ///     Searches existing issues for the given <paramref name="exception"/> and returns a list of results.
+        /// </summary>
+        /// <param name="searchStr">
+        ///     Text to search for.
+        /// </param>
+        /// <returns>
+        ///     A list of search results that match the given <paramref name="exception"/>.
+        /// </returns>
+        /// <exception cref="WebException">
+        ///     Thrown if no response is received.
+        /// </exception>
+        /// <exception cref="RequestException">
+        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
+        /// </exception>
+        [NotNull]
+        public SearchIssuesResult[] SearchIssues(string searchStr)
+        {
+            var response = Request(new SearchIssuesRequest(_repo, searchStr));
+            return (response.Results ?? new List<SearchIssuesResult>()).ToArray();
+        }
+
+        /// <summary>
         ///     Creates a new issue.
         /// </summary>
-        /// <param name="exception">
-        ///     An exception to report in the issue.
+        /// <param name="title">
+        ///     The title of the issue.
+        /// </param>
+        /// <param name="body">
+        ///     The issue's body text in Markdown format.
         /// </param>
         /// <returns>
         ///     The response returned by GitHub.
@@ -54,31 +79,9 @@ namespace GitHub
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
         /// </exception>
         [NotNull]
-        public CreateIssueResponse CreateIssue(Exception exception)
+        public CreateIssueResponse CreateIssue(string title, string body)
         {
-            return Request(new CreateIssueRequest(_repo, exception));
-        }
-
-        /// <summary>
-        ///     Searches existing issues for the given <paramref name="exception"/> and returns a list of results.
-        /// </summary>
-        /// <param name="exception">
-        ///     The exception being searched for.
-        /// </param>
-        /// <returns>
-        ///     A list of search results that match the given <paramref name="exception"/>.
-        /// </returns>
-        /// <exception cref="WebException">
-        ///     Thrown if no response is received.
-        /// </exception>
-        /// <exception cref="RequestException">
-        ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
-        /// </exception>
-        [NotNull]
-        public SearchIssuesResult[] SearchIssues(Exception exception)
-        {
-            var response = Request(new SearchIssuesRequest(exception, _repo));
-            return (response.Results ?? new List<SearchIssuesResult>()).ToArray();
+            return Request(new CreateIssueRequest(_repo, title, body));
         }
 
         /// <summary>
@@ -87,8 +90,8 @@ namespace GitHub
         /// <param name="issue">
         ///     The existing issue to create a comment for.
         /// </param>
-        /// <param name="exception">
-        ///     An exception to report in the comment.
+        /// <param name="body">
+        ///     The comment's body in Markdown format.
         /// </param>
         /// <returns>
         ///     A list of search results that match the given <paramref name="exception"/>.
@@ -100,9 +103,9 @@ namespace GitHub
         ///     Thrown if the GitHub API is unable to complete the request and responds with an error message.
         /// </exception>
         [NotNull]
-        public CreateIssueCommentResponse CreateIssueComment(SearchIssuesResult issue, Exception exception)
+        public CreateIssueCommentResponse CreateIssueComment(SearchIssuesResult issue, string body)
         {
-            return Request(new CreateIssueCommentRequest(_repo, issue.Number, exception));
+            return Request(new CreateIssueCommentRequest(_repo, issue.Number, body));
         }
 
         #endregion

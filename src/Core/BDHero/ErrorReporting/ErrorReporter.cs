@@ -27,13 +27,13 @@ namespace BDHero.ErrorReporting
         private static readonly GitHubClient Client = new GitHubClient("acdvorak/bdhero-private", "131765cc986bd5fa6d09d8633c4d973fbe6dfcf9");
 
         [NotNull]
-        public static IErrorReportResult Report(Exception exception)
+        public static IErrorReportResult Report(ErrorReport report)
         {
 //            var x = new {foo = 123};
 
             try
             {
-                return ReportImpl(exception);
+                return ReportImpl(report);
             }
             catch (Exception ex)
             {
@@ -41,19 +41,19 @@ namespace BDHero.ErrorReporting
             }
         }
 
-        private static IErrorReportResult ReportImpl(Exception exception)
+        private static IErrorReportResult ReportImpl(ErrorReport report)
         {
-            var issues = Client.SearchIssues(exception);
+            var issues = Client.SearchIssues(report.ExceptionDetailRedacted);
 
             if (issues.Any())
             {
                 var issue = issues.First();
-                var comment = Client.CreateIssueComment(issue, exception);
+                var comment = Client.CreateIssueComment(issue, report.Body);
                 return new ErrorReportResultUpdated(issue, comment);
             }
             else
             {
-                var issue = Client.CreateIssue(exception);
+                var issue = Client.CreateIssue(report.Title, report.Body);
                 return new ErrorReportResultCreated(issue);
             }
         }

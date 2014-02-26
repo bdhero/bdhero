@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetUtils.Net;
@@ -16,7 +15,7 @@ namespace GitHub.Models
 
         private readonly string _url;
 
-        public SearchIssuesRequest(Exception exception, string repo)
+        public SearchIssuesRequest(string repo, string searchStr)
         {
             var qualifiers = new Dictionary<string, string>
                              {
@@ -26,7 +25,7 @@ namespace GitHub.Models
                                  { "repo", repo }
                              };
 
-            var exceptionStr = Queryable(exception);
+            var exceptionStr = Queryable(searchStr);
             var qualifiersStr = JoinQualifiers(qualifiers);
 
             var exceptionStrTrimmed = exceptionStr;
@@ -56,11 +55,10 @@ namespace GitHub.Models
             _url = string.Format("https://api.github.com/search/issues?q={0}", queryEncoded);
         }
 
-        private static string Queryable(Exception exception)
+        private static string Queryable(string searchStr)
         {
-            var lines = new Regex(@"[\n\r\f]+").Split(exception.ToString()).Select(line => line.Trim());
+            var lines = new Regex(@"[\n\r\f]+").Split(searchStr).Select(line => line.Trim());
             var concat = string.Join(" ", lines);
-
             return concat;
         }
 

@@ -141,6 +141,8 @@
     <Compile Include="Components\TracksPanel.Designer.cs">
       <DependentUpon>TracksPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\GenericErrorDialog.cs" />
+    <Compile Include="Dialogs\IErrorDialog.cs" />
     <Compile Include="Dialogs\Windows7ErrorDialog.cs" />
     <Compile Include="Forms\FormMediaCustom.cs">
       <SubType>Form</SubType>

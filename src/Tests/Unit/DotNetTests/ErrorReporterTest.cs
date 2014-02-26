@@ -20,7 +20,7 @@ namespace DotNetTests
             }
             catch (Exception e)
             {
-                ErrorReporter.Report(e);
+                ErrorReporter.Report(new ErrorReport(e));
             }
         }
     }

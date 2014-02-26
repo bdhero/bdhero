@@ -23,11 +23,15 @@ using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using OSUtils.Net;
 
 namespace BDHeroGUI.Dialogs
 {
-    public class Windows7ErrorDialog
+    public class Windows7ErrorDialog : IErrorDialog
     {
+        private const string CopyDetailsHref = "copy_details";
+        private const string EditReportHref = "edit_report";
+
         /// <summary>
         ///     Indicates whether this feature is supported on the current platform.
         /// </summary>
@@ -36,124 +40,150 @@ namespace BDHeroGUI.Dialogs
             get { return TaskDialog.IsPlatformSupported; }
         }
 
-        public readonly IList<IErrorReportResultVisitor> ReportResultVisitors = new List<IErrorReportResultVisitor>();
+        private readonly INetworkStatusMonitor _networkStatusMonitor;
+        private readonly ErrorReport _report;
+        private readonly IList<IErrorReportResultVisitor> _reportResultVisitors = new List<IErrorReportResultVisitor>();
+        private TaskDialogCommandLink _submitButton;
 
-        private readonly string _title;
-        private readonly Exception _exception;
-        private readonly bool _isReportable;
-
-        public Windows7ErrorDialog(string title, Exception exception, bool isReportable)
+        public Windows7ErrorDialog(INetworkStatusMonitor networkStatusMonitor, ErrorReport report)
         {
-            _title = title;
-            _exception = exception;
-            _isReportable = isReportable;
+            _networkStatusMonitor = networkStatusMonitor;
+            _report = report;
+
+            // Defaults
+            Title = "Error";
+            Heading = "An unexpected error occured.";
+            Message = _report.ExceptionMessageRaw;
+            StackTrace = _report.ExceptionDetailRaw;
         }
 
-        public DialogResult ShowDialog(IWin32Window owner)
+        public void AddResultVisitor(IErrorReportResultVisitor visitor)
         {
-            var copyDetailsLinkHref = "copy_details";
-            var editReportLinkHref = "edit_report";
+            _reportResultVisitors.Add(visitor);
+        }
 
+        public void RemoveResultVisitor(IErrorReportResultVisitor visitor)
+        {
+            _reportResultVisitors.Remove(visitor);
+        }
+
+        private DialogResult ShowDialog([CanBeNull] IWin32Window owner, bool isReportable)
+        {
             var dialog = new TaskDialog
                          {
+                             Icon = TaskDialogStandardIcon.Error,
                              Cancelable = true,
                              DetailsExpanded = false,
                              HyperlinksEnabled = true,
-                             ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter,
                              StartupLocation = TaskDialogStartupLocation.CenterOwner,
-
-                             Icon = TaskDialogStandardIcon.Error,
-                             Caption = _title,
-                             InstructionText = "An unexpected error occured.",
-                             Text = _exception.Message,
-                             DetailsExpandedText = _exception.ToString(),
-
-                             DetailsCollapsedLabel = "Show &details",
-                             DetailsExpandedLabel = "Hide &details",
-
-                             FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", copyDetailsLinkHref),
-
-                             OwnerWindowHandle = owner.Handle
                          };
 
+            if (owner != null)
+                dialog.OwnerWindowHandle = owner.Handle;
+
+            if (Title != null)
+                dialog.Caption = Title;
+
+            if (Heading != null)
+                dialog.InstructionText = Heading;
+
+            if (Message != null)
+                dialog.Text = Message;
+
+            if (StackTrace != null)
+            {
+                dialog.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
+                dialog.DetailsCollapsedLabel = "Show &details";
+                dialog.DetailsExpandedLabel = "Hide &details";
+                dialog.DetailsExpandedText = StackTrace; // _exception.ToString(),
+                dialog.FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", CopyDetailsHref);
+            }
+
+            dialog.HyperlinkClick += (sender, args) => OnHyperlinkClick(owner, args);
+
+            if (isReportable)
+            {
+                _submitButton = CreateSubmitButton(dialog);
+
+                dialog.Controls.Add(_submitButton);
+                dialog.Controls.Add(CreateDeclineButton(dialog));
+
+                if (dialog.FooterText != null)
+                    dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}", EditReportHref, dialog.FooterText);
+            }
+
+            _networkStatusMonitor.NetworkStatusChanged += OnNetworkStatusChanged;
+
+            // TaskButtonDialogBase.Enabled's documentation states: "The enabled state can cannot be changed before the dialog is shown."
+            // So we need to set a short timer to disable the button *after* the dialog is shown.
+            var timer = new System.Timers.Timer(100);
+            timer.Elapsed += (a, b) => OnNetworkStatusChanged(_networkStatusMonitor.IsOnline);
+            timer.AutoReset = false;
+            timer.Start();
+
+            var result = dialog.Show().ToDialogResult();
+
+            _networkStatusMonitor.NetworkStatusChanged -= OnNetworkStatusChanged;
+
+            return result;
+        }
+
+        private void OnNetworkStatusChanged(bool isConnectedToInternet)
+        {
+            if (_submitButton == null)
+                return;
+
+            _submitButton.Enabled = isConnectedToInternet;
+        }
+
+        private TaskDialogCommandLink CreateSubmitButton(TaskDialog dialog)
+        {
             IErrorReportResult result = null;
-            var sendButton = new TaskDialogCommandLink("sendButton", "&Report This Error\nNo questions asked!");
+            var sendButton = new TaskDialogCommandLink("submitButton", "&Report This Error\nNo questions asked!");
             sendButton.Click += delegate
                                 {
                                     new TaskBuilder()
                                         .OnCurrentThread()
-                                        .DoWork((invoker, token) => result = ErrorReporter.Report(_exception))
-                                        .Succeed(() => ReportExceptionCompleted(owner, result))
+                                        .DoWork((invoker, token) => result = ErrorReporter.Report(_report))
+                                        .Succeed(() => OnErrorReportCompleted(result))
                                         .Build()
                                         .Start();
                                     dialog.Close(TaskDialogResult.Yes);
                                 };
-
-            var dontSendButton = new TaskDialogCommandLink("dontSendButton", "&No Thanks\nI don't feel like being helpful");
-            dontSendButton.Click += delegate
-                                    {
-                                        dialog.Close(TaskDialogResult.No);
-                                    };
-
-            dialog.HyperlinkClick += delegate(object sender, TaskDialogHyperlinkClickedEventArgs args)
-                                     {
-                                         if (args.LinkText == copyDetailsLinkHref)
-                                         {
-                                             Clipboard.SetText(_exception.ToString());
-                                             MessageBox.Show(owner, "Error details copied to clipboard.", "Copied!",
-                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                             return;
-                                         }
-                                         if (args.LinkText == editReportLinkHref)
-                                         {
-                                             MessageBox.Show(owner, "Edit report contents");
-                                         }
-                                     };
-
-            if (_isReportable)
-            {
-                dialog.Controls.Add(sendButton);
-                dialog.Controls.Add(dontSendButton);
-                dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}", editReportLinkHref, dialog.FooterText);
-            }
-
-            return dialog.Show().ToDialogResult();
+            return sendButton;
         }
 
-        private void ReportExceptionCompleted(IWin32Window owner, [NotNull] IErrorReportResult result)
+        private void OnErrorReportCompleted([NotNull] IErrorReportResult result)
         {
             if (result == null)
                 throw new ArgumentNullException("result");
 
-            foreach (var visitor in ReportResultVisitors)
+            foreach (var visitor in _reportResultVisitors)
             {
                 result.Accept(visitor);
             }
+        }
 
-#if false
-            var dialog = new TaskDialog
-                         {
-                             Cancelable = true,
-                             StartupLocation = TaskDialogStartupLocation.CenterOwner,
+        private static TaskDialogCommandLink CreateDeclineButton(TaskDialog dialog)
+        {
+            var dontSendButton = new TaskDialogCommandLink("declineButton", "&No Thanks\nI don't feel like being helpful");
+            dontSendButton.Click += delegate { dialog.Close(TaskDialogResult.No); };
+            return dontSendButton;
+        }
 
-                             Icon = TaskDialogStandardIcon.Information,
-                             Caption = "Cool!",
-                             InstructionText = "Thanks for submitting an error report!",
-
-                            FooterCheckBoxChecked = false,
-                            FooterCheckBoxText = "&Don't show this message again"
-                         };
-
-            if (IsFormValid(owner))
-                dialog.OwnerWindowHandle = owner.Handle;
-
-            dialog.Show();
-
-            if (dialog.FooterCheckBoxChecked.GetValueOrDefault())
-                MessageBox.Show(owner, "OK, we won't show this again");
-            else
-                MessageBox.Show(owner, "Prepare to see more of me, bitch!");
-#endif
+        private void OnHyperlinkClick([CanBeNull] IWin32Window owner, TaskDialogHyperlinkClickedEventArgs args)
+        {
+            if (args.LinkText == CopyDetailsHref)
+            {
+                Clipboard.SetText(_report.ExceptionDetailRaw);
+                MessageBox.Show(owner, "Error details copied to clipboard.", "Copied!",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (args.LinkText == EditReportHref)
+            {
+                MessageBox.Show(owner, "Edit report contents");
+            }
         }
 
 #if false
@@ -162,37 +192,24 @@ namespace BDHeroGUI.Dialogs
             var control = Control.FromHandle(owner.Handle);
             return !(control == null || control.IsDisposed);
         }
-
-        private static void ReportExceptionFail(IWin32Window owner, ExceptionEventArgs args)
-        {
-            if (args.Exception == null)
-                return;
-
-            var icon = MessageBoxIcon.Error;
-            var title = "Error Reporting Failed";
-            var stackTrace = args.Exception.ToString();
-
-            ShowResultMessage(owner, title, stackTrace, icon);
-        }
-
-        private static void ShowResultMessage(IWin32Window owner, string title, string message, MessageBoxIcon icon)
-        {
-            if (IsFormValid(owner))
-            {
-                MessageBox.Show(owner,
-                                message,
-                                title,
-                                MessageBoxButtons.OK,
-                                icon);
-            }
-            else
-            {
-                MessageBox.Show(message,
-                                title,
-                                MessageBoxButtons.OK,
-                                icon);
-            }
-        }
 #endif
+
+        public string Title { get; set; }
+        
+        public string Heading { get; set; }
+        
+        public string Message { get; set; }
+        
+        public string StackTrace { get; set; }
+
+        public void ShowReportable(IWin32Window owner = null)
+        {
+            ShowDialog(owner, true);
+        }
+
+        public void ShowNonReportable(IWin32Window owner = null)
+        {
+            ShowDialog(owner, false);
+        }
     }
 }

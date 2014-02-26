@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using DotNetUtils;
+﻿using System.Diagnostics;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 
@@ -12,21 +9,14 @@ namespace GitHub.Models
     internal class CreateIssueCommentRequest : IGitHubRequest<CreateIssueCommentResponse>
     {
         /// <summary>
-        ///     Indentation to create a code block in Markdown syntax.
-        /// </summary>
-        private const string CodeIndent = "    ";
-
-        /// <summary>
         ///     Gets or sets a detailed description of the issue.
         /// </summary>
         [UsedImplicitly]
         public string Body;
 
-        public CreateIssueCommentRequest(string repo, int issueNumber, Exception exception)
+        public CreateIssueCommentRequest(string repo, int issueNumber, string body)
         {
-            var stackTrace = string.Join("\n", exception.ToString().Split('\n').Select(line => CodeIndent + line));
-
-            Body = string.Format("{0} v{1}:\n\n{2}", AppUtils.AppName, AppUtils.AppVersion, stackTrace);
+            Body = body;
             Url = string.Format("https://api.github.com/repos/{0}/issues/{1}/comments", repo, issueNumber);
         }
 

@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 
@@ -13,11 +10,6 @@ namespace GitHub.Models
     internal class CreateIssueRequest : IGitHubRequest<CreateIssueResponse>
     {
         public const string DefaultLabel = "report";
-
-        /// <summary>
-        ///     Indentation to create a code block in Markdown syntax.
-        /// </summary>
-        private const string CodeIndent = "    ";
 
         /// <summary>
         ///     Gets or sets a brief summary of the issue.
@@ -43,12 +35,10 @@ namespace GitHub.Models
         [UsedImplicitly]
         public List<string> Labels { get; set; }
 
-        public CreateIssueRequest(string repo, Exception exception)
+        public CreateIssueRequest(string repo, string title, string body)
         {
-            var stackTrace = string.Join("\n", exception.ToString().Split('\n').Select(line => CodeIndent + line));
-
-            Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, exception.Message, AppUtils.AppName, AppUtils.AppVersion);
-            Body = string.Format("{0} v{1}:\n\n{2}", AppUtils.AppName, AppUtils.AppVersion, stackTrace);
+            Title = title;
+            Body = body;
             Labels = new List<string> { DefaultLabel };
             Url = string.Format("https://api.github.com/repos/{0}/issues", repo);
         }
