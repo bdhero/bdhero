@@ -54,6 +54,11 @@ Bugs
 Features
 ========
 
+[ ] Smarter path redaction: replace letters with 'X' instead of completely removing path
+[ ] Only allow error reporting for most recent version of BDHero
+    - Older versions need to upgrade
+[ ] Allow user to edit error report details
+
 [ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
 [ ] Add "use last folder" option to File Namer preference dialog
 [ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
