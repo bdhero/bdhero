@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if !__MonoCS__
+#define UseWPF
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,10 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils;
+#if UseWPF
 using System.Windows.Media;
-#if !__MonoCS__
 using System.Windows.Forms.Integration;
 using ICSharpCode.AvalonEdit.Highlighting;
+#else
+using ICSharpCode.TextEditor.Document;
 #endif
 
 namespace BDHeroGUI.Forms
@@ -30,58 +37,113 @@ namespace BDHeroGUI.Forms
             InitEditor();
         }
 
-#if __MonoCS__
-
-        /// <summary>
-        ///     Windows Forms editor
-        /// </summary>
-        private void InitEditor()
-        {
-            var wfEditor = new ICSharpCode.TextEditor.TextEditorControl();
-            wfEditor.Dock = DockStyle.Fill;
-            wfEditor.LoadFile(FilePath, true, true);
-            Controls.Add(wfEditor);
-        }
-
-#else
+#if UseWPF
 
         /// <summary>
         ///     Windows Presentation Foundation editor
         /// </summary>
         private void InitEditor()
         {
-            var wpfEditor = new ICSharpCode.AvalonEdit.TextEditor();
-            wpfEditor.Load(FilePath);
+            var editor = new ICSharpCode.AvalonEdit.TextEditor();
+            editor.Load(FilePath);
 
             // Font
-            wpfEditor.FontFamily = new FontFamily("Consolas, Courier New, monospace");
-            wpfEditor.FontSize = 14;
+            editor.FontFamily = new FontFamily("Consolas, Courier New, monospace");
+            editor.FontSize = 14;
 
             #region Options
 
-            // Options
-            wpfEditor.ShowLineNumbers = true;
-            wpfEditor.Options.CutCopyWholeLine = true;
-            wpfEditor.Options.ShowColumnRuler = true;
-            wpfEditor.Options.ColumnRulerPosition = 80;
-            wpfEditor.Options.EnableRectangularSelection = true;
-            wpfEditor.Options.EnableTextDragDrop = true;
-            wpfEditor.Options.IndentationSize = 4;
-            wpfEditor.Options.ShowBoxForControlCharacters = true;
-            wpfEditor.Options.ShowSpaces = true;
-            wpfEditor.Options.ShowTabs = true;
+            // Line numbers
+            editor.ShowLineNumbers = true;
+
+            // Column ruler
+            editor.Options.ShowColumnRuler = true;
+            editor.Options.ColumnRulerPosition = 80;
+
+            // Selection and drag/drop
+            editor.Options.CutCopyWholeLine = true;
+            editor.Options.EnableRectangularSelection = true;
+            editor.Options.EnableTextDragDrop = true;
+            
+            // Indentation
+            editor.Options.IndentationSize = 4;
+            editor.Options.ConvertTabsToSpaces = true;
+            
+            // Character visualization
+            editor.Options.ShowBoxForControlCharacters = true;
+            editor.Options.ShowSpaces = true;
+            editor.Options.ShowTabs = true;
 
             #endregion
 
             var highlightingManager = HighlightingManager.Instance;
-            wpfEditor.SyntaxHighlighting = highlightingManager.GetDefinitionByExtension(FileExtension);
+            editor.SyntaxHighlighting = highlightingManager.GetDefinitionByExtension(FileExtension);
 
             var elementHost = new ElementHost
                               {
-                                  Child = wpfEditor,
+                                  Child = editor,
                                   Dock = DockStyle.Fill
                               };
             Controls.Add(elementHost);
+        }
+
+#else
+
+        /// <summary>
+        ///     Windows Forms editor
+        /// </summary>
+        private void InitEditor()
+        {
+            var editor = new ICSharpCode.TextEditor.TextEditorControl();
+            editor.LoadFile(FilePath, true, true);
+
+            #region Options
+
+            // Hotkeys
+//            editor.
+
+            // Line numbers
+            editor.ShowLineNumbers = true;
+
+            // Column ruler
+            editor.ShowVRuler = true;
+            editor.VRulerRow = 80;
+
+            // Selection and drag/drop
+//            editor.Options.CutCopyWholeLine = true;
+//            editor.Options.EnableRectangularSelection = true;
+//            editor.Options.EnableTextDragDrop = true;
+
+            // Indentation
+            editor.TabIndent = 4;
+            editor.ConvertTabsToSpaces = true;
+            editor.IndentStyle = IndentStyle.Smart;
+
+            // Character visualization
+//            editor.Options.ShowBoxForControlCharacters = true;
+            editor.ShowSpaces = true;
+            editor.ShowTabs = true;
+
+            #endregion
+
+            try
+            {
+                var dir = AssemblyUtils.GetInstallDir(GetType());
+                if (Directory.Exists(dir))
+                {
+                    var fsmProvider = new FileSyntaxModeProvider(dir); // Provider
+                    HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider);
+                }
+
+                editor.SetHighlighting("MarkDown");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+            }
+
+            editor.Dock = DockStyle.Fill;
+            Controls.Add(editor);
         }
 
 #endif
