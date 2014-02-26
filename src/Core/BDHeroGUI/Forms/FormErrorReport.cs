@@ -6,15 +6,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.Integration;
 using System.Windows.Media;
+#if !__MonoCS__
+using System.Windows.Forms.Integration;
 using ICSharpCode.AvalonEdit.Highlighting;
+#endif
 
 namespace BDHeroGUI.Forms
 {
     public partial class FormErrorReport : Form
     {
+#if __MonoCS__
+        private const string FilePath = @"/Users/admin/Documents/sample.md";
+#else
         private const string FilePath = @"C:\projects\TestProject\CodeEditor\sample.md";
+#endif
         private static readonly string FileExtension = Path.GetExtension(FilePath);
 
         public FormErrorReport()
@@ -34,7 +40,7 @@ namespace BDHeroGUI.Forms
             var wfEditor = new ICSharpCode.TextEditor.TextEditorControl();
             wfEditor.Dock = DockStyle.Fill;
             wfEditor.LoadFile(FilePath, true, true);
-            splitContainer1.Panel2.Controls.Add(wfEditor);
+            Controls.Add(wfEditor);
         }
 
 #else
@@ -75,7 +81,7 @@ namespace BDHeroGUI.Forms
                                   Child = wpfEditor,
                                   Dock = DockStyle.Fill
                               };
-            this.Controls.Add(elementHost);
+            Controls.Add(elementHost);
         }
 
 #endif
