@@ -227,6 +227,8 @@ namespace BDHeroGUI
             ScanOnStartup();
 
             InitAboutBox();
+
+            new FormErrorReport().Show(this);
         }
 
         private void InitNetworkStatusMonitor()
