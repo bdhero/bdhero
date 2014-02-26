@@ -115,9 +115,17 @@ Features
 Mono
 ====
 
+Critical
+--------
+
 1. Use Mono build of Ninject.dll
-2. Newtonsoft.Json.dll not getting copied to BDHeroGUI/bin/Debug
-3. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
+2. ICSharpCode.TextEditor.dll - Net20 NuGet package must be copied to Net40 folder
+3. Newtonsoft.Json.dll not getting copied to BDHeroGUI/bin/Debug
+
+Important
+---------
+
+2. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
 
 Backlog
 =======
