@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Highlighting;
 
@@ -20,15 +21,28 @@ namespace BDHeroGUI.Forms
         {
             InitializeComponent();
 
-            InitWpfEditor();
-
-            InitWfEditor();
+            InitEditor();
         }
+
+#if __MonoCS__
+
+        /// <summary>
+        ///     Windows Forms editor
+        /// </summary>
+        private void InitEditor()
+        {
+            var wfEditor = new ICSharpCode.TextEditor.TextEditorControl();
+            wfEditor.Dock = DockStyle.Fill;
+            wfEditor.LoadFile(FilePath, true, true);
+            splitContainer1.Panel2.Controls.Add(wfEditor);
+        }
+
+#else
 
         /// <summary>
         ///     Windows Presentation Foundation editor
         /// </summary>
-        private void InitWpfEditor()
+        private void InitEditor()
         {
             var wpfEditor = new ICSharpCode.AvalonEdit.TextEditor();
             wpfEditor.Load(FilePath);
@@ -36,6 +50,8 @@ namespace BDHeroGUI.Forms
             // Font
             wpfEditor.FontFamily = new FontFamily("Consolas, Courier New, monospace");
             wpfEditor.FontSize = 14;
+
+            #region Options
 
             // Options
             wpfEditor.ShowLineNumbers = true;
@@ -49,21 +65,19 @@ namespace BDHeroGUI.Forms
             wpfEditor.Options.ShowSpaces = true;
             wpfEditor.Options.ShowTabs = true;
 
+            #endregion
+
             var highlightingManager = HighlightingManager.Instance;
             wpfEditor.SyntaxHighlighting = highlightingManager.GetDefinitionByExtension(FileExtension);
 
-            elementHost1.Child = wpfEditor;
+            var elementHost = new ElementHost
+                              {
+                                  Child = wpfEditor,
+                                  Dock = DockStyle.Fill
+                              };
+            this.Controls.Add(elementHost);
         }
 
-        /// <summary>
-        ///     Windows Forms editor
-        /// </summary>
-        private void InitWfEditor()
-        {
-            var wfEditor = new ICSharpCode.TextEditor.TextEditorControl();
-            wfEditor.Dock = DockStyle.Fill;
-            wfEditor.LoadFile(FilePath, true, true);
-            splitContainer1.Panel2.Controls.Add(wfEditor);
-        }
+#endif
     }
 }
