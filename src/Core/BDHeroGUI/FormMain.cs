@@ -293,7 +293,7 @@ namespace BDHeroGUI
 
             dialog.AddResultVisitor(this);
 
-            if (true || isReportable && !IsID10TError(exception))
+            if (isReportable && !IsID10TError(exception))
             {
                 dialog.ShowReportable(this);
             }
