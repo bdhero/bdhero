@@ -344,6 +344,10 @@
       <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
       <Name>NativeAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\TextEditor\TextEditor.csproj">
+      <Project>{ACD66B56-A9CF-4958-8050-07DDD1AA43BF}</Project>
+      <Name>TextEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\WebBrowserUtils\WebBrowserUtils.csproj">
       <Project>{DB13678F-8815-4BEC-8198-2BAC286A3BAF}</Project>
       <Name>WebBrowserUtils</Name>

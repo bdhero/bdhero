@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using DotNetUtils;
+using TextEditor;
 #if UseWPF
 using System.Windows.Media;
 using System.Windows.Forms.Integration;
@@ -35,6 +36,43 @@ namespace BDHeroGUI.Forms
             InitializeComponent();
 
             InitEditor();
+//            InitEditorInline();
+        }
+
+        private void InitEditor()
+        {
+            var editor = TextEditorFactory.CreateTextEditor();
+
+            editor.IsReadOnly = true;
+
+            editor.Options.ShowLineNumbers = true;
+            editor.Options.ShowTabs = true;
+            editor.Options.ShowSpaces = true;
+            editor.Options.ShowColumnRuler = true;
+            editor.Options.ColumnRulerPosition = 80;
+            editor.Options.ConvertTabsToSpaces = true;
+            editor.Options.IndentationSize = 4;
+            editor.Options.FontSize = 14;
+
+            editor.SetSyntaxFromExtension(FilePath);
+            editor.Load(FilePath);
+
+            editor.TextChanged += (sender, args) => LogEvent(editor, "TextChanged");
+
+            var control = editor.Control;
+            control.Dock = DockStyle.Fill;
+            Controls.Add(control);
+        }
+
+        private void LogEvent(ITextEditor editor, string eventName)
+        {
+            Console.WriteLine("{0}: {{ modified = {1}, readonly = {2}, linecount = {3}, selectedtext = \"{4}\", selectionlength = {5} }}",
+                eventName,
+                editor.IsModified,
+                editor.IsReadOnly,
+                editor.LineCount,
+                editor.SelectedText,
+                editor.SelectionLength);
         }
 
 #if UseWPF
@@ -42,7 +80,7 @@ namespace BDHeroGUI.Forms
         /// <summary>
         ///     Windows Presentation Foundation editor
         /// </summary>
-        private void InitEditor()
+        private void InitEditorInline()
         {
             var editor = new ICSharpCode.AvalonEdit.TextEditor();
             editor.Load(FilePath);
@@ -92,7 +130,7 @@ namespace BDHeroGUI.Forms
         /// <summary>
         ///     Windows Forms editor
         /// </summary>
-        private void InitEditor()
+        private void InitEditorInline()
         {
             var editor = new ICSharpCode.TextEditor.TextEditorControl();
             editor.LoadFile(FilePath, true, true);
