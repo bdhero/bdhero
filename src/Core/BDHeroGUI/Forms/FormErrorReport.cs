@@ -43,8 +43,6 @@ namespace BDHeroGUI.Forms
         {
             var editor = TextEditorFactory.CreateTextEditor();
 
-            editor.IsReadOnly = true;
-
             editor.Options.ShowLineNumbers = true;
             editor.Options.ShowTabs = true;
             editor.Options.ShowSpaces = true;
@@ -59,9 +57,28 @@ namespace BDHeroGUI.Forms
 
             editor.TextChanged += (sender, args) => LogEvent(editor, "TextChanged");
 
+            #region Options - checkbox events
+
+            checkBoxMultiline.CheckedChanged +=
+                (sender, args) => editor.Options.Multiline = checkBoxMultiline.Checked;
+
+            checkBoxShowLineNumbers.CheckedChanged +=
+                (sender, args) => editor.Options.ShowLineNumbers = checkBoxShowLineNumbers.Checked;
+
+            checkBoxShowRuler.CheckedChanged +=
+                (sender, args) => editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
+
+            checkBoxShowWhitespace.CheckedChanged +=
+                (sender, args) => editor.Options.ShowTabs = editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
+
+            checkBoxReadonly.CheckedChanged +=
+                (sender, args) => editor.IsReadOnly = checkBoxReadonly.Checked;
+
+            #endregion
+
             var control = editor.Control;
             control.Dock = DockStyle.Fill;
-            Controls.Add(control);
+            panel1.Controls.Add(control);
         }
 
         private void LogEvent(ITextEditor editor, string eventName)
@@ -122,7 +139,7 @@ namespace BDHeroGUI.Forms
                                   Child = editor,
                                   Dock = DockStyle.Fill
                               };
-            Controls.Add(elementHost);
+            panel1.Controls.Add(elementHost);
         }
 
 #else
@@ -181,7 +198,7 @@ namespace BDHeroGUI.Forms
             }
 
             editor.Dock = DockStyle.Fill;
-            Controls.Add(editor);
+            panel1.Controls.Add(editor);
         }
 
 #endif

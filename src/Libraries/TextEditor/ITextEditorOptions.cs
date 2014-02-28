@@ -16,6 +16,12 @@ namespace TextEditor
 
         #endregion
 
+        #region Scrollbars
+
+        bool Multiline { get; set; }
+
+        #endregion
+
         #region Line numbers
 
         bool ShowLineNumbers { get; set; }
@@ -27,6 +33,8 @@ namespace TextEditor
         bool ShowColumnRuler { get; set; }
 
         int ColumnRulerPosition { get; set; }
+
+        bool CutCopyWholeLine { get; set; }
 
         #endregion
 

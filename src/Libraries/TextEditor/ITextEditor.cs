@@ -21,6 +21,8 @@ namespace TextEditor
 
         string Text { get; set; }
 
+        bool IsReadOnly { get; set; }
+
         void Load(Stream stream);
 
         void Load(string filePath);
@@ -48,8 +50,6 @@ namespace TextEditor
         #region Nice to have
 
         bool IsModified { get; }
-
-        bool IsReadOnly { get; set; }
 
         int LineCount { get; }
 
