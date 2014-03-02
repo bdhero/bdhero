@@ -45,9 +45,9 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(13, 107);
+            this.panel1.Location = new System.Drawing.Point(13, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(764, 508);
+            this.panel1.Size = new System.Drawing.Size(764, 555);
             this.panel1.TabIndex = 4;
             // 
             // checkBoxMultiline
@@ -147,17 +147,17 @@
             this.textEditorControl1.Location = new System.Drawing.Point(110, 36);
             this.textEditorControl1.Multiline = false;
             this.textEditorControl1.Name = "textEditorControl1";
-            this.textEditorControl1.Size = new System.Drawing.Size(667, 65);
+            this.textEditorControl1.Size = new System.Drawing.Size(667, 18);
             this.textEditorControl1.TabIndex = 3;
-            this.textEditorControl1.Text = "textEditorControl1";
+            this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
             // 
             // FormErrorReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 650);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.textEditorControl1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.checkBoxReadonly);
@@ -183,8 +183,8 @@
         private System.Windows.Forms.CheckBox checkBoxReadonly;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private TextEditor.WinForms.TextEditorControl textEditorControl1;
         private System.Windows.Forms.Label label2;
+        private TextEditor.WinForms.TextEditorControl textEditorControl1;
 
 
     }

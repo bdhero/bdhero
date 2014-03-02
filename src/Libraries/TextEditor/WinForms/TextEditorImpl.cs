@@ -260,6 +260,19 @@ namespace TextEditor.WinForms
 
         #region Syntax highlighting
 
+        public void LoadSyntaxDefinitions(string directoryPath)
+        {
+            FileSyntaxModeProvider fsmProvider; // Provider
+            if (Directory.Exists(directoryPath))
+            {
+                fsmProvider = new FileSyntaxModeProvider(directoryPath); // Create new provider with the highlighting directory.
+                HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider); // Attach to the text editor.
+
+                // TODO:
+                _editor.SetHighlighting("FilePath"); // Activate the highlighting, use the name from the SyntaxDefinition node.
+            }
+        }
+
         public void SetSyntaxFromExtension(string fileNameOrExtension)
         {
             var filename = fileNameOrExtension ?? string.Empty;

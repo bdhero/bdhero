@@ -8,7 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 #if !__MonoCS__
@@ -238,6 +240,25 @@ namespace TextEditor.WPF
         #endregion
 
         #region Syntax highlighting
+
+        public void LoadSyntaxDefinitions(string directoryPath)
+        {
+            var files = new DirectoryInfo(directoryPath).GetFiles("*.xshd");
+            foreach (var file in files)
+            {
+                using (var reader = new XmlTextReader(file.OpenText()))
+                {
+                    var xshdSyntaxDefinition = HighlightingLoader.LoadXshd(reader);
+                    var highlightingDefinition = HighlightingLoader.Load(xshdSyntaxDefinition, HighlightingManager.Instance);
+
+                    // TODO:
+                    HighlightingManager.Instance.RegisterHighlighting("FilePath", new [] { ".filepath" }, highlightingDefinition);
+                }
+            }
+
+            // TODO:
+            _editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("FilePath");
+        }
 
         public void SetSyntaxFromExtension(string fileNameOrExtension)
         {
