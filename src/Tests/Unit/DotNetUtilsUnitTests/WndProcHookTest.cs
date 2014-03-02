@@ -34,14 +34,14 @@ namespace DotNetUtilsUnitTests
         [Test]
         public void TestHandled()
         {
-            _hook.GotWndProc += Handle;
+            _hook.WndProcMessage += Handle;
 
             _form.Show();
             _form.Text = "abc";
 
             Thread.Sleep(1000);
 
-            _hook.GotWndProc -= Handle;
+            _hook.WndProcMessage -= Handle;
 
             _form.Hide();
 
@@ -52,14 +52,14 @@ namespace DotNetUtilsUnitTests
         [Test]
         public void TestUnhandled()
         {
-            _hook.GotWndProc += DoNotHandle;
+            _hook.WndProcMessage += DoNotHandle;
 
             _form.Show();
             _form.Text = "abc";
 
             Thread.Sleep(1000);
 
-            _hook.GotWndProc -= DoNotHandle;
+            _hook.WndProcMessage -= DoNotHandle;
 
             _form.Hide();
 

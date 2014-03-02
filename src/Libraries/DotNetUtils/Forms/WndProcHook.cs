@@ -17,7 +17,7 @@ namespace DotNetUtils.Forms
         /// <summary>
         ///     Invoked whenever the hooked control's <see cref="Control.WndProc"/> method is called.
         /// </summary>
-        public event WndProcEventHandler2 GotWndProc;
+        public event WndProcEventHandler2 WndProcMessage;
 
         /// <summary>
         ///     Constructs a new <see cref="WndProcHook"/> instance that listens for <see cref="Control.WndProc"/> messages
@@ -44,8 +44,8 @@ namespace DotNetUtils.Forms
         {
             var args = new HandledEventArgs();
 
-            if (GotWndProc != null)
-                GotWndProc(ref m, args);
+            if (WndProcMessage != null)
+                WndProcMessage(ref m, args);
 
             if (args.Handled)
                 return;
