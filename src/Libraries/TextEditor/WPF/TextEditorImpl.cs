@@ -28,8 +28,6 @@ namespace TextEditor.WPF
 
     internal class TextEditorImpl : ITextEditor
     {
-        private static readonly Regex NewlineRegex = new Regex(@"[\n\r\f]+");
-
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor
             = new ICSharpCode.AvalonEdit.TextEditor
               {
@@ -39,6 +37,7 @@ namespace TextEditor.WPF
         private readonly ElementHost _elementHost = new ElementHost { Dock = DockStyle.Fill };
 
         private readonly TextEditorOptionsImpl _options;
+        private readonly MultilineHelper _multilineHelper;
 
         public TextEditorImpl()
         {
@@ -46,6 +45,8 @@ namespace TextEditor.WPF
             _editor.PreviewKeyDown += OnPreviewKeyDown;
 
             _options = new TextEditorOptionsImpl(_editor);
+
+            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
 
             _elementHost.Child = _editor;
         }
@@ -66,14 +67,12 @@ namespace TextEditor.WPF
 
         #region Text
 
-        private bool _ignoreTextChanged;
-
         public string Text
         {
             get { return _editor.Text; }
             set
             {
-                var newValue = SanitizeText(value);
+                var newValue = MultilineHelper.StripNewlines(value ?? "");
                 if (newValue == Text)
                     return;
 
@@ -85,20 +84,13 @@ namespace TextEditor.WPF
 
         private void EditorOnTextChanged(object sender, EventArgs e)
         {
-            if (_ignoreTextChanged)
-                return;
-
-            _ignoreTextChanged = true;
-            Text = Text;
-            _ignoreTextChanged = false;
-
-            if (TextChanged != null)
-                TextChanged(sender, e);
+            _multilineHelper.TextChanged();
         }
 
-        private string SanitizeText(string text)
+        private void NotifyTextChanged()
         {
-            return Multiline ? text : NewlineRegex.Replace(text, "");
+            if (TextChanged != null)
+                TextChanged(this, EventArgs.Empty);
         }
 
         #endregion
@@ -155,8 +147,8 @@ namespace TextEditor.WPF
         {
             get
             {
-                return _editor.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled &&
-                       _editor.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled;
+                return _editor.HorizontalScrollBarVisibility != ScrollBarVisibility.Hidden &&
+                       _editor.VerticalScrollBarVisibility != ScrollBarVisibility.Hidden;
             }
             set
             {
@@ -168,10 +160,6 @@ namespace TextEditor.WPF
 
                 if (changed)
                 {
-                    // Strip newlines from text
-                    Text = Text;
-
-                    // Notify observers
                     OnMultilineChanged();
                 }
             }
@@ -181,6 +169,8 @@ namespace TextEditor.WPF
 
         private void OnMultilineChanged()
         {
+            _multilineHelper.MultilineChanged();
+
             if (MultilineChanged != null)
                 MultilineChanged(this, EventArgs.Empty);
         }
