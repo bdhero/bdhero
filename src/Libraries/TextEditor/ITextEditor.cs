@@ -75,6 +75,8 @@ namespace TextEditor
 
         void Redo();
 
+        void ClearHistory();
+
         #endregion
 
         #region Clear/delete

@@ -320,6 +320,11 @@ namespace TextEditor.WPF
             _editor.Redo();
         }
 
+        public void ClearHistory()
+        {
+            _editor.Document.UndoStack.ClearAll();
+        }
+
         #endregion
 
         #region Clear/delete

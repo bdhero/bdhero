@@ -1,16 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Timers;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
 
 namespace TextEditor.WinForms
 {
+    internal class PasteListener : NativeWindow
+    {
+        private const int WM_PASTE = 0x0302;
+
+        private readonly Control _control;
+
+        public event CancelEventHandler OnPaste;
+
+        public PasteListener(Control control)
+        {
+            _control = control;
+            if (control == null)
+                return;
+
+            control.HandleCreated += (sender, args) => AssignHandle(control.Handle);
+            control.HandleDestroyed += (sender, args) => ReleaseHandle();
+
+            if (control.IsHandleCreated)
+                AssignHandle(control.Handle);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_PASTE)
+            {
+                var args = new CancelEventArgs();
+
+                if (OnPaste != null)
+                    OnPaste(this, args);
+
+                if (args.Cancel)
+                    return;
+            }
+
+            base.WndProc(ref m);
+        }
+    }
+
     internal class TextEditorImpl : ITextEditor
     {
         private readonly ICSharpCode.TextEditor.TextEditorControl _editor = new ICSharpCode.TextEditor.TextEditorControl();
@@ -21,14 +61,18 @@ namespace TextEditor.WinForms
 
         public TextEditorImpl()
         {
-            _editor.TextChanged += OnTextChanged;
+            _editor.TextChanged += EditorOnTextChanged;
             _editor.ActiveTextAreaControl.TextArea.KeyEventHandler += TextAreaOnKeyEventHandler;
             _editor.ActiveTextAreaControl.TextArea.DoProcessDialogKey += TextAreaOnDoProcessDialogKey;
             _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
 
             _options = new TextEditorOptionsImpl(_editor);
 
-            _newlineStripper = new NewlineStripper(Control, () => Multiline, () => Text, stripped => Text = stripped, ForceRepaint);
+            _newlineStripper = new NewlineStripper(_editor, () => Multiline, () => Text, stripped => Text = stripped, ForceRepaint);
+
+            var listener1 = new PasteListener(_editor);
+            var listener2 = new PasteListener(_editor.ActiveTextAreaControl);
+            var listener3 = new PasteListener(_editor.ActiveTextAreaControl.TextArea);
         }
 
         ITextEditorOptions ITextEditor.Options
@@ -48,7 +92,7 @@ namespace TextEditor.WinForms
             get { return _editor.Text; }
             set
             {
-                var newValue = _newlineStripper.SanitizeText(value);
+                var newValue = _newlineStripper.SanitizeText(value ?? "");
                 if (newValue == Text)
                     return;
 
@@ -58,15 +102,56 @@ namespace TextEditor.WinForms
 
         public event EventHandler TextChanged;
 
-        private void OnTextChanged(object sender, EventArgs e)
+        private bool _ignoreTextChanged;
+
+        private void EditorOnTextChanged(object sender, EventArgs e)
         {
-            if (_newlineStripper.IgnoreTextChanged)
+            if (_newlineStripper.IgnoreTextChanged || _ignoreTextChanged)
                 return;
 
             if (TextChanged != null)
                 TextChanged(sender, e);
 
-            _newlineStripper.SanitizeTextAsync();
+//            _newlineStripper.SanitizeTextAsync();
+
+            var sanitized = _newlineStripper.SanitizeText(Text);
+            if (sanitized != Text)
+            {
+                _ignoreTextChanged = true;
+
+                var timer = new System.Timers.Timer(10) { AutoReset = false };
+                timer.Elapsed += delegate(object o, ElapsedEventArgs args)
+                                 {
+                                     _editor.Invoke(new Action(delegate
+                                                               {
+                                                                   if (CanUndo)
+                                                                   {
+                                                                       if (string.IsNullOrEmpty(sanitized))
+                                                                       {
+                                                                           Text = "";
+                                                                           return;
+                                                                       }
+
+                                                                       var clipboardText = Clipboard.GetText();
+
+                                                                       Clipboard.SetText(sanitized);
+
+                                                                       Undo();
+                                                                       SelectAll();
+                                                                       Paste();
+
+                                                                       Clipboard.SetText(clipboardText);
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       Text = sanitized;
+                                                                   }
+
+                                                                   _ignoreTextChanged = false;
+                                                               }));
+                                 };
+                timer.Start();
+            }
         }
 
         private void ForceRepaint()
@@ -97,7 +182,7 @@ namespace TextEditor.WinForms
 
         private void TextAreaOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs args)
         {
-            if (ShouldPreventTabKey(args.KeyCode))
+            if (ShouldPreventTabKey(args.KeyData))
             {
                 _editor.SelectNextControl(!args.Shift);
             }
@@ -207,6 +292,9 @@ namespace TextEditor.WinForms
                 {
                     // Strip newlines from text
                     Text = Text;
+
+                    // Prevent undo/redo craziness
+                    ClearHistory();
 
                     // Notify observers
                     OnMultilineChanged();
@@ -349,6 +437,11 @@ namespace TextEditor.WinForms
         public void Redo()
         {
             _editor.Redo();
+        }
+
+        public void ClearHistory()
+        {
+            _editor.Document.UndoStack.ClearAll();
         }
 
         #endregion

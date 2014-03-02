@@ -83,6 +83,9 @@ namespace TextEditor
 
         public string SanitizeText(string text)
         {
+            if (text == null)
+                return "";
+
             return Multiline ? text : NewlineRegex.Replace(text, "");
         }
     }
