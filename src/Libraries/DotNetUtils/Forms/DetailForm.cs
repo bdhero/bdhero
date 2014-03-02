@@ -24,7 +24,6 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Windows.Forms;
-using DotNetUtils.Dialogs;
 
 namespace DotNetUtils.Forms
 {
