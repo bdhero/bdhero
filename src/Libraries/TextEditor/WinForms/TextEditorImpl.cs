@@ -110,7 +110,7 @@ namespace TextEditor.WinForms
 
         private bool ShouldPreventTabKey(Keys data)
         {
-            return !Multiline && (data & Keys.Tab) == Keys.Tab;
+            return !Multiline && (data == Keys.Tab || data == (Keys.Tab | Keys.Shift));
         }
 
         #endregion
