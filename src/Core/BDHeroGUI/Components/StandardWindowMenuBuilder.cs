@@ -1,12 +1,12 @@
-﻿using BDHeroGUI.Forms;
-using DotNetUtils.Forms;
+﻿using System.Windows.Forms;
+using BDHeroGUI.Forms;
 using OSUtils.Window;
 
 namespace BDHeroGUI.Components
 {
     class StandardWindowMenuBuilder
     {
-        private readonly WndProcObservableForm _form;
+        private readonly Form _form;
         private readonly IWindowMenuFactory _factory;
         private readonly IWindowMenu _menu;
 
@@ -22,7 +22,7 @@ namespace BDHeroGUI.Components
 
         private bool _isSeparatorAdded;
 
-        public StandardWindowMenuBuilder(WndProcObservableForm form, IWindowMenuFactory factory)
+        public StandardWindowMenuBuilder(Form form, IWindowMenuFactory factory)
         {
             _form = form;
             _factory = factory;

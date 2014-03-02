@@ -129,21 +129,23 @@ namespace BDHeroGUI.Components
         /// <summary>
         /// Initializes the <see cref="BDHeroGUI.Components.DiscMenu"/> for use.
         /// </summary>
-        /// <param name="observable">
+        /// <param name="form">
         /// Windows Forms control (typically a <see cref="Form"/>) to listen for <see cref="Form.WndProc"/> events on.
         /// </param>
         /// <param name="detector">
         /// Drive detector.
         /// </param>
         /// <exception cref="InvalidOperationException">Thrown if this method is called more than once.</exception>
-        public void Initialize(IWndProcObservable observable, IDriveDetector detector)
+        public void Initialize(Form form, IDriveDetector detector)
         {
             if (_isInitialized)
             {
                 throw new InvalidOperationException("DiscMenu has already been initialized");
             }
 
-            observable.WndProcMessage += WndProc;
+            var hook = new WndProcHook(form);
+
+            hook.WndProcMessage += WndProc;
 
             _detector = detector;
             _detector.DeviceArrived += OnDeviceArrived;
@@ -180,7 +182,7 @@ namespace BDHeroGUI.Components
         {
         }
 
-        private void WndProc(ref Message m)
+        private void WndProc(ref Message m, HandledEventArgs args)
         {
             _detector.WndProc(ref m);
         }

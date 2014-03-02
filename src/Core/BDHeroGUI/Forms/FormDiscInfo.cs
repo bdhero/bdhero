@@ -20,13 +20,12 @@ using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHeroGUI.Components;
 using DotNetUtils.Extensions;
-using DotNetUtils.Forms;
 using DotNetUtils.FS;
 using OSUtils.Window;
 
 namespace BDHeroGUI.Forms
 {
-    public partial class FormDiscInfo : WndProcObservableForm
+    public partial class FormDiscInfo : Form
     {
         private readonly PictureBoxSizeMode _defaultJacketSizeMode;
 

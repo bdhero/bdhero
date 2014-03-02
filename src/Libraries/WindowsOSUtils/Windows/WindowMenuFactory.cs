@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Windows.Forms;
 using DotNetUtils.Annotations;
-using DotNetUtils.Forms;
 using OSUtils.Window;
 
 namespace WindowsOSUtils.Windows
@@ -10,7 +10,7 @@ namespace WindowsOSUtils.Windows
     {
         private uint _menuItemIdCounter = 0x1;
 
-        public IWindowMenu CreateMenu(WndProcObservableForm form)
+        public IWindowMenu CreateMenu(Form form)
         {
             return new WindowMenu(form);
         }

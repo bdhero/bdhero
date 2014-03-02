@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
-using DotNetUtils.Forms;
 using Ninject.Modules;
 using OSUtils.DriveDetector;
 using OSUtils.JobObjects;
@@ -158,7 +157,7 @@ namespace OSUtils
         {
             private uint _menuItemIdCounter = 0x1;
 
-            public IWindowMenu CreateMenu(WndProcObservableForm form)
+            public IWindowMenu CreateMenu(Form form)
             {
                 return new MockWindowMenu();
             }

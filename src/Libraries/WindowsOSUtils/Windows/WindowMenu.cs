@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using NativeAPI;
@@ -40,15 +41,15 @@ namespace WindowsOSUtils.Windows
 
         #endregion
 
-        internal WindowMenu(WndProcObservableForm form)
+        internal WindowMenu(Form form)
         {
             _hSysMenu = SystemMenuAPI.GetSystemMenu(form.Handle, false);
-            form.WndProcMessage += OnWndProcMessage;
+            new WndProcHook(form).WndProcMessage += OnWndProcMessage;
         }
 
         #region Window message handling
 
-        private void OnWndProcMessage(ref Message m)
+        private void OnWndProcMessage(ref Message m, HandledEventArgs args)
         {
             WindowMessage msg = m;
 

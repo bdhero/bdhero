@@ -89,9 +89,6 @@
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
     <Compile Include="Forms\WndProcHook.cs" />
-    <Compile Include="Forms\WndProcObservableForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
     <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />
@@ -154,7 +151,6 @@
       <DependentUpon>DetailForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExternalDragProvider.cs" />
-    <Compile Include="Forms\IWndProcObservable.cs" />
     <Compile Include="FS\FileAssociation.cs" />
     <Compile Include="FS\ITempFileRegistrar.cs" />
     <Compile Include="Mono.Options\Options.cs" />

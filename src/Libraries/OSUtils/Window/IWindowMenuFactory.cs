@@ -1,11 +1,11 @@
 ﻿using System;
-using DotNetUtils.Forms;
+using System.Windows.Forms;
 
 namespace OSUtils.Window
 {
     public interface IWindowMenuFactory
     {
-        IWindowMenu CreateMenu(WndProcObservableForm form);
+        IWindowMenu CreateMenu(Form form);
 
         IWindowMenuItem CreateMenuItem(string text = null, EventHandler clickHandler = null);
     }

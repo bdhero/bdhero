@@ -52,7 +52,7 @@ using UpdateLib;
 namespace BDHeroGUI
 {
     [UsedImplicitly]
-    public partial class FormMain : WndProcObservableForm, IErrorReportResultVisitor
+    public partial class FormMain : Form, IErrorReportResultVisitor
     {
         private const string PluginEnabledMenuItemName = "enabled";
 
