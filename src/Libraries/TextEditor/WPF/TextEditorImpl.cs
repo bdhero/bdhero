@@ -175,6 +175,16 @@ namespace TextEditor.WPF
                 MultilineChanged(this, EventArgs.Empty);
         }
 
+        public int HorizontalScrollBarHeight
+        {
+            get { return 0; }
+        }
+
+        public int VerticalScrollBarWidth
+        {
+            get { return 0; }
+        }
+
         #endregion
 
         #region Read Only

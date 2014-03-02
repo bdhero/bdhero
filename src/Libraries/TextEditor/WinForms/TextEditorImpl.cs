@@ -195,6 +195,16 @@ namespace TextEditor.WinForms
                 MultilineChanged(this, EventArgs.Empty);
         }
 
+        public int HorizontalScrollBarHeight
+        {
+            get { return SystemInformation.HorizontalScrollBarHeight; }
+        }
+
+        public int VerticalScrollBarWidth
+        {
+            get { return SystemInformation.VerticalScrollBarWidth; }
+        }
+
         #endregion
 
         #region Read Only

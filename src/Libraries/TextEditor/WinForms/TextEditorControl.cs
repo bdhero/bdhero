@@ -18,7 +18,7 @@ namespace TextEditor.WinForms
             Editor.FontSizeChanged += (sender, args) => OnFontChanged(args);
             Editor.MultilineChanged += (sender, args) => OnMultilineChanged(args);
 
-            Editor.Control.Dock = DockStyle.Fill;
+            Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
             SetStyle(ControlStyles.Selectable, false);
@@ -146,10 +146,18 @@ namespace TextEditor.WinForms
 
             RecreateHandle();
 
-            AdjustHeight(false);
+            if (IsHandleCreated)
+                AdjustHeight(false);
 
             if (MultilineChanged != null)
                 MultilineChanged(this, args);
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            AdjustHeight(true);
         }
 
         /// <summary>
@@ -168,6 +176,7 @@ namespace TextEditor.WinForms
 
             if (Multiline)
             {
+                Editor.Control.Size = Size;
                 return;
             }
 
@@ -175,10 +184,12 @@ namespace TextEditor.WinForms
 
             using (var g = CreateGraphics())
             {
-                var font = new Font(Font.FontFamily, (float)fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
+                var font = new Font(Font.FontFamily, (float) fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
                 var size = g.MeasureString(Editor.Text, font);
-                var height = (int)Math.Ceiling(size.Height);
-                Size = new Size(Width, height);
+                var width = Width;
+                var height = (int) Math.Ceiling(size.Height);
+                Size = new Size(width, height);
+                Editor.Control.Size = new Size(width + Editor.VerticalScrollBarWidth, height + Editor.HorizontalScrollBarHeight);
             }
         }
 

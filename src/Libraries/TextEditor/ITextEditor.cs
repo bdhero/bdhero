@@ -38,6 +38,10 @@ namespace TextEditor
 
         event EventHandler ReadOnlyChanged;
 
+        int HorizontalScrollBarHeight { get; }
+
+        int VerticalScrollBarWidth { get; }
+
         #endregion
 
         #region Load/save
