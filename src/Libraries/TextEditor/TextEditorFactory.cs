@@ -9,12 +9,19 @@ namespace TextEditor
     {
         public static ITextEditor CreateTextEditor()
         {
+            ITextEditor editor =
 #if __MonoCS__
-            return new WinForms.TextEditorImpl();
+                new WinForms.TextEditorImpl()
 #else
-//            return new WPF.TextEditorImpl();
-            return new WinForms.TextEditorImpl();
+                new WPF.TextEditorImpl()
+//                new WinForms.TextEditorImpl()
 #endif
+                ;
+
+            // Default value
+            editor.FontSize = 14;
+            
+            return editor;
         }
     }
 }
