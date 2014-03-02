@@ -57,6 +57,8 @@ namespace TextEditor
                 // Prevent undo/redo craziness
                 _editor.ClearHistory();
             }
+
+            _editor.ForceRepaint();
         }
 
         private void TimerOnElapsed(string sanitized)
@@ -81,6 +83,7 @@ namespace TextEditor
                 _editor.Undo();
                 _editor.SelectAll();
                 _editor.Paste();
+                _editor.ForceRepaint();
 
                 Clipboard.SetText(clipboardText);
             }

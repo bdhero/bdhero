@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ControlExtensions.cs" />
+    <Compile Include="FontSizeConverter.cs" />
     <Compile Include="ITextEditor.cs" />
     <Compile Include="ITextEditorOptions.cs" />
     <Compile Include="MultilineHelper.cs" />

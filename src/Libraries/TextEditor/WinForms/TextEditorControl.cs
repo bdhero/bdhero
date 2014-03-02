@@ -16,6 +16,7 @@ namespace TextEditor.WinForms
             Editor = TextEditorFactory.CreateTextEditor();
             Editor.TextChanged += (sender, args) => OnTextChanged(args);
             Editor.FontSizeChanged += (sender, args) => OnFontChanged(args);
+            Editor.MultilineChanged += (sender, args) => OnMultilineChanged(args);
 
             Editor.Control.Dock = DockStyle.Fill;
             Controls.Add(Editor.Control);
@@ -23,6 +24,11 @@ namespace TextEditor.WinForms
             SetStyle(ControlStyles.Selectable, false);
 
             EnableContextMenu = true;
+        }
+
+        protected override Size DefaultSize
+        {
+            get { return new Size(500, 300); }
         }
 
         private ContextMenu CreateContextMenu()
@@ -63,8 +69,15 @@ namespace TextEditor.WinForms
             return menu;
         }
 
+        /// <summary>
+        ///     Gets the underlying editor for the control.
+        /// </summary>
+        [Browsable(false)]
         public ITextEditor Editor { get; private set; }
 
+        /// <summary>
+        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
+        /// </summary>
         [Browsable(true)]
         [Description("Determines whether the user can enter multiple lines of text.")]
         [DefaultValue(true)]
@@ -92,6 +105,9 @@ namespace TextEditor.WinForms
 
         #region Multiline
 
+        /// <summary>
+        ///     Gets or sets whether the user can enter multiple lines of text.
+        /// </summary>
         [Browsable(true)]
         [Description("Determines whether the user can enter multiple lines of text.")]
         [DefaultValue(true)]
@@ -104,33 +120,66 @@ namespace TextEditor.WinForms
                     return;
 
                 Editor.Multiline = value;
-
-                if (!value)
-                {
-//                    Editor.Options.ConvertTabsToSpaces = false;
-                    Editor.Options.CutCopyWholeLine = false;
-                    Editor.Options.ShowColumnRuler = false;
-                    Editor.Options.ShowLineNumbers = false;
-//                    Editor.Options.ShowSpaces = false;
-//                    Editor.Options.ShowTabs = false;
-                }
-
-                SetStyle(ControlStyles.FixedHeight, !value);
-
-                RecreateHandle();
-
-//                AdjustHeight(false);
-                OnMultilineChanged(EventArgs.Empty);
             }
         }
 
+        /// <summary>
+        ///     Event raised when the value of the <see cref="Multiline"/> property is changed on this <see cref="TextEditorControl"/>.
+        /// </summary>
         [Browsable(true)]
+        [Description("Occurs when the value of the Multiline property changes.")]
+        [RefreshProperties(RefreshProperties.All)]
         public event EventHandler MultilineChanged;
 
         protected virtual void OnMultilineChanged(EventArgs args)
         {
+            if (!Multiline)
+            {
+                Editor.Options.CutCopyWholeLine = false;
+                Editor.Options.ShowColumnRuler = false;
+                Editor.Options.ShowLineNumbers = false;
+                Editor.Options.ShowSpaces = false;
+                Editor.Options.ShowTabs = false;
+            }
+
+            SetStyle(ControlStyles.FixedHeight, !Multiline);
+
+            RecreateHandle();
+
+            AdjustHeight(false);
+
             if (MultilineChanged != null)
                 MultilineChanged(this, args);
+        }
+
+        /// <summary>
+        ///     Adjusts the height of a single-line edit control to match the height of
+        ///     the control's font.
+        /// </summary>
+        private void AdjustHeight(bool returnIfAnchored)
+        {
+            // If we're anchored to two opposite sides of the form, don't adjust the size because
+            // we'll lose our anchored size by resetting to the requested width.
+            if (returnIfAnchored &&
+                (Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
+            {
+                return;
+            }
+
+            if (Multiline)
+            {
+                return;
+            }
+
+            var fontSize = FontSizeConverter.GetWinFormsFontSize(Editor.FontSize);
+
+            using (var g = CreateGraphics())
+            {
+                var font = new Font(Font.FontFamily, (float)fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
+                var size = g.MeasureString(Editor.Text, font);
+                var height = (int)Math.Ceiling(size.Height);
+                Size = new Size(Width, height);
+            }
         }
 
         #endregion

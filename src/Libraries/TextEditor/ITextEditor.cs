@@ -23,6 +23,9 @@ namespace TextEditor
 
         event EventHandler TextChanged;
 
+        /// <summary>
+        ///     WPF font size.  Use the <see cref="FontSizeConverter"/> class to convert between Windows Forms and WPF font sizes.
+        /// </summary>
         double FontSize { get; set; }
 
         event EventHandler FontSizeChanged;
@@ -112,6 +115,12 @@ namespace TextEditor
         bool IsModified { get; }
 
         int LineCount { get; }
+
+        #endregion
+
+        #region Miscellaneous
+
+        void ForceRepaint();
 
         #endregion
     }

@@ -54,6 +54,9 @@ namespace TextEditor.WinForms
                     return;
 
                 _editor.Text = newValue;
+
+                if (newValue != value)
+                    ForceRepaint();
             }
         }
 
@@ -114,7 +117,7 @@ namespace TextEditor.WinForms
 
         public double FontSize
         {
-            get { return _editor.Font.Size; }
+            get { return FontSizeConverter.GetWpfFontSize(_editor.Font.Size); }
             set
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -124,7 +127,7 @@ namespace TextEditor.WinForms
                 var font = _editor.Font;
 
                 _editor.Font = new Font(font.FontFamily.Name,
-                                        (float) GetWinFormsFontSize(value),
+                                        (float) FontSizeConverter.GetWinFormsFontSize(value),
                                         font.Style,
                                         GraphicsUnit.Point,
                                         font.GdiCharSet,
@@ -140,32 +143,6 @@ namespace TextEditor.WinForms
         {
             if (FontSizeChanged != null)
                 FontSizeChanged(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        ///     Converts a WPF font size to its Windows Forms equivalent.
-        /// </summary>
-        /// <param name="wpfFontSize">
-        ///     WPF font size measured in points.
-        /// </param>
-        /// <returns>
-        ///     Windows Forms equivalent of <paramref name="wpfFontSize"/>.
-        /// </returns>
-        /// <remarks>
-        ///     <para>
-        ///         Font size in WPF is expressed as one ninety-sixth of an inch, and in Windows Forms as one seventy-second of an inch.
-        ///     </para>
-        ///     <para>
-        ///         The corresponding conversion is:
-        ///     </para>
-        ///     <code>
-        ///         Windows Forms font size = WPF font size * 72.0 / 96.0
-        ///     </code>
-        /// </remarks>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/ms751565(v=vs.100).aspx"/>
-        private static double GetWinFormsFontSize(double wpfFontSize)
-        {
-            return wpfFontSize * 72.0 / 96.0;
         }
 
         #endregion
@@ -420,6 +397,15 @@ namespace TextEditor.WinForms
         public int LineCount
         {
             get { return _editor.ActiveTextAreaControl.Document.TotalNumberOfLines; }
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        public void ForceRepaint()
+        {
+            _editor.ShowInvalidLines = _editor.ShowInvalidLines;
         }
 
         #endregion
