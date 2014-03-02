@@ -47,6 +47,18 @@ namespace TextEditor
             _notifyTextSanitized();
         }
 
+        public void MultilineChanged()
+        {
+            // Strip newlines from text
+            _editor.Text = StripNewlines(_editor.Text);
+
+            if (!_editor.Multiline)
+            {
+                // Prevent undo/redo craziness
+                _editor.ClearHistory();
+            }
+        }
+
         private void TimerOnElapsed(string sanitized)
         {
             _editor.Control.Invoke(new Action(() => SetSanitizedText(sanitized)));

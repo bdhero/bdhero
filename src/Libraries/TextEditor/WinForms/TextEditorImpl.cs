@@ -200,16 +200,6 @@ namespace TextEditor.WinForms
 
                 if (changed)
                 {
-                    // Strip newlines from text
-                    Text = Text;
-
-                    if (!value)
-                    {
-                        // Prevent undo/redo craziness
-                        ClearHistory();
-                    }
-
-                    // Notify observers
                     OnMultilineChanged();
                 }
             }
@@ -219,6 +209,8 @@ namespace TextEditor.WinForms
 
         private void OnMultilineChanged()
         {
+            _multilineHelper.MultilineChanged();
+
             if (MultilineChanged != null)
                 MultilineChanged(this, EventArgs.Empty);
         }
