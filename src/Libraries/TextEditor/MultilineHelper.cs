@@ -49,16 +49,14 @@ namespace TextEditor
 
         public void MultilineChanged()
         {
+            if (_editor.Multiline)
+                return;
+
             // Strip newlines from text
             _editor.Text = StripNewlines(_editor.Text);
 
-            if (!_editor.Multiline)
-            {
-                // Prevent undo/redo craziness
-                _editor.ClearHistory();
-            }
-
-            _editor.ForceRepaint();
+            // Prevent undo/redo craziness
+            _editor.ClearHistory();
         }
 
         private void TimerOnElapsed(string sanitized)
@@ -83,7 +81,6 @@ namespace TextEditor
                 _editor.Undo();
                 _editor.SelectAll();
                 _editor.Paste();
-                _editor.ForceRepaint();
 
                 Clipboard.SetText(clipboardText);
             }

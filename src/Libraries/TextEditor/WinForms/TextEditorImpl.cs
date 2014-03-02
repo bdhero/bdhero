@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Timers;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
@@ -54,9 +53,6 @@ namespace TextEditor.WinForms
                     return;
 
                 _editor.Text = newValue;
-
-                if (newValue != value)
-                    ForceRepaint();
             }
         }
 
@@ -69,8 +65,15 @@ namespace TextEditor.WinForms
 
         private void NotifyTextChanged()
         {
+            ForceRepaint();
+
             if (TextChanged != null)
                 TextChanged(this, EventArgs.Empty);
+        }
+
+        private void ForceRepaint()
+        {
+            _editor.ShowInvalidLines = _editor.ShowInvalidLines;
         }
 
         #endregion
@@ -397,15 +400,6 @@ namespace TextEditor.WinForms
         public int LineCount
         {
             get { return _editor.ActiveTextAreaControl.Document.TotalNumberOfLines; }
-        }
-
-        #endregion
-
-        #region Miscellaneous
-
-        public void ForceRepaint()
-        {
-            _editor.ShowInvalidLines = _editor.ShowInvalidLines;
         }
 
         #endregion

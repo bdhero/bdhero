@@ -117,11 +117,5 @@ namespace TextEditor
         int LineCount { get; }
 
         #endregion
-
-        #region Miscellaneous
-
-        void ForceRepaint();
-
-        #endregion
     }
 }

@@ -389,14 +389,6 @@ namespace TextEditor.WPF
 
         #endregion
 
-        #region Miscellaneous
-
-        public void ForceRepaint()
-        {
-        }
-
-        #endregion
-
         #region Avalon-specific (no apparent 3.x equivalent)
 
         public void LineUp()
