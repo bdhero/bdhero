@@ -13,51 +13,11 @@ using TextEditor.Extensions;
 
 namespace TextEditor.WinForms
 {
-    internal class PasteListener : NativeWindow
-    {
-        private const int WM_PASTE = 0x0302;
-
-        private readonly Control _control;
-
-        public event CancelEventHandler OnPaste;
-
-        public PasteListener(Control control)
-        {
-            _control = control;
-            if (control == null)
-                return;
-
-            control.HandleCreated += (sender, args) => AssignHandle(control.Handle);
-            control.HandleDestroyed += (sender, args) => ReleaseHandle();
-
-            if (control.IsHandleCreated)
-                AssignHandle(control.Handle);
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_PASTE)
-            {
-                var args = new CancelEventArgs();
-
-                if (OnPaste != null)
-                    OnPaste(this, args);
-
-                if (args.Cancel)
-                    return;
-            }
-
-            base.WndProc(ref m);
-        }
-    }
-
     internal class TextEditorImpl : ITextEditor
     {
         private readonly ICSharpCode.TextEditor.TextEditorControl _editor = new ICSharpCode.TextEditor.TextEditorControl();
 
         private readonly TextEditorOptionsImpl _options;
-
-        private readonly NewlineStripper _newlineStripper;
 
         public TextEditorImpl()
         {
@@ -67,12 +27,6 @@ namespace TextEditor.WinForms
             _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
 
             _options = new TextEditorOptionsImpl(_editor);
-
-            _newlineStripper = new NewlineStripper(_editor, () => Multiline, () => Text, stripped => Text = stripped, ForceRepaint);
-
-            var listener1 = new PasteListener(_editor);
-            var listener2 = new PasteListener(_editor.ActiveTextAreaControl);
-            var listener3 = new PasteListener(_editor.ActiveTextAreaControl.TextArea);
         }
 
         ITextEditorOptions ITextEditor.Options
@@ -87,12 +41,19 @@ namespace TextEditor.WinForms
 
         #region Text
 
+        private static readonly Regex NewlineRegex = new Regex(@"[\n\r\f]+");
+
+        private static string SanitizeText(string text)
+        {
+            return NewlineRegex.Replace(text, "");
+        }
+
         public string Text
         {
             get { return _editor.Text; }
             set
             {
-                var newValue = _newlineStripper.SanitizeText(value ?? "");
+                var newValue = SanitizeText(value ?? "");
                 if (newValue == Text)
                     return;
 
@@ -106,15 +67,13 @@ namespace TextEditor.WinForms
 
         private void EditorOnTextChanged(object sender, EventArgs e)
         {
-            if (_newlineStripper.IgnoreTextChanged || _ignoreTextChanged)
+            if (_ignoreTextChanged)
                 return;
 
             if (TextChanged != null)
                 TextChanged(sender, e);
 
-//            _newlineStripper.SanitizeTextAsync();
-
-            var sanitized = _newlineStripper.SanitizeText(Text);
+            var sanitized = SanitizeText(Text);
             if (sanitized != Text)
             {
                 _ignoreTextChanged = true;
@@ -152,12 +111,6 @@ namespace TextEditor.WinForms
                                  };
                 timer.Start();
             }
-        }
-
-        private void ForceRepaint()
-        {
-//            _editor.ShowInvalidLines = _editor.ShowInvalidLines;
-            _editor.Update();
         }
 
         #endregion
