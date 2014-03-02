@@ -1,62 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using ICSharpCode.TextEditor;
-
-namespace TextEditor.WinForms
+﻿namespace TextEditor.WinForms
 {
     internal class TextEditorOptionsImpl : ITextEditorOptions
     {
-        private readonly TextEditorControl _editor;
+        private readonly ICSharpCode.TextEditor.TextEditorControl _editor;
 
-        public TextEditorOptionsImpl(TextEditorControl editor)
+        public TextEditorOptionsImpl(ICSharpCode.TextEditor.TextEditorControl editor)
         {
             _editor = editor;
-            _editor.ActiveTextAreaControl.TextArea.KeyEventHandler += TextAreaOnKeyEventHandler;
-        }
-
-        private bool TextAreaOnKeyEventHandler(char ch)
-        {
-            return !Multiline && ch == '\n';
-        }
-
-        public double FontSize
-        {
-            get { return _editor.Font.Size; }
-            set
-            {
-                var f = _editor.Font;
-                _editor.Font = new Font(f.FontFamily.Name, (float)value, f.Style, f.Unit, f.GdiCharSet, f.GdiVerticalFont);
-            }
-        }
-
-        public bool Multiline
-        {
-            get
-            {
-                return _editor.HorizontalScroll.Enabled &&
-                       _editor.VerticalScroll.Enabled &&
-
-                       _editor.ActiveTextAreaControl.HScrollBar.Enabled &&
-                       _editor.ActiveTextAreaControl.VScrollBar.Enabled &&
-
-                       _editor.ActiveTextAreaControl.HScrollBar.Visible &&
-                       _editor.ActiveTextAreaControl.VScrollBar.Visible;
-            }
-            set
-            {
-                _editor.HorizontalScroll.Enabled =
-                    _editor.VerticalScroll.Enabled =
-
-                    _editor.ActiveTextAreaControl.HScrollBar.Enabled =
-                    _editor.ActiveTextAreaControl.VScrollBar.Enabled =
-
-                    _editor.ActiveTextAreaControl.HScrollBar.Visible =
-                    _editor.ActiveTextAreaControl.VScrollBar.Visible = value;
-            }
         }
 
         public bool ShowLineNumbers
@@ -86,7 +36,7 @@ namespace TextEditor.WinForms
         public int IndentationSize
         {
             get { return _editor.Document.TextEditorProperties.IndentationSize; }
-            set { _editor.Document.TextEditorProperties.IndentationSize = value; }
+            set { _editor.Document.TextEditorProperties.IndentationSize = _editor.TabIndent = value; }
         }
 
         public bool ConvertTabsToSpaces

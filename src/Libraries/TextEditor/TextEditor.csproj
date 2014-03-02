@@ -57,12 +57,19 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="ITextEditor.cs" />
     <Compile Include="ITextEditorOptions.cs" />
+    <Compile Include="NewlineStripper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinForms\TextEditorControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TextEditorFactory.cs" />
     <Compile Include="WPF\TextEditorOptionsImpl.cs" />
-    <Compile Include="WinForms\TextEditorImpl.cs" />
+    <Compile Include="WinForms\TextEditorImpl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WinForms\TextEditorOptionsImpl.cs" />
     <Compile Include="WPF\TextEditorImpl.cs" />
   </ItemGroup>

@@ -4,9 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Highlighting;
+using TextEditor.Extensions;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 #if !__MonoCS__
 using System.Windows.Forms.Integration;
 using Control = System.Windows.Forms.Control;
@@ -16,7 +20,7 @@ namespace TextEditor.WPF
 {
 #if __MonoCS__
 
-    internal class TextEditorImpl : ITextEditor
+    internal class TextEditorImpl
     {
     }
 
@@ -24,6 +28,8 @@ namespace TextEditor.WPF
 
     internal class TextEditorImpl : ITextEditor
     {
+        private static readonly Regex NewlineRegex = new Regex(@"[\n\r\f]+");
+
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor
             = new ICSharpCode.AvalonEdit.TextEditor
               {
@@ -36,16 +42,15 @@ namespace TextEditor.WPF
 
         public TextEditorImpl()
         {
-            _editor.TextChanged += OnTextChanged;
-            _elementHost.Child = _editor;
+            _editor.TextChanged += EditorOnTextChanged;
+            _editor.PreviewKeyDown += OnPreviewKeyDown;
+
             _options = new TextEditorOptionsImpl(_editor);
+
+            _elementHost.Child = _editor;
         }
 
-        private void OnTextChanged(object sender, EventArgs e)
-        {
-            if (TextChanged != null)
-                TextChanged(sender, e);
-        }
+        #region Core
 
         ITextEditorOptions ITextEditor.Options
         {
@@ -57,32 +62,158 @@ namespace TextEditor.WPF
             get { return _elementHost; }
         }
 
-        public event EventHandler TextChanged;
+        #endregion
 
-        public void SetSyntaxFromExtension(string fileNameOrExtension)
-        {
-            var ext = fileNameOrExtension ?? string.Empty;
+        #region Text
 
-            // Filename ending w/ extension
-            if (new Regex(@".\.\w+$").IsMatch(ext))
-                ext = Path.GetExtension(ext);
-
-            // Extension name only (no dot)
-            if (new Regex(@"^\w+$").IsMatch(ext))
-                ext = "." + ext;
-
-            if (string.IsNullOrEmpty(ext))
-                throw new ArgumentException("fileNameOrExtension does not contain a valid filename or extension");
-
-            var highlightingManager = HighlightingManager.Instance;
-            _editor.SyntaxHighlighting = highlightingManager.GetDefinitionByExtension(ext);
-        }
+        private bool _ignoreTextChanged;
 
         public string Text
         {
             get { return _editor.Text; }
-            set { _editor.Text = value; }
+            set
+            {
+                var newValue = SanitizeText(value);
+                if (newValue == Text)
+                    return;
+
+                _editor.Text = newValue;
+            }
         }
+
+        public event EventHandler TextChanged;
+
+        private void EditorOnTextChanged(object sender, EventArgs e)
+        {
+            if (_ignoreTextChanged)
+                return;
+
+            _ignoreTextChanged = true;
+            Text = Text;
+            _ignoreTextChanged = false;
+
+            if (TextChanged != null)
+                TextChanged(sender, e);
+        }
+
+        private string SanitizeText(string text)
+        {
+            return Multiline ? text : NewlineRegex.Replace(text, "");
+        }
+
+        #endregion
+
+        #region Input events
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!Multiline && e.Key == Key.Enter)
+                e.Handled = true;
+
+            if (!Multiline && e.Key == Key.Tab)
+            {
+                e.Handled = true;
+
+                var shiftKey = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Shift);
+
+                _elementHost.SelectNextControl(!shiftKey);
+            }
+        }
+
+        #endregion
+
+        #region Font
+
+        public double FontSize
+        {
+            get { return _editor.FontSize; }
+            set
+            {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (value == FontSize)
+                    return;
+
+                _editor.FontSize = value;
+
+                OnFontSizeChanged();
+            }
+        }
+
+        public event EventHandler FontSizeChanged;
+
+        private void OnFontSizeChanged()
+        {
+            if (FontSizeChanged != null)
+                FontSizeChanged(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region Multiline
+
+        public bool Multiline
+        {
+            get
+            {
+                return _editor.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled &&
+                       _editor.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled;
+            }
+            set
+            {
+                var changed = value != Multiline;
+                var visibility = value ? ScrollBarVisibility.Visible : ScrollBarVisibility.Hidden;
+
+                _editor.HorizontalScrollBarVisibility =
+                    _editor.VerticalScrollBarVisibility = visibility;
+
+                if (changed)
+                {
+                    // Strip newlines from text
+                    Text = Text;
+
+                    // Notify observers
+                    OnMultilineChanged();
+                }
+            }
+        }
+
+        public event EventHandler MultilineChanged;
+
+        private void OnMultilineChanged()
+        {
+            if (MultilineChanged != null)
+                MultilineChanged(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region Read Only
+
+        public bool ReadOnly
+        {
+            get { return _editor.IsReadOnly; }
+            set
+            {
+                if (value == ReadOnly)
+                    return;
+
+                _editor.IsReadOnly = value;
+
+                OnReadOnlyChanged();
+            }
+        }
+
+        public event EventHandler ReadOnlyChanged;
+
+        private void OnReadOnlyChanged()
+        {
+            if (ReadOnlyChanged != null)
+                ReadOnlyChanged(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region Load/save
 
         public void Load(Stream stream)
         {
@@ -103,6 +234,33 @@ namespace TextEditor.WPF
         {
             _editor.Save(filePath);
         }
+
+        #endregion
+
+        #region Syntax highlighting
+
+        public void SetSyntaxFromExtension(string fileNameOrExtension)
+        {
+            var ext = fileNameOrExtension ?? string.Empty;
+
+            // Filename ending w/ extension
+            if (new Regex(@".\.\w+$").IsMatch(ext))
+                ext = Path.GetExtension(ext);
+
+            // Extension name only (no dot)
+            if (new Regex(@"^\w+$").IsMatch(ext))
+                ext = "." + ext;
+
+            if (string.IsNullOrEmpty(ext))
+                throw new ArgumentException("fileNameOrExtension does not contain a valid filename or extension");
+
+            var highlightingManager = HighlightingManager.Instance;
+            _editor.SyntaxHighlighting = highlightingManager.GetDefinitionByExtension(ext);
+        }
+
+        #endregion
+
+        #region Selection
 
         public void Select(int start, int length)
         {
@@ -138,6 +296,73 @@ namespace TextEditor.WPF
             set { _editor.CaretOffset = value; }
         }
 
+        #endregion
+
+        #region History
+
+        public bool CanUndo
+        {
+            get { return _editor.CanUndo; }
+        }
+
+        public bool CanRedo
+        {
+            get { return _editor.CanRedo; }
+        }
+
+        public void Undo()
+        {
+            _editor.Undo();
+        }
+
+        public void Redo()
+        {
+            _editor.Redo();
+        }
+
+        #endregion
+
+        #region Clear/delete
+
+        public bool CanClear
+        {
+            get { return !ReadOnly && Text.Length > 0; }
+        }
+
+        public void Clear()
+        {
+            _editor.Clear();
+        }
+
+        public bool CanDelete
+        {
+            get { return !ReadOnly && SelectionLength > 0; }
+        }
+
+        public void Delete()
+        {
+            SelectedText = "";
+        }
+
+        #endregion
+
+        #region Clipboard
+
+        public bool CanCut
+        {
+            get { return !ReadOnly && SelectionLength > 0; }
+        }
+
+        public bool CanCopy
+        {
+            get { return SelectionLength > 0; }
+        }
+
+        public bool CanPaste
+        {
+            get { return !ReadOnly; }
+        }
+
         public void Cut()
         {
             _editor.Cut();
@@ -153,26 +378,23 @@ namespace TextEditor.WPF
             _editor.Paste();
         }
 
-        public void Print()
-        {
-            // TODO
-        }
+        #endregion
+
+        #region Informational
 
         public bool IsModified
         {
             get { return _editor.IsModified; }
         }
 
-        public bool IsReadOnly
-        {
-            get { return _editor.IsReadOnly; }
-            set { _editor.IsReadOnly = value; }
-        }
-
         public int LineCount
         {
             get { return _editor.LineCount; }
         }
+
+        #endregion
+
+        #region Avalon-specific (no apparent 3.x equivalent)
 
         public void LineUp()
         {
@@ -263,6 +485,8 @@ namespace TextEditor.WPF
         {
             get { return _editor.ViewportWidth; }
         }
+
+        #endregion
     }
 
 #endif

@@ -12,8 +12,8 @@ namespace TextEditor
 #if __MonoCS__
             return new WinForms.TextEditorImpl();
 #else
-            return new WPF.TextEditorImpl();
-//            return new WinForms.TextEditorImpl();
+//            return new WPF.TextEditorImpl();
+            return new WinForms.TextEditorImpl();
 #endif
         }
     }

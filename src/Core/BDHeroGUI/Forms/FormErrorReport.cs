@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using DotNetUtils;
 using TextEditor;
+using TextEditor.WinForms;
 #if UseWPF
 using System.Windows.Media;
 using System.Windows.Forms.Integration;
@@ -41,7 +42,8 @@ namespace BDHeroGUI.Forms
 
         private void InitEditor()
         {
-            var editor = TextEditorFactory.CreateTextEditor();
+            var control = new TextEditorControl();
+            var editor = control.Editor;
 
             editor.Options.ShowLineNumbers = true;
             editor.Options.ShowTabs = true;
@@ -50,7 +52,7 @@ namespace BDHeroGUI.Forms
             editor.Options.ColumnRulerPosition = 80;
             editor.Options.ConvertTabsToSpaces = true;
             editor.Options.IndentationSize = 4;
-            editor.Options.FontSize = 14;
+            editor.FontSize = 14;
 
             editor.SetSyntaxFromExtension(FilePath);
             editor.Load(FilePath);
@@ -60,7 +62,7 @@ namespace BDHeroGUI.Forms
             #region Options - checkbox events
 
             checkBoxMultiline.CheckedChanged +=
-                (sender, args) => editor.Options.Multiline = checkBoxMultiline.Checked;
+                (sender, args) => editor.Multiline = checkBoxMultiline.Checked;
 
             checkBoxShowLineNumbers.CheckedChanged +=
                 (sender, args) => editor.Options.ShowLineNumbers = checkBoxShowLineNumbers.Checked;
@@ -72,11 +74,10 @@ namespace BDHeroGUI.Forms
                 (sender, args) => editor.Options.ShowTabs = editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
 
             checkBoxReadonly.CheckedChanged +=
-                (sender, args) => editor.IsReadOnly = checkBoxReadonly.Checked;
+                (sender, args) => editor.ReadOnly = checkBoxReadonly.Checked;
 
             #endregion
 
-            var control = editor.Control;
             control.Dock = DockStyle.Fill;
             panel1.Controls.Add(control);
         }
@@ -86,7 +87,7 @@ namespace BDHeroGUI.Forms
             Console.WriteLine("{0}: {{ modified = {1}, readonly = {2}, linecount = {3}, selectedtext = \"{4}\", selectionlength = {5} }}",
                 eventName,
                 editor.IsModified,
-                editor.IsReadOnly,
+                editor.ReadOnly,
                 editor.LineCount,
                 editor.SelectedText,
                 editor.SelectionLength);

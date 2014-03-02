@@ -3,25 +3,41 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Control = System.Windows.Forms.Control;
+using System.Windows.Forms;
 
 namespace TextEditor
 {
     public interface ITextEditor
     {
-        #region Critical
+        #region Core
 
         ITextEditorOptions Options { get; }
 
         Control Control { get; }
 
-        event EventHandler TextChanged;
+        #endregion
 
-        void SetSyntaxFromExtension(string fileNameOrExtension);
+        #region Properties + Events
 
         string Text { get; set; }
 
-        bool IsReadOnly { get; set; }
+        event EventHandler TextChanged;
+
+        double FontSize { get; set; }
+
+        event EventHandler FontSizeChanged;
+
+        bool Multiline { get; set; }
+
+        event EventHandler MultilineChanged;
+
+        bool ReadOnly { get; set; }
+
+        event EventHandler ReadOnlyChanged;
+
+        #endregion
+
+        #region Load/save
 
         void Load(Stream stream);
 
@@ -31,11 +47,55 @@ namespace TextEditor
 
         void Save(string filePath);
 
+        #endregion
+
+        #region Syntax highlighting
+
+        void SetSyntaxFromExtension(string fileNameOrExtension);
+
+        #endregion
+
+        #region Selection
+
         void SelectAll();
 
         string SelectedText { get; set; }
 
         int SelectionLength { get; }
+
+        #endregion
+
+        #region History
+
+        bool CanUndo { get; }
+
+        bool CanRedo { get; }
+
+        void Undo();
+
+        void Redo();
+
+        #endregion
+
+        #region Clear/delete
+
+        bool CanClear { get; }
+
+        void Clear();
+
+        bool CanDelete { get; }
+
+        void Delete();
+
+        #endregion
+
+        #region Clipboard
+
+        bool CanCut { get; }
+        
+        bool CanCopy { get; }
+
+        bool CanPaste { get; }
 
         void Cut();
 
@@ -43,11 +103,9 @@ namespace TextEditor
 
         void Paste();
 
-        void Print();
-
         #endregion
 
-        #region Nice to have
+        #region Informational
 
         bool IsModified { get; }
 

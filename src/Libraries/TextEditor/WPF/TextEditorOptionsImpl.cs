@@ -1,12 +1,8 @@
-﻿using System;
-using System.Windows.Controls;
-using System.Windows.Input;
-
-namespace TextEditor.WPF
+﻿namespace TextEditor.WPF
 {
 #if __MonoCS__
 
-    internal class TextEditorOptionsImpl : ITextEditor
+    internal class TextEditorOptionsImpl
     {
     }
 
@@ -19,34 +15,6 @@ namespace TextEditor.WPF
         public TextEditorOptionsImpl(ICSharpCode.AvalonEdit.TextEditor editor)
         {
             _editor = editor;
-            _editor.PreviewKeyDown += OnPreviewKeyDown;
-        }
-
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !Multiline)
-                e.Handled = true;
-        }
-
-        public double FontSize
-        {
-            get { return _editor.FontSize; }
-            set { _editor.FontSize = value; }
-        }
-
-        public bool Multiline
-        {
-            get
-            {
-                return _editor.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled &&
-                       _editor.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled;
-            }
-            set
-            {
-                var visibility = value ? ScrollBarVisibility.Visible : ScrollBarVisibility.Disabled;
-                _editor.HorizontalScrollBarVisibility =
-                    _editor.VerticalScrollBarVisibility = visibility;
-            }
         }
 
         public bool ShowLineNumbers
