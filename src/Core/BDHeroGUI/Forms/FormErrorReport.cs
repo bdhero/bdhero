@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DotNetUtils;
 using TextEditor;
 using TextEditor.WinForms;
 #if UseWPF
@@ -57,8 +56,6 @@ namespace BDHeroGUI.Forms
             editor.SetSyntaxFromExtension(FilePath);
             editor.Load(FilePath);
 
-            editor.TextChanged += (sender, args) => LogEvent(editor, "TextChanged");
-
             #region Options - checkbox events
 
             checkBoxMultiline.CheckedChanged +=
@@ -80,17 +77,6 @@ namespace BDHeroGUI.Forms
 
             control.Dock = DockStyle.Fill;
             panel1.Controls.Add(control);
-        }
-
-        private void LogEvent(ITextEditor editor, string eventName)
-        {
-            Console.WriteLine("{0}: {{ modified = {1}, readonly = {2}, linecount = {3}, selectedtext = \"{4}\", selectionlength = {5} }}",
-                eventName,
-                editor.IsModified,
-                editor.ReadOnly,
-                editor.LineCount,
-                editor.SelectedText,
-                editor.SelectionLength);
         }
 
 #if UseWPF
