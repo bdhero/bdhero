@@ -60,6 +60,7 @@
     <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="ITextEditor.cs" />
     <Compile Include="ITextEditorOptions.cs" />
+    <Compile Include="MultilineHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WinForms\TextEditorControl.cs">
       <SubType>Component</SubType>

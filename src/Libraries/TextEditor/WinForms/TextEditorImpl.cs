@@ -18,6 +18,7 @@ namespace TextEditor.WinForms
         private readonly ICSharpCode.TextEditor.TextEditorControl _editor = new ICSharpCode.TextEditor.TextEditorControl();
 
         private readonly TextEditorOptionsImpl _options;
+        private readonly MultilineHelper _multilineHelper;
 
         public TextEditorImpl()
         {
@@ -27,6 +28,8 @@ namespace TextEditor.WinForms
             _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
 
             _options = new TextEditorOptionsImpl(_editor);
+
+            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
         }
 
         ITextEditorOptions ITextEditor.Options
@@ -41,19 +44,12 @@ namespace TextEditor.WinForms
 
         #region Text
 
-        private static readonly Regex NewlineRegex = new Regex(@"[\n\r\f]+");
-
-        private static string SanitizeText(string text)
-        {
-            return NewlineRegex.Replace(text, "");
-        }
-
         public string Text
         {
             get { return _editor.Text; }
             set
             {
-                var newValue = SanitizeText(value ?? "");
+                var newValue = MultilineHelper.StripNewlines(value ?? "");
                 if (newValue == Text)
                     return;
 
@@ -63,54 +59,15 @@ namespace TextEditor.WinForms
 
         public event EventHandler TextChanged;
 
-        private bool _ignoreTextChanged;
-
         private void EditorOnTextChanged(object sender, EventArgs e)
         {
-            if (_ignoreTextChanged)
-                return;
+            _multilineHelper.TextChanged();
+        }
 
+        private void NotifyTextChanged()
+        {
             if (TextChanged != null)
-                TextChanged(sender, e);
-
-            var sanitized = SanitizeText(Text);
-            if (sanitized != Text)
-            {
-                _ignoreTextChanged = true;
-
-                var timer = new System.Timers.Timer(10) { AutoReset = false };
-                timer.Elapsed += delegate(object o, ElapsedEventArgs args)
-                                 {
-                                     _editor.Invoke(new Action(delegate
-                                                               {
-                                                                   if (CanUndo)
-                                                                   {
-                                                                       if (string.IsNullOrEmpty(sanitized))
-                                                                       {
-                                                                           Text = "";
-                                                                           return;
-                                                                       }
-
-                                                                       var clipboardText = Clipboard.GetText();
-
-                                                                       Clipboard.SetText(sanitized);
-
-                                                                       Undo();
-                                                                       SelectAll();
-                                                                       Paste();
-
-                                                                       Clipboard.SetText(clipboardText);
-                                                                   }
-                                                                   else
-                                                                   {
-                                                                       Text = sanitized;
-                                                                   }
-
-                                                                   _ignoreTextChanged = false;
-                                                               }));
-                                 };
-                timer.Start();
-            }
+                TextChanged(this, EventArgs.Empty);
         }
 
         #endregion
@@ -246,8 +203,11 @@ namespace TextEditor.WinForms
                     // Strip newlines from text
                     Text = Text;
 
-                    // Prevent undo/redo craziness
-                    ClearHistory();
+                    if (!value)
+                    {
+                        // Prevent undo/redo craziness
+                        ClearHistory();
+                    }
 
                     // Notify observers
                     OnMultilineChanged();
