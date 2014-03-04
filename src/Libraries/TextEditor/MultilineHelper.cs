@@ -59,6 +59,28 @@ namespace TextEditor
             _editor.ClearHistory();
         }
 
+        /// <summary>
+        ///     Attempts to submit the editor's parent form by clicking its "accept" button.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if the editor's parent form's submit button was clicked; otherwise <c>false</c>.
+        /// </returns>
+        public bool SubmitForm()
+        {
+            var form = _editor.Control.FindForm();
+            if (form != null)
+            {
+                var acceptButton = form.AcceptButton;
+                if (acceptButton != null)
+                {
+                    _editor.Control.Invoke(new Action(acceptButton.PerformClick));
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void TimerOnElapsed(string sanitized)
         {
             _editor.Control.Invoke(new Action(() => SetSanitizedText(sanitized)));

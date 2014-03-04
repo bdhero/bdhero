@@ -38,6 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
+            this.buttonAccept = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // panel1
@@ -47,7 +48,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Location = new System.Drawing.Point(13, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(764, 555);
+            this.panel1.Size = new System.Drawing.Size(764, 549);
             this.panel1.TabIndex = 4;
             // 
             // checkBoxMultiline
@@ -56,7 +57,7 @@
             this.checkBoxMultiline.AutoSize = true;
             this.checkBoxMultiline.Checked = true;
             this.checkBoxMultiline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMultiline.Location = new System.Drawing.Point(13, 621);
+            this.checkBoxMultiline.Location = new System.Drawing.Point(12, 619);
             this.checkBoxMultiline.Name = "checkBoxMultiline";
             this.checkBoxMultiline.Size = new System.Drawing.Size(64, 17);
             this.checkBoxMultiline.TabIndex = 5;
@@ -69,7 +70,7 @@
             this.checkBoxShowLineNumbers.AutoSize = true;
             this.checkBoxShowLineNumbers.Checked = true;
             this.checkBoxShowLineNumbers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(83, 621);
+            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(82, 619);
             this.checkBoxShowLineNumbers.Name = "checkBoxShowLineNumbers";
             this.checkBoxShowLineNumbers.Size = new System.Drawing.Size(121, 17);
             this.checkBoxShowLineNumbers.TabIndex = 6;
@@ -82,7 +83,7 @@
             this.checkBoxShowRuler.AutoSize = true;
             this.checkBoxShowRuler.Checked = true;
             this.checkBoxShowRuler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowRuler.Location = new System.Drawing.Point(211, 621);
+            this.checkBoxShowRuler.Location = new System.Drawing.Point(210, 619);
             this.checkBoxShowRuler.Name = "checkBoxShowRuler";
             this.checkBoxShowRuler.Size = new System.Drawing.Size(81, 17);
             this.checkBoxShowRuler.TabIndex = 7;
@@ -95,7 +96,7 @@
             this.checkBoxShowWhitespace.AutoSize = true;
             this.checkBoxShowWhitespace.Checked = true;
             this.checkBoxShowWhitespace.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(299, 621);
+            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(298, 619);
             this.checkBoxShowWhitespace.Name = "checkBoxShowWhitespace";
             this.checkBoxShowWhitespace.Size = new System.Drawing.Size(113, 17);
             this.checkBoxShowWhitespace.TabIndex = 8;
@@ -104,9 +105,9 @@
             // 
             // checkBoxReadonly
             // 
-            this.checkBoxReadonly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxReadonly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxReadonly.AutoSize = true;
-            this.checkBoxReadonly.Location = new System.Drawing.Point(697, 621);
+            this.checkBoxReadonly.Location = new System.Drawing.Point(417, 619);
             this.checkBoxReadonly.Name = "checkBoxReadonly";
             this.checkBoxReadonly.Size = new System.Drawing.Size(71, 17);
             this.checkBoxReadonly.TabIndex = 9;
@@ -151,11 +152,23 @@
             this.textEditorControl1.TabIndex = 3;
             this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
             // 
+            // buttonAccept
+            // 
+            this.buttonAccept.Location = new System.Drawing.Point(702, 615);
+            this.buttonAccept.Name = "buttonAccept";
+            this.buttonAccept.Size = new System.Drawing.Size(75, 23);
+            this.buttonAccept.TabIndex = 10;
+            this.buttonAccept.Text = "Accept: 0";
+            this.buttonAccept.UseVisualStyleBackColor = true;
+            this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
+            // 
             // FormErrorReport
             // 
+            this.AcceptButton = this.buttonAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 650);
+            this.Controls.Add(this.buttonAccept);
             this.Controls.Add(this.textEditorControl1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -185,6 +198,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private TextEditor.WinForms.TextEditorControl textEditorControl1;
+        private System.Windows.Forms.Button buttonAccept;
 
 
     }

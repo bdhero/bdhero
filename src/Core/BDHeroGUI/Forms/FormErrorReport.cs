@@ -21,6 +21,8 @@ namespace BDHeroGUI.Forms
 #endif
         private static readonly string FileExtension = Path.GetExtension(FilePath);
 
+        private int _numClicks;
+
         public FormErrorReport()
         {
             InitializeComponent();
@@ -68,6 +70,11 @@ namespace BDHeroGUI.Forms
             panel1.Controls.Add(control);
 
             textEditorControl1.Editor.LoadSyntaxDefinitions(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        }
+
+        private void buttonAccept_Click(object sender, EventArgs e)
+        {
+            buttonAccept.Text = string.Format("Accept: {0}", ++_numClicks);
         }
     }
 }

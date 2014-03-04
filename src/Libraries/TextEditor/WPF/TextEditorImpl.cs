@@ -41,6 +41,11 @@ namespace TextEditor.WPF
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
 
+        private bool Singleline
+        {
+            get { return !Multiline; }
+        }
+
         public TextEditorImpl()
         {
             _editor.TextChanged += EditorOnTextChanged;
@@ -101,10 +106,16 @@ namespace TextEditor.WPF
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (!Multiline && e.Key == Key.Enter)
+            if (Singleline && e.Key == Key.Enter)
                 e.Handled = true;
 
-            if (!Multiline && e.Key == Key.Tab)
+            if ((Singleline || ReadOnly) && e.Key == Key.Enter)
+            {
+                _multilineHelper.SubmitForm();
+                return;
+            }
+
+            if ((Singleline || ReadOnly) && e.Key == Key.Tab)
             {
                 e.Handled = true;
 

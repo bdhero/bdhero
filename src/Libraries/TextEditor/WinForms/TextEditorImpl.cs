@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Input;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
 
@@ -18,6 +19,11 @@ namespace TextEditor.WinForms
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
+
+        private bool Singleline
+        {
+            get { return !Multiline; }
+        }
 
         public TextEditorImpl()
         {
@@ -93,6 +99,11 @@ namespace TextEditor.WinForms
         /// </returns>
         private bool TextAreaOnDoProcessDialogKey(Keys data)
         {
+            if ((Singleline || ReadOnly) && data == Keys.Enter)
+            {
+                _multilineHelper.SubmitForm();
+                return false;
+            }
             return ShouldPreventTabKey(data);
         }
 
@@ -106,12 +117,12 @@ namespace TextEditor.WinForms
 
         private bool ShouldPreventEnterKey(char ch)
         {
-            return !Multiline && ch == '\n';
+            return Singleline && ch == '\n';
         }
 
         private bool ShouldPreventTabKey(Keys data)
         {
-            return !Multiline && (data == Keys.Tab || data == (Keys.Tab | Keys.Shift));
+            return (Singleline || ReadOnly) && (data == Keys.Tab || data == (Keys.Tab | Keys.Shift));
         }
 
         #endregion
