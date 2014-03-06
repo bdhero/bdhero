@@ -147,7 +147,7 @@ namespace TextEditor.WinForms
             RecreateHandle();
 
             if (IsHandleCreated)
-                AdjustHeight(false);
+                AdjustSize(false);
 
             if (MultilineChanged != null)
                 MultilineChanged(this, args);
@@ -157,7 +157,12 @@ namespace TextEditor.WinForms
         {
             base.OnHandleCreated(e);
 
-            AdjustHeight(true);
+            AdjustSize(true);
+        }
+
+        private void AdjustSize(bool returnIfAnchored)
+        {
+            AdjustHeight(returnIfAnchored);
         }
 
         /// <summary>
