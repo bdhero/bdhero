@@ -135,6 +135,7 @@ namespace TextEditor.WinForms
         {
             if (!Multiline)
             {
+                Editor.Options.ConvertTabsToSpaces = false;
                 Editor.Options.CutCopyWholeLine = false;
                 Editor.Options.ShowColumnRuler = false;
                 Editor.Options.ShowLineNumbers = false;

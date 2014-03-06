@@ -34,6 +34,7 @@ namespace TextEditor
 
             editor.Multiline = true;
 
+            editor.Options.CutCopyWholeLine = true;
             editor.Options.ShowLineNumbers = true;
             editor.Options.ShowTabs = true;
             editor.Options.ShowSpaces = true;
