@@ -8,7 +8,9 @@ using System.Windows.Forms;
 
 namespace TextEditor.WinForms
 {
-    public class TextEditorControl : Panel
+    [DefaultProperty("Text")]
+    [DefaultEvent("TextChanged")]
+    public class TextEditorControl : UserControl
     {
         public TextEditorControl()
         {
@@ -94,6 +96,8 @@ namespace TextEditor.WinForms
 
         #region Text
 
+        [Browsable(true)]
+        [DefaultValue("")]
         public override string Text
         {
             get { return Editor.Text; }
@@ -190,7 +194,7 @@ namespace TextEditor.WinForms
             using (var g = CreateGraphics())
             {
                 var font = new Font(Font.FontFamily, (float) fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
-                var size = g.MeasureString(Editor.Text, font);
+                var size = g.MeasureString("MQ", font);
                 var width = Width;
                 var height = (int) Math.Ceiling(size.Height);
                 Size = new Size(width, height);
