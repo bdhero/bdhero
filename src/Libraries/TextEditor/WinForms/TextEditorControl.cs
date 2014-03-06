@@ -210,5 +210,105 @@ namespace TextEditor.WinForms
         }
 
         #endregion
+
+        #region Options
+
+        /// <summary>
+        ///     Gets or sets whether the user can change the contents of the editor.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the user can change the contents of the editor.")]
+        [DefaultValue(false)]
+        public bool ReadOnly
+        {
+            get { return Editor.ReadOnly; }
+            set { Editor.ReadOnly = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether line numbers are displayed in the gutter.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether line numbers are displayed in the gutter.")]
+        [DefaultValue(true)]
+        public bool ShowLineNumbers
+        {
+            get { return Editor.Options.ShowLineNumbers; }
+            set { Editor.Options.ShowLineNumbers = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether tab and space characters are visualized.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether tab and space characters are visualized.")]
+        [DefaultValue(true)]
+        public bool ShowWhiteSpace
+        {
+            get { return Editor.Options.ShowTabs && Editor.Options.ShowSpaces; }
+            set { Editor.Options.ShowTabs = Editor.Options.ShowSpaces = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether a column ruler is displayed.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether a column ruler is displayed.")]
+        [DefaultValue(true)]
+        public bool ShowColumnRuler
+        {
+            get { return Editor.Options.ShowColumnRuler; }
+            set { Editor.Options.ShowColumnRuler = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the position of the column ruler.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Controls the position of the column ruler.")]
+        [DefaultValue(80)]
+        public int ColumnRulerPosition
+        {
+            get { return Editor.Options.ColumnRulerPosition; }
+            set { Editor.Options.ColumnRulerPosition = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether the tab key inserts spaces instead of a tab character.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the tab key inserts spaces instead of a tab character.")]
+        [DefaultValue(true)]
+        public bool ConvertTabsToSpaces
+        {
+            get { return Editor.Options.ConvertTabsToSpaces; }
+            set { Editor.Options.ConvertTabsToSpaces = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets whether cutting or copying with nothing selected cuts or copies the whole line.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether cutting or copying with nothing selected cuts or copies the whole line.")]
+        [DefaultValue(true)]
+        public bool CutCopyWholeLine
+        {
+            get { return Editor.Options.CutCopyWholeLine; }
+            set { Editor.Options.CutCopyWholeLine = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the indentation (tab/space) width.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Controls the indentation (tab/space) width.")]
+        [DefaultValue(4)]
+        public int IndentationSize
+        {
+            get { return Editor.Options.IndentationSize; }
+            set { Editor.Options.IndentationSize = value; }
+        }
+
+        #endregion
     }
 }
