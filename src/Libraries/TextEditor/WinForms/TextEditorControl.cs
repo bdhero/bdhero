@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace TextEditor.WinForms
 {
-    public class TextEditorControl : Control
+    public class TextEditorControl : Panel
     {
         public TextEditorControl()
         {
