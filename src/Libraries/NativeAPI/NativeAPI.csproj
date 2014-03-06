@@ -96,6 +96,7 @@
     <Compile Include="Win\User\WindowMessageType.cs" />
     <Compile Include="Win\User\WindowStyles.cs" />
     <Compile Include="Win\User\WParam.cs" />
+    <Compile Include="Win\UXTheme\Theme.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
