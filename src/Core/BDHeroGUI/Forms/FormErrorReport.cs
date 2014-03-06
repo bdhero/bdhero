@@ -20,7 +20,6 @@ namespace BDHeroGUI.Forms
 #else
         private const string FilePath = @"C:\projects\TestProject\CodeEditor\sample.md";
 #endif
-        private static readonly string FileExtension = Path.GetExtension(FilePath);
 
         private int _numClicks;
 
@@ -46,7 +45,7 @@ namespace BDHeroGUI.Forms
             editor.Options.IndentationSize = 4;
             editor.FontSize = 14;
 
-            editor.SetSyntaxFromExtension(FilePath);
+            editor.SetSyntax(StandardSyntaxType.Markdown);
             editor.Load(FilePath);
 
             #region Options - checkbox events

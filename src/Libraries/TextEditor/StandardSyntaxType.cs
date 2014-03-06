@@ -13,7 +13,10 @@ namespace TextEditor
         FileName,
 
         [SyntaxModeName("FilePath")]
-        FilePath
+        FilePath,
+
+        [SyntaxModeName("MarkDown")]
+        Markdown,
     }
 
     internal class SyntaxModeNameAttribute : Attribute

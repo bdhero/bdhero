@@ -37,6 +37,8 @@ namespace TextEditor.WinForms
             _options = new TextEditorOptionsImpl(_editor);
 
             _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
+
+            LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
         }
 
         ITextEditorOptions ITextEditor.Options

@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
+
+<SyntaxDefinition name="MarkDown" extensions=".md;.markdown;.mkdown">
+    <RuleSets>
+        <RuleSet name="HTMLSet" reference="HTML" />
+
+        <RuleSet ignorecase="true">
+            <Delimiters>=!&gt;&lt;+-/*%&amp;|^~.}{,;][?:</Delimiters>
+
+            <!-- Blocks -->
+
+            <Span name="Blockquote" color="Gray" stopateol="true">
+                <Begin>&gt;</Begin>
+            </Span>
+
+            <Span name="HorizontalRule1" color="Gray" stopateol="true">
+                <Begin>* * *</Begin>
+            </Span>
+            <Span name="HorizontalRule2" color="Gray" stopateol="true">
+                <Begin>***</Begin>
+            </Span>
+            <Span name="HorizontalRule3" color="Gray" stopateol="true">
+                <Begin>- - -</Begin>
+            </Span>
+            <Span name="HorizontalRule4" color="Gray" stopateol="true">
+                <Begin>---</Begin>
+            </Span>
+
+            <!-- Code -->
+
+            <Span name="CodeLong" color="Green" stopateol="false">
+                <Begin>```</Begin>
+                <End>```</End>
+            </Span>
+            <Span name="CodeShort" color="Green" stopateol="false">
+                <Begin>`</Begin>
+                <End>`</End>
+            </Span>
+
+            <!-- Lists -->
+
+            <Span name="Unordered" color="Purple" stopateol="true">
+                <Begin>* </Begin>
+            </Span>
+
+            <!-- URLs -->
+
+            <Span name="Url1" color="Blue" stopateol="false">
+                <Begin>![</Begin>
+                <End>]</End>
+            </Span>
+            <Span name="Url2" color="Blue" stopateol="false">
+                <Begin>[</Begin>
+                <End>]</End>
+            </Span>
+            <Span name="Url3" color="Blue" stopateol="false">
+                <Begin>(</Begin>
+                <End>)</End>
+            </Span>
+
+            <!-- Headings -->
+
+            <Span name="H6" color="DarkRed" stopateol="true">
+                <Begin>######</Begin>
+            </Span>
+            <Span name="H5" color="DarkRed" stopateol="true">
+                <Begin>#####</Begin>
+            </Span>
+            <Span name="H4" color="DarkRed" stopateol="true">
+                <Begin>####</Begin>
+            </Span>
+            <Span name="H3" color="DarkRed" stopateol="true">
+                <Begin>###</Begin>
+            </Span>
+            <Span name="H2" color="DarkRed" stopateol="true">
+                <Begin>##</Begin>
+            </Span>
+            <Span name="H1" color="DarkRed" stopateol="true">
+                <Begin>#</Begin>
+            </Span>
+
+            <!-- Bold/Italic -->
+
+            <Span name="BoldItalic1" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>_**</Begin>
+                <End>**_</End>
+            </Span>
+            <Span name="BoldItalic2" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>**_</Begin>
+                <End>_**</End>
+            </Span>
+            <Span name="BoldItalic3" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>__*</Begin>
+                <End>*__</End>
+            </Span>
+            <Span name="BoldItalic4" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>*__</Begin>
+                <End>__*</End>
+            </Span>
+            <Span name="BoldItalic5" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>___</Begin>
+                <End>___</End>
+            </Span>
+            <Span name="BoldItalic6" color="Black" bold="true" italic="true" stopateol="false">
+                <Begin>***</Begin>
+                <End>***</End>
+            </Span>
+
+            <Span name="BoldStars" color="Black" bold="true" stopateol="false">
+                <Begin>**</Begin>
+                <End>**</End>
+            </Span>
+            <Span name="BoldUnderscores" color="Black" bold="true" stopateol="false">
+                <Begin>__</Begin>
+                <End>__</End>
+            </Span>
+
+            <Span name="ItalicStar" color="Black" italic="true" stopateol="false">
+                <Begin>*</Begin>
+                <End>*</End>
+            </Span>
+            <Span name="ItalicUnderscore" color="Black" italic="true" stopateol="false">
+                <Begin>_</Begin>
+                <End>_</End>
+            </Span>
+
+            <!-- Code -->
+
+            <Span name="CodeTabs" color="Green" stopateol="true">
+                <Begin>&#9;</Begin>
+            </Span>
+            <Span name="CodeSpaces" color="Green" stopateol="true">
+                <Begin>    </Begin>
+            </Span>
+        </RuleSet>
+    </RuleSets>
+</SyntaxDefinition>

@@ -9,7 +9,7 @@ namespace TextEditor.Resources
 {
     static class Resources
     {
-        static readonly string Prefix = typeof(Resources).FullName + ".";
+        static readonly string Prefix = CurrentAssembly.GetName().Name + ".Resources.";
 
         private static Assembly CurrentAssembly
         {
