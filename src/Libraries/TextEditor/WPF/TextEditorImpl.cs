@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
