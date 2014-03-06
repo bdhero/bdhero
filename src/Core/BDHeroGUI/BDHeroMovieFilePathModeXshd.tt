@@ -1,0 +1,19 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<?xml version="1.0"?>
+<!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
+
+<SyntaxDefinition name = "BDHeroMovieFilePath" extensions = ".bdheromoviefilepath" extends = "FilePath">
+    <RuleSets>
+        <RuleSet ignorecase = "true">
+            <KeyWords name = "PlaceholderVariable" bold = "true" color = "Green" bgcolor = "#EEFFEE">
+                <# foreach (var name in PlaceholderVariableNames) { #>
+                <Key word = "${<#= name #>}" />
+                <# } #>
+            </KeyWords>
+        </RuleSet>
+    </RuleSets>
+</SyntaxDefinition>

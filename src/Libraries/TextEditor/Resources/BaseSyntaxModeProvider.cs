@@ -5,7 +5,7 @@ using ICSharpCode.TextEditor.Document;
 
 namespace TextEditor.Resources
 {
-    internal abstract class BaseSyntaxModeProvider : ISyntaxModeFileProvider
+    public abstract class BaseSyntaxModeProvider : ISyntaxModeFileProvider
     {
         private readonly List<SyntaxMode> _syntaxModes = new List<SyntaxMode>();
 

@@ -189,6 +189,13 @@
     </Compile>
     <Compile Include="Helpers\MediaDragData.cs" />
     <Compile Include="Helpers\ToolStripControlBuilder.cs" />
+    <Compile Include="BDHeroMovieFilePathModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDHeroMovieFilePathModeXshd.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BDHeroMovieFilePathModeXshdModel.cs" />
+    <Compile Include="BDHeroT4SyntaxModeProvider.cs" />
     <Compile Include="TrackFilter.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -223,6 +230,10 @@
     <Compile Include="PlaylistFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="BDHeroMovieFilePathModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>BDHeroMovieFilePathModeXshd.cs</LastGenOutput>
+    </None>
     <None Include="Resources\github-mark-16.png" />
     <None Include="Resources\cross-small-gray.png" />
     <None Include="Resources\network.png" />
@@ -374,7 +385,9 @@
       <Name>OSUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
