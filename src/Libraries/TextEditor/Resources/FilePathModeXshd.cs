@@ -36,7 +36,7 @@ namespace TextEditor.Resources
         <RuleSet ignorecase = ""true"">
             <Delimiters>=!&gt;&lt;+-/*%&amp;|^~.}{,;][?:</Delimiters>
 
-            <Span name = ""Variable"" bold = ""true"" italic = ""false"" color = ""Green"" bgcolor = ""#EEFFEE"">
+            <Span name = ""EnvironmentVariable"" bold = ""true"" color = ""#0476e0"" bgcolor = ""#EEEEFF"">
                 <Begin>%</Begin>
                 <End>%</End>
             </Span>
