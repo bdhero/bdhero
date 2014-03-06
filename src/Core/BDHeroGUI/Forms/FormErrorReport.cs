@@ -36,17 +36,10 @@ namespace BDHeroGUI.Forms
             var control = new TextEditorControl();
             var editor = control.Editor;
 
-            editor.Options.ShowLineNumbers = true;
-            editor.Options.ShowTabs = true;
-            editor.Options.ShowSpaces = true;
-            editor.Options.ShowColumnRuler = true;
-            editor.Options.ColumnRulerPosition = 80;
-            editor.Options.ConvertTabsToSpaces = true;
-            editor.Options.IndentationSize = 4;
-            editor.FontSize = 14;
-
-            editor.SetSyntax(StandardSyntaxType.Markdown);
             editor.Load(FilePath);
+            editor.SetSyntax(StandardSyntaxType.Markdown);
+
+            editor.TextChanged += EditorOnTextChanged;
 
             #region Options - checkbox events
 
@@ -69,6 +62,18 @@ namespace BDHeroGUI.Forms
 
             control.Dock = DockStyle.Fill;
             panel1.Controls.Add(control);
+        }
+
+        private void EditorOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            var editor = sender as ITextEditor;
+            if (editor == null)
+                return;
+
+            Text = Text.Replace("*", "");
+
+            if (editor.IsModified)
+                Text += "*";
         }
 
         private void InitSinglelineEditor()

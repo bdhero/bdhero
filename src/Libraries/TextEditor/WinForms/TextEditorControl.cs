@@ -13,7 +13,7 @@ namespace TextEditor.WinForms
     {
         public TextEditorControl()
         {
-            Editor = TextEditorFactory.CreateTextEditor();
+            Editor = TextEditorFactory.CreateMultiLineTextEditor();
             Editor.TextChanged += (sender, args) => OnTextChanged(args);
             Editor.FontSizeChanged += (sender, args) => OnFontChanged(args);
             Editor.MultilineChanged += (sender, args) => OnMultilineChanged(args);

@@ -8,7 +8,7 @@ namespace TextEditor
 {
     public class TextEditorFactory
     {
-        public static ITextEditor CreateTextEditor()
+        private static ITextEditor CreateTextEditor()
         {
             ITextEditor editor =
 #if __MonoCS__
@@ -25,6 +25,32 @@ namespace TextEditor
             // Load default syntax highlighting mode definitions
             editor.LoadSyntaxDefinitions(new T4SyntaxModeProvider());
             
+            return editor;
+        }
+
+        public static ITextEditor CreateMultiLineTextEditor()
+        {
+            var editor = CreateTextEditor();
+
+            editor.Multiline = true;
+
+            editor.Options.ShowLineNumbers = true;
+            editor.Options.ShowTabs = true;
+            editor.Options.ShowSpaces = true;
+            editor.Options.ShowColumnRuler = true;
+            editor.Options.ColumnRulerPosition = 80;
+            editor.Options.ConvertTabsToSpaces = true;
+            editor.Options.IndentationSize = 4;
+
+            return editor;
+        }
+
+        public static ITextEditor CreateSingleLineTextEditor()
+        {
+            var editor = CreateTextEditor();
+
+            editor.Multiline = false;
+
             return editor;
         }
     }
