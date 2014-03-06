@@ -22,6 +22,8 @@ namespace TextEditor.WinForms
             Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
+            Padding = new Padding(1);
+
             SetStyle(ControlStyles.Selectable, false);
 
             EnableContextMenu = true;
@@ -183,23 +185,35 @@ namespace TextEditor.WinForms
                 return;
             }
 
+            var padLR = Padding.Left + Padding.Right;
+            var padTB = Padding.Top + Padding.Bottom;
+
             if (Multiline)
             {
-                Editor.Control.Size = Size;
+                Editor.Control.Size = new Size(Size.Width - padLR,
+                                               Size.Height - padTB);
                 return;
             }
 
             var fontSize = FontSizeConverter.GetWinFormsFontSize(Editor.FontSize);
+            var font = new Font(Font.FontFamily, (float)fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
+
+            Size measuredTextSize;
 
             using (var g = CreateGraphics())
             {
-                var font = new Font(Font.FontFamily, (float) fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
                 var size = g.MeasureString("MQ", font);
-                var width = Width;
-                var height = (int) Math.Ceiling(size.Height);
-                Size = new Size(width, height);
-                Editor.Control.Size = new Size(width + Editor.VerticalScrollBarWidth, height + Editor.HorizontalScrollBarHeight);
+                measuredTextSize = new Size((int) Math.Ceiling(size.Width), (int) Math.Ceiling(size.Height));
             }
+
+            var width = Width;
+            var height = (int) Math.Ceiling((double) measuredTextSize.Height);
+
+            Size = new Size(width,
+                            height + padTB);
+
+            Editor.Control.Size = new Size(width + Editor.VerticalScrollBarWidth - padLR,
+                                           height + Editor.HorizontalScrollBarHeight);
         }
 
         #endregion
