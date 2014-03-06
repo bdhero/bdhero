@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Windows.Input;
+using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
 using TextEditor.Resources;
@@ -275,11 +276,13 @@ namespace TextEditor.WinForms
         public void LoadSyntaxDefinitions(ISyntaxModeFileProvider syntaxModeFileProvider)
         {
             var manager = HighlightingManager.Manager;
-
             manager.AddSyntaxModeFileProvider(syntaxModeFileProvider);
+        }
 
-            // TODO:
-            _editor.SetHighlighting("FileName"); // Activate the highlighting, use the name from the SyntaxDefinition node.
+        public void SetSyntax(StandardSyntaxType type)
+        {
+            var name = type.GetAttributeProperty<SyntaxModeNameAttribute, string>(attribute => attribute.Name) ?? "";
+            _editor.SetHighlighting(name);
         }
 
         public void SetSyntaxFromExtension(string fileNameOrExtension)

@@ -60,6 +60,8 @@ namespace TextEditor
 
         void LoadSyntaxDefinitions(ICSharpCode.TextEditor.Document.ISyntaxModeFileProvider syntaxModeFileProvider);
 
+        void SetSyntax(StandardSyntaxType type);
+
         void SetSyntaxFromExtension(string fileNameOrExtension);
 
         #endregion

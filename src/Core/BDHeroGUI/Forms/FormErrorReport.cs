@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using TextEditor;
 using TextEditor.WinForms;
 
 namespace BDHeroGUI.Forms
@@ -74,6 +75,7 @@ namespace BDHeroGUI.Forms
         private void InitSinglelineEditor()
         {
             var editor = textEditorControl1.Editor;
+            editor.SetSyntax(StandardSyntaxType.FilePath);
             editor.Text += " --- " + new string(Path.GetInvalidPathChars()) + " --- " + new string(Path.GetInvalidFileNameChars());
         }
 

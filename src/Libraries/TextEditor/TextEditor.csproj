@@ -79,6 +79,7 @@
     <Compile Include="Resources\BaseSyntaxModeProvider.cs" />
     <Compile Include="Resources\SmartResourceSyntaxModeProvider.cs" />
     <Compile Include="Resources\T4SyntaxModeProvider.cs" />
+    <Compile Include="StandardSyntaxType.cs" />
     <Compile Include="WinForms\TextEditorControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -90,8 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\FileName-Mode.xshd" />
-    <EmbeddedResource Include="Resources\FilePath-Mode.xshd" />
     <None Include="Resources\FileNameModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>FileNameModeXshd.cs</LastGenOutput>

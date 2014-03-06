@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
+using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
@@ -265,9 +266,12 @@ namespace TextEditor.WPF
                     manager.RegisterHighlighting(syntaxMode.Name, syntaxMode.Extensions, highlightingDefinition);
                 }
             }
+        }
 
-            // TODO:
-            _editor.SyntaxHighlighting = manager.GetDefinition("FileName");
+        public void SetSyntax(StandardSyntaxType type)
+        {
+            var name = type.GetAttributeProperty<SyntaxModeNameAttribute, string>(attribute => attribute.Name) ?? "";
+            _editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(name);
         }
 
         public void SetSyntaxFromExtension(string fileNameOrExtension)
