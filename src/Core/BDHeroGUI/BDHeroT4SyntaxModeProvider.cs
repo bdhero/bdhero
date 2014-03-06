@@ -11,7 +11,10 @@ namespace BDHeroGUI
         private static readonly Dictionary<string, string> Models
             = new Dictionary<string, string>
               {
-                  { "BDHeroMovieFilePath.tt", new BDHeroMovieFilePathModeXshd().TransformText() },
+                  { "BDHeroMovieFileName.tt", new BDHeroMovieFileNameModeXshd().TransformText().Trim() },
+                  { "BDHeroTVShowFileName.tt", new BDHeroTVShowFileNameModeXshd().TransformText().Trim() },
+                  { "BDHeroMovieFilePath.tt", new BDHeroMovieFilePathModeXshd().TransformText().Trim() },
+                  { "BDHeroTVShowFilePath.tt", new BDHeroTVShowFilePathModeXshd().TransformText().Trim() },
               };
 
         public BDHeroT4SyntaxModeProvider()

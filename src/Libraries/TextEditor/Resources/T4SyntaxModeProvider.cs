@@ -12,8 +12,8 @@ namespace TextEditor.Resources
         private static readonly Dictionary<string, string> DefaultModels
             = new Dictionary<string, string>
               {
-                  { "FilePathModeXshd.tt", new FilePathModeXshd().TransformText() },
-                  { "FileNameModeXshd.tt", new FileNameModeXshd().TransformText() }
+                  { "FilePathModeXshd.tt", new FilePathModeXshd().TransformText().Trim() },
+                  { "FileNameModeXshd.tt", new FileNameModeXshd().TransformText().Trim() }
               };
 
         private readonly IDictionary<string, string> _models;
