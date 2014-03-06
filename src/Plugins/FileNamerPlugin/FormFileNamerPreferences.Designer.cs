@@ -60,7 +60,6 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxMovieDirectory = new DotNetUtils.Controls.FileTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxMovieFileName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.hyperlinkLabelTVShowReleaseDateFormat = new DotNetUtils.Controls.HyperlinkLabel();
             this.label15 = new System.Windows.Forms.Label();
@@ -78,7 +77,6 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxTVShowDirectory = new DotNetUtils.Controls.FileTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBoxTVShowFileName = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxReplaceSpacesWith = new System.Windows.Forms.TextBox();
@@ -93,7 +91,9 @@ namespace BDHero.Plugin.FileNamer
             this.buttonRevert = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textBoxMovieFileName = new TextEditor.WinForms.TextEditorControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxTVShowFileName = new TextEditor.WinForms.TextEditorControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -125,18 +125,21 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.selectableLabelMoviePlaceholders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectableLabelMoviePlaceholders.BackColor = System.Drawing.SystemColors.Window;
             this.selectableLabelMoviePlaceholders.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.selectableLabelMoviePlaceholders.Location = new System.Drawing.Point(117, 6);
             this.selectableLabelMoviePlaceholders.Name = "selectableLabelMoviePlaceholders";
             this.selectableLabelMoviePlaceholders.ReadOnly = true;
             this.selectableLabelMoviePlaceholders.Size = new System.Drawing.Size(679, 13);
             this.selectableLabelMoviePlaceholders.TabIndex = 0;
-            this.selectableLabelMoviePlaceholders.Text = "%volume% %title% %year% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang%";
+            this.selectableLabelMoviePlaceholders.Text = "${volume} ${title} ${year} ${res} ${vcodec} ${acodec} ${channels} ${cut} ${vlang}" +
+    " ${alang}";
             // 
             // textBoxMovieFileNameExample
             // 
             this.textBoxMovieFileNameExample.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxMovieFileNameExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxMovieFileNameExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxMovieFileNameExample.Location = new System.Drawing.Point(117, 100);
             this.textBoxMovieFileNameExample.Name = "textBoxMovieFileNameExample";
@@ -149,6 +152,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.textBoxMovieDirectoryExample.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxMovieDirectoryExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxMovieDirectoryExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxMovieDirectoryExample.Location = new System.Drawing.Point(117, 55);
             this.textBoxMovieDirectoryExample.Name = "textBoxMovieDirectoryExample";
@@ -173,7 +177,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxMovieDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxMovieDirectory.DialogTitle = null;
-            this.textBoxMovieDirectory.DialogType = FileSystemDialogType.OpenDirectory;
+            this.textBoxMovieDirectory.DialogType = DotNetUtils.Dialogs.FS.FileSystemDialogType.OpenDirectory;
             this.textBoxMovieDirectory.FileTypes = null;
             this.textBoxMovieDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxMovieDirectory.Name = "textBoxMovieDirectory";
@@ -200,16 +204,6 @@ namespace BDHero.Plugin.FileNamer
             this.label2.Size = new System.Drawing.Size(98, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "File name template:";
-            // 
-            // textBoxMovieFileName
-            // 
-            this.textBoxMovieFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMovieFileName.Location = new System.Drawing.Point(117, 74);
-            this.textBoxMovieFileName.Name = "textBoxMovieFileName";
-            this.textBoxMovieFileName.Size = new System.Drawing.Size(643, 20);
-            this.textBoxMovieFileName.TabIndex = 3;
-            this.textBoxMovieFileName.Text = "%title% (%year%) [%res%] [%acodec% %channels%]";
             // 
             // label1
             // 
@@ -315,19 +309,21 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.selectableLabelTVShowPlaceholders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectableLabelTVShowPlaceholders.BackColor = System.Drawing.SystemColors.Window;
             this.selectableLabelTVShowPlaceholders.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.selectableLabelTVShowPlaceholders.Location = new System.Drawing.Point(117, 6);
             this.selectableLabelTVShowPlaceholders.Name = "selectableLabelTVShowPlaceholders";
             this.selectableLabelTVShowPlaceholders.ReadOnly = true;
             this.selectableLabelTVShowPlaceholders.Size = new System.Drawing.Size(679, 13);
             this.selectableLabelTVShowPlaceholders.TabIndex = 0;
-            this.selectableLabelTVShowPlaceholders.Text = "%volume% %title% %date% %res% %vcodec% %acodec% %channels% %cut% %vlang% %alang% " +
-    "%episodetitle% %season% %episode%";
+            this.selectableLabelTVShowPlaceholders.Text = "${volume} ${title} ${date} ${res} ${vcodec} ${acodec} ${channels} ${cut} ${vlang}" +
+    " ${alang} ${episodetitle} ${season} ${episode}";
             // 
             // textBoxTVShowFileNameExample
             // 
             this.textBoxTVShowFileNameExample.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTVShowFileNameExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxTVShowFileNameExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxTVShowFileNameExample.Location = new System.Drawing.Point(117, 100);
             this.textBoxTVShowFileNameExample.Name = "textBoxTVShowFileNameExample";
@@ -340,6 +336,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.textBoxTVShowDirectoryExample.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTVShowDirectoryExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxTVShowDirectoryExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxTVShowDirectoryExample.Location = new System.Drawing.Point(117, 55);
             this.textBoxTVShowDirectoryExample.Name = "textBoxTVShowDirectoryExample";
@@ -364,7 +361,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTVShowDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxTVShowDirectory.DialogTitle = null;
-            this.textBoxTVShowDirectory.DialogType = FileSystemDialogType.OpenDirectory;
+            this.textBoxTVShowDirectory.DialogType = DotNetUtils.Dialogs.FS.FileSystemDialogType.OpenDirectory;
             this.textBoxTVShowDirectory.FileTypes = null;
             this.textBoxTVShowDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxTVShowDirectory.Name = "textBoxTVShowDirectory";
@@ -391,16 +388,6 @@ namespace BDHero.Plugin.FileNamer
             this.label11.Size = new System.Drawing.Size(98, 13);
             this.label11.TabIndex = 3;
             this.label11.Text = "File name template:";
-            // 
-            // textBoxTVShowFileName
-            // 
-            this.textBoxTVShowFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTVShowFileName.Location = new System.Drawing.Point(117, 74);
-            this.textBoxTVShowFileName.Name = "textBoxTVShowFileName";
-            this.textBoxTVShowFileName.Size = new System.Drawing.Size(643, 20);
-            this.textBoxTVShowFileName.TabIndex = 3;
-            this.textBoxTVShowFileName.Text = "s%season%e%episode% - %title% (%date%) [%res%] [%acodec% %channels%]";
             // 
             // label12
             // 
@@ -552,12 +539,12 @@ namespace BDHero.Plugin.FileNamer
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.textBoxMovieFileName);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.selectableLabelMoviePlaceholders);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.textBoxMovieFileNameExample);
-            this.tabPage1.Controls.Add(this.textBoxMovieFileName);
             this.tabPage1.Controls.Add(this.textBoxMovieDirectoryExample);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label5);
@@ -571,15 +558,31 @@ namespace BDHero.Plugin.FileNamer
             this.tabPage1.Text = "Movies";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // textBoxMovieFileName
+            // 
+            this.textBoxMovieFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxMovieFileName.ConvertTabsToSpaces = false;
+            this.textBoxMovieFileName.CutCopyWholeLine = false;
+            this.textBoxMovieFileName.Location = new System.Drawing.Point(117, 74);
+            this.textBoxMovieFileName.Multiline = false;
+            this.textBoxMovieFileName.Name = "textBoxMovieFileName";
+            this.textBoxMovieFileName.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxMovieFileName.ShowColumnRuler = false;
+            this.textBoxMovieFileName.ShowLineNumbers = false;
+            this.textBoxMovieFileName.ShowWhiteSpace = false;
+            this.textBoxMovieFileName.Size = new System.Drawing.Size(643, 20);
+            this.textBoxMovieFileName.TabIndex = 3;
+            // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.textBoxTVShowFileName);
             this.tabPage2.Controls.Add(this.hyperlinkLabelTVShowReleaseDateFormat);
             this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.selectableLabelTVShowPlaceholders);
             this.tabPage2.Controls.Add(this.textBoxTVShowReleaseDateFormat);
             this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.textBoxTVShowFileName);
             this.tabPage2.Controls.Add(this.comboBoxEpisodeNumberFormat);
             this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Controls.Add(this.label13);
@@ -598,6 +601,23 @@ namespace BDHero.Plugin.FileNamer
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "TV Shows";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxTVShowFileName
+            // 
+            this.textBoxTVShowFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTVShowFileName.ConvertTabsToSpaces = false;
+            this.textBoxTVShowFileName.CutCopyWholeLine = false;
+            this.textBoxTVShowFileName.Location = new System.Drawing.Point(118, 77);
+            this.textBoxTVShowFileName.Multiline = false;
+            this.textBoxTVShowFileName.Name = "textBoxTVShowFileName";
+            this.textBoxTVShowFileName.Padding = new System.Windows.Forms.Padding(1);
+            this.textBoxTVShowFileName.ShowColumnRuler = false;
+            this.textBoxTVShowFileName.ShowLineNumbers = false;
+            this.textBoxTVShowFileName.ShowWhiteSpace = false;
+            this.textBoxTVShowFileName.Size = new System.Drawing.Size(642, 20);
+            this.textBoxTVShowFileName.TabIndex = 3;
+            this.textBoxTVShowFileName.Text = "s${season}e${episode} - ${title} (${date}) [${res}] [${acodec} ${channels}]";
             // 
             // tabPage3
             // 
@@ -646,7 +666,6 @@ namespace BDHero.Plugin.FileNamer
         private DotNetUtils.Controls.FileTextBox textBoxMovieDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxMovieFileName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label6;
         private DotNetUtils.Controls.SelectableLabel textBoxMovieFileNameExample;
@@ -663,7 +682,6 @@ namespace BDHero.Plugin.FileNamer
         private DotNetUtils.Controls.FileTextBox textBoxTVShowDirectory;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBoxTVShowFileName;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBoxEpisodeNumberFormat;
@@ -687,5 +705,7 @@ namespace BDHero.Plugin.FileNamer
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
+        private TextEditor.WinForms.TextEditorControl textBoxMovieFileName;
+        private TextEditor.WinForms.TextEditorControl textBoxTVShowFileName;
     }
 }

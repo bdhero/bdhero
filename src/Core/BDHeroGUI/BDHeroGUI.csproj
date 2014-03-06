@@ -92,6 +92,24 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BDHeroMovieFileNameModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDHeroMovieFileNameModeXshd.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BDHeroTVShowFileNameModeXshdModel.cs" />
+    <Compile Include="BDHeroMovieFileNameModeXshdModel.cs" />
+    <Compile Include="BDHeroTVShowFileNameModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDHeroTVShowFileNameModeXshd.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BDHeroTVShowFilePathModeXshdModel.cs" />
+    <Compile Include="BDHeroTVShowFilePathModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BDHeroTVShowFilePathModeXshd.tt</DependentUpon>
+    </Compile>
     <Compile Include="Components\AudioTrackListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -226,9 +244,21 @@
     <Compile Include="PlaylistFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="BDHeroMovieFileNameModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>BDHeroMovieFileNameModeXshd.cs</LastGenOutput>
+    </None>
     <None Include="BDHeroMovieFilePathModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>BDHeroMovieFilePathModeXshd.cs</LastGenOutput>
+    </None>
+    <None Include="BDHeroTVShowFileNameModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>BDHeroTVShowFileNameModeXshd.cs</LastGenOutput>
+    </None>
+    <None Include="BDHeroTVShowFilePathModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>BDHeroTVShowFilePathModeXshd.cs</LastGenOutput>
     </None>
     <None Include="Resources\github-mark-16.png" />
     <None Include="Resources\cross-small-gray.png" />

@@ -141,7 +141,7 @@ namespace BDHero.Plugin.FileNamer
 
         private void Replace(ref string fsPart, string varName, string value)
         {
-            fsPart = Regex.Replace(fsPart, string.Format("%{0}%", varName), S(value), RegexOptions.IgnoreCase);
+            fsPart = Regex.Replace(fsPart, string.Format(@"\$\{{{0}\}}", varName), S(value), RegexOptions.IgnoreCase);
         }
 
         /// <summary>

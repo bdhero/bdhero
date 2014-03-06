@@ -12,6 +12,9 @@ namespace BDHeroGUI
             = new Dictionary<string, string>
               {
                   { "BDHeroMovieFileName.tt", new BDHeroMovieFileNameModeXshd().TransformText().Trim() },
+                  { "BDHeroTVShowFileName.tt", new BDHeroTVShowFileNameModeXshd().TransformText().Trim() },
+                  { "BDHeroMovieFilePath.tt", new BDHeroMovieFilePathModeXshd().TransformText().Trim() },
+                  { "BDHeroTVShowFilePath.tt", new BDHeroTVShowFilePathModeXshd().TransformText().Trim() },
               };
 
         public BDHeroT4SyntaxModeProvider()

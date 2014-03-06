@@ -105,8 +105,8 @@ namespace BDHero.Plugin.FileNamer
 
     internal abstract class ReleaseMediumPreferences
     {
-        public string Directory = @"%temp%\%volume%";
-        public string FileName = @"%title% [%res%]";
+        public string Directory = @"%temp%\${volume}";
+        public string FileName = @"${title} [${res}]";
 
         public void CopyFrom(ReleaseMediumPreferences other)
         {
@@ -142,7 +142,7 @@ namespace BDHero.Plugin.FileNamer
 
     internal class MoviePreferences : ReleaseMediumPreferences
     {
-        public new string FileName = @"%title% (%year%) [%res%] [%vcodec%] [%acodec% %channels%]";
+        public new string FileName = @"${title} (${year}) [${res}] [${vcodec}] [${acodec} ${channels}]";
 
         public void CopyFrom(MoviePreferences other)
         {
@@ -178,8 +178,8 @@ namespace BDHero.Plugin.FileNamer
 
     internal class TVShowPreferences : ReleaseMediumPreferences
     {
-        public new string Directory = @"%temp%\%title%\Season %season%";
-        public new string FileName = @"s%season%e%episode% - %episodetitle% [%res%]";
+        public new string Directory = @"%temp%\${title}\Season ${season}";
+        public new string FileName = @"s${season}e${episode} - ${episodetitle} [${res}]";
 
         /// <summary>
         /// Format string for <see cref="int.ToString(string)"/>.

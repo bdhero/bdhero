@@ -21,6 +21,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using BDHero.JobQueue;
@@ -79,7 +80,17 @@ namespace BDHero.Plugin.FileNamer
 
         private Preferences GetPreferences()
         {
-            return PluginUtils.GetPreferences(AssemblyInfo, () => new Preferences());
+            var prefs = PluginUtils.GetPreferences(AssemblyInfo, () => new Preferences());
+            prefs.Movies.Directory = UpgradeSyntax(prefs.Movies.Directory);
+            prefs.Movies.FileName = UpgradeSyntax(prefs.Movies.FileName);
+            prefs.TVShows.Directory = UpgradeSyntax(prefs.TVShows.Directory);
+            prefs.TVShows.FileName = UpgradeSyntax(prefs.TVShows.FileName);
+            return prefs;
+        }
+
+        private string UpgradeSyntax(string path)
+        {
+            return new Regex(@"%(\w+?)%").Replace(path, @"${$1}");
         }
 
         private void SavePreferences(Preferences prefs)

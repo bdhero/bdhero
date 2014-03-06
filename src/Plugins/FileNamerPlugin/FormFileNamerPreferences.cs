@@ -23,7 +23,6 @@ using BDHero.BDROM;
 using BDHero.JobQueue;
 using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
-using DotNetUtils.FS;
 
 namespace BDHero.Plugin.FileNamer
 {
@@ -77,6 +76,7 @@ namespace BDHero.Plugin.FileNamer
 
         private void OnLoad(object sender, EventArgs eventArgs)
         {
+            InitTextEditors();
             InitLabelBackgrounds();
             InitValues();
             InitReplaceSpaces();
@@ -90,6 +90,12 @@ namespace BDHero.Plugin.FileNamer
         #endregion
 
         #region Initialization
+
+        private void InitTextEditors()
+        {
+            textBoxMovieFileName.Editor.SetSyntaxFromExtension(".bdheromoviefilename");
+            textBoxTVShowFileName.Editor.SetSyntaxFromExtension(".bdherotvshowfilename");
+        }
 
         private void InitLabelBackgrounds()
         {
@@ -197,10 +203,7 @@ namespace BDHero.Plugin.FileNamer
             textBoxTVShowReleaseDateFormat.TextChanged += textBoxTVShowReleaseDateFormat_TextChanged;
 
             selectableLabelMoviePlaceholders.SelectVariablesOnClick();
-            textBoxMovieFileName.SelectVariablesOnClick();
-
             selectableLabelTVShowPlaceholders.SelectVariablesOnClick();
-            textBoxTVShowFileName.SelectVariablesOnClick();
         }
 
         private void InitComboBoxEvents()
