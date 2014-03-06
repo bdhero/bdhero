@@ -108,6 +108,16 @@ namespace TextEditor.WinForms
 
         #endregion
 
+        #region Border styles
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            base.OnPaintBackground(e);
+            NativeAPI.Win.UXTheme.Theme.DrawThemedTextBoxBackground(Handle, e.Graphics, e.ClipRectangle);
+        }
+
+        #endregion
+
         #region Multiline
 
         /// <summary>
@@ -158,6 +168,10 @@ namespace TextEditor.WinForms
             if (MultilineChanged != null)
                 MultilineChanged(this, args);
         }
+
+        #endregion
+
+        #region Sizing
 
         protected override void OnHandleCreated(EventArgs e)
         {
