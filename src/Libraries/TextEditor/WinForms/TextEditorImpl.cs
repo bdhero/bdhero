@@ -252,8 +252,7 @@ namespace TextEditor.WinForms
 
         public void Load(Stream stream)
         {
-            // TODO: FIXME
-            _editor.LoadFile("FIXME.md", stream, true, true);
+            _editor.LoadFile("", stream, true, true);
             _lastTextSet = Text;
         }
 
