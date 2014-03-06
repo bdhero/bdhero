@@ -75,6 +75,8 @@ namespace TextEditor.WPF
 
         #region Text
 
+        private string _lastTextSet;
+
         public string Text
         {
             get { return _editor.Text; }
@@ -85,6 +87,7 @@ namespace TextEditor.WPF
                     return;
 
                 _editor.Text = newValue;
+                _lastTextSet = newValue;
             }
         }
 
@@ -232,11 +235,13 @@ namespace TextEditor.WPF
         public void Load(Stream stream)
         {
             _editor.Load(stream);
+            _lastTextSet = Text;
         }
 
         public void Load(string filePath)
         {
             _editor.Load(filePath);
+            _lastTextSet = Text;
         }
 
         public void Save(Stream stream)
@@ -424,7 +429,7 @@ namespace TextEditor.WPF
 
         public bool IsModified
         {
-            get { return _editor.IsModified; }
+            get { return _lastTextSet != Text; }
         }
 
         public int LineCount

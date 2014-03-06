@@ -53,6 +53,8 @@ namespace TextEditor.WinForms
 
         #region Text
 
+        private string _lastTextSet;
+
         public string Text
         {
             get { return _editor.Text; }
@@ -63,6 +65,7 @@ namespace TextEditor.WinForms
                     return;
 
                 _editor.Text = newValue;
+                _lastTextSet = newValue;
             }
         }
 
@@ -254,11 +257,13 @@ namespace TextEditor.WinForms
         {
             // TODO: FIXME
             _editor.LoadFile("FIXME.md", stream, true, true);
+            _lastTextSet = Text;
         }
 
         public void Load(string filePath)
         {
             _editor.LoadFile(filePath, true, true);
+            _lastTextSet = Text;
         }
 
         public void Save(Stream stream)
@@ -431,7 +436,7 @@ namespace TextEditor.WinForms
 
         public bool IsModified
         {
-            get { return false; }
+            get { return _lastTextSet != Text; }
         }
 
         public int LineCount
