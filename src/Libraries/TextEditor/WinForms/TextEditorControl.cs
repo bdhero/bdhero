@@ -10,7 +10,7 @@ namespace TextEditor.WinForms
 {
     [DefaultProperty("Text")]
     [DefaultEvent("TextChanged")]
-    public class TextEditorControl : UserControl
+    public class TextEditorControl : Panel
     {
         public TextEditorControl()
         {
