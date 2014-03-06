@@ -38,6 +38,7 @@ namespace TextEditor
 
         event EventHandler ReadOnlyChanged;
 
+        // TODO: Rename these properties to reflect how they are actually used
         int HorizontalScrollBarHeight { get; }
 
         int VerticalScrollBarWidth { get; }
