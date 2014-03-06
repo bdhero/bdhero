@@ -54,10 +54,12 @@
     <ApplicationIcon>bdhero_gui.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.AvalonEdit">
+    <Reference Include="ICSharpCode.AvalonEdit, Version=4.4.0.9727, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AvalonEdit.4.4.0.9727\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.TextEditor">
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -78,22 +80,16 @@
     <Reference Include="Ninject">
       <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\AudioTrackListView.cs">
@@ -353,16 +349,12 @@
       <Name>NativeAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\TextEditor\TextEditor.csproj">
-      <Project>{ACD66B56-A9CF-4958-8050-07DDD1AA43BF}</Project>
+      <Project>{acd66b56-a9cf-4958-8050-07ddd1aa43bf}</Project>
       <Name>TextEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\WebBrowserUtils\WebBrowserUtils.csproj">
       <Project>{DB13678F-8815-4BEC-8198-2BAC286A3BAF}</Project>
       <Name>WebBrowserUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
-      <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
-      <Name>WindowsOSUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\BDHero\BDHero.csproj">
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>

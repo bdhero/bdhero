@@ -81,6 +81,10 @@
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\TextEditor\TextEditor.csproj">
+      <Project>{acd66b56-a9cf-4958-8050-07ddd1aa43bf}</Project>
+      <Name>TextEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
