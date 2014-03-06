@@ -27,10 +27,11 @@ namespace BDHeroGUI.Forms
         {
             InitializeComponent();
 
-            InitEditor();
+            InitMultilineEditor();
+            InitSinglelineEditor();
         }
 
-        private void InitEditor()
+        private void InitMultilineEditor()
         {
             var control = new TextEditorControl();
             var editor = control.Editor;
@@ -68,8 +69,12 @@ namespace BDHeroGUI.Forms
 
             control.Dock = DockStyle.Fill;
             panel1.Controls.Add(control);
+        }
 
-            textEditorControl1.Editor.LoadSyntaxDefinitions(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        private void InitSinglelineEditor()
+        {
+            var editor = textEditorControl1.Editor;
+            editor.Text += " --- " + new string(Path.GetInvalidPathChars()) + " --- " + new string(Path.GetInvalidFileNameChars());
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)

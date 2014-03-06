@@ -58,13 +58,7 @@ namespace TextEditor
 
         #region Syntax highlighting
 
-        /// <summary>
-        ///     
-        /// </summary>
-        /// <param name="directoryPath">
-        ///     Path to your .XSHD files.
-        /// </param>
-        void LoadSyntaxDefinitions(string directoryPath);
+        void LoadSyntaxDefinitions(ICSharpCode.TextEditor.Document.ISyntaxModeFileProvider syntaxModeFileProvider);
 
         void SetSyntaxFromExtension(string fileNameOrExtension);
 

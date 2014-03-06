@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TextEditor.Resources;
 
 namespace TextEditor
 {
@@ -20,6 +21,9 @@ namespace TextEditor
 
             // Default value
             editor.FontSize = 14;
+
+            // Load default syntax highlighting mode definitions
+            editor.LoadSyntaxDefinitions(new T4SyntaxModeProvider());
             
             return editor;
         }

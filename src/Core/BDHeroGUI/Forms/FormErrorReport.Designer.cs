@@ -37,8 +37,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
             this.buttonAccept = new System.Windows.Forms.Button();
+            this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
             this.SuspendLayout();
             // 
             // panel1
@@ -141,6 +141,17 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "TextEditorControl:";
             // 
+            // buttonAccept
+            // 
+            this.buttonAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAccept.Location = new System.Drawing.Point(702, 615);
+            this.buttonAccept.Name = "buttonAccept";
+            this.buttonAccept.Size = new System.Drawing.Size(75, 23);
+            this.buttonAccept.TabIndex = 10;
+            this.buttonAccept.Text = "Accept: 0";
+            this.buttonAccept.UseVisualStyleBackColor = true;
+            this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
+            // 
             // textEditorControl1
             // 
             this.textEditorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -151,16 +162,6 @@
             this.textEditorControl1.Size = new System.Drawing.Size(667, 18);
             this.textEditorControl1.TabIndex = 3;
             this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
-            // 
-            // buttonAccept
-            // 
-            this.buttonAccept.Location = new System.Drawing.Point(702, 615);
-            this.buttonAccept.Name = "buttonAccept";
-            this.buttonAccept.Size = new System.Drawing.Size(75, 23);
-            this.buttonAccept.TabIndex = 10;
-            this.buttonAccept.Text = "Accept: 0";
-            this.buttonAccept.UseVisualStyleBackColor = true;
-            this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
             // 
             // FormErrorReport
             // 

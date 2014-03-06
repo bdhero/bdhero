@@ -185,6 +185,7 @@
     <Compile Include="TaskUtils\TaskBuilder.cs" />
     <Compile Include="FS\TempFileRegistrar.cs" />
     <Compile Include="ToStringBuilder.cs" />
+    <Compile Include="XmlTextEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -9,9 +9,9 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
-using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
+using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 #if !__MonoCS__
 using System.Windows.Forms.Integration;
@@ -252,23 +252,22 @@ namespace TextEditor.WPF
 
         #region Syntax highlighting
 
-        public void LoadSyntaxDefinitions(string directoryPath)
+        public void LoadSyntaxDefinitions(ICSharpCode.TextEditor.Document.ISyntaxModeFileProvider syntaxModeFileProvider)
         {
-            var files = new DirectoryInfo(directoryPath).GetFiles("*.xshd");
-            foreach (var file in files)
+            var manager = HighlightingManager.Instance;
+
+            foreach (var syntaxMode in syntaxModeFileProvider.SyntaxModes)
             {
-                using (var reader = new XmlTextReader(file.OpenText()))
+                using (var reader = syntaxModeFileProvider.GetSyntaxModeFile(syntaxMode))
                 {
                     var xshdSyntaxDefinition = HighlightingLoader.LoadXshd(reader);
-                    var highlightingDefinition = HighlightingLoader.Load(xshdSyntaxDefinition, HighlightingManager.Instance);
-
-                    // TODO:
-                    HighlightingManager.Instance.RegisterHighlighting("FilePath", new [] { ".filepath" }, highlightingDefinition);
+                    var highlightingDefinition = HighlightingLoader.Load(xshdSyntaxDefinition, manager);
+                    manager.RegisterHighlighting(syntaxMode.Name, syntaxMode.Extensions, highlightingDefinition);
                 }
             }
 
             // TODO:
-            _editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("FilePath");
+            _editor.SyntaxHighlighting = manager.GetDefinition("FileName");
         }
 
         public void SetSyntaxFromExtension(string fileNameOrExtension)

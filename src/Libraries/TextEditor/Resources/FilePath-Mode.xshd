@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
+
+<SyntaxDefinition name = "FilePath" extensions = ".filepath">
+    <RuleSets>
+        <RuleSet ignorecase = "true">
+            <Delimiters>=!&gt;&lt;+-/*%&amp;|^~.}{,;][?:</Delimiters>
+
+            <Span name = "Variable" bold = "true" italic = "false" color = "Green" bgcolor = "HoneyDew">
+                <Begin>%</Begin>
+                <End>%</End>
+            </Span>
+
+            <!-- <MarkPrevious bold = "true" italic = "false" color = "MidnightBlue">(</MarkPrevious> -->
+
+            <KeyWords name = "DriveLetter">
+                <Key word = "A:\" />
+                <Key word = "A:/" />
+                <Key word = "B:\" />
+                <Key word = "B:/" />
+                <Key word = "C:\" />
+                <Key word = "C:/" />
+                <Key word = "D:\" />
+                <Key word = "D:/" />
+                <Key word = "E:\" />
+                <Key word = "E:/" />
+                <Key word = "F:\" />
+                <Key word = "F:/" />
+                <Key word = "G:\" />
+                <Key word = "G:/" />
+                <Key word = "H:\" />
+                <Key word = "H:/" />
+                <Key word = "I:\" />
+                <Key word = "I:/" />
+                <Key word = "J:\" />
+                <Key word = "J:/" />
+                <Key word = "K:\" />
+                <Key word = "K:/" />
+                <Key word = "L:\" />
+                <Key word = "L:/" />
+                <Key word = "M:\" />
+                <Key word = "M:/" />
+                <Key word = "N:\" />
+                <Key word = "N:/" />
+                <Key word = "O:\" />
+                <Key word = "O:/" />
+                <Key word = "P:\" />
+                <Key word = "P:/" />
+                <Key word = "Q:\" />
+                <Key word = "Q:/" />
+                <Key word = "R:\" />
+                <Key word = "R:/" />
+                <Key word = "S:\" />
+                <Key word = "S:/" />
+                <Key word = "T:\" />
+                <Key word = "T:/" />
+                <Key word = "U:\" />
+                <Key word = "U:/" />
+                <Key word = "V:\" />
+                <Key word = "V:/" />
+                <Key word = "W:\" />
+                <Key word = "W:/" />
+                <Key word = "X:\" />
+                <Key word = "X:/" />
+                <Key word = "Y:\" />
+                <Key word = "Y:/" />
+                <Key word = "Z:\" />
+                <Key word = "Z:/" />
+            </KeyWords>
+
+            <KeyWords name = "Invalid" bold = "true" italic = "false" color = "White" bgcolor = "Red">
+                <Key word = ":" />
+                <Key word = "*" />
+                <Key word = "?" />
+                <Key word = "&quot;" />
+                <Key word = "&lt;" />
+                <Key word = "&gt;" />
+                <Key word = "|" />
+            </KeyWords>
+        </RuleSet>
+    </RuleSets>
+</SyntaxDefinition>

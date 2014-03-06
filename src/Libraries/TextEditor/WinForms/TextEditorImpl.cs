@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
+using TextEditor.Resources;
 
 namespace TextEditor.WinForms
 {
@@ -271,17 +272,14 @@ namespace TextEditor.WinForms
 
         #region Syntax highlighting
 
-        public void LoadSyntaxDefinitions(string directoryPath)
+        public void LoadSyntaxDefinitions(ISyntaxModeFileProvider syntaxModeFileProvider)
         {
-            FileSyntaxModeProvider fsmProvider; // Provider
-            if (Directory.Exists(directoryPath))
-            {
-                fsmProvider = new FileSyntaxModeProvider(directoryPath); // Create new provider with the highlighting directory.
-                HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider); // Attach to the text editor.
+            var manager = HighlightingManager.Manager;
 
-                // TODO:
-                _editor.SetHighlighting("FilePath"); // Activate the highlighting, use the name from the SyntaxDefinition node.
-            }
+            manager.AddSyntaxModeFileProvider(syntaxModeFileProvider);
+
+            // TODO:
+            _editor.SetHighlighting("FileName"); // Activate the highlighting, use the name from the SyntaxDefinition node.
         }
 
         public void SetSyntaxFromExtension(string fileNameOrExtension)
