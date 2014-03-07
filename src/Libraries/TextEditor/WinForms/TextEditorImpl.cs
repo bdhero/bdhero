@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Gui.CompletionWindow;
 using TextEditor.Extensions;
 using TextEditor.Resources;
 using TextEditor.Resources.Syntax.Providers;
@@ -37,6 +39,8 @@ namespace TextEditor.WinForms
             _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
 
             LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
+
+            RegisterIntellisenseHandling();
         }
 
         ITextEditorOptions ITextEditor.Options
@@ -48,6 +52,87 @@ namespace TextEditor.WinForms
         {
             get { return _editor; }
         }
+
+        #region Code completion
+
+        private CodeCompletionWindow _codeCompletionWindow;
+        private IContainer _components;
+        private ImageList _intellisenseImageList;
+
+        private void RegisterIntellisenseHandling()
+        {
+            _components = new Container();
+            _intellisenseImageList = new ImageList(_components);
+            _intellisenseImageList.Images.Add(Properties.Resources.property_blue_image_16);
+            _intellisenseImageList.Images.Add(Properties.Resources.terminal_image_16);
+            _intellisenseImageList.Images.Add(Properties.Resources.tag_image_16);
+            _intellisenseImageList.Images.Add(Properties.Resources.property_image_16);
+
+            var textArea = _editor.ActiveTextAreaControl.TextArea;
+            textArea.KeyDown += delegate(object sender, KeyEventArgs e)
+            {
+                if (e.Control == false)
+                    return;
+                if (e.KeyCode != Keys.Space)
+                    return;
+                e.SuppressKeyPress = true;
+                ShowCodeCompletion((char)e.KeyValue);
+            };
+        }
+
+        private void ShowCodeCompletion(char value)
+        {
+            ICompletionDataProvider completionDataProvider = new CodeCompletionProviderImpl(_intellisenseImageList);
+
+            _codeCompletionWindow = CodeCompletionWindow.ShowCompletionWindow(
+                    Control.FindForm(),     // The parent window for the completion window
+                    _editor,                // The text editor to show the window for
+                    "",                     // Filename - will be passed back to the provider
+                    completionDataProvider, // Provider to get the list of possible completions
+                    value                   // Key pressed - will be passed to the provider
+                );
+
+            // ShowCompletionWindow can return null when the provider returns an empty list
+            if (_codeCompletionWindow == null)
+                return;
+
+            _codeCompletionWindow.Closed += CloseCodeCompletionWindow;
+
+            var completions = completionDataProvider.GenerateCompletionData("", _editor.ActiveTextAreaControl.TextArea, value) ?? new ICompletionData[0];
+            
+            if (!completions.Any())
+                return;
+
+            _codeCompletionWindow.MouseWheel += CodeCompletionWindowOnMouseWheel;
+
+            using (var g = _codeCompletionWindow.CreateGraphics())
+            {
+                var width = (int) completions.Select(data => g.MeasureString(data.Text, _codeCompletionWindow.Font).Width).Max();
+
+                width += 16; // Icon size
+                width += SystemInformation.VerticalScrollBarWidth;
+
+                _codeCompletionWindow.Width = width;
+            }
+        }
+
+        private void CodeCompletionWindowOnMouseWheel(object sender, MouseEventArgs args)
+        {
+            _codeCompletionWindow.HandleMouseWheel(args);
+        }
+
+        private void CloseCodeCompletionWindow(object sender, EventArgs e)
+        {
+            if (_codeCompletionWindow != null)
+            {
+                _codeCompletionWindow.Closed -= CloseCodeCompletionWindow;
+                _codeCompletionWindow.MouseWheel -= CodeCompletionWindowOnMouseWheel;
+                _codeCompletionWindow.Dispose();
+                _codeCompletionWindow = null;
+            }
+        }
+
+        #endregion
 
         #region Text
 
