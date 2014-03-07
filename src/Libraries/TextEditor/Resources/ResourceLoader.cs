@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace TextEditor.Resources
 {
-    static class Resources
+    static class ResourceLoader
     {
         private static Assembly CurrentAssembly
         {
-            get { return typeof (Resources).Assembly; }
+            get { return typeof (ResourceLoader).Assembly; }
         }
 
         public static Stream OpenStream(string fullName)

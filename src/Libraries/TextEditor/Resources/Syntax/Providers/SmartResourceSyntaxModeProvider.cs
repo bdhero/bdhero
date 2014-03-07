@@ -8,7 +8,7 @@ namespace TextEditor.Resources.Syntax.Providers
     internal class SmartResourceSyntaxModeProvider : BaseSyntaxModeProvider
     {
         public SmartResourceSyntaxModeProvider()
-            : this(Resources.GetResourceNamesEndingWith(".xshd"))
+            : this(ResourceLoader.GetResourceNamesEndingWith(".xshd"))
         {
         }
 
@@ -21,7 +21,7 @@ namespace TextEditor.Resources.Syntax.Providers
 
             foreach (var fullName in fullFileNames)
             {
-                using (var stream = Resources.OpenStream(fullName))
+                using (var stream = ResourceLoader.OpenStream(fullName))
                 {
                     AddSyntaxMode(fullName, stream);
                 }
@@ -30,7 +30,7 @@ namespace TextEditor.Resources.Syntax.Providers
 
         public override XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
         {
-            return new XmlTextReader(Resources.OpenStream(syntaxMode.FileName));
+            return new XmlTextReader(ResourceLoader.OpenStream(syntaxMode.FileName));
         }
     }
 }

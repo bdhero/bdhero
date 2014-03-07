@@ -75,7 +75,7 @@
       <DependentUpon>FilePathModeXshd.tt</DependentUpon>
     </Compile>
     <Compile Include="Resources\Syntax\Definitions\FilePathModeXshdModel.cs" />
-    <Compile Include="Resources\Resources.cs" />
+    <Compile Include="Resources\ResourceLoader.cs" />
     <Compile Include="Resources\Syntax\Providers\BaseSyntaxModeProvider.cs" />
     <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
     <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
