@@ -14,32 +14,91 @@ namespace TextEditor.WinForms
     [DefaultEvent("TextChanged")]
     public class TextEditorControl : Control
     {
+        /// <summary>
+        ///     Gets the underlying editor for the control.
+        /// </summary>
+        [Browsable(false)]
+        public ITextEditor Editor { get; private set; }
+
+        private bool _isMouseOver;
+        private Padding _borderPadding;
+
         public TextEditorControl()
         {
             Editor = TextEditorFactory.CreateMultiLineTextEditor();
-            Editor.TextChanged += (sender, args) => OnTextChanged(args);
-            Editor.FontSizeChanged += (sender, args) => OnFontChanged(args);
-            Editor.MultilineChanged += (sender, args) => OnMultilineChanged(args);
-
+            Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
             SetStyle(ControlStyles.Selectable, false);
 
-            EnableContextMenu = true;
+            BindEvents();
 
-            // TODO: Sync w/ BorderStyle value
-            Padding = new Padding(1);
-            Editor.Control.Top = 1;
-            Editor.Control.Left = 1;
-            Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
+            // Default values
             BorderStyle = BorderStyle.Fixed3D;
-
-            InitBorderEvents();
+            StandardContextMenu = true;
         }
 
-        protected override Size DefaultSize
+        #region Event binding
+
+        private void BindEvents()
         {
-            get { return new Size(500, 300); }
+            Editor.TextChanged += (s, e) => OnTextChanged(e);
+            Editor.FontSizeChanged += (s, e) => OnFontChanged(e);
+            Editor.MultilineChanged += (s, e) => OnMultilineChanged(e);
+
+            HandleCreated += (s, e) => BindMouseEvents();
+            HandleCreated += (s, e) => BindFocusEvents();
+            HandleCreated += (s, e) => AdjustRects(true);
+
+            PaddingChanged += (s, e) => OnPaddingChanged();
+            BorderStyleChanged += (s, e) => AdjustBorderPadding();
+
+            // Prevent border artifacts
+            Resize += (s, e) => Invalidate();
+
+            PaintBackground += (s, e) => PaintBorder(e);
+        }
+
+        private void BindMouseEvents()
+        {
+            MouseEnter += ControlOnMouseEnter;
+            MouseLeave += ControlOnMouseLeave;
+
+            this.Descendants().ForEach(control => control.MouseEnter += ControlOnMouseEnter);
+            this.Descendants().ForEach(control => control.MouseLeave += ControlOnMouseLeave);
+        }
+
+        private void BindFocusEvents()
+        {
+            GotFocus += OnGotFocus;
+            LostFocus += OnLostFocus;
+
+            this.Descendants().ForEach(control => control.GotFocus += OnGotFocus);
+            this.Descendants().ForEach(control => control.LostFocus += OnLostFocus);
+        }
+
+        #endregion
+
+        #region Browsable properties and events
+
+        #region Context menu
+
+        /// <summary>
+        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the user can enter multiple lines of text.")]
+        [DefaultValue(true)]
+        public bool StandardContextMenu
+        {
+            get { return base.ContextMenu != null; }
+            set
+            {
+                if (value == StandardContextMenu)
+                    return;
+
+                ContextMenu = value ? CreateContextMenu() : null;
+            }
         }
 
         private ContextMenu CreateContextMenu()
@@ -80,29 +139,21 @@ namespace TextEditor.WinForms
             return menu;
         }
 
-        /// <summary>
-        ///     Gets the underlying editor for the control.
-        /// </summary>
-        [Browsable(false)]
-        public ITextEditor Editor { get; private set; }
+        #endregion
 
-        /// <summary>
-        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
-        /// </summary>
+        #region Text property
+
         [Browsable(true)]
-        [Description("Determines whether the user can enter multiple lines of text.")]
-        [DefaultValue(true)]
-        public bool EnableContextMenu
+        [DefaultValue("")]
+        public override string Text
         {
-            get { return base.ContextMenu != null; }
-            set
-            {
-                if (value == EnableContextMenu)
-                    return;
-
-                ContextMenu = value ? CreateContextMenu() : null;
-            }
+            get { return Editor.Text; }
+            set { Editor.Text = value; }
         }
+
+        #endregion
+
+        #region BorderStyle property + event
 
         /// <summary>
         ///     Gets or sets the border style for the control.
@@ -120,252 +171,24 @@ namespace TextEditor.WinForms
 
                 _borderStyle = value;
 
+                OnBorderStyleChanged();
                 Invalidate();
             }
         }
 
         private BorderStyle _borderStyle;
 
-        #region Text
-
-        [Browsable(true)]
-        [DefaultValue("")]
-        public override string Text
-        {
-            get { return Editor.Text; }
-            set { Editor.Text = value; }
-        }
-
-        #endregion
-
-        #region Border styles
-
-        private bool _isMouseOver;
-
-        private void InitBorderEvents()
-        {
-            HandleCreated += OnHandleCreated;
-        }
-
-        private void OnHandleCreated(object sender, EventArgs eventArgs)
-        {
-            MouseEnter += ControlOnMouseEnter;
-            MouseLeave += ControlOnMouseLeave;
-
-            this.Descendants().ForEach(control => control.MouseEnter += ControlOnMouseEnter);
-            this.Descendants().ForEach(control => control.MouseLeave += ControlOnMouseLeave);
-
-            GotFocus += OnGotFocus;
-            LostFocus += OnLostFocus;
-
-            this.Descendants().ForEach(control => control.GotFocus += OnGotFocus);
-            this.Descendants().ForEach(control => control.LostFocus += OnLostFocus);
-        }
-
-        private bool IsThisTextEditorControl(object sender)
-        {
-            if (sender == this)
-                return true;
-
-            var source = sender as Control;
-            if (source == null)
-                return false;
-
-            var control = source;
-            while (control != null)
-            {
-                if (control == this)
-                    return true;
-
-                control = control.Parent;
-            }
-
-            return false;
-        }
-
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            base.OnPaintBackground(e);
-
-            if (BorderStyle == BorderStyle.None)
-                return;
-
-            var state = !Enabled      ? TextBoxBorderStyle.Disabled :
-                        ContainsFocus ? TextBoxBorderStyle.Focused :
-                        _isMouseOver  ? TextBoxBorderStyle.Hot :
-                        TextBoxBorderStyle.Normal;
-
-            Theme.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
-        }
-
-        #region Mouse enter/leave
-
-        private void ControlOnMouseEnter(object sender, EventArgs eventArgs)
-        {
-            _isMouseOver = IsThisTextEditorControl(sender);
-            Invalidate();
-        }
-
-        private void ControlOnMouseLeave(object sender, EventArgs eventArgs)
-        {
-            _isMouseOver = false;
-            Invalidate();
-        }
-
-        #endregion
-
-        #region Focus/blur
-
-        private void OnGotFocus(object sender, EventArgs eventArgs)
-        {
-            Invalidate();
-        }
-
-        private void OnLostFocus(object sender, EventArgs eventArgs)
-        {
-            Invalidate();
-        }
-
-        #endregion
-
-        #region Enable/disable
-
-        protected override void OnEnabledChanged(EventArgs e)
-        {
-            base.OnEnabledChanged(e);
-            Invalidate();
-        }
-
-        protected override void OnParentEnabledChanged(EventArgs e)
-        {
-            base.OnParentEnabledChanged(e);
-            Invalidate();
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Multiline
-
         /// <summary>
-        ///     Gets or sets whether the user can enter multiple lines of text.
+        ///     Triggered whenever the value of the <see cref="BorderStyle"/> property changes.
         /// </summary>
         [Browsable(true)]
-        [Description("Determines whether the user can enter multiple lines of text.")]
-        [DefaultValue(true)]
-        public virtual bool Multiline
+        [Description("Triggered whenever the value of the BorderStyle property changes.")]
+        public event EventHandler BorderStyleChanged;
+
+        protected virtual void OnBorderStyleChanged(EventArgs args = null)
         {
-            get { return Editor.Multiline; }
-            set
-            {
-                if (value == Multiline)
-                    return;
-
-                Editor.Multiline = value;
-            }
-        }
-
-        /// <summary>
-        ///     Event raised when the value of the <see cref="Multiline"/> property is changed on this <see cref="TextEditorControl"/>.
-        /// </summary>
-        [Browsable(true)]
-        [Description("Occurs when the value of the Multiline property changes.")]
-        [RefreshProperties(RefreshProperties.All)]
-        public event EventHandler MultilineChanged;
-
-        protected virtual void OnMultilineChanged(EventArgs args)
-        {
-            if (!Multiline)
-            {
-                Editor.Options.ConvertTabsToSpaces = false;
-                Editor.Options.CutCopyWholeLine = false;
-                Editor.Options.ShowColumnRuler = false;
-                Editor.Options.ShowLineNumbers = false;
-                Editor.Options.ShowSpaces = false;
-                Editor.Options.ShowTabs = false;
-            }
-
-            SetStyle(ControlStyles.FixedHeight, !Multiline);
-
-            RecreateHandle();
-
-            if (IsHandleCreated)
-                AdjustSize(false);
-
-            if (MultilineChanged != null)
-                MultilineChanged(this, args);
-        }
-
-        #endregion
-
-        #region Sizing
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-
-            AdjustSize(true);
-        }
-
-        private void AdjustSize(bool returnIfAnchored)
-        {
-            AdjustHeight(returnIfAnchored);
-        }
-
-        /// <summary>
-        ///     Adjusts the height of a single-line edit control to match the height of
-        ///     the control's font.
-        /// </summary>
-        private void AdjustHeight(bool returnIfAnchored)
-        {
-            // If we're anchored to two opposite sides of the form, don't adjust the size because
-            // we'll lose our anchored size by resetting to the requested width.
-            if (returnIfAnchored &&
-                (Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
-            {
-                return;
-            }
-
-            var padLR = Padding.Left + Padding.Right;
-            var padTB = Padding.Top + Padding.Bottom;
-
-            if (Multiline)
-            {
-                Editor.Control.Size = new Size(Size.Width - padLR,
-                                               Size.Height - padTB);
-                return;
-            }
-
-            var fontSize = FontSizeConverter.GetWinFormsFontSize(Editor.FontSize);
-            var font = new Font(Font.FontFamily, (float)fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
-
-            Size measuredTextSize;
-
-            using (var g = CreateGraphics())
-            {
-                var size = g.MeasureString("MQ", font);
-                measuredTextSize = new Size((int) Math.Ceiling(size.Width), (int) Math.Ceiling(size.Height));
-            }
-
-            var width = Width;
-            var height = (int) Math.Ceiling((double) measuredTextSize.Height);
-
-            Size = new Size(width,
-                            height + padTB);
-
-            Editor.Control.Size = new Size(width + Editor.VerticalScrollBarWidth - padLR,
-                                           height + Editor.HorizontalScrollBarHeight);
-        }
-
-        #endregion
-
-        #region Font
-
-        protected override void OnFontChanged(EventArgs e)
-        {
-            base.OnFontChanged(e);
-//            AdjustHeight(false);
+            if (BorderStyleChanged != null)
+                BorderStyleChanged(this, args ?? EventArgs.Empty);
         }
 
         #endregion
@@ -466,6 +289,316 @@ namespace TextEditor.WinForms
         {
             get { return Editor.Options.IndentationSize; }
             set { Editor.Options.IndentationSize = value; }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Border styles
+
+        private void PaintBorder(PaintEventArgs e)
+        {
+            if (BorderStyle == BorderStyle.None)
+                return;
+
+            var state = !Enabled ? TextBoxBorderStyle.Disabled :
+                        ContainsFocus ? TextBoxBorderStyle.Focused :
+                        _isMouseOver ? TextBoxBorderStyle.Hot :
+                        TextBoxBorderStyle.Normal;
+
+            Theme.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
+        }
+
+        #region Padding
+
+        protected virtual Padding CalculatedPadding
+        {
+            get
+            {
+                return new Padding(Padding.Left   + _borderPadding.Left,
+                                   Padding.Top    + _borderPadding.Top,
+                                   Padding.Right  + _borderPadding.Right,
+                                   Padding.Bottom + _borderPadding.Bottom);
+            }
+        }
+
+        private void AdjustBorderPadding()
+        {
+            _borderPadding = (BorderStyle == BorderStyle.None) ? new Padding(0) : new Padding(1);
+            AdjustChildRect();
+        }
+
+        private void OnPaddingChanged()
+        {
+            AdjustChildRect();
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Mouse enter/leave
+
+        private void ControlOnMouseEnter(object sender, EventArgs eventArgs)
+        {
+            _isMouseOver = IsThisTextEditorControl(sender);
+            Invalidate();
+        }
+
+        private void ControlOnMouseLeave(object sender, EventArgs eventArgs)
+        {
+            _isMouseOver = false;
+            Invalidate();
+        }
+
+        private bool IsThisTextEditorControl(object sender)
+        {
+            if (sender == this)
+                return true;
+
+            var source = sender as Control;
+            if (source == null)
+                return false;
+
+            var control = source;
+            while (control != null)
+            {
+                if (control == this)
+                    return true;
+
+                control = control.Parent;
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region Focus/blur
+
+        private void OnGotFocus(object sender, EventArgs eventArgs)
+        {
+            Invalidate();
+        }
+
+        private void OnLostFocus(object sender, EventArgs eventArgs)
+        {
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Enable/disable
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnParentEnabledChanged(EventArgs e)
+        {
+            base.OnParentEnabledChanged(e);
+            Invalidate();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Multiline
+
+        /// <summary>
+        ///     Gets or sets whether the user can enter multiple lines of text.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the user can enter multiple lines of text.")]
+        [DefaultValue(true)]
+        public virtual bool Multiline
+        {
+            get { return Editor.Multiline; }
+            set
+            {
+                if (value == Multiline)
+                    return;
+
+                Editor.Multiline = value;
+            }
+        }
+
+        /// <summary>
+        ///     Event raised when the value of the <see cref="Multiline"/> property is changed on this <see cref="TextEditorControl"/>.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Occurs when the value of the Multiline property changes.")]
+        [RefreshProperties(RefreshProperties.All)]
+        public event EventHandler MultilineChanged;
+
+        protected virtual void OnMultilineChanged(EventArgs args)
+        {
+            if (!Multiline)
+            {
+                Editor.Options.ConvertTabsToSpaces = false;
+                Editor.Options.CutCopyWholeLine = false;
+                Editor.Options.ShowColumnRuler = false;
+                Editor.Options.ShowLineNumbers = false;
+                Editor.Options.ShowSpaces = false;
+                Editor.Options.ShowTabs = false;
+            }
+
+            SetStyle(ControlStyles.FixedHeight, !Multiline);
+
+            RecreateHandle();
+
+            if (IsHandleCreated)
+                AdjustRects(false);
+
+            if (MultilineChanged != null)
+                MultilineChanged(this, args);
+        }
+
+        #endregion
+
+        #region Sizing
+
+        protected override Size DefaultSize
+        {
+            get { return new Size(500, 300); }
+        }
+
+        /// <summary>
+        ///     Automatically adjusts the height of this control and its child edit control.
+        ///     For singleline (non-multiline) controls, the height is calculated from the child control's font size.
+        /// </summary>
+        private void AdjustRects(bool returnIfAnchored)
+        {
+            // TODO: Always adjust child rect properly, even when returnIfAnchored is true
+
+            var rects = GetAdjustedRects(returnIfAnchored);
+
+            AdjustParentRect(rects.ParentRect);
+            AdjustChildRect(rects.ChildRect);
+        }
+
+        private void AdjustParentRect(Rect rect)
+        {
+            Size = rect.Size;
+        }
+
+        private void AdjustChildRect(Rect rect)
+        {
+            Editor.Control.Size = rect.Size;
+            Editor.Control.Location = rect.Location;
+        }
+
+        private void AdjustChildRect()
+        {
+            AdjustChildRect(GetAdjustedRects(false).ChildRect);
+        }
+
+        private RectSet GetAdjustedRects(bool returnIfAnchored)
+        {
+            var parentSize = Size;
+            var parentLocation = Location;
+
+            var childSize = Editor.Control.Size;
+            var childLocation = new Point(CalculatedPadding.Left, CalculatedPadding.Top);
+
+            // --- Anchored
+
+            // If we're anchored to two opposite sides of the form, don't adjust the size because
+            // we'll lose our anchored size by resetting to the requested width.
+            if (returnIfAnchored &&
+                (Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
+            {
+                return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+            }
+
+            var lrPad = CalculatedPadding.Left + CalculatedPadding.Right;
+            var tbPad = CalculatedPadding.Top  + CalculatedPadding.Bottom;
+
+            // --- Multiline
+
+            if (Multiline)
+            {
+                childSize = new Size(parentSize.Width - lrPad,
+                                     parentSize.Height - tbPad);
+
+                return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+            }
+
+            // --- Singleline
+
+            var fontSize = FontSizeConverter.GetWinFormsFontSize(Editor.FontSize);
+            var font = new Font(Font.FontFamily, (float)fontSize, Font.Style, GraphicsUnit.Point, Font.GdiCharSet, Font.GdiVerticalFont);
+
+            Size measuredTextSize;
+
+            using (var g = CreateGraphics())
+            {
+                var size = g.MeasureString("MQ", font);
+                measuredTextSize = new Size((int) Math.Ceiling(size.Width), (int) Math.Ceiling(size.Height));
+            }
+
+            var parentWidth = parentSize.Width;
+            var parentHeight = (int) Math.Ceiling((double) measuredTextSize.Height);
+
+            parentSize = new Size(parentWidth,
+                                  parentHeight + tbPad);
+
+            childSize = new Size(parentWidth + Editor.VerticalScrollBarWidth - lrPad,
+                                 parentHeight + Editor.HorizontalScrollBarHeight);
+
+            return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+        }
+
+        private class RectSet
+        {
+            public readonly Rect ParentRect;
+            public readonly Rect ChildRect;
+
+            public RectSet(Rect parentRect, Rect childRect)
+            {
+                ParentRect = parentRect;
+                ChildRect = childRect;
+            }
+        }
+
+        private class Rect
+        {
+            public readonly Size Size;
+            public readonly Point Location;
+
+            public Rect(Size size, Point location)
+            {
+                Size = size;
+                Location = location;
+            }
+        }
+
+        #endregion
+
+        #region Font
+
+        // TODO: Implement this
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+//            AdjustHeight(false);
+        }
+
+        #endregion
+
+        #region Painting
+
+        private event PaintEventHandler PaintBackground;
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            base.OnPaintBackground(e);
+
+            if (PaintBackground != null)
+                PaintBackground(this, e);
         }
 
         #endregion

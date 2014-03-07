@@ -40,6 +40,10 @@
             this.buttonAccept = new System.Windows.Forms.Button();
             this.checkBoxDisabled = new System.Windows.Forms.CheckBox();
             this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
+            this.checkBoxBorder = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownPadding = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPadding)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -47,9 +51,9 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Location = new System.Drawing.Point(13, 60);
+            this.panel1.Location = new System.Drawing.Point(13, 64);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(764, 549);
+            this.panel1.Size = new System.Drawing.Size(764, 526);
             this.panel1.TabIndex = 4;
             // 
             // checkBoxMultiline
@@ -58,7 +62,7 @@
             this.checkBoxMultiline.AutoSize = true;
             this.checkBoxMultiline.Checked = true;
             this.checkBoxMultiline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMultiline.Location = new System.Drawing.Point(12, 619);
+            this.checkBoxMultiline.Location = new System.Drawing.Point(12, 596);
             this.checkBoxMultiline.Name = "checkBoxMultiline";
             this.checkBoxMultiline.Size = new System.Drawing.Size(64, 17);
             this.checkBoxMultiline.TabIndex = 5;
@@ -71,7 +75,7 @@
             this.checkBoxShowLineNumbers.AutoSize = true;
             this.checkBoxShowLineNumbers.Checked = true;
             this.checkBoxShowLineNumbers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(82, 619);
+            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(82, 596);
             this.checkBoxShowLineNumbers.Name = "checkBoxShowLineNumbers";
             this.checkBoxShowLineNumbers.Size = new System.Drawing.Size(121, 17);
             this.checkBoxShowLineNumbers.TabIndex = 6;
@@ -84,7 +88,7 @@
             this.checkBoxShowRuler.AutoSize = true;
             this.checkBoxShowRuler.Checked = true;
             this.checkBoxShowRuler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowRuler.Location = new System.Drawing.Point(210, 619);
+            this.checkBoxShowRuler.Location = new System.Drawing.Point(210, 596);
             this.checkBoxShowRuler.Name = "checkBoxShowRuler";
             this.checkBoxShowRuler.Size = new System.Drawing.Size(81, 17);
             this.checkBoxShowRuler.TabIndex = 7;
@@ -97,7 +101,7 @@
             this.checkBoxShowWhitespace.AutoSize = true;
             this.checkBoxShowWhitespace.Checked = true;
             this.checkBoxShowWhitespace.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(298, 619);
+            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(298, 596);
             this.checkBoxShowWhitespace.Name = "checkBoxShowWhitespace";
             this.checkBoxShowWhitespace.Size = new System.Drawing.Size(113, 17);
             this.checkBoxShowWhitespace.TabIndex = 8;
@@ -108,10 +112,10 @@
             // 
             this.checkBoxReadonly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxReadonly.AutoSize = true;
-            this.checkBoxReadonly.Location = new System.Drawing.Point(417, 619);
+            this.checkBoxReadonly.Location = new System.Drawing.Point(85, 619);
             this.checkBoxReadonly.Name = "checkBoxReadonly";
             this.checkBoxReadonly.Size = new System.Drawing.Size(71, 17);
-            this.checkBoxReadonly.TabIndex = 9;
+            this.checkBoxReadonly.TabIndex = 10;
             this.checkBoxReadonly.Text = "Readonly";
             this.checkBoxReadonly.UseVisualStyleBackColor = true;
             // 
@@ -148,7 +152,7 @@
             this.buttonAccept.Location = new System.Drawing.Point(702, 615);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
-            this.buttonAccept.TabIndex = 11;
+            this.buttonAccept.TabIndex = 13;
             this.buttonAccept.Text = "Accept: 0";
             this.buttonAccept.UseVisualStyleBackColor = true;
             this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
@@ -157,10 +161,10 @@
             // 
             this.checkBoxDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxDisabled.AutoSize = true;
-            this.checkBoxDisabled.Location = new System.Drawing.Point(495, 619);
+            this.checkBoxDisabled.Location = new System.Drawing.Point(12, 619);
             this.checkBoxDisabled.Name = "checkBoxDisabled";
             this.checkBoxDisabled.Size = new System.Drawing.Size(67, 17);
-            this.checkBoxDisabled.TabIndex = 10;
+            this.checkBoxDisabled.TabIndex = 9;
             this.checkBoxDisabled.Text = "&Disabled";
             this.checkBoxDisabled.UseVisualStyleBackColor = true;
             // 
@@ -177,9 +181,38 @@
             this.textEditorControl1.ShowColumnRuler = false;
             this.textEditorControl1.ShowLineNumbers = false;
             this.textEditorControl1.ShowWhiteSpace = false;
-            this.textEditorControl1.Size = new System.Drawing.Size(667, 20);
+            this.textEditorControl1.Size = new System.Drawing.Size(667, 22);
             this.textEditorControl1.TabIndex = 3;
             this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
+            // 
+            // checkBoxBorder
+            // 
+            this.checkBoxBorder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxBorder.AutoSize = true;
+            this.checkBoxBorder.Checked = true;
+            this.checkBoxBorder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxBorder.Location = new System.Drawing.Point(162, 619);
+            this.checkBoxBorder.Name = "checkBoxBorder";
+            this.checkBoxBorder.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxBorder.TabIndex = 11;
+            this.checkBoxBorder.Text = "&Border";
+            this.checkBoxBorder.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(225, 620);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(49, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Padding:";
+            // 
+            // numericUpDownPadding
+            // 
+            this.numericUpDownPadding.Location = new System.Drawing.Point(280, 618);
+            this.numericUpDownPadding.Name = "numericUpDownPadding";
+            this.numericUpDownPadding.Size = new System.Drawing.Size(42, 20);
+            this.numericUpDownPadding.TabIndex = 12;
             // 
             // FormErrorReport
             // 
@@ -187,6 +220,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 650);
+            this.Controls.Add(this.numericUpDownPadding);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.checkBoxBorder);
             this.Controls.Add(this.checkBoxDisabled);
             this.Controls.Add(this.buttonAccept);
             this.Controls.Add(this.textEditorControl1);
@@ -201,6 +237,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FormErrorReport";
             this.Text = "FormErrorReport";
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPadding)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,6 +257,9 @@
         private TextEditor.WinForms.TextEditorControl textEditorControl1;
         private System.Windows.Forms.Button buttonAccept;
         private System.Windows.Forms.CheckBox checkBoxDisabled;
+        private System.Windows.Forms.CheckBox checkBoxBorder;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numericUpDownPadding;
 
 
     }
