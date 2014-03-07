@@ -12,6 +12,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 #if !__MonoCS__
 using System.Windows.Forms.Integration;
 using Control = System.Windows.Forms.Control;
@@ -27,6 +28,19 @@ namespace TextEditor.WPF
 
 #else
 
+    internal class ElementHostImpl : ElementHost
+    {
+        public void MouseEnter()
+        {
+            OnMouseEnter(EventArgs.Empty);
+        }
+
+        public void MouseLeave()
+        {
+            OnMouseLeave(EventArgs.Empty);
+        }
+    }
+
     internal class TextEditorImpl : ITextEditor
     {
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor
@@ -35,7 +49,7 @@ namespace TextEditor.WPF
                   FontFamily = new FontFamily("Consolas, Courier New, Courier, monospace")
               };
 
-        private readonly ElementHost _elementHost = new ElementHost { Dock = DockStyle.Fill };
+        private readonly ElementHostImpl _elementHost = new ElementHostImpl { Dock = DockStyle.Fill };
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
@@ -49,12 +63,24 @@ namespace TextEditor.WPF
         {
             _editor.TextChanged += EditorOnTextChanged;
             _editor.PreviewKeyDown += OnPreviewKeyDown;
+            _editor.MouseEnter += EditorOnMouseEnter;
+            _editor.MouseLeave += EditorOnMouseLeave;
 
             _options = new TextEditorOptionsImpl(_editor);
 
             _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
 
             _elementHost.Child = _editor;
+        }
+
+        private void EditorOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _elementHost.MouseEnter();
+        }
+
+        private void EditorOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _elementHost.MouseLeave();
         }
 
         #region Core

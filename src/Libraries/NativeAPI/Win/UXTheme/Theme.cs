@@ -9,32 +9,47 @@ namespace NativeAPI.Win.UXTheme
 {
     public static class Theme
     {
-        public static void DrawThemedTextBoxBackground(IntPtr hWnd, Graphics g, Rectangle bounds)
+        public static void DrawThemedTextBoxBorder(IntPtr hWnd, Graphics g, Rectangle bounds, TextBoxBorderStyle style = TextBoxBorderStyle.Normal)
         {
             IntPtr theme = OpenThemeData(hWnd, CLASS.EDIT);
             if (theme != IntPtr.Zero)
             {
                 IntPtr hdc = g.GetHdc();
                 RECT area = new RECT(bounds);
-                DrawThemeBackground(theme, hdc, (int) EDITPARTS.EP_BACKGROUNDWITHBORDER, (int) BACKGROUNDWITHBORDERSTATES.EBWBS_NORMAL, ref area, IntPtr.Zero);
+
+                var state = style == TextBoxBorderStyle.Focused  ? EDITBORDER_NOSCROLLSTATES.EPSN_FOCUSED :
+                            style == TextBoxBorderStyle.Disabled ? EDITBORDER_NOSCROLLSTATES.EPSN_DISABLED :
+                            style == TextBoxBorderStyle.Hot      ? EDITBORDER_NOSCROLLSTATES.EPSN_HOT :
+                            EDITBORDER_NOSCROLLSTATES.EPSN_NORMAL;
+
+                var iStateId = (int) state;
+
+                DrawThemeBackground(theme, hdc, (int) EDITPARTS.EP_EDITBORDER_NOSCROLL, iStateId, ref area, IntPtr.Zero);
+
                 g.ReleaseHdc();
                 CloseThemeData(theme);
             }
         }
 
+        #region P/Invoke functions
+
         /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/bb773210(v=vs.85).aspx"/>
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
-        private extern static int DrawThemeBackground(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, ref RECT pRect, IntPtr pClipRect);
+        extern static int DrawThemeBackground(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, ref RECT pRect, IntPtr pClipRect);
 
         /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/bb759821(v=vs.85).aspx"/>
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
-        public static extern IntPtr OpenThemeData(IntPtr hWnd, String classList);
+        static extern IntPtr OpenThemeData(IntPtr hWnd, String classList);
 
         [DllImport("uxtheme.dll", ExactSpelling = true)]
-        public extern static Int32 CloseThemeData(IntPtr hTheme);
+        extern static Int32 CloseThemeData(IntPtr hTheme);
+
+        #endregion
+
+        #region Classes and enums
 
         /// <seealso cref="http://stackoverflow.com/a/6539701/467582"/>
-        public static class CLASS
+        static class CLASS
         {
             public const string BUTTON = "BUTTON";
             public const string CLOCK = "CLOCK";
@@ -1696,5 +1711,15 @@ namespace NativeAPI.Win.UXTheme
         };
 
         #endregion
+
+        #endregion
+    }
+
+    public enum TextBoxBorderStyle
+    {
+        Normal,
+        Disabled,
+        Hot,
+        Focused
     }
 }

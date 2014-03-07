@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.Extensions;
+using DotNetUtils.Forms;
+using NativeAPI.Win.User;
+using NativeAPI.Win.UXTheme;
 
 namespace TextEditor.WinForms
 {
@@ -27,6 +32,8 @@ namespace TextEditor.WinForms
             SetStyle(ControlStyles.Selectable, false);
 
             EnableContextMenu = true;
+
+            InitBorderEvents();
         }
 
         protected override Size DefaultSize
@@ -110,11 +117,106 @@ namespace TextEditor.WinForms
 
         #region Border styles
 
+        private bool _isMouseOver;
+
+        private void InitBorderEvents()
+        {
+            HandleCreated += OnHandleCreated;
+        }
+
+        private void OnHandleCreated(object sender, EventArgs eventArgs)
+        {
+            MouseEnter += ControlOnMouseEnter;
+            MouseLeave += ControlOnMouseLeave;
+
+            this.Descendants().ForEach(control => control.MouseEnter += ControlOnMouseEnter);
+            this.Descendants().ForEach(control => control.MouseLeave += ControlOnMouseLeave);
+
+            GotFocus += OnGotFocus;
+            LostFocus += OnLostFocus;
+
+            this.Descendants().ForEach(control => control.GotFocus += OnGotFocus);
+            this.Descendants().ForEach(control => control.LostFocus += OnLostFocus);
+        }
+
+        private bool IsThisTextEditorControl(object sender)
+        {
+            if (sender == this)
+                return true;
+
+            var source = sender as Control;
+            if (source == null)
+                return false;
+
+            var control = source;
+            while (control != null)
+            {
+                if (control == this)
+                    return true;
+
+                control = control.Parent;
+            }
+
+            return false;
+        }
+
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             base.OnPaintBackground(e);
-            NativeAPI.Win.UXTheme.Theme.DrawThemedTextBoxBackground(Handle, e.Graphics, e.ClipRectangle);
+
+            var state = !Enabled      ? TextBoxBorderStyle.Disabled :
+                        ContainsFocus ? TextBoxBorderStyle.Focused :
+                        _isMouseOver  ? TextBoxBorderStyle.Hot :
+                        TextBoxBorderStyle.Normal;
+
+            Theme.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
         }
+
+        #region Mouse enter/leave
+
+        private void ControlOnMouseEnter(object sender, EventArgs eventArgs)
+        {
+            _isMouseOver = IsThisTextEditorControl(sender);
+            Invalidate();
+        }
+
+        private void ControlOnMouseLeave(object sender, EventArgs eventArgs)
+        {
+            _isMouseOver = false;
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Focus/blur
+
+        private void OnGotFocus(object sender, EventArgs eventArgs)
+        {
+            Invalidate();
+        }
+
+        private void OnLostFocus(object sender, EventArgs eventArgs)
+        {
+            Invalidate();
+        }
+
+        #endregion
+
+        #region Enable/disable
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            Invalidate();
+        }
+
+        protected override void OnParentEnabledChanged(EventArgs e)
+        {
+            base.OnParentEnabledChanged(e);
+            Invalidate();
+        }
+
+        #endregion
 
         #endregion
 

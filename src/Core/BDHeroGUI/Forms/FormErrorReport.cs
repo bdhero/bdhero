@@ -29,6 +29,8 @@ namespace BDHeroGUI.Forms
 
             InitMultilineEditor();
             InitSinglelineEditor();
+
+            textBox1.Name = "TextBox";
         }
 
         private void InitMultilineEditor()
@@ -58,8 +60,12 @@ namespace BDHeroGUI.Forms
             checkBoxReadonly.CheckedChanged +=
                 (sender, args) => editor.ReadOnly = checkBoxReadonly.Checked;
 
+            checkBoxDisabled.CheckedChanged +=
+                (sender, args) => control.Enabled = !checkBoxDisabled.Checked;
+
             #endregion
 
+            control.Name = "MultilineEditor";
             control.Dock = DockStyle.Fill;
             panel1.Controls.Add(control);
         }
@@ -78,8 +84,10 @@ namespace BDHeroGUI.Forms
 
         private void InitSinglelineEditor()
         {
+            textEditorControl1.Name = "SinglelineEditor";
             var editor = textEditorControl1.Editor;
-            editor.SetSyntax(StandardSyntaxType.FilePath);
+            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+            editor.SetSyntaxFromExtension(".bdheromoviefilepath");
             editor.Text += " --- " + new string(Path.GetInvalidPathChars()) + " --- " + new string(Path.GetInvalidFileNameChars());
         }
 

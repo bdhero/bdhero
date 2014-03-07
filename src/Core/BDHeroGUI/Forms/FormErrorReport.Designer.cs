@@ -39,6 +39,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
+            this.checkBoxDisabled = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // panel1
@@ -147,7 +148,7 @@
             this.buttonAccept.Location = new System.Drawing.Point(702, 615);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
-            this.buttonAccept.TabIndex = 10;
+            this.buttonAccept.TabIndex = 11;
             this.buttonAccept.Text = "Accept: 0";
             this.buttonAccept.UseVisualStyleBackColor = true;
             this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
@@ -156,12 +157,29 @@
             // 
             this.textEditorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textEditorControl1.ConvertTabsToSpaces = false;
+            this.textEditorControl1.CutCopyWholeLine = false;
             this.textEditorControl1.Location = new System.Drawing.Point(110, 36);
             this.textEditorControl1.Multiline = false;
             this.textEditorControl1.Name = "textEditorControl1";
-            this.textEditorControl1.Size = new System.Drawing.Size(667, 18);
+            this.textEditorControl1.Padding = new System.Windows.Forms.Padding(1);
+            this.textEditorControl1.ShowColumnRuler = false;
+            this.textEditorControl1.ShowLineNumbers = false;
+            this.textEditorControl1.ShowWhiteSpace = false;
+            this.textEditorControl1.Size = new System.Drawing.Size(667, 20);
             this.textEditorControl1.TabIndex = 3;
             this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
+            // 
+            // checkBoxDisabled
+            // 
+            this.checkBoxDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxDisabled.AutoSize = true;
+            this.checkBoxDisabled.Location = new System.Drawing.Point(495, 619);
+            this.checkBoxDisabled.Name = "checkBoxDisabled";
+            this.checkBoxDisabled.Size = new System.Drawing.Size(67, 17);
+            this.checkBoxDisabled.TabIndex = 10;
+            this.checkBoxDisabled.Text = "&Disabled";
+            this.checkBoxDisabled.UseVisualStyleBackColor = true;
             // 
             // FormErrorReport
             // 
@@ -169,6 +187,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 650);
+            this.Controls.Add(this.checkBoxDisabled);
             this.Controls.Add(this.buttonAccept);
             this.Controls.Add(this.textEditorControl1);
             this.Controls.Add(this.label2);
@@ -200,6 +219,7 @@
         private System.Windows.Forms.Label label2;
         private TextEditor.WinForms.TextEditorControl textEditorControl1;
         private System.Windows.Forms.Button buttonAccept;
+        private System.Windows.Forms.CheckBox checkBoxDisabled;
 
 
     }
