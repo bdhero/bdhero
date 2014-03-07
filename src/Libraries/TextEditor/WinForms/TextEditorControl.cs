@@ -27,10 +27,9 @@ namespace TextEditor.WinForms
             Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
-            Padding = new Padding(1);
-
             SetStyle(ControlStyles.Selectable, false);
-
+            Padding = new Padding(1);
+            NativeBorders = true;
             EnableContextMenu = true;
 
             InitBorderEvents();
@@ -103,6 +102,31 @@ namespace TextEditor.WinForms
             }
         }
 
+        /// <summary>
+        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the control is drawn with standard text box border styles native to the OS.  This property and the BorderStyle property are mutually exclusive.")]
+        [DefaultValue(true)]
+        public bool NativeBorders
+        {
+            get { return _nativeBorders; }
+            set
+            {
+                if (value == NativeBorders)
+                    return;
+
+                _nativeBorders = value;
+
+                if (NativeBorders)
+                    BorderStyle = BorderStyle.None;
+
+                Invalidate();
+            }
+        }
+
+        private bool _nativeBorders;
+
         #region Text
 
         [Browsable(true)]
@@ -163,6 +187,9 @@ namespace TextEditor.WinForms
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             base.OnPaintBackground(e);
+
+            if (!NativeBorders)
+                return;
 
             var state = !Enabled      ? TextBoxBorderStyle.Disabled :
                         ContainsFocus ? TextBoxBorderStyle.Focused :

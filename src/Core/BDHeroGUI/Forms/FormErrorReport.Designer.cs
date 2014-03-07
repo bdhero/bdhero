@@ -38,8 +38,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonAccept = new System.Windows.Forms.Button();
-            this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
             this.checkBoxDisabled = new System.Windows.Forms.CheckBox();
+            this.textEditorControl1 = new TextEditor.WinForms.TextEditorControl();
             this.SuspendLayout();
             // 
             // panel1
@@ -153,6 +153,17 @@
             this.buttonAccept.UseVisualStyleBackColor = true;
             this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
             // 
+            // checkBoxDisabled
+            // 
+            this.checkBoxDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxDisabled.AutoSize = true;
+            this.checkBoxDisabled.Location = new System.Drawing.Point(495, 619);
+            this.checkBoxDisabled.Name = "checkBoxDisabled";
+            this.checkBoxDisabled.Size = new System.Drawing.Size(67, 17);
+            this.checkBoxDisabled.TabIndex = 10;
+            this.checkBoxDisabled.Text = "&Disabled";
+            this.checkBoxDisabled.UseVisualStyleBackColor = true;
+            // 
             // textEditorControl1
             // 
             this.textEditorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -169,17 +180,6 @@
             this.textEditorControl1.Size = new System.Drawing.Size(667, 20);
             this.textEditorControl1.TabIndex = 3;
             this.textEditorControl1.Text = "C:\\Users\\%UserName%\\BDHero\\`~1!2@3#4$56^7&8*9(0)-_=+[{]}\\|;:\'\",<.>/?";
-            // 
-            // checkBoxDisabled
-            // 
-            this.checkBoxDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxDisabled.AutoSize = true;
-            this.checkBoxDisabled.Location = new System.Drawing.Point(495, 619);
-            this.checkBoxDisabled.Name = "checkBoxDisabled";
-            this.checkBoxDisabled.Size = new System.Drawing.Size(67, 17);
-            this.checkBoxDisabled.TabIndex = 10;
-            this.checkBoxDisabled.Text = "&Disabled";
-            this.checkBoxDisabled.UseVisualStyleBackColor = true;
             // 
             // FormErrorReport
             // 
