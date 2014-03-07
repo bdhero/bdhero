@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
-using DotNetUtils.Forms;
-using NativeAPI.Win.User;
 using NativeAPI.Win.UXTheme;
 
 namespace TextEditor.WinForms
 {
     [DefaultProperty("Text")]
     [DefaultEvent("TextChanged")]
-    public class TextEditorControl : Panel
+    public class TextEditorControl : Control
     {
         public TextEditorControl()
         {
@@ -24,13 +21,18 @@ namespace TextEditor.WinForms
             Editor.FontSizeChanged += (sender, args) => OnFontChanged(args);
             Editor.MultilineChanged += (sender, args) => OnMultilineChanged(args);
 
-            Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
             SetStyle(ControlStyles.Selectable, false);
-            Padding = new Padding(1);
-            NativeBorders = true;
+
             EnableContextMenu = true;
+
+            // TODO: Sync w/ BorderStyle value
+            Padding = new Padding(1);
+            Editor.Control.Top = 1;
+            Editor.Control.Left = 1;
+            Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
+            BorderStyle = BorderStyle.Fixed3D;
 
             InitBorderEvents();
         }
@@ -103,29 +105,26 @@ namespace TextEditor.WinForms
         }
 
         /// <summary>
-        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
+        ///     Gets or sets the border style for the control.
         /// </summary>
         [Browsable(true)]
-        [Description("Determines whether the control is drawn with standard text box border styles native to the OS.  This property and the BorderStyle property are mutually exclusive.")]
-        [DefaultValue(true)]
-        public bool NativeBorders
+        [Description("Indicates the border style for the control.")]
+        [DefaultValue(BorderStyle.Fixed3D)]
+        public BorderStyle BorderStyle
         {
-            get { return _nativeBorders; }
+            get { return _borderStyle; }
             set
             {
-                if (value == NativeBorders)
+                if (value == BorderStyle)
                     return;
 
-                _nativeBorders = value;
-
-                if (NativeBorders)
-                    BorderStyle = BorderStyle.None;
+                _borderStyle = value;
 
                 Invalidate();
             }
         }
 
-        private bool _nativeBorders;
+        private BorderStyle _borderStyle;
 
         #region Text
 
@@ -188,7 +187,7 @@ namespace TextEditor.WinForms
         {
             base.OnPaintBackground(e);
 
-            if (!NativeBorders)
+            if (BorderStyle == BorderStyle.None)
                 return;
 
             var state = !Enabled      ? TextBoxBorderStyle.Disabled :
