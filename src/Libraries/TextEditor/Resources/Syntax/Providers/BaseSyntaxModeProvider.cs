@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using ICSharpCode.TextEditor.Document;
 
-namespace TextEditor.Resources
+namespace TextEditor.Resources.Syntax.Providers
 {
     public abstract class BaseSyntaxModeProvider : ISyntaxModeFileProvider
     {

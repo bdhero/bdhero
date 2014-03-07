@@ -63,22 +63,22 @@
     <Compile Include="ITextEditorOptions.cs" />
     <Compile Include="MultilineHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\FileNameModeXshd.cs">
+    <Compile Include="Resources\Syntax\Definitions\FileNameModeXshd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FileNameModeXshd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Resources\FileNameModeXshdModel.cs" />
-    <Compile Include="Resources\FilePathModeXshd.cs">
+    <Compile Include="Resources\Syntax\Definitions\FileNameModeXshdModel.cs" />
+    <Compile Include="Resources\Syntax\Definitions\FilePathModeXshd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FilePathModeXshd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Resources\FilePathModeXshdModel.cs" />
+    <Compile Include="Resources\Syntax\Definitions\FilePathModeXshdModel.cs" />
     <Compile Include="Resources\Resources.cs" />
-    <Compile Include="Resources\BaseSyntaxModeProvider.cs" />
-    <Compile Include="Resources\SmartResourceSyntaxModeProvider.cs" />
-    <Compile Include="Resources\T4SyntaxModeProvider.cs" />
+    <Compile Include="Resources\Syntax\Providers\BaseSyntaxModeProvider.cs" />
+    <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
+    <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
     <Compile Include="StandardSyntaxType.cs" />
     <Compile Include="WinForms\TextEditorControl.cs">
       <SubType>Component</SubType>
@@ -91,11 +91,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\FileNameModeXshd.tt">
+    <None Include="Resources\Syntax\Definitions\FileNameModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>FileNameModeXshd.cs</LastGenOutput>
     </None>
-    <None Include="Resources\FilePathModeXshd.tt">
+    <None Include="Resources\Syntax\Definitions\FilePathModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>FilePathModeXshd.cs</LastGenOutput>
     </None>
@@ -114,7 +114,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\MarkDown-Mode.xshd" />
+    <EmbeddedResource Include="Resources\Syntax\Definitions\MarkDown-Mode.xshd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

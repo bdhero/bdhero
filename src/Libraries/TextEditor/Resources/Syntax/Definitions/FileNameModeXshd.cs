@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace TextEditor.Resources
+namespace TextEditor.Resources.Syntax.Definitions
 {
     using System.Linq;
     using System.Text;
@@ -18,7 +18,7 @@ namespace TextEditor.Resources
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FileNameModeXshd.tt"
+    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
     public partial class FileNameModeXshd : FileNameModeXshdBase
     {
@@ -28,7 +28,12 @@ namespace TextEditor.Resources
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"<?xml version=""1.0""?>
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write(@"
+<?xml version=""1.0""?>
 <!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
 
 <SyntaxDefinition name = ""FileName"" extensions = "".filename"">
@@ -46,27 +51,26 @@ namespace TextEditor.Resources
             <KeyWords name = ""Invalid"" bold = ""true"" italic = ""false"" color = ""White"" bgcolor = ""Red"">
                 ");
             
-            #line 22 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FileNameModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
  foreach (var ch in InvalidNameCharsXmlEscaped) { 
             
             #line default
             #line hidden
-            this.Write("                <Key word = \"");
+            this.Write("\n                <Key word = \"");
             
-            #line 23 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FileNameModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ch));
             
             #line default
             #line hidden
-            this.Write("\" />\r\n                ");
+            this.Write("\" />\n                ");
             
-            #line 24 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FileNameModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("            </KeyWords>\r\n        </RuleSet>\r\n    </RuleSets>\r\n</SyntaxDefinition>" +
-                    "");
+            this.Write("\n            </KeyWords>\n        </RuleSet>\n    </RuleSets>\n</SyntaxDefinition>");
             return this.GenerationEnvironment.ToString();
         }
     }

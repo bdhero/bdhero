@@ -8,18 +8,16 @@ namespace TextEditor.Resources
 {
     static class Resources
     {
-        static readonly string Prefix = CurrentAssembly.GetName().Name + ".Resources.";
-
         private static Assembly CurrentAssembly
         {
             get { return typeof (Resources).Assembly; }
         }
 
-        public static Stream OpenStream(string name)
+        public static Stream OpenStream(string fullName)
         {
-            var stream = CurrentAssembly.GetManifestResourceStream(Prefix + name);
+            var stream = CurrentAssembly.GetManifestResourceStream(fullName);
             if (stream == null)
-                throw new FileNotFoundException("The resource file '" + name + "' was not found.");
+                throw new FileNotFoundException("The resource file '" + fullName + "' was not found.");
             return stream;
         }
 

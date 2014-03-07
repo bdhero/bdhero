@@ -9,6 +9,7 @@ using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
 using TextEditor.Resources;
+using TextEditor.Resources.Syntax.Providers;
 
 namespace TextEditor.WinForms
 {

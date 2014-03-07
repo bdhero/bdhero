@@ -2,7 +2,7 @@
 using System.Linq;
 using DotNetUtils;
 
-namespace TextEditor.Resources
+namespace TextEditor.Resources.Syntax.Definitions
 {
     partial class FileNameModeXshd
     {

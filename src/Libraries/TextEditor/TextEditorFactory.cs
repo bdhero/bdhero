@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TextEditor.Resources;
+using TextEditor.Resources.Syntax.Providers;
 
 namespace TextEditor
 {

@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace TextEditor.Resources
+namespace TextEditor.Resources.Syntax.Definitions
 {
     using System.Linq;
     using System.Text;
@@ -18,7 +18,7 @@ namespace TextEditor.Resources
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
     public partial class FilePathModeXshd : FilePathModeXshdBase
     {
@@ -28,7 +28,12 @@ namespace TextEditor.Resources
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"<?xml version=""1.0""?>
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write(@"
+<?xml version=""1.0""?>
 <!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
 
 <SyntaxDefinition name = ""FilePath"" extensions = "".filepath"">
@@ -46,56 +51,55 @@ namespace TextEditor.Resources
             <KeyWords name = ""DriveLetter"">
                 ");
             
-            #line 22 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
  foreach (var ch in DriveLetters) { 
             
             #line default
             #line hidden
-            this.Write("                <Key word = \"");
+            this.Write("\n                <Key word = \"");
             
-            #line 23 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ch));
             
             #line default
             #line hidden
-            this.Write(":\\\" />\r\n                <Key word = \"");
+            this.Write(":\\\" />\n                <Key word = \"");
             
-            #line 24 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ch));
             
             #line default
             #line hidden
-            this.Write(":/\" />\r\n                ");
+            this.Write(":/\" />\n                ");
             
-            #line 25 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("            </KeyWords>\r\n\r\n            <KeyWords name = \"Invalid\" bold = \"true\" i" +
-                    "talic = \"false\" color = \"White\" bgcolor = \"Red\">\r\n                ");
+            this.Write("\n            </KeyWords>\n\n            <KeyWords name = \"Invalid\" bold = \"true\" it" +
+                    "alic = \"false\" color = \"White\" bgcolor = \"Red\">\n                ");
             
-            #line 29 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
  foreach (var ch in InvalidPathCharsXmlEscaped) { 
             
             #line default
             #line hidden
-            this.Write("                <Key word = \"");
+            this.Write("\n                <Key word = \"");
             
-            #line 30 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ch));
             
             #line default
             #line hidden
-            this.Write("\" />\r\n                ");
+            this.Write("\" />\n                ");
             
-            #line 31 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\FilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FilePathModeXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("            </KeyWords>\r\n        </RuleSet>\r\n    </RuleSets>\r\n</SyntaxDefinition>" +
-                    "");
+            this.Write("\n            </KeyWords>\n        </RuleSet>\n    </RuleSets>\n</SyntaxDefinition>");
             return this.GenerationEnvironment.ToString();
         }
     }

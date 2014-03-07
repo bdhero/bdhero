@@ -2,10 +2,10 @@
 using System.IO;
 using System.Text;
 using System.Xml;
-using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
+using TextEditor.Resources.Syntax.Definitions;
 
-namespace TextEditor.Resources
+namespace TextEditor.Resources.Syntax.Providers
 {
     public class T4SyntaxModeProvider : BaseSyntaxModeProvider
     {
