@@ -200,6 +200,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(225, 620);
             this.label3.Name = "label3";
@@ -209,6 +210,7 @@
             // 
             // numericUpDownPadding
             // 
+            this.numericUpDownPadding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.numericUpDownPadding.Location = new System.Drawing.Point(280, 618);
             this.numericUpDownPadding.Name = "numericUpDownPadding";
             this.numericUpDownPadding.Size = new System.Drawing.Size(42, 20);
