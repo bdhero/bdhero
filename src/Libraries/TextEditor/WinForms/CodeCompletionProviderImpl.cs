@@ -51,10 +51,6 @@ namespace TextEditor.WinForms
         /// </summary>
         public bool InsertAction(ICompletionData data, TextArea textArea, int insertionOffset, char key)
         {
-//            textArea.Caret.Position = textArea.Document.OffsetToPosition(
-//                    Math.Min(insertionOffset, textArea.Document.TextLength)
-//                );
-
             var prevWord = GetCharsToLeftOfCursor(textArea);
             var prevText = prevWord.Text;
             if (prevText != "")
@@ -97,7 +93,6 @@ namespace TextEditor.WinForms
             var caret = textArea.Caret;
             var lineSegment = doc.GetLineSegment(caret.Line);
 
-//            var emptyWord = new TextWord(doc, lineSegment, caret.Offset, 0, new HighlightColor("Black", false, false), false);
             var emptyWord = new StartWord("", caret.Line, caret.Column, 0, caret.Offset);
 
             // Caret is at the beginning of the line
@@ -172,7 +167,6 @@ namespace TextEditor.WinForms
 
             var selectionColumn = caret.Column - selectionLength;
 
-//            var startWord = new TextWord(doc, lineSegment, selectionOffsetStart, selectionLength, curWord.SyntaxColor, curWord.HasDefaultColor);
             var startWord = new StartWord(startText, caret.Line, selectionColumn, selectionLength, selectionOffsetStart);
 
             return startWord;
@@ -231,22 +225,6 @@ namespace TextEditor.WinForms
             }
 
             return prevWord;
-        }
-
-        private static TextWord FindPreviousWord(TextArea textArea)
-        {
-            LineSegment lineSegment = textArea.Document.GetLineSegment(textArea.Caret.Line);
-            TextWord currentWord = lineSegment.GetWord(textArea.Caret.Column);
-
-            if (currentWord == null && lineSegment.Words.Count > 0)
-                currentWord = lineSegment.Words[lineSegment.Words.Count - 1];
-
-            // we actually want the previous word, not the current one, in order to make decisions on it.
-            int currentIndex = lineSegment.Words.IndexOf(currentWord);
-            if (currentIndex == -1)
-                return null;
-
-            return lineSegment.Words.GetRange(0, currentIndex).FindLast(word => word.Word.Trim() != "");
         }
 
         private static ICompletionData[] AllCompletions()
