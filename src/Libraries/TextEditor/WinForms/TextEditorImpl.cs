@@ -33,6 +33,7 @@ namespace TextEditor.WinForms
             _editor.ActiveTextAreaControl.TextArea.KeyEventHandler += TextAreaOnKeyEventHandler;
             _editor.ActiveTextAreaControl.TextArea.DoProcessDialogKey += TextAreaOnDoProcessDialogKey;
             _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
+            _editor.ActiveTextAreaControl.TextArea.KeyPress += TextAreaOnKeyPress;
 
             _options = new TextEditorOptionsImpl(_editor);
 
@@ -56,13 +57,11 @@ namespace TextEditor.WinForms
         #region Code completion
 
         private CodeCompletionWindow _codeCompletionWindow;
-        private IContainer _components;
         private ImageList _intellisenseImageList;
 
         private void RegisterIntellisenseHandling()
         {
-            _components = new Container();
-            _intellisenseImageList = new ImageList(_components);
+            _intellisenseImageList = new ImageList(new Container());
             _intellisenseImageList.Images.Add(Properties.Resources.property_blue_image_16);
             _intellisenseImageList.Images.Add(Properties.Resources.terminal_image_16);
             _intellisenseImageList.Images.Add(Properties.Resources.tag_image_16);
@@ -70,18 +69,35 @@ namespace TextEditor.WinForms
 
             var textArea = _editor.ActiveTextAreaControl.TextArea;
             textArea.KeyDown += delegate(object sender, KeyEventArgs e)
-            {
-                if (e.Control == false)
-                    return;
-                if (e.KeyCode != Keys.Space)
-                    return;
-                e.SuppressKeyPress = true;
-                ShowCodeCompletion((char)e.KeyValue);
-            };
+                                {
+                                    var isShortcut = e.Control && e.KeyCode == Keys.Space;
+                                    if (!isShortcut)
+                                        return;
+
+                                    e.SuppressKeyPress = true;
+                                    ShowCodeCompletion((char) e.KeyValue);
+                                };
+
+            _editor.ActiveTextAreaControl.VScrollBar.ValueChanged += ScrollBarOnValueChanged;
+            _editor.ActiveTextAreaControl.HScrollBar.ValueChanged += ScrollBarOnValueChanged;
+        }
+
+        private void ScrollBarOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            if (_codeCompletionWindow == null)
+                return;
+
+            _codeCompletionWindow.Close();
         }
 
         private void ShowCodeCompletion(char value)
         {
+            if (_editor.IsReadOnly || !_editor.Enabled)
+                return;
+
+            if (_codeCompletionWindow != null)
+                _codeCompletionWindow.Close();
+
             ICompletionDataProvider completionDataProvider = new CodeCompletionProviderImpl(_intellisenseImageList);
 
             _codeCompletionWindow = CodeCompletionWindow.ShowCompletionWindow(
@@ -112,7 +128,8 @@ namespace TextEditor.WinForms
                 width += 16; // Icon size
                 width += SystemInformation.VerticalScrollBarWidth;
 
-                _codeCompletionWindow.Width = width;
+                if (width > _codeCompletionWindow.Width)
+                    _codeCompletionWindow.Width = width;
             }
         }
 
@@ -130,6 +147,21 @@ namespace TextEditor.WinForms
                 _codeCompletionWindow.Dispose();
                 _codeCompletionWindow = null;
             }
+        }
+
+        private void TextAreaOnKeyPress(object sender, KeyPressEventArgs args)
+        {
+            if (args.KeyChar == '$' || args.KeyChar == '%' || _codeCompletionWindow != null)
+            {
+                ShowCodeCompletionAsync(args.KeyChar);
+            }
+        }
+
+        private void ShowCodeCompletionAsync(char keyPressed)
+        {
+            var timer = new System.Timers.Timer(100) { AutoReset = false };
+            timer.Elapsed += (s, e) => _editor.Invoke(new Action(() => ShowCodeCompletion(keyPressed)));
+            timer.Start();
         }
 
         #endregion
@@ -201,7 +233,14 @@ namespace TextEditor.WinForms
         {
             if (ShouldPreventTabKey(args.KeyData))
             {
-                _editor.SelectNextControl(!args.Shift);
+                if (_codeCompletionWindow != null)
+                {
+                    SendKeys.Send("\n");
+                }
+                else
+                {
+                    _editor.SelectNextControl(!args.Shift);
+                }
             }
         }
 

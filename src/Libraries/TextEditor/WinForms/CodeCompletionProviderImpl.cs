@@ -31,9 +31,10 @@ namespace TextEditor.WinForms
             get { return null; }
         }
 
+        // -1 for "no default selected"
         public int DefaultIndex
         {
-            get { return -1; }
+            get { return 0; }
         }
 
         public CompletionDataProviderKeyResult ProcessKey(char key)
@@ -50,9 +51,23 @@ namespace TextEditor.WinForms
         /// </summary>
         public bool InsertAction(ICompletionData data, TextArea textArea, int insertionOffset, char key)
         {
-            textArea.Caret.Position = textArea.Document.OffsetToPosition(
-                    Math.Min(insertionOffset, textArea.Document.TextLength)
-                );
+//            textArea.Caret.Position = textArea.Document.OffsetToPosition(
+//                    Math.Min(insertionOffset, textArea.Document.TextLength)
+//                );
+
+            var prevWord = GetCharsToLeftOfCursor(textArea);
+            var prevText = prevWord.Text;
+            if (prevText != "")
+            {
+                if (data.Text.StartsWith(prevText, true, CultureInfo.CurrentUICulture))
+                {
+                    textArea.SelectionManager.SetSelection(
+                            new TextLocation(prevWord.ColumnNumber, prevWord.LineNumber),
+                            new TextLocation(prevWord.ColumnNumber + prevWord.Length, prevWord.LineNumber)
+                        );
+                }
+            }
+
             return data.InsertAction(textArea, key);
         }
 
@@ -61,7 +76,7 @@ namespace TextEditor.WinForms
             var allCompletions = AllCompletions();
             var relevantCompletions = allCompletions;
 
-            var prevText = GetCharsToLeftOfCursor(textArea);
+            var prevText = GetCharsToLeftOfCursor(textArea).Text;
 
             if (prevText != "")
             {
@@ -70,38 +85,33 @@ namespace TextEditor.WinForms
                                   .ToArray();
             }
 
-//            string name = prevNonWhitespaceTerm.Word;
-//            if (name == "specification" || name == "requires" || name == "same_machine_as" || name == "@")
-//            {
-//                return ModulesSuggestions();
-//            }
-//            int temp;
-//            if (name == "users_per_machine" || int.TryParse(name, out temp))
-//            {
-//                return NumbersSuggestions();
-//            }
-
             if (relevantCompletions.Any())
                 return relevantCompletions;
 
             return allCompletions;
         }
 
-        private static string GetCharsToLeftOfCursor(TextArea textArea)
+        private static StartWord GetCharsToLeftOfCursor(TextArea textArea)
         {
             var doc = textArea.Document;
             var caret = textArea.Caret;
             var lineSegment = doc.GetLineSegment(caret.Line);
 
+//            var emptyWord = new TextWord(doc, lineSegment, caret.Offset, 0, new HighlightColor("Black", false, false), false);
+            var emptyWord = new StartWord("", caret.Line, caret.Column, 0, caret.Offset);
+
             // Caret is at the beginning of the line
             if (caret.Column == 0)
-                return "";
+                return emptyWord;
 
             var curWord = lineSegment.GetWord(caret.Column);
 
             // Caret is at the end of the line
             if (curWord == null)
-                return "";
+                return emptyWord;
+
+            if (curWord.IsWhiteSpace)
+                curWord = GetPrevWord(caret, lineSegment, curWord);
 
             Console.WriteLine("Cur word: \"{0}\"", curWord.Word);
 
@@ -110,47 +120,80 @@ namespace TextEditor.WinForms
             // Caret is at the start of the current word - get the previous word
             if (caret.Offset == curWord.Offset)
             {
-                // TODO: Describe
+                // This should never happen
                 if (prevWord == null)
-                    return "";
+                    return emptyWord;
 
                 var isSameSyntax = AreEqual(prevWord.SyntaxColor, curWord.SyntaxColor);
 
-                // TODO: Describe
+                // Caret is between two different syntax highlights
                 if (!isSameSyntax)
-                    return "";
+                    return emptyWord;
 
                 curWord = prevWord;
+                prevWord = GetPrevWord(caret, lineSegment, curWord);
             }
 
             // Caret is in whitespace
             if (curWord.IsWhiteSpace)
-                return "";
+                return emptyWord;
 
-            var startText = doc.GetText(curWord.Offset, caret.Offset - curWord.Offset);
+            var selectionOffsetStart = curWord.Offset;
+            var selectionLength = caret.Offset - curWord.Offset;
+
+            var startText = doc.GetText(selectionOffsetStart, selectionLength);
 
             if (prevWord != null)
             {
                 var prevText = prevWord.Word;
-                if (prevText.EndsWith("%"))
-                    startText = "%" + startText;
-                if (prevText.EndsWith("${"))
-                    startText = "${" + startText;
+
+                const string envVar = "%";
+                const string placeholder = "${";
+
+                if (prevText.EndsWith(envVar))
+                {
+                    startText = envVar + startText;
+                    selectionOffsetStart -= envVar.Length;
+                    selectionLength += envVar.Length;
+                }
+                else if (prevText.EndsWith(placeholder))
+                {
+                    startText = placeholder + startText;
+                    selectionOffsetStart -= placeholder.Length;
+                    selectionLength += placeholder.Length;
+                }
             }
 
-//            // Should never happen
-//            if (string.IsNullOrWhiteSpace(prevText))
-//                return "";
-//
-//            // Should never happen
-//            if (new Regex(@"\s+$").IsMatch(prevText))
-//                return "";
-//
-//            return new Regex(@"\S+$").Match(prevText).Value;
+            // Caret is in whitespace
+            if (new Regex(@"\s+$").IsMatch(startText))
+                return emptyWord;
 
-            Console.WriteLine("Starting text in current word: \"{0}\"", startText);
+            Console.WriteLine("Starting text: \"{0}\"", startText);
 
-            return startText;
+            var selectionColumn = caret.Column - selectionLength;
+
+//            var startWord = new TextWord(doc, lineSegment, selectionOffsetStart, selectionLength, curWord.SyntaxColor, curWord.HasDefaultColor);
+            var startWord = new StartWord(startText, caret.Line, selectionColumn, selectionLength, selectionOffsetStart);
+
+            return startWord;
+        }
+
+        private class StartWord
+        {
+            public readonly string Text;
+            public readonly int LineNumber;
+            public readonly int ColumnNumber;
+            public readonly int Length;
+            public readonly int Offset;
+
+            public StartWord(string text, int lineNumber, int columnNumber, int length, int offset)
+            {
+                Text = text;
+                LineNumber = lineNumber;
+                ColumnNumber = columnNumber;
+                Length = length;
+                Offset = offset;
+            }
         }
 
         private static bool AreEqual(HighlightColor highlight1, HighlightColor highlight2)
@@ -163,12 +206,6 @@ namespace TextEditor.WinForms
 
             if (highlight1.Italic != highlight2.Italic)
                 return false;
-
-//            if (highlight1.HasBackground != highlight2.HasBackground)
-//                return false;
-
-//            if (highlight1.HasForeground != highlight2.HasForeground)
-//                return false;
 
             if (!highlight1.BackgroundColor.Equals(highlight2.BackgroundColor))
                 return false;
@@ -187,7 +224,7 @@ namespace TextEditor.WinForms
             while (prevWord == null && idx-- > 0)
             {
                 var thisWord = lineSegment.GetWord(idx);
-                if (thisWord.Offset == curWord.Offset)
+                if (thisWord.Offset == curWord.Offset || thisWord.IsWhiteSpace)
                     continue;
 
                 prevWord = thisWord;
