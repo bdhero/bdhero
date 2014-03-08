@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
@@ -56,7 +58,17 @@ namespace TextEditor.WinForms
 
         public ICompletionData[] GenerateCompletionData(string fileName, TextArea textArea, char charTyped)
         {
-            var completions = AllCompletions();
+            var allCompletions = AllCompletions();
+            var relevantCompletions = allCompletions;
+
+            var prevText = GetCharsToLeftOfCursor(textArea);
+
+            if (prevText != "")
+            {
+                relevantCompletions =
+                    allCompletions.Where(data => data.Text.StartsWith(prevText, true, CultureInfo.CurrentUICulture))
+                                  .ToArray();
+            }
 
 //            string name = prevNonWhitespaceTerm.Word;
 //            if (name == "specification" || name == "requires" || name == "same_machine_as" || name == "@")
@@ -69,7 +81,119 @@ namespace TextEditor.WinForms
 //                return NumbersSuggestions();
 //            }
 
-            return completions;
+            if (relevantCompletions.Any())
+                return relevantCompletions;
+
+            return allCompletions;
+        }
+
+        private static string GetCharsToLeftOfCursor(TextArea textArea)
+        {
+            var doc = textArea.Document;
+            var caret = textArea.Caret;
+            var lineSegment = doc.GetLineSegment(caret.Line);
+
+            // Caret is at the beginning of the line
+            if (caret.Column == 0)
+                return "";
+
+            var curWord = lineSegment.GetWord(caret.Column);
+
+            // Caret is at the end of the line
+            if (curWord == null)
+                return "";
+
+            Console.WriteLine("Cur word: \"{0}\"", curWord.Word);
+
+            var prevWord = GetPrevWord(caret, lineSegment, curWord);
+
+            // Caret is at the start of the current word - get the previous word
+            if (caret.Offset == curWord.Offset)
+            {
+                // TODO: Describe
+                if (prevWord == null)
+                    return "";
+
+                var isSameSyntax = AreEqual(prevWord.SyntaxColor, curWord.SyntaxColor);
+
+                // TODO: Describe
+                if (!isSameSyntax)
+                    return "";
+
+                curWord = prevWord;
+            }
+
+            // Caret is in whitespace
+            if (curWord.IsWhiteSpace)
+                return "";
+
+            var startText = doc.GetText(curWord.Offset, caret.Offset - curWord.Offset);
+
+            if (prevWord != null)
+            {
+                var prevText = prevWord.Word;
+                if (prevText.EndsWith("%"))
+                    startText = "%" + startText;
+                if (prevText.EndsWith("${"))
+                    startText = "${" + startText;
+            }
+
+//            // Should never happen
+//            if (string.IsNullOrWhiteSpace(prevText))
+//                return "";
+//
+//            // Should never happen
+//            if (new Regex(@"\s+$").IsMatch(prevText))
+//                return "";
+//
+//            return new Regex(@"\S+$").Match(prevText).Value;
+
+            Console.WriteLine("Starting text in current word: \"{0}\"", startText);
+
+            return startText;
+        }
+
+        private static bool AreEqual(HighlightColor highlight1, HighlightColor highlight2)
+        {
+            if (highlight1 == null || highlight2 == null)
+                return false;
+
+            if (highlight1.Bold != highlight2.Bold)
+                return false;
+
+            if (highlight1.Italic != highlight2.Italic)
+                return false;
+
+//            if (highlight1.HasBackground != highlight2.HasBackground)
+//                return false;
+
+//            if (highlight1.HasForeground != highlight2.HasForeground)
+//                return false;
+
+            if (!highlight1.BackgroundColor.Equals(highlight2.BackgroundColor))
+                return false;
+
+            if (!highlight1.Color.Equals(highlight2.Color))
+                return false;
+
+            return true;
+        }
+
+        private static TextWord GetPrevWord(Caret caret, LineSegment lineSegment, TextWord curWord)
+        {
+            TextWord prevWord = null;
+
+            var idx = caret.Column;
+            while (prevWord == null && idx-- > 0)
+            {
+                var thisWord = lineSegment.GetWord(idx);
+                if (thisWord.Offset == curWord.Offset)
+                    continue;
+
+                prevWord = thisWord;
+            }
+
+            return prevWord;
         }
 
         private static TextWord FindPreviousWord(TextArea textArea)
