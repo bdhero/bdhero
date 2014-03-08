@@ -54,6 +54,13 @@ Bugs
 Features
 ========
 
+[ ] Code Completion:
+    [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
+    [ ] Handle "%UserName%| \" (caret placed at the '|')
+    [ ] Handle "%|\" (caret placed at the '|')
+
+[ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
+
 [ ] Smarter path redaction: replace letters with 'X' instead of completely removing path
 [ ] Only allow error reporting for most recent version of BDHero
     - Older versions need to upgrade
