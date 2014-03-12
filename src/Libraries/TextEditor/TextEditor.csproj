@@ -85,6 +85,7 @@
     <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
     <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
     <Compile Include="StandardSyntaxType.cs" />
+    <Compile Include="WinForms\CodeCompletionControllerImpl.cs" />
     <Compile Include="WinForms\CodeCompletionProviderImpl.cs" />
     <Compile Include="WinForms\TextEditorControl.cs">
       <SubType>Component</SubType>
