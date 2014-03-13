@@ -194,15 +194,11 @@ namespace TextEditor.WPF
             if (IsMetaKey(key))
                 return "";
 
+            // Ignore non-printable characters
+            if (!IsPrintable(key))
+                return "";
+
             var keyChar = KeyboardAPI.GetCharFromKey(key);
-
-            // Non-printable control character
-            if (keyChar < ' ')
-                return "";
-
-            // Other non-printable character (e.g., Delete)
-            if (keyChar == ' ' && key != Key.Space)
-                return "";
 
             return string.Format("{0}", keyChar);
         }
@@ -223,6 +219,21 @@ namespace TextEditor.WPF
                     return true;
             }
             return false;
+        }
+
+        private static bool IsPrintable(Key key)
+        {
+            var keyChar = KeyboardAPI.GetCharFromKey(key);
+
+            // Non-printable control character
+            if (keyChar < ' ')
+                return false;
+
+            // Other non-printable character (e.g., Delete)
+            if (keyChar == ' ' && key != Key.Space)
+                return false;
+
+            return true;
         }
 
         private void CompletionWindowOnDeactivated(object sender, EventArgs eventArgs)
