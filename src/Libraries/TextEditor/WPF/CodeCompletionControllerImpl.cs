@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Forms.Integration;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -22,8 +20,9 @@ namespace TextEditor.WPF
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
 
         private CompletionWindow _completionWindow;
-
-        private bool _closing;
+        
+        private bool _isWindowMoveEventBound;
+        private bool _isClosing;
 
         public CodeCompletionControllerImpl(ICSharpCode.AvalonEdit.TextEditor editor)
         {
@@ -35,52 +34,12 @@ namespace TextEditor.WPF
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
         }
 
-        private bool _hasInitialized;
-
-        // TODO: Rename this
-        private void Initialize()
-        {
-            if (_hasInitialized)
-                return;
-
-            Window parentWindow = Window.GetWindow(_editor);
-            if (parentWindow != null)
-            {
-                parentWindow.LocationChanged += (s, a) => Close();
-                parentWindow.SizeChanged += (s, a) => Close();
-                parentWindow.StateChanged += (s, a) => Close();
-            }
-            else
-            {
-                // http://social.msdn.microsoft.com/Forums/vstudio/en-US/b0a5bfcd-db94-425d-9c56-07233441d055/how-to-get-elementhost-given-a-wpf-control?forum=wpf#92811a22-c67b-4937-8817-40d7512940b5
-                HwndSource wpfHandle = PresentationSource.FromVisual(_editor) as HwndSource;
-
-                // the WPF control is hosted if the wpfHandle is not null
-                if (wpfHandle != null)
-                {
-                    ElementHost host = System.Windows.Forms.Control.FromChildHandle(wpfHandle.Handle) as ElementHost;
-                    if (host != null)
-                    {
-                        var form = host.FindForm();
-                        if (form != null)
-                        {
-                            form.Move += (s, a) => Close();
-                            form.LocationChanged += (s, a) => Close();
-                            form.SizeChanged += (s, a) => Close();
-                        }
-                    }
-                }
-            }
-
-            _hasInitialized = true;
-        }
-
         public bool IgnoreTabOrEnterKey
         {
             get { return _completionWindow != null; }
         }
 
-        #region Event handlers - text editor
+        #region Event Handlers - Text Editor
 
         private void EditorOnPreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -129,48 +88,37 @@ namespace TextEditor.WPF
 
         #endregion
 
-        #region Show/close
+        #region Event Handlers - Parent Window
 
-        private void Show()
+        private void BindWindowEventHandlers()
         {
-            Close();
-
-            // Open code completion after the user has pressed dot:
-            _completionWindow = new CompletionWindow(_editor.TextArea)
-                                {
-                                    CloseWhenCaretAtBeginning = true,
-                                    SizeToContent = SizeToContent.WidthAndHeight
-                                };
-
-            BindCompletionWindowEventHandlers();
-
-            IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
-            data.AddRange(GenerateCompletionData());
-
-            // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
-            // when we try to focus the text editor.
-//            _completionWindow.GotKeyboardFocus += (sender, args) =>
-//                                                  args.OldFocus.Focus();
-
-            _completionWindow.Show();
-
-            _completionWindow.MinWidth = _completionWindow.Width;
-
-            Initialize();
-        }
-
-        private void Close()
-        {
-            if (_closing)
+            if (_isWindowMoveEventBound)
                 return;
 
-            if (_completionWindow != null)
-                _completionWindow.Close();
+            Window parentWindow = Window.GetWindow(_editor);
+            if (parentWindow != null)
+            {
+                parentWindow.LocationChanged += Close;
+                parentWindow.SizeChanged += Close;
+                parentWindow.StateChanged += Close;
+            }
+            else
+            {
+                var form = _editor.FindForm();
+                if (form != null)
+                {
+                    form.Move += Close;
+                    form.LocationChanged += Close;
+                    form.SizeChanged += Close;
+                }
+            }
+
+            _isWindowMoveEventBound = true;
         }
 
         #endregion
 
-        #region Event handlers - completion window
+        #region Event Handlers - Completion Window
 
         private void BindCompletionWindowEventHandlers()
         {
@@ -290,14 +238,60 @@ namespace TextEditor.WPF
 
         private void CompletionWindowOnClosing(object sender, CancelEventArgs e)
         {
-            _closing = true;
+            _isClosing = true;
         }
 
         private void CompletionWindowOnClosed(object sender, EventArgs eventArgs)
         {
             UnbindCompletionWindowEventHandlers();
             _completionWindow = null;
-            _closing = false;
+            _isClosing = false;
+        }
+
+        #endregion
+
+        #region Show/close
+
+        private void Show()
+        {
+            Close();
+
+            // Open code completion after the user has pressed dot:
+            _completionWindow = new CompletionWindow(_editor.TextArea)
+                                {
+                                    CloseWhenCaretAtBeginning = true,
+                                    SizeToContent = SizeToContent.WidthAndHeight
+                                };
+
+            BindCompletionWindowEventHandlers();
+
+            IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
+            data.AddRange(GenerateCompletionData());
+
+            // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
+            // when we try to focus the text editor.
+//            _completionWindow.GotKeyboardFocus += (sender, args) =>
+//                                                  args.OldFocus.Focus();
+
+            _completionWindow.Show();
+
+            _completionWindow.MinWidth = _completionWindow.Width;
+
+            BindWindowEventHandlers();
+        }
+
+        private void Close()
+        {
+            if (_isClosing)
+                return;
+
+            if (_completionWindow != null)
+                _completionWindow.Close();
+        }
+
+        private void Close(object sender, EventArgs eventArgs)
+        {
+            Close();
         }
 
         #endregion
