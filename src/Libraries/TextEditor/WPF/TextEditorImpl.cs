@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,9 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using DotNetUtils.Extensions;
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
@@ -53,6 +57,7 @@ namespace TextEditor.WPF
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
+        private readonly CodeCompletionControllerImpl _codeCompletionController;
 
         private bool Singleline
         {
@@ -61,6 +66,8 @@ namespace TextEditor.WPF
 
         public TextEditorImpl()
         {
+            _codeCompletionController = new CodeCompletionControllerImpl(_editor);
+
             _editor.TextChanged += EditorOnTextChanged;
             _editor.PreviewKeyDown += OnPreviewKeyDown;
             _editor.MouseEnter += EditorOnMouseEnter;
@@ -82,6 +89,10 @@ namespace TextEditor.WPF
         {
             _elementHost.MouseLeave();
         }
+
+        #region Code completion
+
+        #endregion
 
         #region Core
 
@@ -134,6 +145,12 @@ namespace TextEditor.WPF
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Handled)
+                return;
+
+            if (_codeCompletionController.IgnoreTabOrEnterKey)
+                return;
+
             if (Singleline && e.Key == Key.Enter)
                 e.Handled = true;
 

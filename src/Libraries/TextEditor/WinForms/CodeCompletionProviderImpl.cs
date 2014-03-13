@@ -233,21 +233,25 @@ namespace TextEditor.WinForms
 
             var placeholders = new Dictionary<string, string>
                                {
-                                   { "${title}", "Name of the movie or TV show episode." },
-                                   { "${year}", "Year the movie was released." },
-                                   { "${res}", "Vertical resolution of the primary video track (e.g., 1080i, 720p, 480p)." },
+                                   { "${title}",    "Name of the movie or TV show episode." },
+                                   { "${year}",     "Year the movie was released." },
+                                   { "${res}",      "Vertical resolution of the primary video track (e.g., 1080i, 720p, 480p)." },
                                    { "${channels}", "Number of audio channels (2.0, 5.1, 7.1, etc.)." },
-                                   { "${vcodec}", "Primary video track codec." },
-                                   { "${acodec}", "Primary audio track codec." },
+                                   { "${vcodec}",   "Primary video track codec." },
+                                   { "${acodec}",   "Primary audio track codec." },
                                };
 
-            completions.AddRange(placeholders.Select(pair => new DefaultCompletionData(pair.Key, pair.Value, 0)));
+            var placeholdersOrdered = placeholders.Select(pair => new DefaultCompletionData(pair.Key, pair.Value, 0))
+                                                  .OrderBy(data => data.Text);
+
+            completions.AddRange(placeholdersOrdered);
 
             var envVars = Environment.GetEnvironmentVariables()
                                      .OfType<DictionaryEntry>()
                                      .Select(entry =>
                                              new KeyValuePair<string, string>(entry.Key as string,
                                                                               entry.Value as string))
+                                     .OrderBy(pair => pair.Key)
                                      .ToArray();
 
             completions.AddRange(envVars.Select(pair => new DefaultCompletionData(string.Format("%{0}%", pair.Key), pair.Value, 1)));
