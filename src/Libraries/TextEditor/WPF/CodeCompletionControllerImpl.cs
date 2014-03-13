@@ -200,12 +200,38 @@ namespace TextEditor.WPF
                 case Key.Escape:
                     Close();
                     break;
+
+                case Key.Left:
+                case Key.Right:
+                    ProxyKey(e);
+                    break;
             }
         }
 
         private void ProxyDialogKey(KeyEventArgs e)
         {
             WithCompletionList(list => list.HandleKey(e));
+        }
+
+        /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
+        private void ProxyKey(KeyEventArgs e)
+        {
+//            var key = Key.Insert;                    // Key to send
+//            var target = Keyboard.FocusedElement;    // Target element
+
+            var key = e.Key;
+            var target = _editor.TextArea; // Target element
+
+            var keyboardDevice = Keyboard.PrimaryDevice;
+            var inputSource = PresentationSource.FromVisual(target);
+            var routedEvent = Keyboard.KeyDownEvent; // Event to send
+
+            if (inputSource == null)
+                return;
+
+            var args = new KeyEventArgs(keyboardDevice, inputSource, 0, key) { RoutedEvent = routedEvent };
+
+            target.RaiseEvent(args);
         }
 
         private void ProxyInputKey(KeyEventArgs e)
