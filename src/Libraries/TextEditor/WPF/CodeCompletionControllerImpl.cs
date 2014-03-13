@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
@@ -123,6 +124,7 @@ namespace TextEditor.WPF
         private void BindCompletionWindowEventHandlers()
         {
             _completionWindow.Loaded      += CompletionWindowOnLoaded;
+            _completionWindow.KeyDown     += CompletionWindowOnKeyDown;
             _completionWindow.KeyUp       += CompletionWindowOnKeyUp;
             _completionWindow.Deactivated += CompletionWindowOnDeactivated;
             _completionWindow.Closing     += CompletionWindowOnClosing;
@@ -132,6 +134,7 @@ namespace TextEditor.WPF
         private void UnbindCompletionWindowEventHandlers()
         {
             _completionWindow.Loaded      -= CompletionWindowOnLoaded;
+            _completionWindow.KeyDown     -= CompletionWindowOnKeyDown;
             _completionWindow.KeyUp       -= CompletionWindowOnKeyUp;
             _completionWindow.Deactivated -= CompletionWindowOnDeactivated;
             _completionWindow.Closing     -= CompletionWindowOnClosing;
@@ -141,6 +144,41 @@ namespace TextEditor.WPF
         private void CompletionWindowOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             WithCompletionList(list => list.SelectedItem = list.CompletionData.FirstOrDefault());
+        }
+
+        private void CompletionWindowOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!_completionWindow.IsKeyboardFocusWithin)
+                return;
+
+            switch (e.Key)
+            {
+                // Avalon already handles these, even when the completion window is focused
+                case Key.PageUp:
+                case Key.PageDown:
+                case Key.Home:
+                case Key.End:
+                    break;
+
+                // Handled by CompletionWindowOnKeyUp
+                case Key.Down:
+                case Key.Up:
+                case Key.Tab:
+                case Key.Enter:
+                case Key.Escape:
+                    break;
+
+                // Close the completion window
+                case Key.Back:
+                case Key.Delete:
+                    Close();
+                    break;
+
+                // All other keys get inserted as text input (if applicable)
+                default:
+                    ProxyInputKey(e);
+                    break;
+            }
         }
 
         private void CompletionWindowOnKeyUp(object sender, KeyEventArgs e)
@@ -153,33 +191,34 @@ namespace TextEditor.WPF
                 // Proxy key events that Avalon doesn't handle when the completion window is focused
                 case Key.Down:
                 case Key.Up:
-                case Key.Home:
-                case Key.End:
                 case Key.Tab:
                 case Key.Enter:
-                    WithCompletionList(list => list.HandleKey(e));
+                    ProxyDialogKey(e);
                     break;
+
+                // Close the completion window
                 case Key.Escape:
                     Close();
-                    break;
-
-                // Avalon already handles these, even when the completion window is focused
-                case Key.PageUp:
-                case Key.PageDown:
-                    break;
-
-                // All other keys get passed on
-                default:
-                    var keyString = GetPrintableString(e.Key);
-                    if (keyString.Any())
-                    {
-                        TextAreaOnTextEntering(keyString);
-                        _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
-                    }
                     break;
             }
         }
 
+        private void ProxyDialogKey(KeyEventArgs e)
+        {
+            WithCompletionList(list => list.HandleKey(e));
+        }
+
+        private void ProxyInputKey(KeyEventArgs e)
+        {
+            var keyString = GetPrintableString(e.Key);
+            if (keyString == "")
+                return;
+
+            TextAreaOnTextEntering(keyString);
+            _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
+        }
+
+        [NotNull]
         private static string GetPrintableString(Key key)
         {
             // Ignore meta keys
