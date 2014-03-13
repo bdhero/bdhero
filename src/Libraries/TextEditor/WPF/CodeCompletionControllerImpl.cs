@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -31,6 +33,46 @@ namespace TextEditor.WPF
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
             _editor.TextArea.TextEntered += TextAreaOnTextEntered;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
+        }
+
+        private bool _hasInitialized;
+
+        // TODO: Rename this
+        private void Initialize()
+        {
+            if (_hasInitialized)
+                return;
+
+            Window parentWindow = Window.GetWindow(_editor);
+            if (parentWindow != null)
+            {
+                parentWindow.LocationChanged += (s, a) => Close();
+                parentWindow.SizeChanged += (s, a) => Close();
+                parentWindow.StateChanged += (s, a) => Close();
+            }
+            else
+            {
+                // http://social.msdn.microsoft.com/Forums/vstudio/en-US/b0a5bfcd-db94-425d-9c56-07233441d055/how-to-get-elementhost-given-a-wpf-control?forum=wpf#92811a22-c67b-4937-8817-40d7512940b5
+                HwndSource wpfHandle = PresentationSource.FromVisual(_editor) as HwndSource;
+
+                // the WPF control is hosted if the wpfHandle is not null
+                if (wpfHandle != null)
+                {
+                    ElementHost host = System.Windows.Forms.Control.FromChildHandle(wpfHandle.Handle) as ElementHost;
+                    if (host != null)
+                    {
+                        var form = host.FindForm();
+                        if (form != null)
+                        {
+                            form.Move += (s, a) => Close();
+                            form.LocationChanged += (s, a) => Close();
+                            form.SizeChanged += (s, a) => Close();
+                        }
+                    }
+                }
+            }
+
+            _hasInitialized = true;
         }
 
         public bool IgnoreTabOrEnterKey
@@ -113,6 +155,8 @@ namespace TextEditor.WPF
             _completionWindow.Show();
 
             _completionWindow.MinWidth = _completionWindow.Width;
+
+            Initialize();
         }
 
         private void Close()
