@@ -213,6 +213,16 @@ namespace TextEditor.WPF
             WithCompletionList(list => list.HandleKey(e));
         }
 
+        private void ProxyInputKey(KeyEventArgs e)
+        {
+            var keyString = GetPrintableString(e.Key);
+            if (keyString == "")
+                return;
+
+            TextAreaOnTextEntering(keyString);
+            _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
+        }
+
         /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
         private void ProxyKey(KeyEventArgs e)
         {
@@ -229,16 +239,6 @@ namespace TextEditor.WPF
             var args = new KeyEventArgs(keyboardDevice, inputSource, 0, key) { RoutedEvent = routedEvent };
 
             target.RaiseEvent(args);
-        }
-
-        private void ProxyInputKey(KeyEventArgs e)
-        {
-            var keyString = GetPrintableString(e.Key);
-            if (keyString == "")
-                return;
-
-            TextAreaOnTextEntering(keyString);
-            _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
         }
 
         [NotNull]
