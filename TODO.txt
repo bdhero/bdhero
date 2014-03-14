@@ -1,6 +1,10 @@
 Chores
 ======
 
+[ ] Use HandleRef instead of IntPtr
+
+[ ] Use try/catch around P/Invoke calls instead of #if !__MonoCS__?
+
 [ ] Remove Mono compile-time checks (via #if __MonoCS__) and use runtime checks instead: http://stackoverflow.com/a/329072/467582.  Don't compile w/ Xamarin Studio - only use Visual Studio.
 
 [ ] Normalize capitalization of Win32 classes/structs/enums
@@ -58,6 +62,8 @@ Features
     [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
     [ ] Handle "%UserName%| \" (caret placed at the '|')
     [ ] Handle "%|\" (caret placed at the '|')
+    [ ] TAB/ENTER key: disable default behavior when code completion window is open
+    [ ] Broken on Mono
 
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
