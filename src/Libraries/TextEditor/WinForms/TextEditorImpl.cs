@@ -21,7 +21,7 @@ namespace TextEditor.WinForms
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
-        private readonly CodeCompletionControllerImpl _codeCompletionController;
+        private readonly CompletionControllerImpl _completionController;
 
         private bool Singleline
         {
@@ -41,7 +41,7 @@ namespace TextEditor.WinForms
 
             LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
 
-            _codeCompletionController = new CodeCompletionControllerImpl(_editor);
+            _completionController = new CompletionControllerImpl(_editor);
         }
 
         ITextEditorOptions ITextEditor.Options
@@ -127,7 +127,7 @@ namespace TextEditor.WinForms
             if (!ShouldPreventTabKey(args.KeyData))
                 return;
 
-            if (_codeCompletionController.HandleTabKey())
+            if (_completionController.HandleTabKey())
                 return;
 
             _editor.SelectNextControl(!args.Shift);

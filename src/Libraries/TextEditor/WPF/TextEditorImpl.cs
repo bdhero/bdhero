@@ -45,7 +45,7 @@ namespace TextEditor.WPF
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
-        private readonly CodeCompletionControllerImpl _codeCompletionController;
+        private readonly CompletionControllerImpl _completionController;
 
         private bool Singleline
         {
@@ -54,7 +54,7 @@ namespace TextEditor.WPF
 
         public TextEditorImpl()
         {
-            _codeCompletionController = new CodeCompletionControllerImpl(_editor);
+            _completionController = new CompletionControllerImpl(_editor);
 
             _editor.TextChanged += EditorOnTextChanged;
             _editor.PreviewKeyDown += OnPreviewKeyDown;
@@ -136,7 +136,7 @@ namespace TextEditor.WPF
             if (e.Handled)
                 return;
 
-            if (_codeCompletionController.IgnoreTabOrEnterKey)
+            if (_completionController.IgnoreTabOrEnterKey)
                 return;
 
             if (Singleline && e.Key == Key.Enter)

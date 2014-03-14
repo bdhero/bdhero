@@ -85,14 +85,14 @@
     <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
     <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
     <Compile Include="StandardSyntaxType.cs" />
-    <Compile Include="WinForms\CodeCompletionControllerImpl.cs" />
-    <Compile Include="WinForms\CodeCompletionProviderImpl.cs" />
+    <Compile Include="WinForms\CompletionControllerImpl.cs" />
+    <Compile Include="WinForms\CompletionProviderImpl.cs" />
     <Compile Include="WinForms\TextEditorControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TextEditorFactory.cs" />
-    <Compile Include="WPF\CodeCompletionControllerImpl.cs" />
-    <Compile Include="WPF\CodeCompletionProviderImpl.cs" />
+    <Compile Include="WPF\CompletionControllerImpl.cs" />
+    <Compile Include="WPF\CompletionProviderImpl.cs" />
     <Compile Include="WPF\TextEditorOptionsImpl.cs" />
     <Compile Include="WinForms\TextEditorImpl.cs" />
     <Compile Include="WinForms\TextEditorOptionsImpl.cs" />

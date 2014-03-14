@@ -7,26 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
 using NativeAPI.Win.User;
 
 namespace TextEditor.WPF
 {
-    internal class CodeCompletionControllerImpl
+    internal class CompletionControllerImpl
     {
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
+
+        private readonly CompletionProviderImpl _completionProvider = new CompletionProviderImpl();
 
         private CompletionWindow _completionWindow;
         
         private bool _isWindowMoveEventBound;
         private bool _isClosing;
 
-        public CodeCompletionControllerImpl(ICSharpCode.AvalonEdit.TextEditor editor)
+        public CompletionControllerImpl(ICSharpCode.AvalonEdit.TextEditor editor)
         {
             _editor = editor;
 
@@ -217,15 +216,12 @@ namespace TextEditor.WPF
         /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
         private void ProxyKey(KeyEventArgs e)
         {
-//            var key = Key.Insert;                    // Key to send
-//            var target = Keyboard.FocusedElement;    // Target element
-
             var key = e.Key;
-            var target = _editor.TextArea; // Target element
+            var target = _editor.TextArea;
 
             var keyboardDevice = Keyboard.PrimaryDevice;
             var inputSource = PresentationSource.FromVisual(target);
-            var routedEvent = Keyboard.KeyDownEvent; // Event to send
+            var routedEvent = Keyboard.KeyDownEvent;
 
             if (inputSource == null)
                 return;
@@ -331,8 +327,8 @@ namespace TextEditor.WPF
 
             BindCompletionWindowEventHandlers();
 
-            IList<ICompletionData> data = _completionWindow.CompletionList.CompletionData;
-            data.AddRange(GenerateCompletionData());
+            var data = _completionWindow.CompletionList.CompletionData;
+            data.AddRange(_completionProvider.GenerateCompletionData());
 
             // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
             // when we try to focus the text editor.
@@ -374,100 +370,6 @@ namespace TextEditor.WPF
         }
 
         #endregion
-
-        public ICompletionData[] GenerateCompletionData()
-        {
-            var allCompletions = AllCompletions();
-            var relevantCompletions = allCompletions;
-
-//            var prevText = GetCharsToLeftOfCursor(textArea).Text;
-//
-//            if (prevText != "")
-//            {
-//                relevantCompletions =
-//                    allCompletions.Where(data => data.Text.StartsWith(prevText, true, CultureInfo.CurrentUICulture))
-//                                  .ToArray();
-//            }
-
-            if (relevantCompletions.Any())
-                return relevantCompletions;
-
-            return allCompletions;
-        }
-
-        private static ICompletionData[] AllCompletions()
-        {
-            var completions = new List<ICompletionData>();
-
-            var placeholders = new Dictionary<string, string>
-                               {
-                                   { "${title}",    "Name of the movie or TV show episode." },
-                                   { "${year}",     "Year the movie was released." },
-                                   { "${res}",      "Vertical resolution of the primary video track (e.g., 1080i, 720p, 480p)." },
-                                   { "${channels}", "Number of audio channels (2.0, 5.1, 7.1, etc.)." },
-                                   { "${vcodec}",   "Primary video track codec." },
-                                   { "${acodec}",   "Primary audio track codec." },
-                               };
-
-            var placeholdersOrdered = placeholders.Select(pair => new MyCompletionData(pair.Key, pair.Value, null))
-                                                  .OrderBy(data => data.Text);
-
-            completions.AddRange(placeholdersOrdered);
-
-            var envVars = Environment.GetEnvironmentVariables()
-                                     .OfType<DictionaryEntry>()
-                                     .Select(entry =>
-                                             new KeyValuePair<string, string>(entry.Key as string,
-                                                                              entry.Value as string))
-                                     .OrderBy(pair => pair.Key)
-                                     .ToArray();
-
-            completions.AddRange(envVars.Select(pair => new MyCompletionData(string.Format("%{0}%", pair.Key), pair.Value, null)));
-
-            return completions.ToArray();
-        }
-
-        /// Implements AvalonEdit ICompletionData interface to provide the entries in the
-        /// completion drop down.
-        public class MyCompletionData : ICompletionData
-        {
-            public MyCompletionData(string text)
-            {
-                Text = text;
-                Description = "Description for " + Text;
-            }
-
-            public MyCompletionData(string text, string description, ImageSource image)
-            {
-                Text = text;
-                Description = description;
-                Image = image;
-            }
-
-            public ImageSource Image { get; private set; }
-
-            public string Text { get; private set; }
-
-            // Use this property if you want to show a fancy UIElement in the list.
-            public object Content
-            {
-                get { return Text; }
-            }
-
-            public object Description { get; private set; }
-
-            public double Priority { get; private set; }
-
-            public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
-            {
-                // http://www.codeproject.com/Articles/42490/Using-AvalonEdit-WPF-Text-Editor
-                var textCompositionEventArgs = insertionRequestEventArgs as TextCompositionEventArgs;
-                var keyEventArgs = insertionRequestEventArgs as KeyEventArgs;
-                var mouseEventArgs = insertionRequestEventArgs as MouseEventArgs;
-
-                textArea.Document.Replace(completionSegment, Text);
-            }
-        }
     }
 }
 #endif

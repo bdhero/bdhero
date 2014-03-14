@@ -12,11 +12,11 @@ using ICSharpCode.TextEditor.Gui.CompletionWindow;
 
 namespace TextEditor.WinForms
 {
-    public class CodeCompletionProviderImpl : ICompletionDataProvider
+    public class CompletionProviderImpl : ICompletionDataProvider
     {
         private readonly ImageList imageList;
 
-        public CodeCompletionProviderImpl(ImageList imageList)
+        public CompletionProviderImpl(ImageList imageList)
         {
             this.imageList = imageList;
         }

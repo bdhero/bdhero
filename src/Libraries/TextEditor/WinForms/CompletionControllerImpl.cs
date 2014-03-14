@@ -8,7 +8,7 @@ using ICSharpCode.TextEditor.Gui.CompletionWindow;
 
 namespace TextEditor.WinForms
 {
-    internal class CodeCompletionControllerImpl
+    internal class CompletionControllerImpl
     {
         private readonly ICSharpCode.TextEditor.TextEditorControl _editor;
 
@@ -16,7 +16,7 @@ namespace TextEditor.WinForms
 
         private CodeCompletionWindow _codeCompletionWindow;
 
-        public CodeCompletionControllerImpl(ICSharpCode.TextEditor.TextEditorControl editor)
+        public CompletionControllerImpl(ICSharpCode.TextEditor.TextEditorControl editor)
         {
             _editor = editor;
 
@@ -109,7 +109,7 @@ namespace TextEditor.WinForms
             if (_codeCompletionWindow != null)
                 _codeCompletionWindow.Close();
 
-            ICompletionDataProvider completionDataProvider = new CodeCompletionProviderImpl(_intellisenseImageList);
+            ICompletionDataProvider completionDataProvider = new CompletionProviderImpl(_intellisenseImageList);
 
             _codeCompletionWindow = CodeCompletionWindow.ShowCompletionWindow(
                     _editor.FindForm(),     // The parent window for the completion window
