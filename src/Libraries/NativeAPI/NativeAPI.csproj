@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +53,7 @@
     <Compile Include="Mac\Memory\vm_statistics_data_t.cs" />
     <Compile Include="PInvokeUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinErrorConstants.cs" />
     <Compile Include="Win\CommonControls\HeaderItem.cs" />
     <Compile Include="Win\CommonControls\HeaderItemFormat.cs" />
     <Compile Include="Win\CommonControls\HeaderItemMask.cs" />
@@ -98,7 +100,11 @@
     <Compile Include="Win\User\WindowMessageType.cs" />
     <Compile Include="Win\User\WindowStyles.cs" />
     <Compile Include="Win\User\WParam.cs" />
+    <Compile Include="Win\UXTheme\NativeMethods.cs" />
+    <Compile Include="Win\UXTheme\SafeHandles\SafeGraphicsDeviceContextHandle.cs" />
+    <Compile Include="Win\UXTheme\SafeHandles\SafeThemeDataHandle.cs" />
     <Compile Include="Win\UXTheme\ThemeAPI.cs" />
+    <Compile Include="Win\UXTheme\VisualStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
