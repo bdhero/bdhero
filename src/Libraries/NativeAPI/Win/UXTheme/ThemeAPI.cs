@@ -7,7 +7,7 @@ using System.Text;
 
 namespace NativeAPI.Win.UXTheme
 {
-    public static class Theme
+    public static class ThemeAPI
     {
         public static void DrawThemedTextBoxBorder(IntPtr hWnd, Graphics g, Rectangle bounds, TextBoxBorderStyle style = TextBoxBorderStyle.Normal)
         {

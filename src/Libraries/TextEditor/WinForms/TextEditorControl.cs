@@ -307,7 +307,7 @@ namespace TextEditor.WinForms
                         _isMouseOver ? TextBoxBorderStyle.Hot :
                         TextBoxBorderStyle.Normal;
 
-            Theme.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
+            ThemeAPI.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
         }
 
         #region Padding
