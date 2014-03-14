@@ -11,6 +11,7 @@ namespace NativeAPI.Win.UXTheme
     {
         public static void DrawThemedTextBoxBorder(IntPtr hWnd, Graphics g, Rectangle bounds, TextBoxBorderStyle style = TextBoxBorderStyle.Normal)
         {
+#if !__MonoCS__
             IntPtr theme = OpenThemeData(hWnd, CLASS.EDIT);
             if (theme != IntPtr.Zero)
             {
@@ -29,6 +30,7 @@ namespace NativeAPI.Win.UXTheme
                 g.ReleaseHdc();
                 CloseThemeData(theme);
             }
+#endif
         }
 
         #region P/Invoke functions
