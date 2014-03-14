@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__MonoCS__
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,21 +15,11 @@ using TextEditor.Extensions;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-#if !__MonoCS__
 using System.Windows.Forms.Integration;
 using Control = System.Windows.Forms.Control;
-#endif
 
 namespace TextEditor.WPF
 {
-#if __MonoCS__
-
-    internal class TextEditorImpl
-    {
-    }
-
-#else
-
     internal class ElementHostImpl : ElementHost
     {
         public void MouseEnter()
@@ -572,5 +563,5 @@ namespace TextEditor.WPF
         #endregion
     }
 
-#endif
 }
+#endif
