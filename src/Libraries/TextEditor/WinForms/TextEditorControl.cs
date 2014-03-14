@@ -302,10 +302,10 @@ namespace TextEditor.WinForms
             if (BorderStyle == BorderStyle.None)
                 return;
 
-            var state = !Enabled ? TextBoxBorderStyle.Disabled :
-                        ContainsFocus ? TextBoxBorderStyle.Focused :
-                        _isMouseOver ? TextBoxBorderStyle.Hot :
-                        TextBoxBorderStyle.Normal;
+            var state = !Enabled      ? TextBoxState.Disabled :
+                        ContainsFocus ? TextBoxState.Focused :
+                        _isMouseOver  ? TextBoxState.Hot :
+                                        TextBoxState.Normal;
 
             ThemeAPI.DrawThemedTextBoxBorder(Handle, e.Graphics, e.ClipRectangle, state);
         }

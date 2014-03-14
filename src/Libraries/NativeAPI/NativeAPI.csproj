@@ -103,6 +103,7 @@
     <Compile Include="Win\UXTheme\NativeMethods.cs" />
     <Compile Include="Win\UXTheme\SafeHandles\SafeGraphicsDeviceContextHandle.cs" />
     <Compile Include="Win\UXTheme\SafeHandles\SafeThemeDataHandle.cs" />
+    <Compile Include="Win\UXTheme\TextBoxState.cs" />
     <Compile Include="Win\UXTheme\ThemeAPI.cs" />
     <Compile Include="Win\UXTheme\VisualStyle.cs" />
   </ItemGroup>
