@@ -23,7 +23,7 @@ namespace NativeAPI.Win.UXTheme.SafeHandles
 
         private static bool CloseThemeData(IntPtr handle)
         {
-            return NativeMethods.CloseThemeData(handle) == NativeMethods.S_OK;
+            return NativeMethods.CloseThemeData(handle) == WinErrorConstants.S_OK;
         }
     }
 }
