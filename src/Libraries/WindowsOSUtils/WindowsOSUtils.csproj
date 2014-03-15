@@ -82,7 +82,6 @@
     <Compile Include="WindowsInjectorFactory.cs" />
     <Compile Include="Windows\WindowMenuFactory.cs" />
     <Compile Include="Windows\WindowMenuItem.cs" />
-    <Compile Include="Windows\WindowMessage.cs" />
     <Compile Include="WMI\Classes\DiskDrive.cs" />
     <Compile Include="WMI\Classes\DiskPartition.cs" />
     <Compile Include="WMI\Classes\LogicalDisk.cs" />

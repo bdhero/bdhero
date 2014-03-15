@@ -19,13 +19,14 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using NativeAPI;
-using NativeAPI.Win.User;
 
 // ReSharper disable MemberCanBePrivate.Global
-namespace WindowsOSUtils.Windows
+namespace NativeAPI.Win.User
 {
-    public class WindowMessage
+    /// <summary>
+    ///     Wraps a <see cref="Message"/> object to provide more useful functionality.
+    /// </summary>
+    public sealed class WindowMessage
     {
         #region Private fields
 

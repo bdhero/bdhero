@@ -97,6 +97,7 @@
     <Compile Include="Win\User\SystemMenuAPI.cs" />
     <Compile Include="Win\User\WindowAPI.cs" />
     <Compile Include="Win\User\WindowInfo.cs" />
+    <Compile Include="Win\User\WindowMessage.cs" />
     <Compile Include="Win\User\WindowMessageType.cs" />
     <Compile Include="Win\User\WindowStyles.cs" />
     <Compile Include="Win\User\WParam.cs" />
