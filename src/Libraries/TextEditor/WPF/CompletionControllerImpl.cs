@@ -11,6 +11,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
+using DotNetUtils.Forms;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -20,6 +21,9 @@ namespace TextEditor.WPF
 {
     internal class CompletionControllerImpl
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
 
         private readonly CompletionProviderImpl _completionProvider;
@@ -32,6 +36,13 @@ namespace TextEditor.WPF
         public CompletionControllerImpl(ICSharpCode.AvalonEdit.TextEditor editor)
         {
             _editor = editor;
+
+            _editor.PreviewKeyDown += (s, e) =>
+                    Console.WriteLine("Editor.PreviewKeyDown({0})", e.Key);
+
+            _editor.TextArea.PreviewKeyDown += (s, e) =>
+                    Console.WriteLine("Editor.TextArea.PreviewKeyDown({0})", e.Key);
+
 
             _editor.PreviewKeyDown += EditorOnPreviewKeyDown;
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
@@ -102,7 +113,7 @@ namespace TextEditor.WPF
             if (_isWindowMoveEventBound)
                 return;
 
-            Window parentWindow = Window.GetWindow(_editor);
+            var parentWindow = Window.GetWindow(_editor);
             if (parentWindow != null)
             {
                 parentWindow.LocationChanged += Close;
@@ -130,8 +141,8 @@ namespace TextEditor.WPF
         private void BindCompletionWindowEventHandlers()
         {
             _completionWindow.Loaded      += CompletionWindowOnLoaded;
+            _completionWindow.SizeChanged += CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     += CompletionWindowOnKeyDown;
-            _completionWindow.KeyUp       += CompletionWindowOnKeyUp;
             _completionWindow.Deactivated += CompletionWindowOnDeactivated;
             _completionWindow.Closing     += CompletionWindowOnClosing;
             _completionWindow.Closed      += CompletionWindowOnClosed;
@@ -140,8 +151,8 @@ namespace TextEditor.WPF
         private void UnbindCompletionWindowEventHandlers()
         {
             _completionWindow.Loaded      -= CompletionWindowOnLoaded;
+            _completionWindow.SizeChanged -= CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     -= CompletionWindowOnKeyDown;
-            _completionWindow.KeyUp       -= CompletionWindowOnKeyUp;
             _completionWindow.Deactivated -= CompletionWindowOnDeactivated;
             _completionWindow.Closing     -= CompletionWindowOnClosing;
             _completionWindow.Closed      -= CompletionWindowOnClosed;
@@ -149,8 +160,70 @@ namespace TextEditor.WPF
 
         private void CompletionWindowOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            AutoSize();
+        }
+
+        private void AutoSize()
+        {
+            AutoSizeToContent();
+        }
+
+        private void AutoSizeToContent()
+        {
+            // Disable max width/height, which will cause the window to resize itself to fit its contents.
+            _completionWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            _completionWindow.MaxWidth = double.PositiveInfinity;
+            _completionWindow.MaxHeight = double.PositiveInfinity;
+        }
+
+        private void SetManualSize(double width, double height)
+        {
+            _completionWindow.SizeToContent = SizeToContent.Manual;
+            _completionWindow.Width = _completionWindow.MinWidth = _completionWindow.MaxWidth = width;
+            _completionWindow.Height = _completionWindow.MinHeight = _completionWindow.MaxHeight = height;
+        }
+
+        private void CompletionWindowOnSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            Logger.DebugFormat("CompletionWindow.SizeChanged({0} => {1})", args.PreviousSize, args.NewSize);
+
+            // Ignore initial resize.
+            if (args.PreviousSize.Equals(new Size(0, 0)))
+                return;
+
+            // Window is narrowing (or staying the same width), which means it doesn't need to be made wider to fit its contents.
+            // Since we won't be resizing the window any further, we can safely auto-select the first completion item.
+            // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
+            // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
+            if (args.NewSize.Width <= args.PreviousSize.Width)
+            {
+                _completionWindow.MaxHeight = args.PreviousSize.Height;
+                SelectFirstItem();
+                return;
+            }
+
+            // We've already found the "ideal" width and height of the window, and are currently in the middle of
+            // resizing the window's height DOWN to a reasonable height so that it doesn't overflow off the screen.
+            if (args.NewSize.Height <= args.PreviousSize.Height)
+                return;
+
+            var fullWidth = args.NewSize.Width + SystemParameters.VerticalScrollBarWidth;
+            var oldHeight = args.PreviousSize.Height;
+
+            SetManualSize(fullWidth, oldHeight);
+
+            // Now that we've set the final width and height of the window, we can auto-select the first completion item.
+            // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
+            // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
+            SelectFirstItem();
+        }
+
+        private void SelectFirstItem()
+        {
             WithCompletionList(list => list.SelectedItem = list.CompletionData.FirstOrDefault());
         }
+
+        #region Keyboard event handling
 
         private void CompletionWindowOnKeyDown(object sender, KeyEventArgs e)
         {
@@ -159,78 +232,25 @@ namespace TextEditor.WPF
 
             switch (e.Key)
             {
-                // Avalon already handles these, even when the completion window is focused
+                // Avalon already handles these
                 case Key.PageUp:
                 case Key.PageDown:
                 case Key.Home:
                 case Key.End:
-                    break;
-
-                // Handled by CompletionWindowOnKeyUp
                 case Key.Down:
                 case Key.Up:
                 case Key.Tab:
                 case Key.Enter:
                 case Key.Escape:
-                    break;
-
-                // Close the completion window
-                case Key.Back:
-                case Key.Delete:
-                    Close();
-                    break;
-
-                // All other keys get inserted as text input (if applicable)
-                default:
-                    ProxyInputKey(e);
-                    break;
+                    return;
             }
-        }
 
-        private void CompletionWindowOnKeyUp(object sender, KeyEventArgs e)
-        {
-            if (!_completionWindow.IsKeyboardFocusWithin)
-                return;
-
-            switch (e.Key)
-            {
-                // Proxy key events that Avalon doesn't handle when the completion window is focused
-                case Key.Down:
-                case Key.Up:
-                case Key.Tab:
-                case Key.Enter:
-                    ProxyDialogKey(e);
-                    break;
-
-                // Close the completion window
-                case Key.Escape:
-                    Close();
-                    break;
-
-                case Key.Left:
-                case Key.Right:
-                    ProxyKey(e);
-                    break;
-            }
-        }
-
-        private void ProxyDialogKey(KeyEventArgs e)
-        {
-            WithCompletionList(list => list.HandleKey(e));
-        }
-
-        private void ProxyInputKey(KeyEventArgs e)
-        {
-            var keyString = GetPrintableString(e.Key);
-            if (keyString == "")
-                return;
-
-            TextAreaOnTextEntering(keyString);
-            _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
+            ProxyDialogKey(e);
+            ProxyInputKey(e);
         }
 
         /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
-        private void ProxyKey(KeyEventArgs e)
+        private void ProxyDialogKey(KeyEventArgs e)
         {
             var key = e.Key;
             var target = _editor.TextArea;
@@ -245,6 +265,16 @@ namespace TextEditor.WPF
             var args = new KeyEventArgs(keyboardDevice, inputSource, 0, key) { RoutedEvent = routedEvent };
 
             target.RaiseEvent(args);
+        }
+
+        private void ProxyInputKey(KeyEventArgs e)
+        {
+            var keyString = GetPrintableString(e.Key);
+            if (keyString == "")
+                return;
+
+            TextAreaOnTextEntering(keyString);
+            _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
         }
 
         [NotNull]
@@ -296,12 +326,14 @@ namespace TextEditor.WPF
             return true;
         }
 
+        #endregion
+
         private void CompletionWindowOnDeactivated(object sender, EventArgs eventArgs)
         {
             // Workaround for bug in Avalon:
             // Show completion window, then focus completion window w/ mouse or scroll wheel.
             // Click back in the text editor area.  The completion window disappears, but doesn't "close".
-            Close();
+//            Close();
         }
 
         private void CompletionWindowOnClosing(object sender, CancelEventArgs e)
@@ -327,28 +359,115 @@ namespace TextEditor.WPF
             // Open code completion after the user has pressed dot:
             _completionWindow = new CompletionWindow(_editor.TextArea)
                                 {
+                                    CloseAutomatically = true,
                                     CloseWhenCaretAtBeginning = true,
-                                    SizeToContent = SizeToContent.WidthAndHeight
+//                                    SizeToContent = SizeToContent.WidthAndHeight,
+                                    ResizeMode = ResizeMode.NoResize
                                 };
+
+
+            // <---
+
+
+            // TODO:
+            _completionWindow.CompletionList.InsertionRequested += CompletionListOnInsertionRequested;
+            _completionWindow.CompletionList.IsFiltering = true;
+//            _completionWindow.CompletionList.;
+
+            _completionWindow.PreviewKeyDown += CompletionWindowOnPreviewKeyDown;
+
+
+            // --->
+
 
             BindCompletionWindowEventHandlers();
 
             var data = _completionWindow.CompletionList.CompletionData;
             data.AddRange(_completionProvider.GenerateCompletionData());
 
+
+            // <---
+
+
             // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
             // when we try to focus the text editor.
 //            _completionWindow.GotKeyboardFocus += (sender, args) =>
-//                                                  args.OldFocus.Focus();
+//                                                  _editor.TextArea.Focus();
+
+            _completionWindow.Focusable = false;
+
+
+            // --->
+
 
             // http://stackoverflow.com/a/839806/467582
             ElementHost.EnableModelessKeyboardInterop(_completionWindow);
 
+            BindWindowEventHandlers();
+
             _completionWindow.Show();
 
-            _completionWindow.MinWidth = _completionWindow.Width;
 
-            BindWindowEventHandlers();
+
+            // <---
+
+
+            var hook = new WpfWndProcHook(_completionWindow);
+            hook.WndProcMessage += HookOnWndProcMessage;
+
+
+            // --->
+        }
+
+        private void HookOnWndProcMessage(ref Message m, HandledEventArgs args)
+        {
+//            Console.WriteLine("CompletionWindow.WndProc  -  {0}", m);
+
+            WindowMessage msg = m;
+
+            if (msg.Is(WindowMessageType.WM_GETDLGCODE))
+            {
+                switch (msg.WParamInt64Value)
+                {
+                    case VirtualKey.VK_TAB:
+                    case VirtualKey.VK_RETURN:
+                    case VirtualKey.VK_LEFT:
+                    case VirtualKey.VK_UP:
+                    case VirtualKey.VK_RIGHT:
+                    case VirtualKey.VK_DOWN:
+                    {
+                        args.Handled = true;
+                        m.Result = new IntPtr(DialogCode.DLGC_WANTMESSAGE);
+                        return;
+                    }
+                }
+            }
+
+            if (msg.Is(WindowMessageType.WM_CAPTURECHANGED) ||
+                msg.Is(WindowMessageType.WM_MOUSEWHEEL))
+            {
+                // If nothing is focused, it means the user clicked on the scrollbar or scrolled with the mouse wheel,
+                // which will prevent keystrokes from being seen by Avalon.  To work around this, we need to immediately focus something.
+                var focused = Keyboard.FocusedElement ?? FocusManager.GetFocusedElement(_completionWindow);
+                if (focused == null)
+                {
+                    WithCompletionList(list => list.Focus());
+                }
+            }
+        }
+
+        private void CompletionWindowOnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine("CompletionWindow.PreviewKeyDown({0})", e.Key);
+        }
+
+        private void CompletionListOnInsertionRequested(object sender, EventArgs eventArgs)
+        {
+            var inputEvent = eventArgs as InputEventArgs;
+            if (inputEvent != null)
+            {
+                inputEvent.Handled = true;
+            }
         }
 
         private void Close()
