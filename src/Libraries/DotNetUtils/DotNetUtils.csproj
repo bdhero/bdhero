@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
+    <Compile Include="Forms\WndProcEventHandler.cs" />
     <Compile Include="Forms\WndProcHook.cs" />
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
