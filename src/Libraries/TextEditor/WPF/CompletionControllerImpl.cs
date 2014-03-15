@@ -365,84 +365,20 @@ namespace TextEditor.WPF
             {
                 switch (message.WParamInt64Value)
                 {
-                    case VK_TAB:
-                    case VK_RETURN:
-                    case VK_LEFT:
-                    case VK_UP:
-                    case VK_RIGHT:
-                    case VK_DOWN:
+                    case VirtualKey.VK_TAB:
+                    case VirtualKey.VK_RETURN:
+                    case VirtualKey.VK_LEFT:
+                    case VirtualKey.VK_UP:
+                    case VirtualKey.VK_RIGHT:
+                    case VirtualKey.VK_DOWN:
                         args.Handled = true;
-                        m.Result = new IntPtr(DLGC_WANTMESSAGE);
+                        m.Result = new IntPtr(DialogCode.DLGC_WANTMESSAGE);
                         break;
                 }
             }
         }
 
-        #region Win32 window message constants
 
-        /// <summary>
-        ///     Button.
-        /// </summary>
-        private const int DLGC_BUTTON = 0x2000;
-
-        /// <summary>
-        ///     Default push button.
-        /// </summary>
-        private const int DLGC_DEFPUSHBUTTON = 0x0010;
-
-        /// <summary>
-        ///     <c>EM_SETSEL</c> messages.
-        /// </summary>
-        private const int DLGC_HASSETSEL = 0x0008;
-
-        /// <summary>
-        ///     Radio button.
-        /// </summary>
-        private const int DLGC_RADIOBUTTON = 0x0040;
-
-        /// <summary>
-        ///     Static control.
-        /// </summary>
-        private const int DLGC_STATIC = 0x0100;
-
-        /// <summary>
-        ///     Non-default push button.
-        /// </summary>
-        private const int DLGC_UNDEFPUSHBUTTON = 0x0020;
-
-        /// <summary>
-        ///     All keyboard input.
-        /// </summary>
-        private const int DLGC_WANTALLKEYS = 0x0004;
-
-        /// <summary>
-        ///     Direction keys.
-        /// </summary>
-        private const int DLGC_WANTARROWS = 0x0001;
-
-        /// <summary>
-        ///     <see cref="WindowMessageType.WM_CHAR"/> messages.
-        /// </summary>
-        private const int DLGC_WANTCHARS = 0x0080;
-
-        /// <summary>
-        ///     All keyboard input (the application passes this message in the MSG structure to the control).
-        /// </summary>
-        private const int DLGC_WANTMESSAGE = 0x0004;
-
-        /// <summary>
-        ///     <kbd>TAB</kbd> key.
-        /// </summary>
-        private const int DLGC_WANTTAB = 0x0002;
-
-        private const int VK_TAB = 0x09;
-        private const int VK_RETURN = 0x0D;
-        private const int VK_LEFT = 0x25;
-        private const int VK_UP = 0x26;
-        private const int VK_RIGHT = 0x27;
-        private const int VK_DOWN = 0x28;
-
-        #endregion
 
         private void Close()
         {
