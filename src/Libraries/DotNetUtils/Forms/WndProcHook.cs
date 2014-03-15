@@ -6,7 +6,7 @@ namespace DotNetUtils.Forms
 {
     /// <summary>
     ///     Hooks into the <see cref="Control.WndProc"/> message handler to allow classes outside of a <see cref="Control"/>
-    ///     to receive and suppress native window messages.
+    ///     to receive, handle, and suppress native window messages.
     /// </summary>
     /// <seealso cref="http://stackoverflow.com/a/3539204/467582"/>
     /// <seealso cref="http://msdn.microsoft.com/en-us/library/system.windows.forms.nativewindow(v=vs.100).aspx"/>

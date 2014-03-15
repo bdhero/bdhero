@@ -390,7 +390,7 @@ namespace TextEditor.WPF
             return IntPtr.Zero;
         }
 
-        #region Win32 constants
+        #region Win32 window message constants
 
         /// <summary>
         ///     Button.
@@ -403,7 +403,7 @@ namespace TextEditor.WPF
         private const int DLGC_DEFPUSHBUTTON = 0x0010;
 
         /// <summary>
-        ///     EM_SETSEL messages.
+        ///     <c>EM_SETSEL</c> messages.
         /// </summary>
         private const int DLGC_HASSETSEL = 0x0008;
 
@@ -433,7 +433,7 @@ namespace TextEditor.WPF
         private const int DLGC_WANTARROWS = 0x0001;
 
         /// <summary>
-        ///     WM_CHAR messages.
+        ///     <see cref="WindowMessageType.WM_CHAR"/> messages.
         /// </summary>
         private const int DLGC_WANTCHARS = 0x0080;
 
@@ -443,7 +443,7 @@ namespace TextEditor.WPF
         private const int DLGC_WANTMESSAGE = 0x0004;
 
         /// <summary>
-        ///     TAB key.
+        ///     <kbd>TAB</kbd> key.
         /// </summary>
         private const int DLGC_WANTTAB = 0x0002;
 
