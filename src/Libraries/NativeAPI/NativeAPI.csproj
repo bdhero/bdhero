@@ -84,6 +84,7 @@
     <Compile Include="Win\ShellLightWeight\AssocStr.cs" />
     <Compile Include="Win\User\CursorAPI.cs" />
     <Compile Include="Win\User\CursorType.cs" />
+    <Compile Include="Win\User\DialogCode.cs" />
     <Compile Include="Win\User\ExtendedWindowStyles.cs" />
     <Compile Include="Win\User\KeyboardAPI.cs" />
     <Compile Include="Win\User\LParam.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Win\User\MenuItemType.cs" />
     <Compile Include="Win\User\ShowWindowCommand.cs" />
     <Compile Include="Win\User\SystemMenuAPI.cs" />
+    <Compile Include="Win\User\VirtualKey.cs" />
     <Compile Include="Win\User\WindowAPI.cs" />
     <Compile Include="Win\User\WindowInfo.cs" />
     <Compile Include="Win\User\WindowMessage.cs" />
