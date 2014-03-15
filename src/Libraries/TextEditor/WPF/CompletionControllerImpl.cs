@@ -13,7 +13,6 @@ using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
-using WindowsOSUtils.Windows;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Window = System.Windows.Window;
 
@@ -342,14 +341,11 @@ namespace TextEditor.WPF
 //            _completionWindow.GotKeyboardFocus += (sender, args) =>
 //                                                  args.OldFocus.Focus();
 
+            // http://stackoverflow.com/a/839806/467582
             ElementHost.EnableModelessKeyboardInterop(_completionWindow);
 
-//            _completionWindow.Loaded += delegate
-//                                        {
-//                                            HwndSource s = HwndSource.FromVisual(_completionWindow) as HwndSource;
-//                                            if (s != null)
-//                                                s.AddHook(Hook);
-//                                        };
+//            var hook = new WpfWndProcHook(_completionWindow);
+//            hook.WndProcMessage += HookOnWndProcMessage;
 
             _completionWindow.Show();
 
@@ -358,19 +354,12 @@ namespace TextEditor.WPF
             BindWindowEventHandlers();
         }
 
-        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        /// <seealso cref="http://stackoverflow.com/a/836713/467582"/>
+        private void HookOnWndProcMessage(ref Message m, HandledEventArgs args)
         {
-            var m = new Message
-                    {
-                        HWnd = hwnd,
-                        Msg = msg,
-                        WParam = wParam,
-                        LParam = lParam
-                    };
-
             WindowMessage message = m;
 
-            Console.WriteLine("CompletionWindow.WndProc  :  {0,-25} - {1}", message.Type, m);
+//            Console.WriteLine("CompletionWindow.WndProc  :  {0,-25} - {1}", message.Type, m);
 
             if (message.Is(WindowMessageType.WM_GETDLGCODE))
             {
@@ -382,12 +371,11 @@ namespace TextEditor.WPF
                     case VK_UP:
                     case VK_RIGHT:
                     case VK_DOWN:
-                        handled = true;
-                        return new IntPtr(DLGC_WANTCHARS | DLGC_WANTARROWS | DLGC_HASSETSEL);
+                        args.Handled = true;
+                        m.Result = new IntPtr(DLGC_WANTMESSAGE);
+                        break;
                 }
             }
-
-            return IntPtr.Zero;
         }
 
         #region Win32 window message constants
