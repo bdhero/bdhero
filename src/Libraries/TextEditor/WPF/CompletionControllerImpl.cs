@@ -344,41 +344,12 @@ namespace TextEditor.WPF
             // http://stackoverflow.com/a/839806/467582
             ElementHost.EnableModelessKeyboardInterop(_completionWindow);
 
-//            var hook = new WpfWndProcHook(_completionWindow);
-//            hook.WndProcMessage += HookOnWndProcMessage;
-
             _completionWindow.Show();
 
             _completionWindow.MinWidth = _completionWindow.Width;
 
             BindWindowEventHandlers();
         }
-
-        /// <seealso cref="http://stackoverflow.com/a/836713/467582"/>
-        private void HookOnWndProcMessage(ref Message m, HandledEventArgs args)
-        {
-            WindowMessage message = m;
-
-//            Console.WriteLine("CompletionWindow.WndProc  :  {0,-25} - {1}", message.Type, m);
-
-            if (message.Is(WindowMessageType.WM_GETDLGCODE))
-            {
-                switch (message.WParamInt64Value)
-                {
-                    case VirtualKey.VK_TAB:
-                    case VirtualKey.VK_RETURN:
-                    case VirtualKey.VK_LEFT:
-                    case VirtualKey.VK_UP:
-                    case VirtualKey.VK_RIGHT:
-                    case VirtualKey.VK_DOWN:
-                        args.Handled = true;
-                        m.Result = new IntPtr(DialogCode.DLGC_WANTMESSAGE);
-                        break;
-                }
-            }
-        }
-
-
 
         private void Close()
         {
