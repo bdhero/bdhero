@@ -18,6 +18,41 @@ namespace DotNetUtils.Forms
         /// <summary>
         ///     Invoked whenever the hooked control receives a native window message.
         /// </summary>
+        /// <example>
+        ///     <code>
+        ///         public class MyElementHost : ElementHost
+        ///         {
+        ///             public void ShowWindow()
+        ///             {
+        ///                 var window = new Window();
+        ///                 var hook = new WpfWndProcHook(window);
+        ///                 hook.WndProcMessage += HookOnWndProcMessage;
+        ///                 window.Show();
+        ///             }
+        ///
+        ///             private void HookOnWndProcMessage(ref Message m, HandledEventArgs args)
+        ///             {
+        ///                 WindowMessage message = m;
+        ///
+        ///                 if (message.Is(WindowMessageType.WM_GETDLGCODE))
+        ///                 {
+        ///                     switch (message.WParamInt64Value)
+        ///                     {
+        ///                         case VirtualKey.VK_TAB:
+        ///                         case VirtualKey.VK_RETURN:
+        ///                         case VirtualKey.VK_LEFT:
+        ///                         case VirtualKey.VK_UP:
+        ///                         case VirtualKey.VK_RIGHT:
+        ///                         case VirtualKey.VK_DOWN:
+        ///                             args.Handled = true;
+        ///                             m.Result = new IntPtr(DialogCode.DLGC_WANTMESSAGE);
+        ///                             break;
+        ///                     }
+        ///                 }
+        ///             }
+        ///         }
+        /// </code>
+        /// </example>
         public event WndProcEventHandler WndProcMessage;
 
         /// <summary>
