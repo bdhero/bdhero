@@ -52,6 +52,23 @@ namespace NativeAPI.Win.User
         WM_NULL = 0x0000,
 
         /// <summary>
+        ///     Sent to a window after it has gained the keyboard focus.
+        /// </summary>
+        /// <param name="wParam">
+        ///     A handle to the window that has lost the keyboard focus. This parameter can be <c>null</c>.
+        /// </param>
+        /// <param name="lParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <returns>
+        ///     An application should return zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     To display a caret, an application should call the appropriate caret functions when it receives the <c>WM_SETFOCUS</c> message.
+        /// </remarks>
+        WM_SETFOCUS = 0x0007,
+
+        /// <summary>
         ///     An application sends the <c>WM_SETREDRAW</c> message to a window to allow changes in that window to be
         ///     redrawn or to prevent changes in that window from being redrawn.
         /// </summary>
@@ -119,6 +136,41 @@ namespace NativeAPI.Win.User
         WM_SETCURSOR = 0x0020,
 
         /// <summary>
+        ///     <para>
+        ///         Sent when the cursor is in an inactive window and the user presses a mouse button.
+        ///         The parent window receives this message only if the child window passes it to the <c>DefWindowProc</c> function.
+        ///     </para>
+        ///     <para>
+        ///         A window receives this message through its <c>WindowProc</c> function.
+        ///     </para>
+        /// </summary>
+        /// <param name="wParam">
+        ///     A handle to the top-level parent window of the window being activated.
+        /// </param>
+        /// <param name="lParam">
+        ///     <para>
+        ///         The low-order word specifies the hit-test value returned by the <c>DefWindowProc</c> function
+        ///         as a result of processing the <see cref="WM_NCHITTEST"/> message.
+        ///         For a list of hit-test values, see <see cref="WM_NCHITTEST"/>.
+        ///     </para>
+        ///     <para>
+        ///         The high-order word specifies the identifier of the mouse message generated when the user pressed
+        ///         a mouse button. The mouse message is either discarded or posted to the window, depending on the return value.
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     The return value specifies whether the window should be activated and whether the identifier of the
+        ///     mouse message should be discarded. It must be one of the <see cref="MouseActivate"/> values.
+        /// </returns>
+        /// <remarks>
+        ///     The <c>DefWindowProc</c> function passes the message to a child window's parent window before
+        ///     any processing occurs. The parent window determines whether to activate the child window.
+        ///     If it activates the child window, the parent window should return <see cref="MouseActivate.MA_NOACTIVATE"/> or
+        ///     <see cref="MouseActivate.MA_NOACTIVATEANDEAT"/> to prevent the system from processing the message further.
+        /// </remarks>
+        WM_MOUSEACTIVATE = 0x0021,
+
+        /// <summary>
         ///     Sent to the window procedure associated with a control. By default, the system handles all
         ///     keyboard input to the control; the system interprets certain types of keyboard input as dialog box
         ///     navigation keys. To override this default behavior, the control can respond to the <c>WM_GETDLGCODE</c> message
@@ -157,6 +209,35 @@ namespace NativeAPI.Win.User
         WM_SYSCOMMAND = 0x0112,
 
         /// <summary>
+        ///     <para>
+        ///         Sent to the window that is losing the mouse capture.
+        ///     </para>
+        ///     <para>
+        ///         A window receives this message through its <c>WindowProc</c> function.
+        ///     </para>
+        /// </summary>
+        /// <param name="wParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <param name="lParam">
+        ///     A handle to the window gaining the mouse capture.
+        /// </param>
+        /// <returns>
+        ///     An application should return zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         A window receives this message even if it calls <c>ReleaseCapture</c> itself.
+        ///         An application should not attempt to set the mouse capture in response to this message.
+        ///     </para>
+        ///     <para>
+        ///         When it receives this message, a window should redraw itself, if necessary, to reflect the new
+        ///         mouse-capture state.
+        ///     </para>
+        /// </remarks>
+        WM_CAPTURECHANGED = 0x0215,
+
+        /// <summary>
         ///     Notifies an application of a change to the hardware configuration of a device or the computer.
         /// </summary>
         WM_DEVICECHANGE = 0x0219,
@@ -166,7 +247,7 @@ namespace NativeAPI.Win.User
         WM_MOVE = 0x0003,
         WM_SIZE = 0x0005,
         WM_ACTIVATE = 0x0006,
-        WM_SETFOCUS = 0x0007,
+
         WM_KILLFOCUS = 0x0008,
         WM_ENABLE = 0x000a,
         WM_SETTEXT = 0x000c,
@@ -188,7 +269,6 @@ namespace NativeAPI.Win.User
         WM_FONTCHANGE = 0x001d,
         WM_TIMECHANGE = 0x001e,
         WM_CANCELMODE = 0x001f,
-        WM_MOUSEACTIVATE = 0x0021,
         WM_CHILDACTIVATE = 0x0022,
         WM_QUEUESYNC = 0x0023,
         WM_GETMINMAXINFO = 0x0024,
@@ -324,7 +404,6 @@ namespace NativeAPI.Win.User
         WM_EXITMENULOOP = 0x0212,
         WM_NEXTMENU = 0x0213,
         WM_SIZING = 0x0214,
-        WM_CAPTURECHANGED = 0x0215,
         WM_MOVING = 0x0216,
         WM_POWERBROADCAST = 0x0218,
         WM_MDICREATE = 0x0220,
