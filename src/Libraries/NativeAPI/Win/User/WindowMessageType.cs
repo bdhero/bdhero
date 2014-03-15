@@ -28,17 +28,65 @@ namespace NativeAPI.Win.User
     public enum WindowMessageType : uint
     {
         /// <summary>
-        ///     A window receives this message when the user chooses a command from the Window menu (formerly known
-        ///     as the system or control menu) or when the user chooses the maximize button, minimize button,
-        ///     restore button, or close button.
+        ///     <para>
+        ///         Performs no operation. An application sends the WM_NULL message if it wants to post a message that the recipient window will ignore.
+        ///     </para>
+        ///     <para>
+        ///         A window receives this message through its <c>WindowProc</c> function.
+        ///     </para>
         /// </summary>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx"/>
-        WM_SYSCOMMAND = 0x0112,
+        /// <param name="wParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <param name="lParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <returns>
+        ///     Type: LRESULT.
+        ///     An application returns zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     For example, if an application has installed a WH_GETMESSAGE hook and wants to prevent a message from being processed, the GetMsgProc callback function can change the message number to WM_NULL so the recipient will ignore it.
+        ///     As another example, an application can check if a window is responding to messages by sending the WM_NULL message with the SendMessageTimeout function.
+        /// </remarks>
+        WM_NULL = 0x0000,
 
         /// <summary>
-        ///     Notifies an application of a change to the hardware configuration of a device or the computer.
+        ///     An application sends the <c>WM_SETREDRAW</c> message to a window to allow changes in that window to be
+        ///     redrawn or to prevent changes in that window from being redrawn.
         /// </summary>
-        WM_DEVICECHANGE = 0x0219,
+        /// <param name="wParam">
+        ///     The redraw state. If this parameter is <c>true</c>, the content can be redrawn after a change.
+        ///     If this parameter is <c>false</c>, the content cannot be redrawn after a change.
+        /// </param>
+        /// <param name="lParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <returns>
+        ///     An application returns zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         This message can be useful if an application must add several items to a list box.
+        ///         The application can call this message with <c>wParam</c> set to <c>false</c>, add the items, and then call the
+        ///         message again with <c>wParam</c> set to <c>true</c>. Finally, the application can call
+        ///         <c>RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN)</c>
+        ///         to cause the list box to be repainted.
+        ///     </para>
+        ///     <para>
+        ///         Note: <c>RedrawWindow</c> with the specified flags is used instead of <c>InvalidateRect</c> because the former
+        ///         is necessary for some controls that have nonclient area on their own, or have window styles that
+        ///         cause them to be given a nonclient area (such as <see cref="WindowStyles.WS_THICKFRAME"/>,
+        ///         <see cref="WindowStyles.WS_BORDER"/>, or <see cref="ExtendedWindowStyles.WS_EX_CLIENTEDGE"/>).
+        ///         If the control does not have a nonclient area, <c>RedrawWindow</c> with these flags will do only as much
+        ///         invalidation as <c>InvalidateRect</c> would.
+        ///     </para>
+        ///     <para>
+        ///         If the application sends the <c>WM_SETREDRAW</c> message to a hidden window, the window becomes visible
+        ///         (that is, the operating system adds the <see cref="WindowStyles.WS_VISIBLE"/> style to the window).
+        ///     </para>
+        /// </remarks>
+        WM_SETREDRAW = 0x000b,
 
         /// <summary>
         ///     Sent to a window if the mouse causes the cursor to move within a window and mouse input is not captured.
@@ -70,7 +118,49 @@ namespace NativeAPI.Win.User
         /// </remarks>
         WM_SETCURSOR = 0x0020,
 
-        WM_NULL = 0x0000,
+        /// <summary>
+        ///     Sent to the window procedure associated with a control. By default, the system handles all
+        ///     keyboard input to the control; the system interprets certain types of keyboard input as dialog box
+        ///     navigation keys. To override this default behavior, the control can respond to the <c>WM_GETDLGCODE</c> message
+        ///     to indicate the types of input it wants to process itself.
+        /// </summary>
+        /// <param name="wParam">
+        ///     The virtual key, pressed by the user, that prompted Windows to issue this notification.
+        ///     The handler must selectively handle these keys. For instance, the handler might accept and process
+        ///     <see cref="VirtualKey.VK_RETURN"/> but delegate <see cref="VirtualKey.VK_TAB"/> to the owner window.
+        ///     For a list of values, see <see cref="VirtualKey"/>.
+        /// </param>
+        /// <param name="lParam">
+        ///     A pointer to a <see cref="System.Windows.Forms.Message"/> structure (or <c>null</c> if the system is performing a query).
+        /// </param>
+        /// <returns>
+        ///     The return value is one or more of the <see cref="DialogCode"/> values, indicating which type of input the application processes.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         Although the <c>DefWindowProc</c> function always returns zero in response to the <c>WM_GETDLGCODE</c> message,
+        ///         the window procedure for the predefined control classes return a code appropriate for each class.
+        ///     </para>
+        ///     <para>
+        ///         The <c>WM_GETDLGCODE</c> message and the returned values are useful only with user-defined
+        ///         dialog box controls or standard controls modified by subclassing.
+        ///     </para>
+        /// </remarks>
+        WM_GETDLGCODE = 0x0087,
+
+        /// <summary>
+        ///     A window receives this message when the user chooses a command from the Window menu (formerly known
+        ///     as the system or control menu) or when the user chooses the maximize button, minimize button,
+        ///     restore button, or close button.
+        /// </summary>
+        /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx"/>
+        WM_SYSCOMMAND = 0x0112,
+
+        /// <summary>
+        ///     Notifies an application of a change to the hardware configuration of a device or the computer.
+        /// </summary>
+        WM_DEVICECHANGE = 0x0219,
+
         WM_CREATE = 0x0001,
         WM_DESTROY = 0x0002,
         WM_MOVE = 0x0003,
@@ -79,7 +169,6 @@ namespace NativeAPI.Win.User
         WM_SETFOCUS = 0x0007,
         WM_KILLFOCUS = 0x0008,
         WM_ENABLE = 0x000a,
-        WM_SETREDRAW = 0x000b,
         WM_SETTEXT = 0x000c,
         WM_GETTEXT = 0x000d,
         WM_GETTEXTLENGTH = 0x000e,
@@ -146,7 +235,6 @@ namespace NativeAPI.Win.User
         WM_NCHITTEST = 0x0084,
         WM_NCPAINT = 0x0085,
         WM_NCACTIVATE = 0x0086,
-        WM_GETDLGCODE = 0x0087,
         WM_SYNCPAINT = 0x0088,
         WM_NCMOUSEMOVE = 0x00a0,
         WM_NCLBUTTONDOWN = 0x00a1,
@@ -191,7 +279,6 @@ namespace NativeAPI.Win.User
         WM_IME_KEYLAST = 0x010f,
         WM_INITDIALOG = 0x0110,
         WM_COMMAND = 0x0111,
-//        WM_SYSCOMMAND = 0x0112,
         WM_TIMER = 0x0113,
         WM_HSCROLL = 0x0114,
         WM_VSCROLL = 0x0115,
@@ -240,7 +327,6 @@ namespace NativeAPI.Win.User
         WM_CAPTURECHANGED = 0x0215,
         WM_MOVING = 0x0216,
         WM_POWERBROADCAST = 0x0218,
-//        WM_DEVICECHANGE = 0x0219,
         WM_MDICREATE = 0x0220,
         WM_MDIDESTROY = 0x0221,
         WM_MDIACTIVATE = 0x0222,
