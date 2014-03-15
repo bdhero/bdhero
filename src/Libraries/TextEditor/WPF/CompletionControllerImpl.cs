@@ -6,11 +6,16 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
+using WindowsOSUtils.Windows;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using Window = System.Windows.Window;
 
 namespace TextEditor.WPF
 {
@@ -18,7 +23,7 @@ namespace TextEditor.WPF
     {
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
 
-        private readonly CompletionProviderImpl _completionProvider = new CompletionProviderImpl();
+        private readonly CompletionProviderImpl _completionProvider;
 
         private CompletionWindow _completionWindow;
         
@@ -33,6 +38,8 @@ namespace TextEditor.WPF
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
             _editor.TextArea.TextEntered += TextAreaOnTextEntered;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
+
+            _completionProvider = new CompletionProviderImpl(_editor);
         }
 
         public bool IgnoreTabOrEnterKey
@@ -335,12 +342,119 @@ namespace TextEditor.WPF
 //            _completionWindow.GotKeyboardFocus += (sender, args) =>
 //                                                  args.OldFocus.Focus();
 
+            ElementHost.EnableModelessKeyboardInterop(_completionWindow);
+
+//            _completionWindow.Loaded += delegate
+//                                        {
+//                                            HwndSource s = HwndSource.FromVisual(_completionWindow) as HwndSource;
+//                                            if (s != null)
+//                                                s.AddHook(Hook);
+//                                        };
+
             _completionWindow.Show();
 
             _completionWindow.MinWidth = _completionWindow.Width;
 
             BindWindowEventHandlers();
         }
+
+        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            var m = new Message
+                    {
+                        HWnd = hwnd,
+                        Msg = msg,
+                        WParam = wParam,
+                        LParam = lParam
+                    };
+
+            WindowMessage message = m;
+
+            Console.WriteLine("CompletionWindow.WndProc  :  {0,-25} - {1}", message.Type, m);
+
+            if (message.Is(WindowMessageType.WM_GETDLGCODE))
+            {
+                switch (message.WParamInt64Value)
+                {
+                    case VK_TAB:
+                    case VK_RETURN:
+                    case VK_LEFT:
+                    case VK_UP:
+                    case VK_RIGHT:
+                    case VK_DOWN:
+                        handled = true;
+                        return new IntPtr(DLGC_WANTCHARS | DLGC_WANTARROWS | DLGC_HASSETSEL);
+                }
+            }
+
+            return IntPtr.Zero;
+        }
+
+        #region Win32 constants
+
+        /// <summary>
+        ///     Button.
+        /// </summary>
+        private const int DLGC_BUTTON = 0x2000;
+
+        /// <summary>
+        ///     Default push button.
+        /// </summary>
+        private const int DLGC_DEFPUSHBUTTON = 0x0010;
+
+        /// <summary>
+        ///     EM_SETSEL messages.
+        /// </summary>
+        private const int DLGC_HASSETSEL = 0x0008;
+
+        /// <summary>
+        ///     Radio button.
+        /// </summary>
+        private const int DLGC_RADIOBUTTON = 0x0040;
+
+        /// <summary>
+        ///     Static control.
+        /// </summary>
+        private const int DLGC_STATIC = 0x0100;
+
+        /// <summary>
+        ///     Non-default push button.
+        /// </summary>
+        private const int DLGC_UNDEFPUSHBUTTON = 0x0020;
+
+        /// <summary>
+        ///     All keyboard input.
+        /// </summary>
+        private const int DLGC_WANTALLKEYS = 0x0004;
+
+        /// <summary>
+        ///     Direction keys.
+        /// </summary>
+        private const int DLGC_WANTARROWS = 0x0001;
+
+        /// <summary>
+        ///     WM_CHAR messages.
+        /// </summary>
+        private const int DLGC_WANTCHARS = 0x0080;
+
+        /// <summary>
+        ///     All keyboard input (the application passes this message in the MSG structure to the control).
+        /// </summary>
+        private const int DLGC_WANTMESSAGE = 0x0004;
+
+        /// <summary>
+        ///     TAB key.
+        /// </summary>
+        private const int DLGC_WANTTAB = 0x0002;
+
+        private const int VK_TAB = 0x09;
+        private const int VK_RETURN = 0x0D;
+        private const int VK_LEFT = 0x25;
+        private const int VK_UP = 0x26;
+        private const int VK_RIGHT = 0x27;
+        private const int VK_DOWN = 0x28;
+
+        #endregion
 
         private void Close()
         {
