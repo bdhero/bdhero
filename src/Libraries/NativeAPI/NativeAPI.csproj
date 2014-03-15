@@ -94,6 +94,7 @@
     <Compile Include="Win\User\MenuItemInfoMember.cs" />
     <Compile Include="Win\User\MenuItemState.cs" />
     <Compile Include="Win\User\MenuItemType.cs" />
+    <Compile Include="Win\User\MouseActivate.cs" />
     <Compile Include="Win\User\ShowWindowCommand.cs" />
     <Compile Include="Win\User\SystemMenuAPI.cs" />
     <Compile Include="Win\User\VirtualKey.cs" />
