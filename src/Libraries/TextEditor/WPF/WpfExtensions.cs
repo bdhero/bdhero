@@ -22,7 +22,6 @@ namespace TextEditor.WPF
             var timer = new Timer(interval) { AutoReset = false };
             timer.Elapsed += delegate
                              {
-
                                  if (elem.Dispatcher.CheckAccess())
                                  {
                                      // The calling thread owns the dispatcher, and hence the UI element
