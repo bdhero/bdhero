@@ -43,11 +43,9 @@ namespace TextEditor.WPF
             _editor.TextArea.PreviewKeyDown += (s, e) =>
                     Console.WriteLine("Editor.TextArea.PreviewKeyDown({0})", e.Key);
 
-
             _editor.PreviewKeyDown += EditorOnPreviewKeyDown;
             _editor.TextChanged += EditorOnTextChanged;
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
-            _editor.TextArea.TextEntered += TextAreaOnTextEntered;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
             _completionProvider = new CompletionProviderImpl(_editor);
@@ -71,7 +69,7 @@ namespace TextEditor.WPF
 
         private void EditorOnTextChanged(object sender, EventArgs eventArgs)
         {
-            if (_completionWindow != null)
+            if (_completionWindow != null/* && _completionWindow.SizeToContent != SizeToContent.Manual*/)
             {
                 AutoSize();
             }
@@ -79,7 +77,12 @@ namespace TextEditor.WPF
 
         private void TextAreaOnTextEntering(object sender, TextCompositionEventArgs e)
         {
-            TextAreaOnTextEntering(e.Text, (EventArgs) e);
+            TextAreaOnTextEntering(e.Text, (EventArgs)e);
+
+            if (e.Text == "$" || e.Text == "%" && _completionWindow == null)
+            {
+                Show();
+            }
         }
 
         private void TextAreaOnTextEntering(string text, EventArgs e = null)
@@ -95,14 +98,6 @@ namespace TextEditor.WPF
             }
             // Do not set e.Handled=true.
             // We still want to insert the character that was typed.
-        }
-
-        private void TextAreaOnTextEntered(object sender, TextCompositionEventArgs e)
-        {
-            if (e.Text == "$" || e.Text == "%" || _completionWindow != null)
-            {
-//                Show();
-            }
         }
 
         private void TextAreaOnMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
@@ -179,15 +174,35 @@ namespace TextEditor.WPF
 
         private void AutoSizeToContent()
         {
+            Logger.Debug("AutoSizeToContent()");
+
+            var prevSizeToContent = _completionWindow.SizeToContent;
+            var newSizeToContent = SizeToContent.WidthAndHeight;
+
+            Logger.DebugFormat("    CompletionWindow.SizeToContent: {0} => {1}", prevSizeToContent, newSizeToContent);
+
+            if (prevSizeToContent == newSizeToContent)
+                return;
+
             // Disable max width/height, which will cause the window to resize itself to fit its contents.
             _completionWindow.MaxWidth = double.PositiveInfinity;
             _completionWindow.MaxHeight = double.PositiveInfinity;
-            _completionWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            _completionWindow.SizeToContent = newSizeToContent;
         }
 
         private void SetManualSize(double width, double height)
         {
-            _completionWindow.SizeToContent = SizeToContent.Manual;
+            Logger.DebugFormat("SetManualSize({0}, {1})", width, height);
+
+            var prevSizeToContent = _completionWindow.SizeToContent;
+            var newSizeToContent = SizeToContent.Height;
+
+            Logger.DebugFormat("    CompletionWindow.SizeToContent: {0} => {1}", prevSizeToContent, newSizeToContent);
+
+            if (prevSizeToContent == newSizeToContent)
+                return;
+
+            _completionWindow.SizeToContent = newSizeToContent;
             _completionWindow.Width = width;
             _completionWindow.Height = height;
             _completionWindow.MaxHeight = MaxHeight;
@@ -207,25 +222,29 @@ namespace TextEditor.WPF
             if (oldSize.Equals(System.Drawing.Size.Empty))
                 return;
 
+            var newWidth = (int) (newSize.Width + SystemParameters.VerticalScrollBarWidth + RightPadding);
+//            var newHeight = Math.Min(newSize.Height, MaxHeight);
+            var newHeight = newSize.Height;
+
+            newSize = new System.Drawing.Size(newWidth, newHeight);
+
             // Window is narrowing (or staying the same width), which means it doesn't need to be made wider to fit its contents.
             // Since we won't be resizing the window any further, we can safely auto-select the first completion item.
             // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
             // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
-            if (newSize.Width <= oldSize.Width)
+            if (newSize.Width < oldSize.Width)
             {
+//                _completionWindow.MaxHeight = MaxHeight;
                 SelectFirstItem();
                 return;
             }
 
             // We've already found the "ideal" width and height of the window, and are currently in the middle of
             // resizing the window's height DOWN to a reasonable height so that it doesn't overflow off the screen.
-            if (newSize.Height <= oldSize.Height)
+            if (newSize.Height < oldSize.Height)
                 return;
 
-            var fullWidth = newSize.Width + SystemParameters.VerticalScrollBarWidth + RightPadding;
-            var newHeight = Math.Min(newSize.Height, MaxHeight);
-
-            SetManualSize(fullWidth, newHeight);
+            SetManualSize(newWidth, newHeight);
 
             // Now that we've set the final width and height of the window, we can auto-select the first completion item.
             // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
@@ -379,7 +398,6 @@ namespace TextEditor.WPF
                                     ResizeMode = ResizeMode.NoResize
                                 };
 
-
             // <---
 
 
@@ -394,8 +412,7 @@ namespace TextEditor.WPF
 
             BindCompletionWindowEventHandlers();
 
-            var data = _completionWindow.CompletionList.CompletionData;
-            data.AddRange(_completionProvider.GenerateCompletionData());
+            _completionWindow.CompletionList.CompletionData.AddRange(_completionProvider.GenerateCompletionData());
 
             // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
             // when we try to focus the text editor.
