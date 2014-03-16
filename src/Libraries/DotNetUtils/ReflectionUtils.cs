@@ -30,6 +30,76 @@ namespace DotNetUtils
     public static class ReflectionUtils
     {
         /// <summary>
+        ///     Invokes the specified <paramref name="action"/> if and only if a non-public field of type
+        ///     <typeparamref name="T"/> with the specified <paramref name="name"/> exists on <paramref name="obj"/>
+        ///     and the value of the field is not <c>null</c>.
+        /// </summary>
+        /// <param name="obj">
+        ///     An object whose non-public field will be accessed.
+        /// </param>
+        /// <param name="name">
+        ///     The name of the non-public field to access.
+        /// </param>
+        /// <param name="action">
+        ///     An action to invoke if the requested field exists with the specified <paramref name="name"/> and
+        ///     type <typeparamref name="T"/> and is not <c>null</c>.
+        /// </param>
+        /// <typeparam name="T">
+        ///     The data type of the field being accessed.
+        /// </typeparam>
+        public static void WithField<T>(this object obj, string name, Action<T> action)
+            where T : class
+        {
+            try
+            {
+                var type = obj.GetType();
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic);
+                var member = fields.FirstOrDefault(info => info.FieldType == typeof(T) && info.Name == name);
+                if (member == null)
+                    return;
+
+                var value = member.GetValue(obj) as T;
+                if (value == default(T))
+                    return;
+
+                action(value);
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        ///     Invokes the method with the specified <paramref name="name"/> on the given <paramref name="obj"/>
+        ///     with the specified <paramref name="params"/>.  If the requested method does not exist,
+        ///     nothing will happen (no exception is thrown).
+        /// </summary>
+        /// <param name="obj">
+        ///     Object to invoke the method on.
+        /// </param>
+        /// <param name="name">
+        ///     Name of the method to invoke.
+        /// </param>
+        /// <param name="params">
+        ///     Parameters to pass to the method.
+        /// </param>
+        public static void InvokeMethod(this object obj, string name, params object[] @params)
+        {
+            try
+            {
+                var type = obj.GetType();
+                var method = type.GetMethod(name, BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic);
+                if (method == null)
+                    return;
+
+                method.Invoke(obj, @params);
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
         ///     Generates a hierarchical YAML-like string representation of an object.
         /// </summary>
         /// <param name="obj">Object to stringify.</param>
