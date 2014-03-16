@@ -20,20 +20,37 @@ namespace TextEditor.WPF
             where T : UIElement
         {
             var timer = new Timer(interval) { AutoReset = false };
-            timer.Elapsed += delegate
-                             {
-                                 if (elem.Dispatcher.CheckAccess())
-                                 {
-                                     // The calling thread owns the dispatcher, and hence the UI element
-                                     action(elem);
-                                 }
-                                 else
-                                 {
-                                     // Invokation required
-                                     elem.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => action(elem)));
-                                 }
-                             };
+            timer.Elapsed += (sender, args) => Invoke(elem, action);
             timer.Start();
+        }
+
+        public static void Invoke<T>(this T elem, Action<T> action)
+            where T : UIElement
+        {
+            if (elem.Dispatcher.CheckAccess())
+            {
+                // The calling thread owns the dispatcher, and hence the UI element
+                action(elem);
+            }
+            else
+            {
+                // Invokation required
+                elem.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => action(elem)));
+            }
+        }
+
+        public static void EnableWinFormsInterop(this Window window)
+        {
+            // http://stackoverflow.com/a/839806/467582
+            ElementHost.EnableModelessKeyboardInterop(window);
+
+            // http://blogs.msdn.com/b/mhendersblog/archive/2005/10/04/476921.aspx
+            var parentForm = window.FindForm();
+            if (parentForm == null)
+                return;
+
+            var helper = new WindowInteropHelper(window);
+            helper.Owner = parentForm.Handle;
         }
 
         /// <summary>
