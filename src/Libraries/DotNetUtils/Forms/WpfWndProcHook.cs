@@ -75,6 +75,21 @@ namespace DotNetUtils.Forms
                 _elem.Loaded += (sender, args) => AddHook();
         }
 
+        /// <summary>
+        ///     Hooks the specified <paramref name="handler"/> into the given <paramref name="elem"/>'s
+        ///     window message system.
+        /// </summary>
+        /// <param name="elem">
+        ///     A WPF framework element to listen to for window messages.
+        /// </param>
+        /// <param name="handler">
+        ///     Event handler that will be called whenever <paramref name="elem"/> receives a window message.
+        /// </param>
+        public static void Hook(FrameworkElement elem, WndProcEventHandler handler)
+        {
+            new WpfWndProcHook(elem).WndProcMessage += handler;
+        }
+
         private void AddHook()
         {
             var hwndSource = PresentationSource.FromVisual(_elem) as HwndSource;
