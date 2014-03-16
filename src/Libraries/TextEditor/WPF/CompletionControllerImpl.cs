@@ -467,6 +467,13 @@ namespace TextEditor.WPF
             _completionWindow.Show();
 
             WpfWndProcHook.Hook(_completionWindow, CompletionWindowOnWndProcMessage);
+
+            // TODO: Smarter filtering
+            var textArea = _completionWindow.TextArea;
+            var doc = textArea.Document;
+            var line = doc.GetLineByNumber(textArea.Caret.Line);
+            var text = doc.GetText(line).Substring(0, textArea.Caret.Column - 1);
+            _completionWindow.CompletionList.SelectItem(text);
         }
 
         private void CompletionWindowOnWndProcMessage(ref Message m, HandledEventArgs args)
