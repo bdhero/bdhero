@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Timers;
 #if !__MonoCS__
 using System;
 using System.Collections;
@@ -7,17 +7,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Forms.Integration;
+using System.Windows.Controls;
 using System.Windows.Input;
-using DotNetUtils.Annotations;
+using DotNetUtils;
 using DotNetUtils.Extensions;
 using DotNetUtils.Forms;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using ToolTip = System.Windows.Controls.ToolTip;
-using Window = System.Windows.Window;
+using Message = System.Windows.Forms.Message;
 
 namespace TextEditor.WPF
 {
@@ -27,8 +24,8 @@ namespace TextEditor.WPF
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
-
         private readonly CompletionProviderImpl _completionProvider;
+        private readonly Throttle _windowMoveThrottle = new Throttle(50);
 
         private CompletionWindow _completionWindow;
         
@@ -50,11 +47,18 @@ namespace TextEditor.WPF
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
             _completionProvider = new CompletionProviderImpl(_editor);
+
+            _windowMoveThrottle.Elapsed += WindowMoveThrottleOnElapsed;
         }
 
         public bool IgnoreTabOrEnterKey
         {
             get { return _completionWindow != null; }
+        }
+
+        private bool HasCompletions
+        {
+            get { return WithCompletionList(list => list.ListBox.HasItems); }
         }
 
         #region Event Handlers - Text Editor
@@ -95,40 +99,66 @@ namespace TextEditor.WPF
 
         private void TextAreaOnMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
         {
-            // Workaround for bug in Avalon:
+            // Workaround for WPF/WinForms interop issue:
             // Show completion window, then focus completion window w/ mouse or scroll wheel.
             // Click back in the text editor area.  The completion window disappears, but doesn't "close".
-            Close();
+//            Close();
         }
 
         #endregion
 
         #region Event Handlers - Parent Window
 
-        private void BindWindowEventHandlers()
+        private void BindParentWindowEventHandlers()
         {
             if (_isWindowMoveEventBound)
                 return;
 
-            var parentWindow = Window.GetWindow(_editor);
-            if (parentWindow != null)
+            var form = _editor.FindForm();
+            if (form != null)
             {
-                parentWindow.LocationChanged += Close;
-                parentWindow.SizeChanged += Close;
-                parentWindow.StateChanged += Close;
-            }
-            else
-            {
-                var form = _editor.FindForm();
-                if (form != null)
-                {
-                    form.Move += Close;
-                    form.LocationChanged += Close;
-                    form.SizeChanged += Close;
-                }
+                form.Move += FormOnMove;
+                form.LocationChanged += FormOnMove;
+                form.SizeChanged += FormOnMove;
             }
 
             _isWindowMoveEventBound = true;
+        }
+
+        private enum ToolTipRepositionStrategy
+        {
+            HideAndShow,
+            RePosition,
+            Delayed,
+        }
+
+        private void FormOnMove(object sender, EventArgs eventArgs)
+        {
+            if (_completionWindow == null)
+                return;
+
+            var strategy = ToolTipRepositionStrategy.Delayed;
+
+            if (strategy == ToolTipRepositionStrategy.HideAndShow)
+                HideToolTip();
+
+            _completionWindow.InvokeMethod("UpdatePosition");
+
+            if (strategy == ToolTipRepositionStrategy.HideAndShow)
+                ShowToolTip();
+
+            if (strategy == ToolTipRepositionStrategy.RePosition)
+                RePositionToolTip();
+
+            if (strategy != ToolTipRepositionStrategy.Delayed)
+                return;
+
+            _windowMoveThrottle.Reset();
+        }
+
+        private void WindowMoveThrottleOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            _completionWindow.Invoke(window => RePositionToolTip());
         }
 
         #endregion
@@ -166,14 +196,6 @@ namespace TextEditor.WPF
 
             Logger.DebugFormat("CompletionWindow.SizeChanged({0} => {1})", oldSize, newSize);
 
-            // Ignore initial resize.
-            if (oldSize.Equals(System.Drawing.Size.Empty))
-            {
-//                Logger.DebugFormat("    ignoring - initial resize");
-//                return;
-            }
-
-            // Probably a bug
             if (oldSize.Equals(newSize))
             {
                 Logger.DebugFormat("    ignoring - size hasn't changed");
@@ -183,7 +205,6 @@ namespace TextEditor.WPF
                 return;
             }
 
-            // Flag set
             if (_ignoreSizeChange)
             {
                 Logger.DebugFormat("    ignoring - flag set");
@@ -215,7 +236,7 @@ namespace TextEditor.WPF
             _completionWindow.MaxHeight = _maxHeight;
             _completionWindow.SizeToContent = _sizeToContent;
 
-            if (HasItems)
+            if (HasCompletions)
             {
                 var newWidth = fullWidth;
 
@@ -234,17 +255,25 @@ namespace TextEditor.WPF
             }
         }
 
-        private bool HasItems
-        {
-            get { return WithCompletionList(list => list.ListBox.HasItems); }
-        }
+        #region Tool Tip
 
-        private void RePositionToolTip()
+        private void ShowToolTip(bool show = true)
         {
-            HideToolTip();
+            var listBox = _completionWindow.CompletionList.ListBox;
+            var numItems = listBox.Items.Count;
 
-            if (HasItems)
-                ShowToolTip();
+            if (numItems < 2)
+                return;
+
+            var delta = +1;
+            var curIndex = listBox.SelectedIndex;
+            if (curIndex == numItems - 1)
+                delta = -1;
+
+            listBox.SelectIndex(curIndex + delta);
+            listBox.SelectIndex(curIndex - delta);
+
+            _completionWindow.WithField<ToolTip>("toolTip", toolTip => toolTip.IsOpen = show);
         }
 
         private void HideToolTip()
@@ -252,34 +281,17 @@ namespace TextEditor.WPF
             ShowToolTip(false);
         }
 
-        private void ShowToolTip(bool show = true)
+        private void RePositionToolTip()
         {
-            WithToolTip(toolTip => toolTip.IsOpen = show);
+            HideToolTip();
+
+            if (HasCompletions)
+                ShowToolTip();
         }
 
-        private void WithToolTip(Action<ToolTip> action)
-        {
-            // Dirty...
-            try
-            {
-                var type = _completionWindow.GetType();
-                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic);
-                var toolTipMember1 = fields.FirstOrDefault(info => info.Name.Equals("toolTip", StringComparison.OrdinalIgnoreCase));
-                var toolTipMember2 = fields.FirstOrDefault(info => info.FieldType == typeof (ToolTip));
-                var toolTipMember = toolTipMember1 ?? toolTipMember2;
-                if (toolTipMember != null)
-                {
-                    var toolTip = toolTipMember.GetValue(_completionWindow) as ToolTip;
-                    if (toolTip != null)
-                    {
-                        action(toolTip);
-                    }
-                }
-            }
-            catch
-            {
-            }
-        }
+        #endregion
+
+        #region Item selection
 
         private void SelectFirstItem()
         {
@@ -299,6 +311,8 @@ namespace TextEditor.WPF
             HideToolTip();
         }
 
+        #endregion
+
         #region Keyboard event handling
 
         private void CompletionWindowOnKeyDown(object sender, KeyEventArgs e)
@@ -306,46 +320,21 @@ namespace TextEditor.WPF
             if (!_completionWindow.IsKeyboardFocusWithin)
                 return;
 
-            switch (e.Key)
-            {
-                // Avalon already handles these
-                case Key.PageUp:
-                case Key.PageDown:
-                case Key.Home:
-                case Key.End:
-                case Key.Down:
-                case Key.Up:
-                case Key.Tab:
-                case Key.Enter:
-                case Key.Escape:
-                    return;
-            }
+            if (KeyboardHelper.IsHandledByAvalon(e.Key))
+                return;
 
             ProxyDialogKey(e);
             ProxyInputKey(e);
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
         private void ProxyDialogKey(KeyEventArgs e)
         {
-            var key = e.Key;
-            var target = _editor.TextArea;
-
-            var keyboardDevice = Keyboard.PrimaryDevice;
-            var inputSource = PresentationSource.FromVisual(target);
-            var routedEvent = Keyboard.KeyDownEvent;
-
-            if (inputSource == null)
-                return;
-
-            var args = new KeyEventArgs(keyboardDevice, inputSource, 0, key) { RoutedEvent = routedEvent };
-
-            target.RaiseEvent(args);
+            KeyboardHelper.RaiseKeyEvent(_editor.TextArea, e);
         }
 
         private void ProxyInputKey(KeyEventArgs e)
         {
-            var keyString = GetPrintableString(e.Key);
+            var keyString = KeyboardHelper.GetPrintableString(e.Key);
             if (keyString == "")
                 return;
 
@@ -353,60 +342,12 @@ namespace TextEditor.WPF
             _editor.TextArea.Document.Insert(_editor.TextArea.Caret.Offset, keyString);
         }
 
-        [NotNull]
-        private static string GetPrintableString(Key key)
-        {
-            // Ignore meta keys
-            if (IsMetaKey(key))
-                return "";
-
-            // Ignore non-printable characters
-            if (!IsPrintable(key))
-                return "";
-
-            var keyChar = KeyboardAPI.GetCharFromKey(key);
-
-            return string.Format("{0}", keyChar);
-        }
-
-        private static bool IsMetaKey(Key key)
-        {
-            switch (key)
-            {
-                case Key.LeftCtrl:
-                case Key.RightCtrl:
-                case Key.LeftShift:
-                case Key.RightShift:
-                case Key.LeftAlt:
-                case Key.RightAlt:
-                case Key.LWin:
-                case Key.RWin:
-                case Key.System:
-                    return true;
-            }
-            return false;
-        }
-
-        private static bool IsPrintable(Key key)
-        {
-            var keyChar = KeyboardAPI.GetCharFromKey(key);
-
-            // Non-printable control character
-            if (keyChar < ' ')
-                return false;
-
-            // Other non-printable character (e.g., Delete)
-            if (keyChar == ' ' && key != Key.Space)
-                return false;
-
-            return true;
-        }
 
         #endregion
 
         private void CompletionWindowOnDeactivated(object sender, EventArgs eventArgs)
         {
-            // Workaround for bug in Avalon:
+            // Workaround for bug in Avalon (or WPF/WinForms interop issue?):
             // Show completion window, then focus completion window w/ mouse or scroll wheel.
             // Click back in the text editor area.  The completion window disappears, but doesn't "close".
 //            Close();
@@ -438,20 +379,13 @@ namespace TextEditor.WPF
                                     CloseAutomatically = true,
                                     CloseWhenCaretAtBeginning = true,
                                     ResizeMode = ResizeMode.NoResize,
-                                    SizeToContent = SizeToContent.Height
+                                    SizeToContent = SizeToContent.Height,
+                                    Topmost = true
                                 };
-
-            // <---
-
 
             // TODO:
             _completionWindow.CompletionList.InsertionRequested += CompletionListOnInsertionRequested;
-//            _completionWindow.CompletionList.IsFiltering = true;
-//            _completionWindow.CompletionList.ListBox.
-
-
-            // --->
-
+            _completionWindow.CompletionList.IsFiltering = true;
 
             BindCompletionWindowEventHandlers();
 
@@ -462,10 +396,9 @@ namespace TextEditor.WPF
 //            _completionWindow.GotKeyboardFocus += (sender, args) =>
 //                                                  _editor.TextArea.Focus();
 
-            // http://stackoverflow.com/a/839806/467582
-            ElementHost.EnableModelessKeyboardInterop(_completionWindow);
+            _completionWindow.EnableWinFormsInterop();
 
-            BindWindowEventHandlers();
+            BindParentWindowEventHandlers();
 
             _completionWindow.Show();
 

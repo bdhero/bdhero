@@ -93,6 +93,7 @@
     <Compile Include="TextEditorFactory.cs" />
     <Compile Include="WPF\CompletionControllerImpl.cs" />
     <Compile Include="WPF\CompletionProviderImpl.cs" />
+    <Compile Include="WPF\KeyboardHelper.cs" />
     <Compile Include="WPF\TextEditorOptionsImpl.cs" />
     <Compile Include="WinForms\TextEditorImpl.cs" />
     <Compile Include="WinForms\TextEditorOptionsImpl.cs" />
