@@ -29,7 +29,8 @@ namespace NativeAPI.Win.User
     {
         /// <summary>
         ///     <para>
-        ///         Performs no operation. An application sends the WM_NULL message if it wants to post a message that the recipient window will ignore.
+        ///         Performs no operation. An application sends the <c>WM_NULL</c> message if it wants to post a message
+        ///         that the recipient window will ignore.
         ///     </para>
         ///     <para>
         ///         A window receives this message through its <c>WindowProc</c> function.
@@ -46,10 +47,48 @@ namespace NativeAPI.Win.User
         ///     An application returns zero if it processes this message.
         /// </returns>
         /// <remarks>
-        ///     For example, if an application has installed a WH_GETMESSAGE hook and wants to prevent a message from being processed, the GetMsgProc callback function can change the message number to WM_NULL so the recipient will ignore it.
-        ///     As another example, an application can check if a window is responding to messages by sending the WM_NULL message with the SendMessageTimeout function.
+        ///     <para>
+        ///         For example, if an application has installed a <c>WH_GETMESSAGE</c> hook and wants to prevent a
+        ///         message from being processed, the <c>GetMsgProc</c> callback function can change the message number to
+        ///         <c>WM_NULL</c> so the recipient will ignore it.
+        ///     </para>
+        ///     <para>
+        ///         As another example, an application can check if a window is responding to messages by sending the
+        ///         <c>WM_NULL</c> message with the <c>SendMessageTimeout</c> function.
+        ///     </para>
         /// </remarks>
         WM_NULL = 0x0000,
+
+        /// <summary>
+        ///     Sent to both the window being activated and the window being deactivated.
+        ///     If the windows use the same input queue, the message is sent synchronously, first to the window
+        ///     procedure of the top-level window being deactivated, then to the window procedure of the top-level
+        ///     window being activated. If the windows use different input queues, the message is sent asynchronously,
+        ///     so the window is activated immediately.
+        /// </summary>
+        /// <param name="wParam">
+        ///     The low-order word specifies whether the window is being activated or deactivated.
+        ///     This parameter can be one of the <see cref="WindowActivate"/> values. The high-order word specifies
+        ///     the minimized state of the window being activated or deactivated.
+        ///     A nonzero value indicates the window is minimized.
+        /// </param>
+        /// <param name="lParam">
+        ///     A handle to the window being activated or deactivated, depending on the value of the <paramref name="wParam"/> parameter.
+        ///     If the low-order word of wParam is <see cref="WindowActivate.WA_INACTIVE"/>,
+        ///     <c>lParam</c> is the handle to the window being activated.
+        ///     If the low-order word of wParam is <see cref="WindowActivate.WA_ACTIVE"/> or <see cref="WindowActivate.WA_CLICKACTIVE"/>,
+        ///     <c>lParam</c> is the handle to the window being deactivated.
+        ///     This handle can be <c>null</c>.
+        /// </param>
+        /// <returns>
+        ///     If an application processes this message, it should return zero.
+        /// </returns>
+        /// <remarks>
+        ///     If the window is being activated and is not minimized, the <c>DefWindowProc</c> function sets the
+        ///     keyboard focus to the window. If the window is activated by a mouse click, it also receives a
+        ///     <see cref="WM_MOUSEACTIVATE"/> message.
+        /// </remarks>
+        WM_ACTIVATE = 0x0006,
 
         /// <summary>
         ///     Sent to a window after it has gained the keyboard focus.
@@ -67,6 +106,30 @@ namespace NativeAPI.Win.User
         ///     To display a caret, an application should call the appropriate caret functions when it receives the <c>WM_SETFOCUS</c> message.
         /// </remarks>
         WM_SETFOCUS = 0x0007,
+
+        /// <summary>
+        ///     Sent to a window immediately before it loses the keyboard focus.
+        /// </summary>
+        /// <param name="wParam">
+        ///     A handle to the window that receives the keyboard focus. This parameter can be NULL.
+        /// </param>
+        /// <param name="lParam">
+        ///     This parameter is not used.
+        /// </param>
+        /// <returns>
+        ///     An application should return zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         If an application is displaying a caret, the caret should be destroyed at this point.
+        ///     </para>
+        ///     <para>
+        ///         While processing this message, do not make any function calls that display or activate a window.
+        ///         This causes the thread to yield control and can cause the application to stop responding to messages.
+        ///         For more information, see Message Deadlocks.
+        ///     </para>
+        /// </remarks>
+        WM_KILLFOCUS = 0x0008,
 
         /// <summary>
         ///     An application sends the <c>WM_SETREDRAW</c> message to a window to allow changes in that window to be
@@ -324,8 +387,6 @@ namespace NativeAPI.Win.User
         WM_DESTROY = 0x0002,
         WM_MOVE = 0x0003,
         WM_SIZE = 0x0005,
-        WM_ACTIVATE = 0x0006,
-        WM_KILLFOCUS = 0x0008,
         WM_ENABLE = 0x000a,
         WM_SETTEXT = 0x000c,
         WM_GETTEXT = 0x000d,
