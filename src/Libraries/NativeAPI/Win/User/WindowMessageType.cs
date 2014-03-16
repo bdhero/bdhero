@@ -210,6 +210,84 @@ namespace NativeAPI.Win.User
 
         /// <summary>
         ///     <para>
+        ///         Sent to the focus window when the mouse wheel is rotated. The <c>DefWindowProc</c> function propagates
+        ///         the message to the window's parent. There should be no internal forwarding of the message, since
+        ///         <c>DefWindowProc</c> propagates it up the parent chain until it finds a window that processes it.
+        ///     </para>
+        ///     <para>
+        ///         A window receives this message through its <c>WindowProc</c> function.
+        ///     </para>
+        /// </summary>
+        /// <param name="wParam">
+        ///     <para>
+        ///         The high-order word indicates the distance the wheel is rotated, expressed in multiples or
+        ///         divisions of <c>WHEEL_DELTA</c>, which is <c>120</c>. A positive value indicates that the wheel was rotated
+        ///         forward, away from the user; a negative value indicates that the wheel was rotated backward, toward the user.
+        ///     </para>
+        ///     <para>
+        ///         The low-order word indicates whether various virtual keys are down. This parameter can be one or more of the following values.
+        ///     </para>
+        /// </param>
+        /// <param name="lParam">
+        ///     <para>
+        ///         The low-order word specifies the x-coordinate of the pointer, relative to the upper-left corner of the screen.
+        ///     </para>
+        ///     <para>
+        ///         The high-order word specifies the y-coordinate of the pointer, relative to the upper-left corner of the screen.
+        ///     </para>
+        /// </param>
+        /// <returns>
+        ///     If an application processes this message, it should return zero.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         Use the following code to get the information in the <c>wParam</c> parameter:
+        ///     </para>
+        ///     <code>
+        ///         fwKeys = GET_KEYSTATE_WPARAM(wParam);
+        ///         zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+        ///     </code>
+        ///     <para>
+        ///         Use the following code to obtain the horizontal and vertical position:
+        ///     </para>
+        ///     <code>
+        ///         xPos = GET_X_LPARAM(lParam); 
+        ///         yPos = GET_Y_LPARAM(lParam); 
+        ///     </code>
+        ///     <para>
+        ///         As noted above, the x-coordinate is in the low-order short of the return value; the y-coordinate
+        ///         is in the high-order short (both represent signed values because they can take negative values
+        ///         on systems with multiple monitors).
+        ///     </para>
+        ///     <para>
+        ///         The wheel rotation will be a multiple of <c>WHEEL_DELTA</c>, which is set at <c>120</c>.
+        ///         This is the threshold for action to be taken, and one such action (for example, scrolling one increment)
+        ///         should occur for each delta.
+        ///     </para>
+        ///     <para>
+        ///         The delta was set to 120 to allow Microsoft or other vendors to build finer-resolution wheels
+        ///         (a freely-rotating wheel with no notches) to send more messages per rotation, but with a smaller value
+        ///         in each message. To use this feature, you can either add the incoming delta values until 
+        ///         <c>WHEEL_DELTA</c> is reached (so for a delta-rotation you get the same response), or scroll partial
+        ///         lines in response to the more frequent messages. You can also choose your scroll granularity
+        ///         and accumulate deltas until it is reached.
+        ///     </para>
+        ///     <para>
+        ///         Note, there is no <c>fwKeys</c> for <c>MSH_MOUSEWHEEL</c>. Otherwise, the parameters are exactly the same
+        ///         as for <c>WM_MOUSEWHEEL</c>.
+        ///     </para>
+        ///     <para>
+        ///         It is up to the application to forward <c>MSH_MOUSEWHEEL</c> to any embedded objects or controls.
+        ///         The application is required to send the message to an active embedded OLE application.
+        ///         It is optional that the application sends it to a wheel-enabled control with focus.
+        ///         If the application does send the message to a control, it can check the return value to see
+        ///         if the message was processed. Controls are required to return a value of TRUE if they process the message.
+        ///     </para>
+        /// </remarks>
+        WM_MOUSEWHEEL = 0x020a,
+
+        /// <summary>
+        ///     <para>
         ///         Sent to the window that is losing the mouse capture.
         ///     </para>
         ///     <para>
@@ -247,7 +325,6 @@ namespace NativeAPI.Win.User
         WM_MOVE = 0x0003,
         WM_SIZE = 0x0005,
         WM_ACTIVATE = 0x0006,
-
         WM_KILLFOCUS = 0x0008,
         WM_ENABLE = 0x000a,
         WM_SETTEXT = 0x000c,
@@ -395,7 +472,6 @@ namespace NativeAPI.Win.User
         WM_MBUTTONUP = 0x0208,
         WM_MBUTTONDBLCLK = 0x0209,
         WM_MOUSELAST = 0x0209,
-        WM_MOUSEWHEEL = 0x020a,
         WM_XBUTTONDOWN = 0x020b,
         WM_XBUTTONUP = 0x020c,
         WM_XBUTTONDBLCLK = 0x020d,
