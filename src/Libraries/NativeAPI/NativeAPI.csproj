@@ -98,6 +98,7 @@
     <Compile Include="Win\User\ShowWindowCommand.cs" />
     <Compile Include="Win\User\SystemMenuAPI.cs" />
     <Compile Include="Win\User\VirtualKey.cs" />
+    <Compile Include="Win\User\WindowActivate.cs" />
     <Compile Include="Win\User\WindowAPI.cs" />
     <Compile Include="Win\User\WindowInfo.cs" />
     <Compile Include="Win\User\WindowMessage.cs" />
