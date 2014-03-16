@@ -45,6 +45,7 @@ namespace TextEditor.WPF
 
 
             _editor.PreviewKeyDown += EditorOnPreviewKeyDown;
+            _editor.TextChanged += EditorOnTextChanged;
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
             _editor.TextArea.TextEntered += TextAreaOnTextEntered;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
@@ -68,6 +69,14 @@ namespace TextEditor.WPF
             }
         }
 
+        private void EditorOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            if (_completionWindow != null)
+            {
+                AutoSize();
+            }
+        }
+
         private void TextAreaOnTextEntering(object sender, TextCompositionEventArgs e)
         {
             TextAreaOnTextEntering(e.Text, (EventArgs) e);
@@ -81,7 +90,7 @@ namespace TextEditor.WPF
                 {
                     // Whenever a non-letter is typed while the completion window is open,
                     // insert the currently selected element.
-                    _completionWindow.CompletionList.RequestInsertion(e ?? EventArgs.Empty);
+//                    _completionWindow.CompletionList.RequestInsertion(e ?? EventArgs.Empty);
                 }
             }
             // Do not set e.Handled=true.
@@ -92,7 +101,7 @@ namespace TextEditor.WPF
         {
             if (e.Text == "$" || e.Text == "%" || _completionWindow != null)
             {
-                Show();
+//                Show();
             }
         }
 
@@ -171,46 +180,52 @@ namespace TextEditor.WPF
         private void AutoSizeToContent()
         {
             // Disable max width/height, which will cause the window to resize itself to fit its contents.
-            _completionWindow.SizeToContent = SizeToContent.WidthAndHeight;
             _completionWindow.MaxWidth = double.PositiveInfinity;
             _completionWindow.MaxHeight = double.PositiveInfinity;
+            _completionWindow.SizeToContent = SizeToContent.WidthAndHeight;
         }
 
         private void SetManualSize(double width, double height)
         {
             _completionWindow.SizeToContent = SizeToContent.Manual;
-            _completionWindow.Width = _completionWindow.MinWidth = _completionWindow.MaxWidth = width;
-            _completionWindow.Height = _completionWindow.MinHeight = _completionWindow.MaxHeight = height;
+            _completionWindow.Width = width;
+            _completionWindow.Height = height;
+            _completionWindow.MaxHeight = MaxHeight;
         }
+
+        private const int MaxHeight = 300;
+        private const int RightPadding = 5;
 
         private void CompletionWindowOnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            Logger.DebugFormat("CompletionWindow.SizeChanged({0} => {1})", args.PreviousSize, args.NewSize);
+            var oldSize = new System.Drawing.Size((int) args.PreviousSize.Width, (int) args.PreviousSize.Height);
+            var newSize = new System.Drawing.Size((int) args.NewSize.Width, (int) args.NewSize.Height);
+
+            Logger.DebugFormat("CompletionWindow.SizeChanged({0} => {1})", oldSize, newSize);
 
             // Ignore initial resize.
-            if (args.PreviousSize.Equals(new Size(0, 0)))
+            if (oldSize.Equals(System.Drawing.Size.Empty))
                 return;
 
             // Window is narrowing (or staying the same width), which means it doesn't need to be made wider to fit its contents.
             // Since we won't be resizing the window any further, we can safely auto-select the first completion item.
             // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
             // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
-            if (args.NewSize.Width <= args.PreviousSize.Width)
+            if (newSize.Width <= oldSize.Width)
             {
-                _completionWindow.MaxHeight = args.PreviousSize.Height;
                 SelectFirstItem();
                 return;
             }
 
             // We've already found the "ideal" width and height of the window, and are currently in the middle of
             // resizing the window's height DOWN to a reasonable height so that it doesn't overflow off the screen.
-            if (args.NewSize.Height <= args.PreviousSize.Height)
+            if (newSize.Height <= oldSize.Height)
                 return;
 
-            var fullWidth = args.NewSize.Width + SystemParameters.VerticalScrollBarWidth;
-            var oldHeight = args.PreviousSize.Height;
+            var fullWidth = newSize.Width + SystemParameters.VerticalScrollBarWidth + RightPadding;
+            var newHeight = Math.Min(newSize.Height, MaxHeight);
 
-            SetManualSize(fullWidth, oldHeight);
+            SetManualSize(fullWidth, newHeight);
 
             // Now that we've set the final width and height of the window, we can auto-select the first completion item.
             // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
@@ -361,7 +376,6 @@ namespace TextEditor.WPF
                                 {
                                     CloseAutomatically = true,
                                     CloseWhenCaretAtBeginning = true,
-//                                    SizeToContent = SizeToContent.WidthAndHeight,
                                     ResizeMode = ResizeMode.NoResize
                                 };
 
@@ -371,10 +385,8 @@ namespace TextEditor.WPF
 
             // TODO:
             _completionWindow.CompletionList.InsertionRequested += CompletionListOnInsertionRequested;
-            _completionWindow.CompletionList.IsFiltering = true;
-//            _completionWindow.CompletionList.;
-
-            _completionWindow.PreviewKeyDown += CompletionWindowOnPreviewKeyDown;
+//            _completionWindow.CompletionList.IsFiltering = true;
+//            _completionWindow.CompletionList.ListBox.
 
 
             // --->
@@ -385,20 +397,10 @@ namespace TextEditor.WPF
             var data = _completionWindow.CompletionList.CompletionData;
             data.AddRange(_completionProvider.GenerateCompletionData());
 
-
-            // <---
-
-
             // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
             // when we try to focus the text editor.
 //            _completionWindow.GotKeyboardFocus += (sender, args) =>
 //                                                  _editor.TextArea.Focus();
-
-            _completionWindow.Focusable = false;
-
-
-            // --->
-
 
             // http://stackoverflow.com/a/839806/467582
             ElementHost.EnableModelessKeyboardInterop(_completionWindow);
@@ -407,35 +409,31 @@ namespace TextEditor.WPF
 
             _completionWindow.Show();
 
-
-
-            // <---
-
-
-            var hook = new WpfWndProcHook(_completionWindow);
-            hook.WndProcMessage += HookOnWndProcMessage;
-
-
-            // --->
+            WpfWndProcHook.Hook(_completionWindow, CompletionWindowOnWndProcMessage);
         }
 
-        private void HookOnWndProcMessage(ref Message m, HandledEventArgs args)
+        private void CompletionWindowOnWndProcMessage(ref Message m, HandledEventArgs args)
         {
-//            Console.WriteLine("CompletionWindow.WndProc  -  {0}", m);
-
             WindowMessage msg = m;
 
+            // Ensure that dialog keys get sent to the window
             if (msg.Is(WindowMessageType.WM_GETDLGCODE))
             {
                 switch (msg.WParamInt64Value)
                 {
                     case VirtualKey.VK_TAB:
                     case VirtualKey.VK_RETURN:
+                    case VirtualKey.VK_ESCAPE:
+                    case VirtualKey.VK_SPACE:
                     case VirtualKey.VK_LEFT:
                     case VirtualKey.VK_UP:
                     case VirtualKey.VK_RIGHT:
                     case VirtualKey.VK_DOWN:
                     {
+                        // Tell Windows that we want to receive WM_KEYDOWN messages for dialog keys when the scrollbar is focused.
+                        // ElementHost.EnableModelessKeyboardInterop() already handles this when all other elements are focused,
+                        // but for some reason if the user clicks on the scrollbar or scrolls with the mouse wheel
+                        // WM_KEYDOWN messages don't get sent.
                         args.Handled = true;
                         m.Result = new IntPtr(DialogCode.DLGC_WANTMESSAGE);
                         return;
@@ -443,6 +441,7 @@ namespace TextEditor.WPF
                 }
             }
 
+            // Ensure that focus is always on something that is listening for keyboard input
             if (msg.Is(WindowMessageType.WM_CAPTURECHANGED) ||
                 msg.Is(WindowMessageType.WM_MOUSEWHEEL))
             {
@@ -454,11 +453,6 @@ namespace TextEditor.WPF
                     WithCompletionList(list => list.Focus());
                 }
             }
-        }
-
-        private void CompletionWindowOnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine("CompletionWindow.PreviewKeyDown({0})", e.Key);
         }
 
         private void CompletionListOnInsertionRequested(object sender, EventArgs eventArgs)
@@ -490,11 +484,18 @@ namespace TextEditor.WPF
 
         private void WithCompletionList(Action<CompletionList> action)
         {
-            var list = _completionWindow.Content as CompletionList;
-            if (list != null)
-            {
-                action(list);
-            }
+            if (_completionWindow == null || _completionWindow.CompletionList == null)
+                return;
+
+            action(_completionWindow.CompletionList);
+        }
+
+        private T WithCompletionList<T>(Func<CompletionList, T> action)
+        {
+            if (_completionWindow == null || _completionWindow.CompletionList == null)
+                return default(T);
+
+            return action(_completionWindow.CompletionList);
         }
 
         #endregion
