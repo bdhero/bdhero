@@ -1,4 +1,5 @@
-﻿#if !__MonoCS__
+﻿using System.Reflection;
+#if !__MonoCS__
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using DotNetUtils.Forms;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using ToolTip = System.Windows.Controls.ToolTip;
 using Window = System.Windows.Window;
 
 namespace TextEditor.WPF
@@ -44,7 +46,6 @@ namespace TextEditor.WPF
                     Console.WriteLine("Editor.TextArea.PreviewKeyDown({0})", e.Key);
 
             _editor.PreviewKeyDown += EditorOnPreviewKeyDown;
-            _editor.TextChanged += EditorOnTextChanged;
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
@@ -64,14 +65,6 @@ namespace TextEditor.WPF
             {
                 e.Handled = true;
                 Show();
-            }
-        }
-
-        private void EditorOnTextChanged(object sender, EventArgs eventArgs)
-        {
-            if (_completionWindow != null/* && _completionWindow.SizeToContent != SizeToContent.Manual*/)
-            {
-                AutoSize();
             }
         }
 
@@ -144,7 +137,6 @@ namespace TextEditor.WPF
 
         private void BindCompletionWindowEventHandlers()
         {
-            _completionWindow.Loaded      += CompletionWindowOnLoaded;
             _completionWindow.SizeChanged += CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     += CompletionWindowOnKeyDown;
             _completionWindow.Deactivated += CompletionWindowOnDeactivated;
@@ -154,7 +146,6 @@ namespace TextEditor.WPF
 
         private void UnbindCompletionWindowEventHandlers()
         {
-            _completionWindow.Loaded      -= CompletionWindowOnLoaded;
             _completionWindow.SizeChanged -= CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     -= CompletionWindowOnKeyDown;
             _completionWindow.Deactivated -= CompletionWindowOnDeactivated;
@@ -162,54 +153,11 @@ namespace TextEditor.WPF
             _completionWindow.Closed      -= CompletionWindowOnClosed;
         }
 
-        private void CompletionWindowOnLoaded(object sender, RoutedEventArgs routedEventArgs)
-        {
-            AutoSize();
-        }
-
-        private void AutoSize()
-        {
-            AutoSizeToContent();
-        }
-
-        private void AutoSizeToContent()
-        {
-            Logger.Debug("AutoSizeToContent()");
-
-            var prevSizeToContent = _completionWindow.SizeToContent;
-            var newSizeToContent = SizeToContent.WidthAndHeight;
-
-            Logger.DebugFormat("    CompletionWindow.SizeToContent: {0} => {1}", prevSizeToContent, newSizeToContent);
-
-            if (prevSizeToContent == newSizeToContent)
-                return;
-
-            // Disable max width/height, which will cause the window to resize itself to fit its contents.
-            _completionWindow.MaxWidth = double.PositiveInfinity;
-            _completionWindow.MaxHeight = double.PositiveInfinity;
-            _completionWindow.SizeToContent = newSizeToContent;
-        }
-
-        private void SetManualSize(double width, double height)
-        {
-            Logger.DebugFormat("SetManualSize({0}, {1})", width, height);
-
-            var prevSizeToContent = _completionWindow.SizeToContent;
-            var newSizeToContent = SizeToContent.Height;
-
-            Logger.DebugFormat("    CompletionWindow.SizeToContent: {0} => {1}", prevSizeToContent, newSizeToContent);
-
-            if (prevSizeToContent == newSizeToContent)
-                return;
-
-            _completionWindow.SizeToContent = newSizeToContent;
-            _completionWindow.Width = width;
-            _completionWindow.Height = height;
-            _completionWindow.MaxHeight = MaxHeight;
-        }
-
-        private const int MaxHeight = 300;
         private const int RightPadding = 5;
+
+        private bool _ignoreSizeChange;
+        private int _maxHeight;
+        private SizeToContent _sizeToContent;
 
         private void CompletionWindowOnSizeChanged(object sender, SizeChangedEventArgs args)
         {
@@ -220,41 +168,132 @@ namespace TextEditor.WPF
 
             // Ignore initial resize.
             if (oldSize.Equals(System.Drawing.Size.Empty))
-                return;
-
-            var newWidth = (int) (newSize.Width + SystemParameters.VerticalScrollBarWidth + RightPadding);
-//            var newHeight = Math.Min(newSize.Height, MaxHeight);
-            var newHeight = newSize.Height;
-
-            newSize = new System.Drawing.Size(newWidth, newHeight);
-
-            // Window is narrowing (or staying the same width), which means it doesn't need to be made wider to fit its contents.
-            // Since we won't be resizing the window any further, we can safely auto-select the first completion item.
-            // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
-            // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
-            if (newSize.Width < oldSize.Width)
             {
-//                _completionWindow.MaxHeight = MaxHeight;
-                SelectFirstItem();
+//                Logger.DebugFormat("    ignoring - initial resize");
+//                return;
+            }
+
+            // Probably a bug
+            if (oldSize.Equals(newSize))
+            {
+                Logger.DebugFormat("    ignoring - size hasn't changed");
                 return;
             }
 
-            // We've already found the "ideal" width and height of the window, and are currently in the middle of
-            // resizing the window's height DOWN to a reasonable height so that it doesn't overflow off the screen.
-            if (newSize.Height < oldSize.Height)
+            // Flag set
+            if (_ignoreSizeChange)
+            {
+                Logger.DebugFormat("    ignoring - flag set");
+
+                _ignoreSizeChange = false;
+
+                // Now that we've set the final width and height of the window, we can auto-select the first completion item.
+                // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
+                // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
+                SelectFirstItem();
+                _completionWindow.SetTimeout(window => RePositionToolTip(), 10);
+
                 return;
+            }
 
-            SetManualSize(newWidth, newHeight);
+            _ignoreSizeChange = true;
+            _maxHeight = (int) _completionWindow.MaxHeight;
+            _sizeToContent = _completionWindow.SizeToContent;
 
-            // Now that we've set the final width and height of the window, we can auto-select the first completion item.
-            // If we always auto-selected the first completion item every time a resize event occurred, the tooltip
-            // would be incorrectly positioned because Avalon doesn't reposition it when the window size changes.
-            SelectFirstItem();
+            _completionWindow.MaxWidth = double.PositiveInfinity;
+            _completionWindow.MaxHeight = double.PositiveInfinity;
+            _completionWindow.SizeToContent = SizeToContent.WidthAndHeight;
+
+            var fullWidth = _completionWindow.Width;
+            var fullHeight = _completionWindow.Height;
+
+            Logger.DebugFormat("    full size = {0}, {1}", fullWidth, fullHeight);
+
+            _completionWindow.MaxHeight = _maxHeight;
+            _completionWindow.SizeToContent = _sizeToContent;
+
+            if (HasItems)
+            {
+                var newWidth = fullWidth;
+
+                if (fullHeight > _maxHeight)
+                    newWidth += SystemParameters.VerticalScrollBarWidth + RightPadding;
+
+                _completionWindow.Width = newWidth;
+
+                RePositionToolTip();
+            }
+            else
+            {
+                _completionWindow.Width = oldSize.Width;
+
+                HideToolTip();
+            }
+        }
+
+        private bool HasItems
+        {
+            get { return WithCompletionList(list => list.ListBox.HasItems); }
+        }
+
+        private void RePositionToolTip()
+        {
+            HideToolTip();
+
+            if (HasItems)
+                ShowToolTip();
+        }
+
+        private void HideToolTip()
+        {
+            ShowToolTip(false);
+        }
+
+        private void ShowToolTip(bool show = true)
+        {
+            WithToolTip(toolTip => toolTip.IsOpen = show);
+        }
+
+        private void WithToolTip(Action<ToolTip> action)
+        {
+            // Dirty...
+            try
+            {
+                var type = _completionWindow.GetType();
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic);
+                var toolTipMember1 = fields.FirstOrDefault(info => info.Name.Equals("toolTip", StringComparison.OrdinalIgnoreCase));
+                var toolTipMember2 = fields.FirstOrDefault(info => info.FieldType == typeof (ToolTip));
+                var toolTipMember = toolTipMember1 ?? toolTipMember2;
+                if (toolTipMember != null)
+                {
+                    var toolTip = toolTipMember.GetValue(_completionWindow) as ToolTip;
+                    if (toolTip != null)
+                    {
+                        action(toolTip);
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
         private void SelectFirstItem()
         {
             WithCompletionList(list => list.SelectedItem = list.CompletionData.FirstOrDefault());
+            RePositionToolTip();
+        }
+
+        private void SelectLastItem()
+        {
+            WithCompletionList(list => list.SelectedItem = list.CompletionData.LastOrDefault());
+            RePositionToolTip();
+        }
+
+        private void SelectNone()
+        {
+            WithCompletionList(list => list.SelectedItem = null);
+            HideToolTip();
         }
 
         #region Keyboard event handling
@@ -395,7 +434,8 @@ namespace TextEditor.WPF
                                 {
                                     CloseAutomatically = true,
                                     CloseWhenCaretAtBeginning = true,
-                                    ResizeMode = ResizeMode.NoResize
+                                    ResizeMode = ResizeMode.NoResize,
+                                    SizeToContent = SizeToContent.Height
                                 };
 
             // <---
