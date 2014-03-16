@@ -177,6 +177,9 @@ namespace TextEditor.WPF
             if (oldSize.Equals(newSize))
             {
                 Logger.DebugFormat("    ignoring - size hasn't changed");
+
+                _ignoreSizeChange = false;
+
                 return;
             }
 
