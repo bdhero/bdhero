@@ -133,6 +133,9 @@ namespace TextEditor.WPF
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
+            var control = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control);
+            var shift = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Shift);
+
             if (e.Handled)
                 return;
 
@@ -151,10 +154,12 @@ namespace TextEditor.WPF
             if ((Singleline || ReadOnly) && e.Key == Key.Tab)
             {
                 e.Handled = true;
+                _elementHost.SelectNextControl(!shift);
+            }
 
-                var shiftKey = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Shift);
-
-                _elementHost.SelectNextControl(!shiftKey);
+            if (ReadOnly && control && (e.Key == Key.Z || e.Key == Key.Y))
+            {
+                e.Handled = true;
             }
         }
 
