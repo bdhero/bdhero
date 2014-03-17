@@ -383,6 +383,9 @@ namespace TextEditor.WPF
         {
             Close();
 
+            if (_editor.IsReadOnly)
+                return;
+
             // Open code completion after the user has pressed dot:
             _completionWindow = new CompletionWindow(_editor.TextArea)
                                 {
