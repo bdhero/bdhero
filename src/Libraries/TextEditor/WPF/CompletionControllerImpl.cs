@@ -263,17 +263,26 @@ namespace TextEditor.WPF
             var listBox = _completionWindow.CompletionList.ListBox;
             var numItems = listBox.Items.Count;
 
-            if (numItems < 2)
+            if (numItems == 0)
                 return;
 
-            var delta = +1;
+            if (numItems == 1)
+            {
+                ShowToolTipImpl(show);
+                return;
+            }
+
             var curIndex = listBox.SelectedIndex;
-            if (curIndex == numItems - 1)
-                delta = -1;
 
-            listBox.SelectIndex(curIndex + delta);
-            listBox.SelectIndex(curIndex - delta);
+            listBox.SelectIndex(curIndex + 1);
+            listBox.SelectIndex(curIndex - 1);
+            listBox.SelectIndex(curIndex);
 
+            ShowToolTipImpl(show);
+        }
+
+        private void ShowToolTipImpl(bool show)
+        {
             _completionWindow.WithField<ToolTip>("toolTip", toolTip => toolTip.IsOpen = show);
         }
 
