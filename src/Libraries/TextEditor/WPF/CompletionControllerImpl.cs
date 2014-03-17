@@ -65,7 +65,8 @@ namespace TextEditor.WPF
 
         private void EditorOnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Space && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            var control = e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control);
+            if (control && e.Key == Key.Space)
             {
                 e.Handled = true;
                 Show();
