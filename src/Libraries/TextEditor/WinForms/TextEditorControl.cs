@@ -128,12 +128,12 @@ namespace TextEditor.WinForms
 
             menu.Popup += delegate
                           {
-                              undo.Enabled = Editor.CanUndo;
-                              redo.Enabled = Editor.CanRedo;
-                              cut.Enabled = Editor.CanCut;
-                              copy.Enabled = Editor.CanCopy;
-                              paste.Enabled = Editor.CanPaste;
-                              delete.Enabled = Editor.CanDelete;
+                              undo.Enabled   = Editor.CanUndo   && !Editor.ReadOnly;
+                              redo.Enabled   = Editor.CanRedo   && !Editor.ReadOnly;
+                              cut.Enabled    = Editor.CanCut    && !Editor.ReadOnly;
+                              copy.Enabled   = Editor.CanCopy;
+                              paste.Enabled  = Editor.CanPaste  && !Editor.ReadOnly;
+                              delete.Enabled = Editor.CanDelete && !Editor.ReadOnly;
                           };
 
             return menu;
