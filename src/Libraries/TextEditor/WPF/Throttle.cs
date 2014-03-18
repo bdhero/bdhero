@@ -20,6 +20,11 @@ namespace TextEditor.WPF
             _timer.Start();
         }
 
+        public void Stop()
+        {
+            _timer.Stop();
+        }
+
         private void TimerOnElapsed(object sender, ElapsedEventArgs args)
         {
             if (Elapsed != null)
