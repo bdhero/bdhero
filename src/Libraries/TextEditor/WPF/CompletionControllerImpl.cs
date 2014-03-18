@@ -25,7 +25,6 @@ namespace TextEditor.WPF
 
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
         private readonly CompletionProviderImpl _completionProvider;
-        private readonly Throttle _windowMoveThrottle = new Throttle(50);
 
         private CompletionWindow _completionWindow;
         
@@ -47,8 +46,6 @@ namespace TextEditor.WPF
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
             _completionProvider = new CompletionProviderImpl(_editor);
-
-            _windowMoveThrottle.Elapsed += WindowMoveThrottleOnElapsed;
         }
 
         public bool IgnoreTabOrEnterKey
@@ -124,40 +121,18 @@ namespace TextEditor.WPF
             _isWindowMoveEventBound = true;
         }
 
-        private enum ToolTipRepositionStrategy
-        {
-            HideAndShow,
-            RePosition,
-            Delayed,
-        }
-
         private void FormOnLocationChanged(object sender, EventArgs eventArgs)
         {
             if (_completionWindow == null)
                 return;
 
-            var strategy = ToolTipRepositionStrategy.RePosition;
-
-            if (strategy == ToolTipRepositionStrategy.HideAndShow)
-                HideToolTip();
-
-            _completionWindow.InvokeMethod("UpdatePosition");
-
-            if (strategy == ToolTipRepositionStrategy.HideAndShow)
-                ShowToolTip();
-
-            if (strategy == ToolTipRepositionStrategy.RePosition)
-                RePositionToolTip();
-
-            if (strategy != ToolTipRepositionStrategy.Delayed)
-                return;
-
-            _windowMoveThrottle.Reset();
+            RePositionCompletionWindow();
+            RePositionToolTip();
         }
 
-        private void WindowMoveThrottleOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void RePositionCompletionWindow()
         {
-            _completionWindow.Invoke(window => RePositionToolTip());
+            _completionWindow.InvokeMethod("UpdatePosition");
         }
 
         #endregion
@@ -258,30 +233,10 @@ namespace TextEditor.WPF
 
         private void ShowToolTip(bool show = true)
         {
-            var listBox = _completionWindow.CompletionList.ListBox;
-            var numItems = listBox.Items.Count;
-
-            if (numItems == 0)
-                return;
-
-            if (numItems == 1)
-            {
-                ShowToolTipImpl(show);
-                return;
-            }
-
-            var curIndex = listBox.SelectedIndex;
-
-            listBox.SelectIndex(curIndex + 1);
-            listBox.SelectIndex(curIndex - 1);
-            listBox.SelectIndex(curIndex);
-
-            ShowToolTipImpl(show);
-        }
-
-        private void ShowToolTipImpl(bool show)
-        {
             WithToolTip(toolTip => toolTip.IsOpen = show);
+
+            if (show && HasCompletions)
+                RePositionToolTip();
         }
 
         private void HideToolTip()
@@ -313,18 +268,6 @@ namespace TextEditor.WPF
         {
             WithCompletionList(list => list.SelectedItem = list.CompletionData.FirstOrDefault());
             RePositionToolTip();
-        }
-
-        private void SelectLastItem()
-        {
-            WithCompletionList(list => list.SelectedItem = list.CompletionData.LastOrDefault());
-            RePositionToolTip();
-        }
-
-        private void SelectNone()
-        {
-            WithCompletionList(list => list.SelectedItem = null);
-            HideToolTip();
         }
 
         #endregion
