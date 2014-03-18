@@ -143,7 +143,6 @@ namespace TextEditor.WPF
         {
             _completionWindow.SizeChanged += CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     += CompletionWindowOnKeyDown;
-            _completionWindow.Deactivated += CompletionWindowOnDeactivated;
             _completionWindow.Closing     += CompletionWindowOnClosing;
             _completionWindow.Closed      += CompletionWindowOnClosed;
         }
@@ -152,7 +151,6 @@ namespace TextEditor.WPF
         {
             _completionWindow.SizeChanged -= CompletionWindowOnSizeChanged;
             _completionWindow.KeyDown     -= CompletionWindowOnKeyDown;
-            _completionWindow.Deactivated -= CompletionWindowOnDeactivated;
             _completionWindow.Closing     -= CompletionWindowOnClosing;
             _completionWindow.Closed      -= CompletionWindowOnClosed;
         }
@@ -303,14 +301,6 @@ namespace TextEditor.WPF
 
 
         #endregion
-
-        private void CompletionWindowOnDeactivated(object sender, EventArgs eventArgs)
-        {
-            // Workaround for bug in Avalon (or WPF/WinForms interop issue?):
-            // Show completion window, then focus completion window w/ mouse or scroll wheel.
-            // Click back in the text editor area.  The completion window disappears, but doesn't "close".
-//            Close();
-        }
 
         private void CompletionWindowOnClosing(object sender, CancelEventArgs e)
         {
