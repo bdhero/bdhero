@@ -118,9 +118,7 @@ namespace TextEditor.WPF
             var form = _editor.FindForm();
             if (form != null)
             {
-                form.Move += FormOnMove;
-                form.LocationChanged += FormOnMove;
-                form.SizeChanged += FormOnMove;
+                form.LocationChanged += FormOnLocationChanged;
             }
 
             _isWindowMoveEventBound = true;
@@ -133,12 +131,12 @@ namespace TextEditor.WPF
             Delayed,
         }
 
-        private void FormOnMove(object sender, EventArgs eventArgs)
+        private void FormOnLocationChanged(object sender, EventArgs eventArgs)
         {
             if (_completionWindow == null)
                 return;
 
-            var strategy = ToolTipRepositionStrategy.Delayed;
+            var strategy = ToolTipRepositionStrategy.RePosition;
 
             if (strategy == ToolTipRepositionStrategy.HideAndShow)
                 HideToolTip();
@@ -283,7 +281,7 @@ namespace TextEditor.WPF
 
         private void ShowToolTipImpl(bool show)
         {
-            _completionWindow.WithField<ToolTip>("toolTip", toolTip => toolTip.IsOpen = show);
+            WithToolTip(toolTip => toolTip.IsOpen = show);
         }
 
         private void HideToolTip()
@@ -293,10 +291,18 @@ namespace TextEditor.WPF
 
         private void RePositionToolTip()
         {
-            HideToolTip();
+            WithToolTip(RePositionToolTip);
+        }
 
-            if (HasCompletions)
-                ShowToolTip();
+        private static void RePositionToolTip(ToolTip toolTip)
+        {
+            toolTip.VerticalOffset++;
+            toolTip.VerticalOffset--;
+        }
+
+        private void WithToolTip(Action<ToolTip> action)
+        {
+            _completionWindow.WithField("toolTip", action);
         }
 
         #endregion
