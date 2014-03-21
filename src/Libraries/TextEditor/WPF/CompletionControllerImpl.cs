@@ -338,6 +338,8 @@ namespace TextEditor.WPF
             if (_editor.IsReadOnly)
                 return;
 
+            _editor.ScrollTo(_editor.TextArea.Caret.Line, _editor.TextArea.Caret.Column);
+
             // Open code completion after the user has pressed dot:
             _completionWindow = new CompletionWindow(_editor.TextArea)
                                 {
