@@ -67,7 +67,7 @@ namespace DotNetUtils.Controls
         protected override void OnKeyUp(KeyEventArgs e)
         {
             _isKeyHandled = false;
-            base.OnKeyDown(e);
+            base.OnKeyUp(e);
         }
     }
 }
