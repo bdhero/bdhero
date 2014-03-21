@@ -405,10 +405,7 @@ namespace TextEditor.WPF
 
             WindowMessage msg = m;
 
-            if (!msg.Is(WindowMessageType.WM_NCHITTEST) &&
-                !msg.Is(WindowMessageType.WM_MOUSEMOVE) &&
-                !msg.Is(WindowMessageType.WM_SETCURSOR) &&
-                Enum.IsDefined(typeof(WindowMessageType), (uint) msg.Id))
+            if (msg.IsLoggable)
             {
 //                Console.WriteLine("ParentWindow.WndProc: {0}", m);
             }
@@ -465,11 +462,8 @@ namespace TextEditor.WPF
                     }
                 }
             }
-            
-            if (!msg.Is(WindowMessageType.WM_NCHITTEST) &&
-                !msg.Is(WindowMessageType.WM_MOUSEMOVE) &&
-                !msg.Is(WindowMessageType.WM_SETCURSOR) &&
-                Enum.IsDefined(typeof(WindowMessageType), (uint) msg.Id))
+
+            if (msg.IsLoggable)
             {
 //                Console.WriteLine("CompletionWindow.WndProc: {0}", m);
             }

@@ -164,6 +164,17 @@ namespace NativeAPI.Win.User
 
         #endregion
 
+        public bool IsLoggable
+        {
+            get
+            {
+                return !Is(WindowMessageType.WM_NCHITTEST) &&
+                       !Is(WindowMessageType.WM_MOUSEMOVE) &&
+                       !Is(WindowMessageType.WM_SETCURSOR) &&
+                       Enum.IsDefined(typeof (WindowMessageType), (uint) Id);
+            }
+        }
+
         #region Equality tests
 
         /// <summary>
