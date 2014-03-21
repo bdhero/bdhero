@@ -49,6 +49,10 @@ namespace TextEditor.WPF
         private bool _isWindowMoveEventBound;
         private bool _isClosing;
 
+        private bool _deactivateParentWindowOnCompletionWindowClose;
+
+        private WndProcHook _parentWinFormsWndProcHook;
+
         public CompletionControllerImpl(ICSharpCode.AvalonEdit.TextEditor editor)
         {
             _editor = editor;
@@ -171,6 +175,22 @@ namespace TextEditor.WPF
             _completionWindow.Closed      -= CompletionWindowOnClosed;
         }
 
+        private void MouseWheelThrottleOnElapsed(object sender, ElapsedEventArgs args)
+        {
+            _editor.Invoke(_ => _editor.Focus());
+        }
+
+        private void CompletionListOnInsertionRequested(object sender, EventArgs eventArgs)
+        {
+            var inputEvent = eventArgs as InputEventArgs;
+            if (inputEvent != null)
+            {
+                inputEvent.Handled = true;
+            }
+        }
+
+        #region Resizing - Completion Window
+
         private const int RightPadding = 5;
 
         private bool _ignoreSizeChange;
@@ -242,6 +262,8 @@ namespace TextEditor.WPF
                 HideToolTip();
             }
         }
+
+        #endregion
 
         #region Tool Tip
 
@@ -318,6 +340,8 @@ namespace TextEditor.WPF
 
         #endregion
 
+        #region Close event handling
+
         private void CompletionWindowOnClosing(object sender, CancelEventArgs e)
         {
             _isClosing = true;
@@ -326,6 +350,7 @@ namespace TextEditor.WPF
         private void CompletionWindowOnClosed(object sender, EventArgs eventArgs)
         {
             UnbindCompletionWindowEventHandlers();
+
             _completionWindow = null;
             _isClosing = false;
 
@@ -342,9 +367,9 @@ namespace TextEditor.WPF
 
         #endregion
 
-        #region Show/close
+        #endregion
 
-        private WndProcHook _wndProcHook;
+        #region Show/close
 
         private void Show()
         {
@@ -355,14 +380,7 @@ namespace TextEditor.WPF
 
             _editor.ScrollTo(_editor.TextArea.Caret.Line, _editor.TextArea.Caret.Column);
 
-            if (_wndProcHook == null)
-            {
-                WithForm(delegate(Form form)
-                         {
-                             _wndProcHook = new WndProcHook(form);
-                             _wndProcHook.WndProcMessage += ParentFormOnWndProcMessage;
-                         });
-            }
+            BindParentWndProcHook();
 
             // Open code completion after the user has pressed dot:
             _completionWindow = new CompletionWindow(_editor.TextArea)
@@ -371,24 +389,22 @@ namespace TextEditor.WPF
                                     CloseWhenCaretAtBeginning = true,
                                     ResizeMode = ResizeMode.NoResize,
                                     SizeToContent = SizeToContent.Height,
-                                    Topmost = true
+                                    Topmost = true,
                                 };
+
+            _completionWindow.EnableWinFormsInterop();
 
             // TODO:
             _completionWindow.CompletionList.InsertionRequested += CompletionListOnInsertionRequested;
             _completionWindow.CompletionList.IsFiltering = true;
-
-            BindCompletionWindowEventHandlers();
-
             _completionWindow.CompletionList.CompletionData.AddRange(_completionProvider.GenerateCompletionData());
 
-            _completionWindow.EnableWinFormsInterop();
-
+            BindCompletionWindowEventHandlers();
             BindParentWindowEventHandlers();
 
             _completionWindow.Show();
 
-            WpfWndProcHook.Hook(_completionWindow, CompletionWindowOnWndProcMessage);
+            BindCompletionWindowWndProcHook();
 
             // TODO: Smarter filtering
             var textArea = _completionWindow.TextArea;
@@ -398,40 +414,51 @@ namespace TextEditor.WPF
             _completionWindow.CompletionList.SelectItem(text);
         }
 
+        private void Close()
+        {
+            if (_isClosing)
+                return;
+
+            if (_completionWindow != null)
+                _completionWindow.Close();
+        }
+
+        #endregion
+
+        #region Window Procedure (WndProc) event handling
+
+        private void BindParentWndProcHook()
+        {
+            if (_parentWinFormsWndProcHook != null)
+                return;
+
+            WithForm(delegate(Form form)
+                     {
+                         _parentWinFormsWndProcHook = new WndProcHook(form);
+                         _parentWinFormsWndProcHook.WndProcMessage += ParentFormOnWndProcMessage;
+                     });
+        }
+
+        private void BindCompletionWindowWndProcHook()
+        {
+            WpfWndProcHook.Hook(_completionWindow, CompletionWindowOnWndProcMessage);
+        }
+
         private void ParentFormOnWndProcMessage(ref Message m, HandledEventArgs args)
         {
             if (_completionWindow == null)
                 return;
 
             WindowMessage msg = m;
-
-            if (msg.IsLoggable)
-            {
-//                Console.WriteLine("ParentWindow.WndProc: {0}", m);
-            }
             
             if (msg.Is(WindowMessageType.WM_NCACTIVATE))
             {
                 // See http://stackoverflow.com/a/17346031/467582
-//                if (msg.WParamPtr == IntPtr.Zero)
-                {
-                    args.Handled = true;
-                    m.Result = new IntPtr(-1);
-                }
+                args.Handled = true;
+                m.Result = new IntPtr(-1);
+
                 _deactivateParentWindowOnCompletionWindowClose = (msg.WParamPtr == IntPtr.Zero);
-                Console.WriteLine("_deactivateParentWindowOnCompletionWindowClose = {0}", _deactivateParentWindowOnCompletionWindowClose);
             }
-        }
-
-        private bool _deactivateParentWindowOnCompletionWindowClose;
-
-        private void WithForm(Action<Form> action)
-        {
-            var form = _editor.FindForm();
-            if (form == null)
-                return;
-
-            action(form);
         }
 
         private void CompletionWindowOnWndProcMessage(ref Message m, HandledEventArgs args)
@@ -463,11 +490,6 @@ namespace TextEditor.WPF
                 }
             }
 
-            if (msg.IsLoggable)
-            {
-//                Console.WriteLine("CompletionWindow.WndProc: {0}", m);
-            }
-
             // Ensure that focus is always on something that is listening for keyboard input
             if (msg.Is(WindowMessageType.WM_MOUSEWHEEL))
             {
@@ -478,7 +500,6 @@ namespace TextEditor.WPF
                 msg.Is(WindowMessageType.WM_MBUTTONDOWN) ||
                 msg.Is(WindowMessageType.WM_RBUTTONDOWN))
             {
-//                WithForm(form => form.Activate());
                 _editor.Focus();
                 return;
             }
@@ -487,33 +508,22 @@ namespace TextEditor.WPF
                 msg.Is(WindowMessageType.WM_MBUTTONUP) ||
                 msg.Is(WindowMessageType.WM_RBUTTONUP))
             {
-//                WithForm(form => form.Activate());
                 _editor.Focus();
                 return;
             }
         }
 
-        private void MouseWheelThrottleOnElapsed(object sender, ElapsedEventArgs args)
-        {
-            _editor.Invoke(_ => _editor.Focus());
-        }
+        #endregion
 
-        private void CompletionListOnInsertionRequested(object sender, EventArgs eventArgs)
-        {
-            var inputEvent = eventArgs as InputEventArgs;
-            if (inputEvent != null)
-            {
-                inputEvent.Handled = true;
-            }
-        }
+        #region WinForms component accessors
 
-        private void Close()
+        private void WithForm(Action<Form> action)
         {
-            if (_isClosing)
+            var form = _editor.FindForm();
+            if (form == null)
                 return;
 
-            if (_completionWindow != null)
-                _completionWindow.Close();
+            action(form);
         }
 
         #endregion
