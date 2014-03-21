@@ -45,7 +45,7 @@ namespace TextEditor.WPF
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
-        private readonly CompletionControllerImpl _completionController;
+        private readonly ICompletionController _completionController;
 
         private bool Singleline
         {

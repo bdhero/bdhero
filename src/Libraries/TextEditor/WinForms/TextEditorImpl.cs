@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -8,9 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
-using ICSharpCode.TextEditor.Gui.CompletionWindow;
 using TextEditor.Extensions;
-using TextEditor.Resources;
 using TextEditor.Resources.Syntax.Providers;
 
 namespace TextEditor.WinForms
@@ -21,7 +18,7 @@ namespace TextEditor.WinForms
 
         private readonly TextEditorOptionsImpl _options;
         private readonly MultilineHelper _multilineHelper;
-        private readonly CompletionControllerImpl _completionController;
+        private readonly ICompletionController _completionController;
 
         private bool Singleline
         {

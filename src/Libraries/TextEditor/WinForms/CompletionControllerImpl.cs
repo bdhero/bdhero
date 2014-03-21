@@ -8,7 +8,24 @@ using ICSharpCode.TextEditor.Gui.CompletionWindow;
 
 namespace TextEditor.WinForms
 {
-    internal class CompletionControllerImpl
+    internal interface ICompletionController
+    {
+        bool HandleTabKey();
+    }
+
+    internal class MockCompletionController : ICompletionController
+    {
+        public MockCompletionController(ICSharpCode.TextEditor.TextEditorControl editor)
+        {
+        }
+
+        public bool HandleTabKey()
+        {
+            return false;
+        }
+    }
+
+    internal class CompletionControllerImpl : ICompletionController
     {
         private readonly ICSharpCode.TextEditor.TextEditorControl _editor;
 

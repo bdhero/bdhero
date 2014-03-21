@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using DotNetUtils;
 using DotNetUtils.Extensions;
@@ -18,7 +17,21 @@ using Message = System.Windows.Forms.Message;
 
 namespace TextEditor.WPF
 {
-    internal class CompletionControllerImpl
+    internal interface ICompletionController
+    {
+        bool IgnoreTabOrEnterKey { get; }
+    }
+
+    internal class MockCompletionController : ICompletionController
+    {
+        public MockCompletionController(ICSharpCode.AvalonEdit.TextEditor editor)
+        {
+        }
+
+        public bool IgnoreTabOrEnterKey { get; private set; }
+    }
+
+    internal class CompletionControllerImpl : ICompletionController
     {
         private static readonly log4net.ILog Logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
