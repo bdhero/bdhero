@@ -278,6 +278,11 @@ namespace DotNetUtils.Controls
             return IsActivateKey(keyData) || base.IsInputKey(keyData);
         }
 
+        protected bool IsCopyKey(KeyEventArgs e)
+        {
+            return e.Modifiers == Keys.Control && e.KeyCode == Keys.C;
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Handled)
@@ -287,6 +292,12 @@ namespace DotNetUtils.Controls
             {
                 _isKeyHandled = true;
                 OnClick(e);
+            }
+
+            if (IsCopyKey(e))
+            {
+                Clipboard.SetText(Text);
+                e.Handled = true;
             }
 
             base.OnKeyDown(e);

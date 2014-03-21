@@ -61,6 +61,13 @@ namespace DotNetUtils.Controls
                 e.Handled = true;
                 OnClick(e);
             }
+
+            if (IsCopyKey(e))
+            {
+                Clipboard.SetText(Url);
+                e.Handled = true;
+            }
+
             base.OnKeyDown(e);
         }
 
