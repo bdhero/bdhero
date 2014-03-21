@@ -42,7 +42,7 @@ namespace TextEditor.WPF
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
         private readonly CompletionProviderImpl _completionProvider;
 
-        private readonly Throttle _mouseWheelThrottle = new Throttle(50);
+        private readonly Throttle _mouseWheelThrottle = new Throttle(1);
 
         private CompletionWindow _completionWindow;
         
