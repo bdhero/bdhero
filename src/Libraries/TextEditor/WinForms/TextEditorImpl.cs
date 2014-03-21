@@ -38,7 +38,7 @@ namespace TextEditor.WinForms
 
             LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
 
-            _completionController = new CompletionControllerImpl(_editor);
+            _completionController = new MockCompletionController(_editor);
         }
 
         ITextEditorOptions ITextEditor.Options

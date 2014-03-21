@@ -54,7 +54,7 @@ namespace TextEditor.WPF
 
         public TextEditorImpl()
         {
-            _completionController = new CompletionControllerImpl(_editor);
+            _completionController = new MockCompletionController(_editor);
 
             _editor.TextChanged += EditorOnTextChanged;
             _editor.PreviewKeyDown += OnPreviewKeyDown;
