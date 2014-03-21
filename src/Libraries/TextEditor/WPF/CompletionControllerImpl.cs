@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using DotNetUtils;
 using DotNetUtils.Extensions;
@@ -14,6 +15,8 @@ using DotNetUtils.Forms;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using NativeAPI.Win.User;
 using Message = System.Windows.Forms.Message;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using ToolTip = System.Windows.Controls.ToolTip;
 
 namespace TextEditor.WPF
 {
@@ -39,6 +42,8 @@ namespace TextEditor.WPF
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor;
         private readonly CompletionProviderImpl _completionProvider;
 
+        private readonly Throttle _mouseWheelThrottle = new Throttle(50);
+
         private CompletionWindow _completionWindow;
         
         private bool _isWindowMoveEventBound;
@@ -59,6 +64,8 @@ namespace TextEditor.WPF
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
             _completionProvider = new CompletionProviderImpl();
+
+            _mouseWheelThrottle.Elapsed += MouseWheelThrottleOnElapsed;
         }
 
         public bool IgnoreTabOrEnterKey
@@ -125,11 +132,7 @@ namespace TextEditor.WPF
             if (_isWindowMoveEventBound)
                 return;
 
-            var form = _editor.FindForm();
-            if (form != null)
-            {
-                form.LocationChanged += FormOnLocationChanged;
-            }
+            WithForm(form => form.LocationChanged += FormOnLocationChanged);
 
             _isWindowMoveEventBound = true;
         }
@@ -325,11 +328,23 @@ namespace TextEditor.WPF
             UnbindCompletionWindowEventHandlers();
             _completionWindow = null;
             _isClosing = false;
+
+            if (_deactivateParentWindowOnCompletionWindowClose)
+            {
+                WithForm(delegate(Form form)
+                         {
+                             WindowAPI.SendMessage(form.Handle, WindowMessageType.WM_NCACTIVATE, new IntPtr(0), new IntPtr(0));
+                             WindowAPI.SendMessage(form.Handle, WindowMessageType.WM_ACTIVATE, new IntPtr(0), new IntPtr(0));
+                         });
+                _deactivateParentWindowOnCompletionWindowClose = false;
+            }
         }
 
         #endregion
 
         #region Show/close
+
+        private WndProcHook _wndProcHook;
 
         private void Show()
         {
@@ -339,6 +354,15 @@ namespace TextEditor.WPF
                 return;
 
             _editor.ScrollTo(_editor.TextArea.Caret.Line, _editor.TextArea.Caret.Column);
+
+            if (_wndProcHook == null)
+            {
+                WithForm(delegate(Form form)
+                         {
+                             _wndProcHook = new WndProcHook(form);
+                             _wndProcHook.WndProcMessage += ParentFormOnWndProcMessage;
+                         });
+            }
 
             // Open code completion after the user has pressed dot:
             _completionWindow = new CompletionWindow(_editor.TextArea)
@@ -358,11 +382,6 @@ namespace TextEditor.WPF
 
             _completionWindow.CompletionList.CompletionData.AddRange(_completionProvider.GenerateCompletionData());
 
-            // TODO: This would be ideal, but Avalon appears to have a bug whereby the completion window is hidden (but not closed)
-            // when we try to focus the text editor.
-//            _completionWindow.GotKeyboardFocus += (sender, args) =>
-//                                                  _editor.TextArea.Focus();
-
             _completionWindow.EnableWinFormsInterop();
 
             BindParentWindowEventHandlers();
@@ -377,6 +396,45 @@ namespace TextEditor.WPF
             var line = doc.GetLineByNumber(textArea.Caret.Line);
             var text = doc.GetText(line).Substring(0, textArea.Caret.Column - 1);
             _completionWindow.CompletionList.SelectItem(text);
+        }
+
+        private void ParentFormOnWndProcMessage(ref Message m, HandledEventArgs args)
+        {
+            if (_completionWindow == null)
+                return;
+
+            WindowMessage msg = m;
+
+            if (!msg.Is(WindowMessageType.WM_NCHITTEST) &&
+                !msg.Is(WindowMessageType.WM_MOUSEMOVE) &&
+                !msg.Is(WindowMessageType.WM_SETCURSOR) &&
+                Enum.IsDefined(typeof(WindowMessageType), (uint) msg.Id))
+            {
+//                Console.WriteLine("ParentWindow.WndProc: {0}", m);
+            }
+            
+            if (msg.Is(WindowMessageType.WM_NCACTIVATE))
+            {
+                // See http://stackoverflow.com/a/17346031/467582
+//                if (msg.WParamPtr == IntPtr.Zero)
+                {
+                    args.Handled = true;
+                    m.Result = new IntPtr(-1);
+                }
+                _deactivateParentWindowOnCompletionWindowClose = (msg.WParamPtr == IntPtr.Zero);
+                Console.WriteLine("_deactivateParentWindowOnCompletionWindowClose = {0}", _deactivateParentWindowOnCompletionWindowClose);
+            }
+        }
+
+        private bool _deactivateParentWindowOnCompletionWindowClose;
+
+        private void WithForm(Action<Form> action)
+        {
+            var form = _editor.FindForm();
+            if (form == null)
+                return;
+
+            action(form);
         }
 
         private void CompletionWindowOnWndProcMessage(ref Message m, HandledEventArgs args)
@@ -407,19 +465,43 @@ namespace TextEditor.WPF
                     }
                 }
             }
+            
+            if (!msg.Is(WindowMessageType.WM_NCHITTEST) &&
+                !msg.Is(WindowMessageType.WM_MOUSEMOVE) &&
+                !msg.Is(WindowMessageType.WM_SETCURSOR) &&
+                Enum.IsDefined(typeof(WindowMessageType), (uint) msg.Id))
+            {
+//                Console.WriteLine("CompletionWindow.WndProc: {0}", m);
+            }
 
             // Ensure that focus is always on something that is listening for keyboard input
-            if (msg.Is(WindowMessageType.WM_CAPTURECHANGED) ||
-                msg.Is(WindowMessageType.WM_MOUSEWHEEL))
+            if (msg.Is(WindowMessageType.WM_MOUSEWHEEL))
             {
-                // If nothing is focused, it means the user clicked on the scrollbar or scrolled with the mouse wheel,
-                // which will prevent keystrokes from being seen by Avalon.  To work around this, we need to immediately focus something.
-                var focused = Keyboard.FocusedElement ?? FocusManager.GetFocusedElement(_completionWindow);
-                if (focused == null)
-                {
-                    WithCompletionList(list => list.Focus());
-                }
+                _mouseWheelThrottle.Reset();
             }
+
+            if (msg.Is(WindowMessageType.WM_LBUTTONDOWN) ||
+                msg.Is(WindowMessageType.WM_MBUTTONDOWN) ||
+                msg.Is(WindowMessageType.WM_RBUTTONDOWN))
+            {
+//                WithForm(form => form.Activate());
+                _editor.Focus();
+                return;
+            }
+
+            if (msg.Is(WindowMessageType.WM_LBUTTONUP) ||
+                msg.Is(WindowMessageType.WM_MBUTTONUP) ||
+                msg.Is(WindowMessageType.WM_RBUTTONUP))
+            {
+//                WithForm(form => form.Activate());
+                _editor.Focus();
+                return;
+            }
+        }
+
+        private void MouseWheelThrottleOnElapsed(object sender, ElapsedEventArgs args)
+        {
+            _editor.Invoke(_ => _editor.Focus());
         }
 
         private void CompletionListOnInsertionRequested(object sender, EventArgs eventArgs)
@@ -438,11 +520,6 @@ namespace TextEditor.WPF
 
             if (_completionWindow != null)
                 _completionWindow.Close();
-        }
-
-        private void Close(object sender, EventArgs eventArgs)
-        {
-            Close();
         }
 
         #endregion
