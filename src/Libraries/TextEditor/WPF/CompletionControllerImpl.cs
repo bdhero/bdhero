@@ -58,7 +58,7 @@ namespace TextEditor.WPF
             _editor.TextArea.TextEntering += TextAreaOnTextEntering;
             _editor.TextArea.MouseWheel += TextAreaOnMouseWheel;
 
-            _completionProvider = new CompletionProviderImpl(_editor);
+            _completionProvider = new CompletionProviderImpl();
         }
 
         public bool IgnoreTabOrEnterKey
