@@ -19,18 +19,18 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using BDHero.BDROM;
-using BDHero.Plugin;
 using BDHero.JobQueue;
+using BDHero.Plugin;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
-using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
 
 namespace ChapterGrabberPlugin
 {
@@ -39,9 +39,11 @@ namespace ChapterGrabberPlugin
     {
         private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string ApiGet = "http://chapterdb.org/chapters/search?title=";
-        private const string ApiGetEnd = "&chapterCount=0 HTTP/1.1";
-        private static string xmlResponse;
+        private const string Username = "BDHero";
+        private const string ApiKey = "G88IO875M9SKU6DPB82F";
+
+        private const string QueryUrl = "http://chapterdb.org/chapters/search?title=";
+        private const string QueryParams = "&chapterCount=0 HTTP/1.1";
 
         public IPluginHost Host { get; private set; }
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
@@ -100,8 +102,7 @@ namespace ChapterGrabberPlugin
                         // defaulted to [0] first chapter list that matches filter criteria
                         ReplaceChapters(apiValues[0], moviePlaylist.Chapters);
 
-                        var Message = "Custom chapters were added to: " + moviePlaylist.FileName;
-                        Logger.Info(Message);
+                        Logger.InfoFormat("Custom chapters were added to {0}", moviePlaylist.FileName);
                     }
                 }    
             }
@@ -141,76 +142,54 @@ namespace ChapterGrabberPlugin
         static private List<JsonChaps> GetChapters(string movieName)
         {
             var movieSearchResults = new List<JsonChaps>();
-            var headers = new List<string>();
-                headers.Add("ApiKey: G88IO875M9SKU6DPB82F");
-                headers.Add("UserName: BDHero");
+            var headers = new List<string> { string.Format("ApiKey: {0}", ApiKey), string.Format("UserName: {0}", Username) };
             var doc = new XmlDocument();
             
             try
             {
-                xmlResponse = HttpRequest.Get(ApiGet + movieName + ApiGetEnd, headers);
+                var xmlResponse = HttpRequest.Get(QueryUrl + movieName + QueryParams, headers);
+                doc.LoadXml(xmlResponse);
             }
             catch (WebException ex)
             {
-                if (ex.Response != null)
+                using (var webResponse = ex.Response)
                 {
-                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    var httpWebResponse = webResponse as HttpWebResponse;
+                    if (httpWebResponse == null)
+                        throw;
+
+                    using (var responseStream = httpWebResponse.GetResponseStream())
+                    using (var reader = new StreamReader(responseStream))
                     {
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                        {
-                            var errorBody = reader.ReadToEnd();
-                            var errorRegex = @"(?<=<title.*>)([\s\S]*)(?=</title>)";
-                            var rex = new Regex(errorRegex, RegexOptions.IgnoreCase);
-                            var errorTitle = rex.Match(errorBody).Value.Trim();
-                            throw new Exception("Error: " + errorTitle, ex);
-                        }
+                        var errorBody = reader.ReadToEnd();
+                        var regex = new Regex(@"(?<=<title.*>)([\s\S]*)(?=</title>)", RegexOptions.IgnoreCase);
+                        var errorTitle = regex.Match(errorBody).Value.Trim();
+                        throw new ChapterGrabberException(errorTitle, ex);
                     }
                 }
-                else
-                {
-                    throw new Exception("Error: An error occurred when contacting chapterdb.org", ex);
-                }
-            }
-
-            try
-            {
-                doc.LoadXml(xmlResponse);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error: An error occurred when processing the response from chapterdb.org", ex);
             }
 
             if (doc.DocumentElement != null)
             {
                 foreach (var node in doc.DocumentElement)
                 {
-                    string jsonText;
-                    try
-                    {
-                        jsonText = Regex.Replace(JsonConvert.SerializeXmlNode((XmlElement)node, Formatting.Indented),
-                                                "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
-                        jsonText = jsonText.Replace("?xml", "xml");
+                    var jsonText = Regex.Replace(JsonConvert.SerializeXmlNode((XmlElement) node, Formatting.Indented),
+                                                 "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
+                    jsonText = jsonText.Replace("?xml", "xml");
 
-                        movieSearchResults.Add(JsonConvert.DeserializeObject<JsonChaps>(jsonText));
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Error: An error occurred when serializing the response from chapterdb.org", ex);
-                    }
+                    movieSearchResults.Add(JsonConvert.DeserializeObject<JsonChaps>(jsonText));
                 }
             }
            
             if (movieSearchResults.Count > 0)
             {               
-                var Message = movieSearchResults.Count + " possible matches were found for " + movieName;
-                Logger.Info(Message);
+                Logger.InfoFormat("{0} possible matche(s) were found for {1}", movieSearchResults.Count, movieName);
             }
             else
             {
-                var Message = "No matches were found for " + movieName;
-                Logger.Info(Message);
+                Logger.InfoFormat("No matches were found for {0}", movieName);
             }
+
             return movieSearchResults;
         }
 
@@ -222,8 +201,7 @@ namespace ChapterGrabberPlugin
 
             if (apiResultsFilteredByValidName.Count > 0)
             {
-                var Message = apiResultsFilteredByValidName.Count + " result(s) matched the filter criteria for custom chapters";
-                Logger.Info(Message);
+                Logger.InfoFormat("{0} result(s) matched the filter criteria for custom chapters", apiResultsFilteredByValidName.Count);
             }
 
             return apiResultsFilteredByValidName;
@@ -273,7 +251,6 @@ namespace ChapterGrabberPlugin
 
         private static bool DoTimecodesMatch(double timeDisc, double timeApi)
         {
-            var test = Math.Abs(timeDisc - timeApi);
             return Math.Abs(timeDisc - timeApi) <= 1.0;
         }
 

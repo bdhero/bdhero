@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChapterGrabberException.cs" />
     <Compile Include="ChapterJson.cs" />
     <Compile Include="ChapterGrabberPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

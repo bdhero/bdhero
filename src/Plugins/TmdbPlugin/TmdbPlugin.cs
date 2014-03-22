@@ -253,9 +253,9 @@ namespace TmdbPlugin
 
             if (_apiKey == null)
             {
-                const string message = "ERROR: No API key found";
+                const string message = "No API key found";
                 Logger.Error(message);
-                throw new Exception(message);
+                throw new TmdbException(message);
             }
 
             _tmdbApi = new Tmdb(_apiKey, _searchISO_639_1);
@@ -409,7 +409,7 @@ namespace TmdbPlugin
             try
             {
                 var pluginSettings = SmartJsonConvert.DeserializeObject<TmdbApiErrors>(tmdbResponse);
-                Logger.ErrorFormat("Error: api.themoviedb.org returned the following Status Code {0} : {1}",
+                Logger.ErrorFormat("api.themoviedb.org returned status code {0}: \"{1}\"",
                                    pluginSettings.StatusCode,
                                    pluginSettings.StatusMessage);
             }

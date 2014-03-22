@@ -103,7 +103,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             if (_exception is OperationCanceledException)
                 throw new OperationCanceledException("FFmpeg was canceled", _exception);
-            throw new Exception("Error occurred while muxing with FFmpeg", _exception);
+            throw new FFmpegException("Error occurred while muxing with FFmpeg", _exception);
         }
 
         private void OnProgressUpdated(FFmpeg ffmpeg, ProgressState progressState, CancellationToken cancellationToken)
@@ -130,7 +130,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                 }
                 else
                 {
-                    _exception = exception ?? new Exception(string.Format("FFmpeg exited with state: {0}", state));
+                    _exception = exception ?? new FFmpegException(string.Format("FFmpeg exited with state: {0}", state));
                 }
             }
             SignalThreadExited();

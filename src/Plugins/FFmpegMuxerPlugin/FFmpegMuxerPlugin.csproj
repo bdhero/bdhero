@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FFmpeg.cs" />
+    <Compile Include="FFmpegException.cs" />
     <Compile Include="FFmpegPlugin.cs" />
     <Compile Include="FFmpegTrackIndex.cs" />
     <Compile Include="MkvPropEdit.cs" />
