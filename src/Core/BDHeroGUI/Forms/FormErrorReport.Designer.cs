@@ -54,12 +54,10 @@
             // 
             this.checkBoxShowLineNumbers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowLineNumbers.AutoSize = true;
-            this.checkBoxShowLineNumbers.Checked = true;
-            this.checkBoxShowLineNumbers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(82, 619);
+            this.checkBoxShowLineNumbers.Location = new System.Drawing.Point(169, 619);
             this.checkBoxShowLineNumbers.Name = "checkBoxShowLineNumbers";
             this.checkBoxShowLineNumbers.Size = new System.Drawing.Size(121, 17);
-            this.checkBoxShowLineNumbers.TabIndex = 4;
+            this.checkBoxShowLineNumbers.TabIndex = 5;
             this.checkBoxShowLineNumbers.Text = "Show &Line Numbers";
             this.checkBoxShowLineNumbers.UseVisualStyleBackColor = true;
             // 
@@ -69,10 +67,10 @@
             this.checkBoxShowRuler.AutoSize = true;
             this.checkBoxShowRuler.Checked = true;
             this.checkBoxShowRuler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowRuler.Location = new System.Drawing.Point(328, 619);
+            this.checkBoxShowRuler.Location = new System.Drawing.Point(82, 619);
             this.checkBoxShowRuler.Name = "checkBoxShowRuler";
             this.checkBoxShowRuler.Size = new System.Drawing.Size(81, 17);
-            this.checkBoxShowRuler.TabIndex = 6;
+            this.checkBoxShowRuler.TabIndex = 4;
             this.checkBoxShowRuler.Text = "Show &Ruler";
             this.checkBoxShowRuler.UseVisualStyleBackColor = true;
             // 
@@ -80,12 +78,10 @@
             // 
             this.checkBoxShowWhitespace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowWhitespace.AutoSize = true;
-            this.checkBoxShowWhitespace.Checked = true;
-            this.checkBoxShowWhitespace.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(209, 619);
+            this.checkBoxShowWhitespace.Location = new System.Drawing.Point(296, 619);
             this.checkBoxShowWhitespace.Name = "checkBoxShowWhitespace";
             this.checkBoxShowWhitespace.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxShowWhitespace.TabIndex = 5;
+            this.checkBoxShowWhitespace.TabIndex = 6;
             this.checkBoxShowWhitespace.Text = "Show &Whitespace";
             this.checkBoxShowWhitespace.UseVisualStyleBackColor = true;
             // 
@@ -110,12 +106,14 @@
             // buttonAccept
             // 
             this.buttonAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonAccept.Location = new System.Drawing.Point(621, 615);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
             this.buttonAccept.TabIndex = 8;
             this.buttonAccept.Text = "&Submit";
             this.buttonAccept.UseVisualStyleBackColor = true;
+            this.buttonAccept.Click += new System.EventHandler(this.buttonAccept_Click);
             // 
             // buttonCancel
             // 
@@ -167,6 +165,7 @@
             this.Controls.Add(this.checkBoxShowLineNumbers);
             this.Controls.Add(this.panel1);
             this.Name = "FormErrorReport";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error Report";
             this.ResumeLayout(false);

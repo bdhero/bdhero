@@ -8,13 +8,9 @@ namespace BDHeroGUI.Forms
 {
     public partial class FormErrorReport : Form
     {
-#if __MonoCS__
-        private const string FilePath = @"/Users/admin/Documents/sample.md";
-#else
-        private const string FilePath = @"C:\projects\TestProject\CodeEditor\sample.md";
-#endif
-
         private readonly ErrorReport _report;
+        private readonly TextEditorControl _editorControl;
+        private readonly ITextEditor _editor;
 
         public FormErrorReport(ErrorReport report)
         {
@@ -22,49 +18,45 @@ namespace BDHeroGUI.Forms
 
             _report = report;
 
-            InitMultilineEditor();
-        }
-
-        private void InitMultilineEditor()
-        {
-            var control = new TextEditorControl();
-            var editor = control.Editor;
-
-            if (editor.Options.SupportsWordWrap)
-            {
-                editor.Options.WordWrapIndent = editor.FontSize * 4;
-            }
-            else
-            {
-                checkBoxWordWrap.Hide();
-            }
-
-            editor.Load(FilePath);
-            editor.SetSyntax(StandardSyntaxType.Markdown);
+            _editorControl = new TextEditorControl();
+            _editor = _editorControl.Editor;
 
             textBoxTitle.Text = _report.Title;
-            editor.Text = _report.Body;
+            _editor.Text = _report.Body;
 
-            editor.TextChanged += EditorOnTextChanged;
+            _editor.TextChanged += EditorOnTextChanged;
+            _editor.SetSyntax(StandardSyntaxType.Markdown);
+
+            #region Editor options
+
+            _editor.Options.ShowSpaces = false;
+            _editor.Options.ShowLineNumbers = false;
+
+            if (_editor.Options.SupportsWordWrap)
+                _editor.Options.WordWrapIndent = _editor.FontSize * 4;
+            else
+                checkBoxWordWrap.Hide();
+
+            #endregion
 
             #region Options - checkbox events
 
             checkBoxShowLineNumbers.CheckedChanged +=
-                (sender, args) => editor.Options.ShowLineNumbers = checkBoxShowLineNumbers.Checked;
+                (sender, args) => _editor.Options.ShowLineNumbers = checkBoxShowLineNumbers.Checked;
 
             checkBoxShowRuler.CheckedChanged +=
-                (sender, args) => editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
+                (sender, args) => _editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
 
             checkBoxShowWhitespace.CheckedChanged +=
-                (sender, args) => editor.Options.ShowTabs = editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
+                (sender, args) => _editor.Options.ShowTabs = _editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
 
             checkBoxWordWrap.CheckedChanged +=
-                (sender, args) => editor.Options.WordWrap = checkBoxWordWrap.Checked;
+                (sender, args) => _editor.Options.WordWrap = checkBoxWordWrap.Checked;
 
             #endregion
 
-            control.Dock = DockStyle.Fill;
-            panel1.Controls.Add(control);
+            _editorControl.Dock = DockStyle.Fill;
+            panel1.Controls.Add(_editorControl);
         }
 
         private void EditorOnTextChanged(object sender, EventArgs eventArgs)
@@ -77,6 +69,13 @@ namespace BDHeroGUI.Forms
 
             if (editor.IsModified)
                 Text += "*";
+        }
+
+        private void buttonAccept_Click(object sender, EventArgs e)
+        {
+            _report.Title = textBoxTitle.Text;
+            _report.Body = _editor.Text;
+            Close();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
