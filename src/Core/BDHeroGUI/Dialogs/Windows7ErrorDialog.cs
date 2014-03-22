@@ -102,7 +102,7 @@ namespace BDHeroGUI.Dialogs
                 dialog.FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", CopyDetailsHref);
             }
 
-            dialog.HyperlinkClick += (sender, args) => OnHyperlinkClick(owner, args);
+            dialog.HyperlinkClick += (sender, args) => OnHyperlinkClick(dialog, owner, args);
 
             if (isReportable)
             {
@@ -141,19 +141,21 @@ namespace BDHeroGUI.Dialogs
 
         private TaskDialogCommandLink CreateSubmitButton(TaskDialog dialog)
         {
-            IErrorReportResult result = null;
             var sendButton = new TaskDialogCommandLink("submitButton", _networkStatusMonitor.IsOnline ? SubmitButtonTextOnline : SubmitButtonTextOffline);
-            sendButton.Click += delegate
-                                {
-                                    new TaskBuilder()
-                                        .OnCurrentThread()
-                                        .DoWork((invoker, token) => result = ErrorReporter.Report(_report))
-                                        .Succeed(() => OnErrorReportCompleted(result))
-                                        .Build()
-                                        .Start();
-                                    dialog.Close(TaskDialogResult.Yes);
-                                };
+            sendButton.Click += (sender, args) => Submit(dialog);
             return sendButton;
+        }
+
+        private void Submit(TaskDialog dialog)
+        {
+            IErrorReportResult result = null;
+            new TaskBuilder()
+                .OnCurrentThread()
+                .DoWork((invoker, token) => result = ErrorReporter.Report(_report))
+                .Succeed(() => OnErrorReportCompleted(result))
+                .Build()
+                .Start();
+            dialog.Close(TaskDialogResult.Yes);
         }
 
         private void OnErrorReportCompleted([NotNull] IErrorReportResult result)
@@ -174,7 +176,7 @@ namespace BDHeroGUI.Dialogs
             return dontSendButton;
         }
 
-        private void OnHyperlinkClick([CanBeNull] IWin32Window owner, TaskDialogHyperlinkClickedEventArgs args)
+        private void OnHyperlinkClick(TaskDialog dialog, [CanBeNull] IWin32Window owner, TaskDialogHyperlinkClickedEventArgs args)
         {
             if (args.LinkText == CopyDetailsHref)
             {
@@ -185,7 +187,11 @@ namespace BDHeroGUI.Dialogs
             }
             if (args.LinkText == EditReportHref)
             {
-                new FormErrorReport(_report).ShowDialog(owner);
+                var result = new FormErrorReport(_report).ShowDialog(owner);
+                if (result == DialogResult.OK || result == DialogResult.Yes)
+                {
+                    Submit(dialog);
+                }
             }
         }
 
