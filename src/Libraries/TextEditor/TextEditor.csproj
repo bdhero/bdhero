@@ -81,8 +81,11 @@
     </Compile>
     <Compile Include="Resources\Syntax\Definitions\FilePathModeXshdModel.cs" />
     <Compile Include="Resources\ResourceLoader.cs" />
+    <Compile Include="Resources\Syntax\MySyntaxMode.cs" />
     <Compile Include="Resources\Syntax\Providers\BaseSyntaxModeProvider.cs" />
+    <Compile Include="Resources\Syntax\Providers\ISyntaxModeProvider.cs" />
     <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
+    <Compile Include="Resources\Syntax\Providers\SyntaxModeProviderAdapter.cs" />
     <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
     <Compile Include="StandardSyntaxType.cs" />
     <Compile Include="WinForms\CompletionControllerImpl.cs" />

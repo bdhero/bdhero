@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using TextEditor.Resources.Syntax.Providers;
 
 namespace TextEditor
 {
@@ -56,7 +57,7 @@ namespace TextEditor
 
         #region Syntax highlighting
 
-        void LoadSyntaxDefinitions(ICSharpCode.TextEditor.Document.ISyntaxModeFileProvider syntaxModeFileProvider);
+        void LoadSyntaxDefinitions(ISyntaxModeProvider syntaxModeFileProvider);
 
         void SetSyntax(StandardSyntaxType type);
 

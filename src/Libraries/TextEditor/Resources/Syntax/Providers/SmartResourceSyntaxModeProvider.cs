@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Xml;
-using ICSharpCode.TextEditor.Document;
 
 namespace TextEditor.Resources.Syntax.Providers
 {
@@ -28,7 +27,7 @@ namespace TextEditor.Resources.Syntax.Providers
             }
         }
 
-        public override XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
+        public override XmlTextReader GetSyntaxModeFile(MySyntaxMode syntaxMode)
         {
             return new XmlTextReader(ResourceLoader.OpenStream(syntaxMode.FileName));
         }

@@ -2,11 +2,13 @@
 using System.IO;
 using System.Text;
 using System.Xml;
-using ICSharpCode.TextEditor.Document;
 using TextEditor.Resources.Syntax.Definitions;
 
 namespace TextEditor.Resources.Syntax.Providers
 {
+    /// <summary>
+    ///     Provides syntax modes from compiled T4 templates.
+    /// </summary>
     public class T4SyntaxModeProvider : BaseSyntaxModeProvider
     {
         private static readonly Dictionary<string, string> DefaultModels
@@ -18,11 +20,22 @@ namespace TextEditor.Resources.Syntax.Providers
 
         private readonly IDictionary<string, string> _models;
 
+        /// <summary>
+        ///     Constructs a new <see cref="T4SyntaxModeProvider"/> instance with the default list of syntax modes
+        ///     stored in the <see cref="TextEditor.Resources.Syntax.Definitions"/> namespace.
+        /// </summary>
         public T4SyntaxModeProvider()
             : this(DefaultModels)
         {
         }
 
+        /// <summary>
+        ///     Constructs a new <see cref="T4SyntaxModeProvider"/> instance with the the given list of <paramref name="models"/>.
+        /// </summary>
+        /// <param name="models">
+        ///     Map of key value pairs where the <b>key</b> is the syntax mode's file name and
+        ///     the <b>value</b> is the text contents of the <c>.XSHD</c> file.
+        /// </param>
         public T4SyntaxModeProvider(IDictionary<string, string> models)
         {
             _models = models;
@@ -36,7 +49,7 @@ namespace TextEditor.Resources.Syntax.Providers
             }
         }
 
-        public override XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
+        public override XmlTextReader GetSyntaxModeFile(MySyntaxMode syntaxMode)
         {
             return new XmlTextReader(GetStream(syntaxMode.FileName));
         }
