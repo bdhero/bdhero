@@ -38,6 +38,9 @@ namespace TextEditor
             editor.Options.ConvertTabsToSpaces = true;
             editor.Options.IndentationSize = 4;
 
+            // TODO: Sync this with the font size
+            editor.Options.WordWrapIndent = editor.FontSize * 4;
+
             return editor;
         }
 
