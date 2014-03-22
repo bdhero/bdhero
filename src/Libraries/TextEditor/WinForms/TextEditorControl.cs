@@ -517,8 +517,8 @@ namespace TextEditor.WinForms
             parentSize = new Size(parentWidth,
                                   parentHeight + tbPad);
 
-            childSize = new Size(parentWidth + Editor.VerticalScrollBarWidth - lrPad,
-                                 parentHeight + Editor.HorizontalScrollBarHeight);
+            childSize = new Size(parentWidth + Editor.VerticalScrollBarWidthAllowance - lrPad,
+                                 parentHeight + Editor.HorizontalScrollBarHeightAllowance);
 
             return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
         }

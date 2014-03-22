@@ -221,12 +221,12 @@ namespace TextEditor.WinForms
                 MultilineChanged(this, EventArgs.Empty);
         }
 
-        public int HorizontalScrollBarHeight
+        public int HorizontalScrollBarHeightAllowance
         {
             get { return SystemInformation.HorizontalScrollBarHeight; }
         }
 
-        public int VerticalScrollBarWidth
+        public int VerticalScrollBarWidthAllowance
         {
             get { return SystemInformation.VerticalScrollBarWidth; }
         }

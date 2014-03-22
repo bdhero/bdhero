@@ -67,10 +67,15 @@ namespace TextEditor
         /// </summary>
         event EventHandler ReadOnlyChanged;
 
-        // TODO: Rename these properties to reflect how they are actually used
-        int HorizontalScrollBarHeight { get; }
+        /// <summary>
+        ///     Gets the number of horizontal pixels to hide when <see cref="Multiline"/> is <c>false</c>.
+        /// </summary>
+        int HorizontalScrollBarHeightAllowance { get; }
 
-        int VerticalScrollBarWidth { get; }
+        /// <summary>
+        ///     Gets the number of vertical pixels to hide when <see cref="Multiline"/> is <c>false</c>.
+        /// </summary>
+        int VerticalScrollBarWidthAllowance { get; }
 
         #endregion
 
