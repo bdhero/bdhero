@@ -49,9 +49,9 @@ namespace BDHero.Plugin.FileNamer
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Video", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Audio", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.selectableLabelMoviePlaceholders = new UILib.WinForms.Controls.SelectableLabel();
@@ -191,7 +191,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(766, 77);
+            this.label3.Location = new System.Drawing.Point(766, 78);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(30, 13);
             this.label3.TabIndex = 4;
@@ -200,7 +200,7 @@ namespace BDHero.Plugin.FileNamer
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 77);
+            this.label2.Location = new System.Drawing.Point(13, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(98, 13);
             this.label2.TabIndex = 3;
@@ -221,7 +221,7 @@ namespace BDHero.Plugin.FileNamer
             this.hyperlinkLabelTVShowReleaseDateFormat.DisabledColor = System.Drawing.Color.Empty;
             this.hyperlinkLabelTVShowReleaseDateFormat.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.hyperlinkLabelTVShowReleaseDateFormat.HoverColor = System.Drawing.Color.Empty;
-            this.hyperlinkLabelTVShowReleaseDateFormat.Location = new System.Drawing.Point(240, 178);
+            this.hyperlinkLabelTVShowReleaseDateFormat.Location = new System.Drawing.Point(240, 180);
             this.hyperlinkLabelTVShowReleaseDateFormat.Name = "hyperlinkLabelTVShowReleaseDateFormat";
             this.hyperlinkLabelTVShowReleaseDateFormat.RegularColor = System.Drawing.Color.Empty;
             this.hyperlinkLabelTVShowReleaseDateFormat.Size = new System.Drawing.Size(130, 14);
@@ -232,7 +232,7 @@ namespace BDHero.Plugin.FileNamer
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 178);
+            this.label15.Location = new System.Drawing.Point(6, 180);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(105, 13);
             this.label15.TabIndex = 15;
@@ -240,7 +240,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             // textBoxTVShowReleaseDateFormat
             // 
-            this.textBoxTVShowReleaseDateFormat.Location = new System.Drawing.Point(117, 175);
+            this.textBoxTVShowReleaseDateFormat.Location = new System.Drawing.Point(117, 177);
             this.textBoxTVShowReleaseDateFormat.Name = "textBoxTVShowReleaseDateFormat";
             this.textBoxTVShowReleaseDateFormat.Size = new System.Drawing.Size(117, 20);
             this.textBoxTVShowReleaseDateFormat.TabIndex = 7;
@@ -248,7 +248,7 @@ namespace BDHero.Plugin.FileNamer
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(21, 150);
+            this.label14.Location = new System.Drawing.Point(21, 152);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(90, 13);
             this.label14.TabIndex = 13;
@@ -261,7 +261,7 @@ namespace BDHero.Plugin.FileNamer
             this.comboBoxEpisodeNumberFormat.Items.AddRange(new object[] {
             "1",
             "01"});
-            this.comboBoxEpisodeNumberFormat.Location = new System.Drawing.Point(117, 147);
+            this.comboBoxEpisodeNumberFormat.Location = new System.Drawing.Point(117, 149);
             this.comboBoxEpisodeNumberFormat.Name = "comboBoxEpisodeNumberFormat";
             this.comboBoxEpisodeNumberFormat.Size = new System.Drawing.Size(43, 21);
             this.comboBoxEpisodeNumberFormat.TabIndex = 6;
@@ -269,7 +269,7 @@ namespace BDHero.Plugin.FileNamer
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(23, 123);
+            this.label13.Location = new System.Drawing.Point(23, 125);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(88, 13);
             this.label13.TabIndex = 11;
@@ -282,7 +282,7 @@ namespace BDHero.Plugin.FileNamer
             this.comboBoxSeasonNumberFormat.Items.AddRange(new object[] {
             "1",
             "01"});
-            this.comboBoxSeasonNumberFormat.Location = new System.Drawing.Point(117, 120);
+            this.comboBoxSeasonNumberFormat.Location = new System.Drawing.Point(117, 122);
             this.comboBoxSeasonNumberFormat.Name = "comboBoxSeasonNumberFormat";
             this.comboBoxSeasonNumberFormat.Size = new System.Drawing.Size(43, 21);
             this.comboBoxSeasonNumberFormat.TabIndex = 5;
@@ -291,7 +291,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(63, 100);
+            this.label7.Location = new System.Drawing.Point(63, 102);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(48, 13);
             this.label7.TabIndex = 9;
@@ -326,7 +326,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTVShowFileNameExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxTVShowFileNameExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxTVShowFileNameExample.Location = new System.Drawing.Point(117, 100);
+            this.textBoxTVShowFileNameExample.Location = new System.Drawing.Point(117, 102);
             this.textBoxTVShowFileNameExample.Name = "textBoxTVShowFileNameExample";
             this.textBoxTVShowFileNameExample.ReadOnly = true;
             this.textBoxTVShowFileNameExample.Size = new System.Drawing.Size(679, 13);
@@ -375,7 +375,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(766, 77);
+            this.label10.Location = new System.Drawing.Point(766, 78);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(30, 13);
             this.label10.TabIndex = 4;
@@ -384,7 +384,7 @@ namespace BDHero.Plugin.FileNamer
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(13, 77);
+            this.label11.Location = new System.Drawing.Point(13, 78);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(98, 13);
             this.label11.TabIndex = 3;
@@ -465,16 +465,16 @@ namespace BDHero.Plugin.FileNamer
             this.columnHeaderNumber});
             this.listViewCodecNames.FullRowSelect = true;
             this.listViewCodecNames.GridLines = true;
-            listViewGroup1.Header = "Video";
-            listViewGroup1.Name = "listViewGroupVideo";
-            listViewGroup2.Header = "Audio";
-            listViewGroup2.Name = "listViewGroupAudio";
-            listViewGroup3.Header = "Subtitles";
-            listViewGroup3.Name = "listViewGroupSubtitles";
+            listViewGroup4.Header = "Video";
+            listViewGroup4.Name = "listViewGroupVideo";
+            listViewGroup5.Header = "Audio";
+            listViewGroup5.Name = "listViewGroupAudio";
+            listViewGroup6.Header = "Subtitles";
+            listViewGroup6.Name = "listViewGroupSubtitles";
             this.listViewCodecNames.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
+            listViewGroup4,
+            listViewGroup5,
+            listViewGroup6});
             this.listViewCodecNames.HideSelection = false;
             this.listViewCodecNames.LabelEdit = true;
             this.listViewCodecNames.Location = new System.Drawing.Point(6, 6);
@@ -609,14 +609,14 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTVShowFileName.ConvertTabsToSpaces = false;
             this.textBoxTVShowFileName.CutCopyWholeLine = false;
-            this.textBoxTVShowFileName.Location = new System.Drawing.Point(118, 77);
+            this.textBoxTVShowFileName.Location = new System.Drawing.Point(117, 74);
             this.textBoxTVShowFileName.Multiline = false;
             this.textBoxTVShowFileName.Name = "textBoxTVShowFileName";
             this.textBoxTVShowFileName.Padding = new System.Windows.Forms.Padding(1);
             this.textBoxTVShowFileName.ShowColumnRuler = false;
             this.textBoxTVShowFileName.ShowLineNumbers = false;
             this.textBoxTVShowFileName.ShowWhiteSpace = false;
-            this.textBoxTVShowFileName.Size = new System.Drawing.Size(642, 20);
+            this.textBoxTVShowFileName.Size = new System.Drawing.Size(643, 22);
             this.textBoxTVShowFileName.TabIndex = 3;
             this.textBoxTVShowFileName.Text = "s${season}e${episode} - ${title} (${date}) [${res}] [${acodec} ${channels}]";
             // 
