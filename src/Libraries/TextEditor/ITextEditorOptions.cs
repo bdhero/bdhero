@@ -32,6 +32,8 @@
 
         bool ShowTabs { get; set; }
 
+        bool ShowWhiteSpace { get; set; }
+
         #endregion
 
         #region Word wrapping

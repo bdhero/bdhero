@@ -83,6 +83,12 @@
             set { _editor.Options.ShowTabs = value; }
         }
 
+        public bool ShowWhiteSpace
+        {
+            get { return ShowSpaces && ShowTabs; }
+            set { ShowSpaces = ShowTabs = value; }
+        }
+
         public bool SupportsWordWrap
         {
             get { return true; }
