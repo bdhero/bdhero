@@ -57,5 +57,21 @@
             set { _editor.ShowTabs = value; }
         }
 
+        public bool SupportsWordWrap
+        {
+            get { return false; }
+        }
+
+        public bool WordWrap
+        {
+            get { return false; }
+            set { }
+        }
+
+        public double WordWrapIndent
+        {
+            get { return 0; }
+            set { }
+        }
     }
 }

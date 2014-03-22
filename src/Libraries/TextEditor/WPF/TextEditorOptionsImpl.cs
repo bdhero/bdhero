@@ -82,6 +82,23 @@
             get { return _editor.Options.ShowTabs; }
             set { _editor.Options.ShowTabs = value; }
         }
+
+        public bool SupportsWordWrap
+        {
+            get { return true; }
+        }
+
+        public bool WordWrap
+        {
+            get { return _editor.WordWrap; }
+            set { _editor.WordWrap = value; }
+        }
+
+        public double WordWrapIndent
+        {
+            get { return _editor.Options.WordWrapIndentation; }
+            set { _editor.Options.WordWrapIndentation = value; }
+        }
     }
 
 #endif
