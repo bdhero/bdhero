@@ -42,6 +42,7 @@ using DotNetUtils.FS;
 using DotNetUtils.TaskUtils;
 using log4net;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
@@ -149,6 +150,19 @@ namespace BDHeroGUI
             }
 
             InitSystemMenu();
+
+            InitTaskBarId();
+        }
+
+        private void InitTaskBarId()
+        {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                var manager = TaskbarManager.Instance;
+                manager.ApplicationId = string.Format("{0}.{1}.{2}.{3:s}",
+                                                      AppUtils.ProductName, AppUtils.AppName,
+                                                      AppUtils.AppVersion, AppUtils.BuildDate);
+            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
