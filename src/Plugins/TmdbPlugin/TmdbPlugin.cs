@@ -83,6 +83,18 @@ namespace TmdbPlugin
             if (cancellationToken.IsCancellationRequested)
                 return;
 
+            if (_apiKey == null)
+            {
+                const string message = "No API key found";
+                Logger.Error(message);
+                throw new TmdbException(message);
+            }
+
+            _tmdbApi = new Tmdb(_apiKey, _searchISO_639_1);
+
+            if (Configuration == null)
+                return;
+
             Search(job);
 
             if (cancellationToken.IsCancellationRequested)
@@ -160,21 +172,26 @@ namespace TmdbPlugin
 
         #region TMDb Configuration
 
-        private TmdbConfiguration GetConfiguration()
+        private TmdbConfiguration Configuration
         {
-            if (_configuration == null)
+            get
             {
+                if (_configuration != null)
+                    return _configuration;
+
                 Logger.Debug("Getting TMDb configuration");
+
                 _configuration = _tmdbApi.GetConfiguration();
+
+                return _configuration;
             }
-            return _configuration;
         }
 
         private void GetBaseImageUrl()
         {
             if (string.IsNullOrEmpty(_rootImageUrl))
             {
-                _rootImageUrl = GetConfiguration().images.base_url + "w185";
+                _rootImageUrl = Configuration.images.base_url + "w185";
             }
 
             if (string.IsNullOrEmpty(_rootImageUrl))
@@ -250,15 +267,6 @@ namespace TmdbPlugin
 
             var searchTitle = query.Title;
             var searchYear = query.Year;
-
-            if (_apiKey == null)
-            {
-                const string message = "No API key found";
-                Logger.Error(message);
-                throw new TmdbException(message);
-            }
-
-            _tmdbApi = new Tmdb(_apiKey, _searchISO_639_1);
 
             // TMDb (previously) choked on dashes - not sure if it still does or not...
             // E.G.: "The Amazing Spider-Man" --> "The Amazing Spider Man"
@@ -364,7 +372,7 @@ namespace TmdbPlugin
                 {
                     if (string.IsNullOrEmpty(_rootImageUrl))
                     {
-                        _rootImageUrl = GetConfiguration().images.base_url + "original";
+                        _rootImageUrl = Configuration.images.base_url + "original";
                     }
                     tmdbMovieImages = _tmdbApi.GetMovieImages(movie.Id, null);
                     var posterLanguages = (tmdbMovieImages.posters.Select(poster => poster.iso_639_1).ToList());
