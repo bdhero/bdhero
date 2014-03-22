@@ -47,6 +47,7 @@ using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using OSUtils.Window;
+using TextEditor;
 using UILib.Extensions;
 using UILib.WinForms;
 using UpdateLib;
@@ -242,6 +243,13 @@ namespace BDHeroGUI
             ScanOnStartup();
 
             InitAboutBox();
+            InitTextEditors();
+        }
+
+        private void InitTextEditors()
+        {
+            var editor = TextEditorFactory.CreateMultiLineTextEditor();
+            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
         }
 
         private void InitNetworkStatusMonitor()
