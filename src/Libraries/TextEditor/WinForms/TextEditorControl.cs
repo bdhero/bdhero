@@ -26,6 +26,7 @@ namespace TextEditor.WinForms
         public TextEditorControl()
         {
             Editor = TextEditorFactory.CreateMultiLineTextEditor();
+            Editor.Multiline = true;
             Editor.Control.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom);
             Controls.Add(Editor.Control);
 
