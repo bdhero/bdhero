@@ -19,7 +19,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
-using DotNetUtils.Extensions;
+using UILib.Extensions;
 
 namespace UILib.WinForms.Controls
 {

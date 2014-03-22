@@ -55,6 +55,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ColumnHeaderExtensions.cs" />
+    <Compile Include="Extensions\CommonFileDialogResultExtensions.cs" />
+    <Compile Include="Extensions\ControlExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
+    <Compile Include="Extensions\ListViewItemExtensions.cs" />
+    <Compile Include="Extensions\ScrollableControlExtensions.cs" />
+    <Compile Include="Extensions\TabPageExtensions.cs" />
+    <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
+    <Compile Include="Extensions\TextBoxExtensions.cs" />
     <Compile Include="WinForms\Controls\EmailAddress.cs" />
     <Compile Include="WinForms\Controls\EmailLabel.cs">
       <SubType>Component</SubType>
@@ -161,6 +170,7 @@
   <ItemGroup>
     <None Include="Resources\network.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

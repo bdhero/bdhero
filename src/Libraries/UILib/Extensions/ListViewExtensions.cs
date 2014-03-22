@@ -19,10 +19,11 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using DotNetUtils.Extensions;
 using NativeAPI.Win.CommonControls;
 using NativeAPI.Win.User;
 
-namespace DotNetUtils.Extensions
+namespace UILib.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="ListView"/>s.

@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using DotNetUtils.Extensions;
 using NativeAPI.Win.UXTheme;
+using UILib.Extensions;
 
 namespace TextEditor.WinForms
 {

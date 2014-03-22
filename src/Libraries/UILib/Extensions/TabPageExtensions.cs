@@ -1,4 +1,4 @@
-// Copyright 2014 Andrew C. Dvorak
+﻿// Copyright 2012-2014 Andrew C. Dvorak
 //
 // This file is part of BDHero.
 //
@@ -16,29 +16,32 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace DotNetUtils.Extensions
+namespace UILib.Extensions
 {
     /// <summary>
-    ///     Extension methods for the <see cref="CommonFileDialogResult"/> enum.
+    /// Extension methods for <see cref="TabPage"/> controls.
     /// </summary>
-    public static class CommonFileDialogResultExtensions
+    public static class TabPageExtensions
     {
         /// <summary>
-        ///     Converts a <see cref="CommonFileDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
+        /// Recursively enables or disables all child controls of the TabPage
+        /// without enabling or disabling the TabPage itself.
         /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        public static DialogResult ToDialogResult(this CommonFileDialogResult result)
+        /// <param name="page"></param>
+        /// <param name="enable"></param>
+        public static void EnableChildControls(this TabPage page, bool enable)
         {
-            if (result == CommonFileDialogResult.Ok)
-                return DialogResult.OK;
+            EnableControls(page.Controls, enable);
+        }
 
-            if (result == CommonFileDialogResult.Cancel)
-                return DialogResult.Cancel;
-
-            return DialogResult.None;
+        private static void EnableControls(Control.ControlCollection ctls, bool enable)
+        {
+            foreach (Control ctl in ctls)
+            {
+                ctl.Enabled = enable;
+                EnableControls(ctl.Controls, enable);
+            }
         }
     }
 }

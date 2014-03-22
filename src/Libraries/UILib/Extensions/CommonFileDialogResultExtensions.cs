@@ -18,33 +18,24 @@
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace DotNetUtils.Extensions
+namespace UILib.Extensions
 {
     /// <summary>
-    ///     Extension methods for the <see cref="TaskDialogResult"/> enum.
+    ///     Extension methods for the <see cref="CommonFileDialogResult"/> enum.
     /// </summary>
-    public static class TaskDialogResultExtensions
+    public static class CommonFileDialogResultExtensions
     {
         /// <summary>
-        ///     Converts a <see cref="TaskDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
+        ///     Converts a <see cref="CommonFileDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static DialogResult ToDialogResult(this TaskDialogResult result)
+        public static DialogResult ToDialogResult(this CommonFileDialogResult result)
         {
-            if (result == TaskDialogResult.Ok)
+            if (result == CommonFileDialogResult.Ok)
                 return DialogResult.OK;
 
-            if (result == TaskDialogResult.Yes)
-                return DialogResult.Yes;
-
-            if (result == TaskDialogResult.No)
-                return DialogResult.No;
-
-            if (result == TaskDialogResult.Retry)
-                return DialogResult.Retry;
-
-            if (result == TaskDialogResult.Cancel)
+            if (result == CommonFileDialogResult.Cancel)
                 return DialogResult.Cancel;
 
             return DialogResult.None;

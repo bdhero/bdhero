@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using DotNetUtils.Annotations;
-using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OSUtils.Net;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Dialogs
 {

@@ -18,7 +18,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace DotNetUtils.Extensions
+namespace UILib.Extensions
 {
     /// <summary>
     ///     Extension methods for <see cref="ScrollableControl"/> objects.

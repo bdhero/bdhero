@@ -47,6 +47,7 @@ using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using OSUtils.Window;
+using UILib.Extensions;
 using UILib.WinForms;
 using UpdateLib;
 

@@ -19,8 +19,8 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
-using DotNetUtils.Extensions;
 using I18N;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {

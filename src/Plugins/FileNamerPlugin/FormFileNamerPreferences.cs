@@ -21,7 +21,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHero.JobQueue;
-using DotNetUtils.Extensions;
+using UILib.Extensions;
 using UILib.WinForms.Controls;
 
 namespace BDHero.Plugin.FileNamer

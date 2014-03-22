@@ -20,6 +20,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using DotNetUtils.Extensions;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {

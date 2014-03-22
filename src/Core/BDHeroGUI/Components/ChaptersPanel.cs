@@ -22,6 +22,7 @@ using System.Windows.Forms;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Components
 {

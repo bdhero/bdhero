@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using NativeAPI.Win.User;
 
-namespace DotNetUtils.Extensions
+namespace UILib.Extensions
 {
     /// <summary>
     /// Extension methods for classes derived from the <see cref="Control"/> base class.

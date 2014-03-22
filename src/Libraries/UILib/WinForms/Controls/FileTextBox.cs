@@ -19,6 +19,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using DotNetUtils.FS;
+using UILib.Extensions;
 using UILib.WinForms.Dialogs.FS;
 
 namespace UILib.WinForms.Controls

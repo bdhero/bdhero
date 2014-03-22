@@ -27,6 +27,7 @@ using DotNetUtils.Extensions;
 using LicenseUtils;
 using LicenseUtils.Controls;
 using OSUtils.Info;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {

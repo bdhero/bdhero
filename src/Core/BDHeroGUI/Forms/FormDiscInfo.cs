@@ -22,6 +22,7 @@ using BDHeroGUI.Components;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using OSUtils.Window;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {
