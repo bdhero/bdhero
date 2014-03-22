@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -76,16 +77,27 @@ namespace BDHero.Plugin.FileNamer
         private Preferences GetPreferences()
         {
             var prefs = PluginUtils.GetPreferences(AssemblyInfo, () => new Preferences());
-            prefs.Movies.Directory = UpgradeSyntax(prefs.Movies.Directory);
-            prefs.Movies.FileName = UpgradeSyntax(prefs.Movies.FileName);
+            prefs.Movies.Directory  = UpgradeSyntax(prefs.Movies.Directory);
+            prefs.Movies.FileName   = UpgradeSyntax(prefs.Movies.FileName);
             prefs.TVShows.Directory = UpgradeSyntax(prefs.TVShows.Directory);
-            prefs.TVShows.FileName = UpgradeSyntax(prefs.TVShows.FileName);
+            prefs.TVShows.FileName  = UpgradeSyntax(prefs.TVShows.FileName);
             return prefs;
         }
 
-        private string UpgradeSyntax(string path)
+        private static string UpgradeSyntax(string path)
         {
-            return new Regex(@"%(\w+?)%").Replace(path, @"${$1}");
+            return new Regex(@"%(\w+?)%").Replace(path, MigrateVariableSyntax);
+        }
+
+        private static string MigrateVariableSyntax(Match match)
+        {
+            var variableName = match.Groups[1].Value;
+            if (FileNameVars.MovieVars.Contains(variableName) ||
+                FileNameVars.TVShowVars.Contains(variableName))
+            {
+                return match.Result(@"${$1}");
+            }
+            return match.Value;
         }
 
         private void SavePreferences(Preferences prefs)
