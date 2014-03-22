@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
+using OSUtils.Net;
 using TextEditor;
 using TextEditor.WinForms;
 
@@ -9,14 +10,17 @@ namespace BDHeroGUI.Forms
     public partial class FormErrorReport : Form
     {
         private readonly ErrorReport _report;
+        private readonly INetworkStatusMonitor _networkStatusMonitor;
+
         private readonly TextEditorControl _editorControl;
         private readonly ITextEditor _editor;
 
-        public FormErrorReport(ErrorReport report)
+        public FormErrorReport(ErrorReport report, INetworkStatusMonitor networkStatusMonitor)
         {
             InitializeComponent();
 
             _report = report;
+            _networkStatusMonitor = networkStatusMonitor;
 
             _editorControl = new TextEditorControl();
             _editor = _editorControl.Editor;
@@ -73,8 +77,19 @@ namespace BDHeroGUI.Forms
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
+            if (!_networkStatusMonitor.IsOnline)
+            {
+                MessageBox.Show(this,
+                                "You do not appear to be connected to the Internet." + "\n" +
+                                "Please reconnect and try again.",
+                                "Internet connection required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             _report.Title = textBoxTitle.Text;
             _report.Body = _editor.Text;
+
+            DialogResult = DialogResult.OK;
             Close();
         }
 

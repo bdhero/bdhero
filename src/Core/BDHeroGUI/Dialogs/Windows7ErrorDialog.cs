@@ -187,7 +187,7 @@ namespace BDHeroGUI.Dialogs
             }
             if (args.LinkText == EditReportHref)
             {
-                var result = new FormErrorReport(_report).ShowDialog(owner);
+                var result = new FormErrorReport(_report, _networkStatusMonitor).ShowDialog(owner);
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     Submit(dialog);
