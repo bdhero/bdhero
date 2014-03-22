@@ -12,7 +12,6 @@ namespace BDHeroGUI.Forms
         private readonly ErrorReport _report;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
 
-        private readonly TextEditorControl _editorControl;
         private readonly ITextEditor _editor;
 
         public FormErrorReport(ErrorReport report, INetworkStatusMonitor networkStatusMonitor)
@@ -22,55 +21,27 @@ namespace BDHeroGUI.Forms
             _report = report;
             _networkStatusMonitor = networkStatusMonitor;
 
-            _editorControl = new TextEditorControl();
-            _editor = _editorControl.Editor;
+            var editorControl = new TextEditorControl();
+            _editor = editorControl.Editor;
 
             textBoxTitle.Text = _report.Title;
             _editor.Text = _report.Body;
 
+            _editor.Options.ShowWhiteSpace = false;
+            _editor.Options.ShowLineNumbers = false;
+
             _editor.TextChanged += EditorOnTextChanged;
             _editor.SetSyntax(StandardSyntaxType.Markdown);
 
-            #region Editor options
-
-            _editor.Options.ShowWhiteSpace = false;
-
-            if (_editor.Options.SupportsWordWrap)
-                _editor.Options.WordWrapIndent = _editor.FontSize * 4;
-            else
-                checkBoxWordWrap.Hide();
-
-            #endregion
-
-            #region Options - checkbox events
-
-            checkBoxShowLineNumbers.CheckedChanged +=
-                (sender, args) => _editor.Options.ShowLineNumbers = checkBoxShowLineNumbers.Checked;
-
-            checkBoxShowRuler.CheckedChanged +=
-                (sender, args) => _editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
-
-            checkBoxShowWhitespace.CheckedChanged +=
-                (sender, args) => _editor.Options.ShowWhiteSpace = checkBoxShowWhitespace.Checked;
-
-            checkBoxWordWrap.CheckedChanged +=
-                (sender, args) => _editor.Options.WordWrap = checkBoxWordWrap.Checked;
-
-            #endregion
-
-            _editorControl.Dock = DockStyle.Fill;
-            panel1.Controls.Add(_editorControl);
+            editorControl.Dock = DockStyle.Fill;
+            editorPanel.Controls.Add(editorControl);
         }
 
         private void EditorOnTextChanged(object sender, EventArgs eventArgs)
         {
-            var editor = sender as ITextEditor;
-            if (editor == null)
-                return;
-
             Text = Text.Replace("*", "");
 
-            if (editor.IsModified)
+            if (_editor.IsModified)
                 Text += "*";
         }
 
