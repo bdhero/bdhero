@@ -102,7 +102,7 @@ namespace TextEditor.WPF
             get { return _editor.Text; }
             set
             {
-                var newValue = MultilineHelper.StripNewlines(value ?? "");
+                var newValue = (Multiline ? value : MultilineHelper.StripNewlines(value ?? "")) ?? "";
                 if (newValue == Text)
                     return;
 
