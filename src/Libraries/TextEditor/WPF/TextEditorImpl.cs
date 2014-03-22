@@ -10,7 +10,7 @@ using System.Windows.Media;
 using DotNetUtils.Extensions;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
-using TextEditor.Resources.Syntax.Providers;
+using TextEditor.SyntaxHighlighting.Providers;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;

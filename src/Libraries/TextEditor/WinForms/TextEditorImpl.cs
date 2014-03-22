@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using DotNetUtils.Extensions;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
-using TextEditor.Resources.Syntax.Providers;
+using TextEditor.SyntaxHighlighting.Providers;
 
 namespace TextEditor.WinForms
 {

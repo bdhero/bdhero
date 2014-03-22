@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Reflection;
 using System.Xml;
+using TextEditor.Resources;
 
-namespace TextEditor.Resources.Syntax.Providers
+namespace TextEditor.SyntaxHighlighting.Providers
 {
     internal class SmartResourceSyntaxModeProvider : BaseSyntaxModeProvider
     {

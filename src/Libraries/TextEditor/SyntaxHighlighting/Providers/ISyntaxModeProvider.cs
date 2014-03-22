@@ -2,7 +2,7 @@
 using System.Xml;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
-namespace TextEditor.Resources.Syntax.Providers
+namespace TextEditor.SyntaxHighlighting.Providers
 {
     /// <summary>
     ///     Interface for a class that reads syntax highlighting definition (<c>.XSHD</c>) files.

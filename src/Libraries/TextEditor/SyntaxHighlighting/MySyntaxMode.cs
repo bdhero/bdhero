@@ -1,4 +1,4 @@
-namespace TextEditor.Resources.Syntax
+namespace TextEditor.SyntaxHighlighting
 {
     public class MySyntaxMode
     {

@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace TextEditor.Resources.Syntax.Definitions
+namespace TextEditor.SyntaxHighlighting.Definitions
 {
     using System.Linq;
     using System.Text;
@@ -18,7 +18,7 @@ namespace TextEditor.Resources.Syntax.Definitions
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
+    #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\SyntaxHighlighting\Definitions\FileNameModeXshd.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
     public partial class FileNameModeXshd : FileNameModeXshdBase
     {
@@ -28,12 +28,7 @@ namespace TextEditor.Resources.Syntax.Definitions
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write(@"
-<?xml version=""1.0""?>
+            this.Write(@"<?xml version=""1.0""?>
 <!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
 
 <SyntaxDefinition name = ""FileName"" extensions = "".filename"">
@@ -51,26 +46,27 @@ namespace TextEditor.Resources.Syntax.Definitions
             <KeyWords name = ""Invalid"" bold = ""true"" italic = ""false"" color = ""White"" bgcolor = ""Red"">
                 ");
             
-            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
+            #line 22 "C:\projects\bdhero\src\Libraries\TextEditor\SyntaxHighlighting\Definitions\FileNameModeXshd.tt"
  foreach (var ch in InvalidNameCharsXmlEscaped) { 
             
             #line default
             #line hidden
-            this.Write("\n                <Key word = \"");
+            this.Write("                <Key word = \"");
             
-            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
+            #line 23 "C:\projects\bdhero\src\Libraries\TextEditor\SyntaxHighlighting\Definitions\FileNameModeXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ch));
             
             #line default
             #line hidden
-            this.Write("\" />\n                ");
+            this.Write("\" />\r\n                ");
             
-            #line 1 "C:\projects\bdhero\src\Libraries\TextEditor\Resources\Syntax\Definitions\FileNameModeXshd.tt"
+            #line 24 "C:\projects\bdhero\src\Libraries\TextEditor\SyntaxHighlighting\Definitions\FileNameModeXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("\n            </KeyWords>\n        </RuleSet>\n    </RuleSets>\n</SyntaxDefinition>");
+            this.Write("            </KeyWords>\r\n        </RuleSet>\r\n    </RuleSets>\r\n</SyntaxDefinition>" +
+                    "");
             return this.GenerationEnvironment.ToString();
         }
     }

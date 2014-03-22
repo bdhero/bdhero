@@ -2,7 +2,7 @@
 using System.Xml;
 using ICSharpCode.TextEditor.Document;
 
-namespace TextEditor.Resources.Syntax.Providers
+namespace TextEditor.SyntaxHighlighting.Providers
 {
     internal class SyntaxModeProviderAdapter : ISyntaxModeFileProvider
     {

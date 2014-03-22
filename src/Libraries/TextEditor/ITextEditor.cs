@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using TextEditor.Resources.Syntax.Providers;
+using TextEditor.SyntaxHighlighting.Providers;
 
 namespace TextEditor
 {

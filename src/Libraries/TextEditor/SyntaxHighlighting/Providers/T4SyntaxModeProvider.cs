@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 using System.Xml;
-using TextEditor.Resources.Syntax.Definitions;
+using TextEditor.SyntaxHighlighting.Definitions;
 
-namespace TextEditor.Resources.Syntax.Providers
+namespace TextEditor.SyntaxHighlighting.Providers
 {
     /// <summary>
     ///     Provides syntax modes from compiled T4 templates.

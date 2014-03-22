@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TextEditor.Resources.Syntax.Providers;
+using TextEditor.SyntaxHighlighting.Providers;
 
 namespace BDHero.SyntaxHighlighting
 {

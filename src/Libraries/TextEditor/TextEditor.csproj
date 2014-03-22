@@ -68,25 +68,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Syntax\Definitions\FileNameModeXshd.cs">
+    <Compile Include="SyntaxHighlighting\Definitions\FileNameModeXshd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FileNameModeXshd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Syntax\Definitions\FileNameModeXshdModel.cs" />
-    <Compile Include="Resources\Syntax\Definitions\FilePathModeXshd.cs">
+    <Compile Include="SyntaxHighlighting\Definitions\FileNameModeXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\Definitions\FilePathModeXshd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FilePathModeXshd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Syntax\Definitions\FilePathModeXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\Definitions\FilePathModeXshdModel.cs" />
     <Compile Include="Resources\ResourceLoader.cs" />
-    <Compile Include="Resources\Syntax\MySyntaxMode.cs" />
-    <Compile Include="Resources\Syntax\Providers\BaseSyntaxModeProvider.cs" />
-    <Compile Include="Resources\Syntax\Providers\ISyntaxModeProvider.cs" />
-    <Compile Include="Resources\Syntax\Providers\SmartResourceSyntaxModeProvider.cs" />
-    <Compile Include="Resources\Syntax\Providers\SyntaxModeProviderAdapter.cs" />
-    <Compile Include="Resources\Syntax\Providers\T4SyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\MySyntaxMode.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\BaseSyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\ISyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\SmartResourceSyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\SyntaxModeProviderAdapter.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\T4SyntaxModeProvider.cs" />
     <Compile Include="StandardSyntaxType.cs" />
     <Compile Include="WinForms\CompletionControllerImpl.cs" />
     <Compile Include="WinForms\CompletionProviderImpl.cs" />
@@ -109,11 +109,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Syntax\Definitions\FileNameModeXshd.tt">
+    <None Include="SyntaxHighlighting\Definitions\FileNameModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>FileNameModeXshd.cs</LastGenOutput>
     </None>
-    <None Include="Resources\Syntax\Definitions\FilePathModeXshd.tt">
+    <None Include="SyntaxHighlighting\Definitions\FilePathModeXshd.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>FilePathModeXshd.cs</LastGenOutput>
     </None>
@@ -140,7 +140,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Syntax\Definitions\MarkDown-Mode.xshd" />
+    <EmbeddedResource Include="SyntaxHighlighting\Definitions\MarkDown-Mode.xshd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\property.png" />

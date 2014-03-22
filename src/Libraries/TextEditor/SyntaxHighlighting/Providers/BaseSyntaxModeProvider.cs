@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 
-namespace TextEditor.Resources.Syntax.Providers
+namespace TextEditor.SyntaxHighlighting.Providers
 {
     /// <summary>
     ///     Provides common base functionality for <see cref="ISyntaxModeProvider"/>.
