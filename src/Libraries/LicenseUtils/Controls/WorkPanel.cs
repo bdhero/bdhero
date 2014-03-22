@@ -16,8 +16,8 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
-using DotNetUtils.Controls;
 using LicenseUtils.Forms;
+using UILib.Controls;
 
 namespace LicenseUtils.Controls
 {

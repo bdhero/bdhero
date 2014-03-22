@@ -89,6 +89,10 @@
       <Project>{acd66b56-a9cf-4958-8050-07ddd1aa43bf}</Project>
       <Name>TextEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

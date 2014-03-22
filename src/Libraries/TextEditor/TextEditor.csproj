@@ -124,6 +124,14 @@
       <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
       <Name>NativeAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfUtils\WpfUtils.csproj">
+      <Project>{CAD66ABF-D84D-48F0-8D6F-9BDD2D9E3C9D}</Project>
+      <Name>WpfUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

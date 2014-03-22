@@ -23,7 +23,7 @@ using System.Windows.Forms;
 using NativeAPI;
 using OSUtils.Window;
 using NativeAPI.Win.User;
-using DotNetUtils.Forms;
+using UILib.Forms;
 
 namespace WindowsOSUtils.Windows
 {

@@ -21,9 +21,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
-using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
 using I18N;
+using UILib.Controls;
 
 namespace BDHeroGUI.Components
 {

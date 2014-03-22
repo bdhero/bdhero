@@ -20,9 +20,9 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.JobQueue;
 using BDHeroGUI.Helpers;
-using DotNetUtils.Dialogs.FS;
 using DotNetUtils.FS;
 using I18N;
+using UILib.Dialogs.FS;
 
 namespace BDHeroGUI.Forms
 {

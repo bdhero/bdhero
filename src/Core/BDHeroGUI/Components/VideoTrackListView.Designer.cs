@@ -45,7 +45,7 @@ namespace BDHeroGUI.Components
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewVideoTracks = new DotNetUtils.Controls.ListView2();
+            this.listViewVideoTracks = new UILib.Controls.ListView2();
             this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFrameRate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -128,7 +128,7 @@ namespace BDHeroGUI.Components
 
         #endregion
 
-        private DotNetUtils.Controls.ListView2 listViewVideoTracks;
+        private UILib.Controls.ListView2 listViewVideoTracks;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderResolution;
         private System.Windows.Forms.ColumnHeader columnHeaderFrameRate;

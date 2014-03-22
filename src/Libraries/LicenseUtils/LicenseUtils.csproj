@@ -99,6 +99,10 @@
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\AuthorPanel.resx">

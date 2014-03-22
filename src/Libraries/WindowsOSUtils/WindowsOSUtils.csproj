@@ -110,6 +110,10 @@
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

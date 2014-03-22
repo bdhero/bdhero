@@ -55,20 +55,16 @@
     <Reference Include="Ninject">
       <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppUtils.cs" />
@@ -80,79 +76,23 @@
     <Compile Include="Concurrency\IPromise.cs" />
     <Compile Include="Concurrency\TimerPromise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
-    <Compile Include="Controls\SelectablePictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SelectableStatusStrip.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\TaskDialogResultExtensions.cs" />
-    <Compile Include="Forms\WndProcEventHandler.cs" />
-    <Compile Include="Forms\WndProcHook.cs" />
-    <Compile Include="Forms\WpfWndProcHook.cs" />
     <Compile Include="FS\FileType.cs" />
-    <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
-    <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />
     <Compile Include="Extensions\CommonFileDialogResultExtensions.cs" />
-    <Compile Include="Controls\FileTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\FileTextBox.Designer.cs">
-      <DependentUpon>FileTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\EmailLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\EmailAddress.cs" />
-    <Compile Include="Dialogs\FS\FolderBrowserDialog2.cs" />
-    <Compile Include="Controls\HyperlinkLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Dialogs\FS\SaveFileDialog2.cs" />
-    <Compile Include="Dialogs\FS\OpenFileDialog2.cs" />
-    <Compile Include="Dialogs\FS\IFileSystemDialog.cs" />
-    <Compile Include="Controls\ListView2.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SelectableLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Crypto\CryptoHashAlgorithm.cs" />
     <Compile Include="Crypto\CryptoHashInput.cs" />
     <Compile Include="DebugTimer.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ColumnHeaderExtensions.cs" />
     <Compile Include="Extensions\ControlExtensions.cs" />
-    <Compile Include="Controls\LinkLabel2.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ListViewColumnSorter.cs" />
-    <Compile Include="Controls\ProgressBar2.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SplitButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SplitContainerWithDivider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Hyperlink.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\ScrollableControlExtensions.cs" />
-    <Compile Include="Forms\DragUtils.cs" />
     <Compile Include="Extensions\ListViewItemExtensions.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Extensions\TextBoxExtensions.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\VersionExtensions.cs" />
-    <Compile Include="Forms\DetailForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DetailForm.Designer.cs">
-      <DependentUpon>DetailForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ExternalDragProvider.cs" />
     <Compile Include="FS\FileAssociation.cs" />
     <Compile Include="FS\ITempFileRegistrar.cs" />
     <Compile Include="Mono.Options\Options.cs" />
@@ -193,12 +133,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\FileTextBox.resx">
-      <DependentUpon>FileTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DetailForm.resx">
-      <DependentUpon>DetailForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

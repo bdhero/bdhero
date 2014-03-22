@@ -45,7 +45,7 @@ namespace BDHeroGUI.Components
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewAudioTracks = new DotNetUtils.Controls.ListView2();
+            this.listViewAudioTracks = new UILib.Controls.ListView2();
             this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderChannels = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLanguage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -119,7 +119,7 @@ namespace BDHeroGUI.Components
 
         #endregion
 
-        private DotNetUtils.Controls.ListView2 listViewAudioTracks;
+        private UILib.Controls.ListView2 listViewAudioTracks;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderLanguage;
         private System.Windows.Forms.ColumnHeader columnHeaderChannels;

@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelNotice = new DotNetUtils.Controls.SelectableLabel();
-            this.emailLabel = new DotNetUtils.Controls.EmailLabel();
-            this.hyperlinkLabel = new DotNetUtils.Controls.HyperlinkLabel();
+            this.labelNotice = new UILib.Controls.SelectableLabel();
+            this.emailLabel = new UILib.Controls.EmailLabel();
+            this.hyperlinkLabel = new UILib.Controls.HyperlinkLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,8 +102,8 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private DotNetUtils.Controls.EmailLabel emailLabel;
-        private DotNetUtils.Controls.HyperlinkLabel hyperlinkLabel;
-        private DotNetUtils.Controls.SelectableLabel labelNotice;
+        private UILib.Controls.EmailLabel emailLabel;
+        private UILib.Controls.HyperlinkLabel hyperlinkLabel;
+        private UILib.Controls.SelectableLabel labelNotice;
     }
 }

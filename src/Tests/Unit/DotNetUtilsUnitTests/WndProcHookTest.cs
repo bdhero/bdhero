@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using DotNetUtils.Forms;
 using NUnit.Framework;
+using UILib.Forms;
 
 namespace DotNetUtilsUnitTests
 {

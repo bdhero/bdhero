@@ -48,7 +48,7 @@ namespace BDHeroGUI.Forms
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.labelQuickSummary = new DotNetUtils.Controls.SelectableLabel();
+            this.labelQuickSummary = new UILib.Controls.SelectableLabel();
             this.groupBoxJacket = new System.Windows.Forms.GroupBox();
             this.pictureBoxJacket = new System.Windows.Forms.PictureBox();
             this.contextMenuStripJacket = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -202,7 +202,7 @@ namespace BDHeroGUI.Forms
         private Components.DiscInfoMetadataPanel discInfoMetadataPanel;
         private System.Windows.Forms.Button buttonClose;
         private Components.DiscInfoFeaturesPanel discInfoFeaturesPanel;
-        private DotNetUtils.Controls.SelectableLabel labelQuickSummary;
+        private UILib.Controls.SelectableLabel labelQuickSummary;
         private System.Windows.Forms.GroupBox groupBoxJacket;
         private System.Windows.Forms.PictureBox pictureBoxJacket;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripJacket;

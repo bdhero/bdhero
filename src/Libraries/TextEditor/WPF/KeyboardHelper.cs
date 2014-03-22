@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using DotNetUtils.Annotations;
 using NativeAPI.Win.User;
+using WpfUtils;
 
 namespace TextEditor.WPF
 {
@@ -55,7 +56,7 @@ namespace TextEditor.WPF
             if (!IsPrintable(key))
                 return "";
 
-            var keyChar = KeyboardAPI.GetCharFromKey(key);
+            var keyChar = WpfKeyboardUtils.GetCharFromKey(key);
 
             return string.Format("{0}", keyChar);
         }
@@ -80,7 +81,7 @@ namespace TextEditor.WPF
 
         private static bool IsPrintable(Key key)
         {
-            var keyChar = KeyboardAPI.GetCharFromKey(key);
+            var keyChar = WpfKeyboardUtils.GetCharFromKey(key);
 
             // Non-printable control character
             if (keyChar < ' ')

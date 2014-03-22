@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
-using DotNetUtils.Controls;
 using DotNetUtils.Extensions;
+using UILib.Controls;
 
 namespace BDHeroGUI.Helpers
 {

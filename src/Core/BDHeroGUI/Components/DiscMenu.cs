@@ -24,9 +24,9 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
 using DotNetUtils.Annotations;
-using DotNetUtils.Forms;
 using DotNetUtils.TaskUtils;
 using OSUtils.DriveDetector;
+using UILib.Forms;
 
 namespace BDHeroGUI.Components
 {

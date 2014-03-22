@@ -52,10 +52,10 @@ namespace BDHeroGUI.Forms
             this.tabPageCredit = new System.Windows.Forms.TabPage();
             this.creditPanel = new System.Windows.Forms.Panel();
             this.tabPageSysInfo = new System.Windows.Forms.TabPage();
-            this.linkLabelSourceCode = new DotNetUtils.Controls.HyperlinkLabel();
-            this.labelCopyright = new DotNetUtils.Controls.SelectableLabel();
-            this.labelProductName = new DotNetUtils.Controls.SelectableLabel();
-            this.labelBuildDate = new DotNetUtils.Controls.SelectableLabel();
+            this.linkLabelSourceCode = new UILib.Controls.HyperlinkLabel();
+            this.labelCopyright = new UILib.Controls.SelectableLabel();
+            this.labelProductName = new UILib.Controls.SelectableLabel();
+            this.labelBuildDate = new UILib.Controls.SelectableLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPageCredit.SuspendLayout();
@@ -229,16 +229,16 @@ namespace BDHeroGUI.Forms
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBoxLogo;
-        private DotNetUtils.Controls.SelectableLabel labelProductName;
-        private DotNetUtils.Controls.SelectableLabel labelCopyright;
+        private UILib.Controls.SelectableLabel labelProductName;
+        private UILib.Controls.SelectableLabel labelCopyright;
         private System.Windows.Forms.Button buttonOk;
-        private DotNetUtils.Controls.HyperlinkLabel linkLabelSourceCode;
+        private UILib.Controls.HyperlinkLabel linkLabelSourceCode;
         private System.Windows.Forms.TextBox textBoxSystemInfo;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageSysInfo;
         private System.Windows.Forms.TabPage tabPageCredit;
         private System.Windows.Forms.Panel creditPanel;
-        private DotNetUtils.Controls.SelectableLabel labelBuildDate;
+        private UILib.Controls.SelectableLabel labelBuildDate;
 
     }
 }

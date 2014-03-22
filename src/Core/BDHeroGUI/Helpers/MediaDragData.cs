@@ -22,8 +22,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
-using DotNetUtils.Forms;
 using DotNetUtils.FS;
+using UILib.Forms;
 
 namespace BDHeroGUI.Helpers
 {
