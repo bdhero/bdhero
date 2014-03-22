@@ -16,12 +16,10 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
