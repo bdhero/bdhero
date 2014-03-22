@@ -31,6 +31,8 @@ namespace BDHeroGUI.Dialogs
     {
         private const string CopyDetailsHref = "copy_details";
         private const string EditReportHref = "edit_report";
+        private const string SubmitButtonTextOnline = "&Report This Error\nNo questions asked!";
+        private const string SubmitButtonTextOffline = "&Report This Error (Internet access required)\nNo questions asked!";
 
         /// <summary>
         ///     Indicates whether this feature is supported on the current platform.
@@ -139,7 +141,7 @@ namespace BDHeroGUI.Dialogs
         private TaskDialogCommandLink CreateSubmitButton(TaskDialog dialog)
         {
             IErrorReportResult result = null;
-            var sendButton = new TaskDialogCommandLink("submitButton", "&Report This Error\nNo questions asked!");
+            var sendButton = new TaskDialogCommandLink("submitButton", _networkStatusMonitor.IsOnline ? SubmitButtonTextOnline : SubmitButtonTextOffline);
             sendButton.Click += delegate
                                 {
                                     new TaskBuilder()
