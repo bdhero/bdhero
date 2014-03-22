@@ -69,10 +69,6 @@
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsOSUtils\WindowsOSUtils.csproj">
-      <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
-      <Name>WindowsOSUtils</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
