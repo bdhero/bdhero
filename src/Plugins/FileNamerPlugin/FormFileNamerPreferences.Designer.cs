@@ -107,7 +107,7 @@ namespace BDHero.Plugin.FileNamer
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label6.Location = new System.Drawing.Point(63, 100);
+            this.label6.Location = new System.Drawing.Point(63, 102);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(48, 13);
             this.label6.TabIndex = 9;
@@ -142,7 +142,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxMovieFileNameExample.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxMovieFileNameExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxMovieFileNameExample.Location = new System.Drawing.Point(117, 100);
+            this.textBoxMovieFileNameExample.Location = new System.Drawing.Point(117, 102);
             this.textBoxMovieFileNameExample.Name = "textBoxMovieFileNameExample";
             this.textBoxMovieFileNameExample.ReadOnly = true;
             this.textBoxMovieFileNameExample.Size = new System.Drawing.Size(679, 13);
@@ -572,7 +572,7 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxMovieFileName.ShowColumnRuler = false;
             this.textBoxMovieFileName.ShowLineNumbers = false;
             this.textBoxMovieFileName.ShowWhiteSpace = false;
-            this.textBoxMovieFileName.Size = new System.Drawing.Size(643, 20);
+            this.textBoxMovieFileName.Size = new System.Drawing.Size(643, 22);
             this.textBoxMovieFileName.TabIndex = 3;
             // 
             // tabPage2
