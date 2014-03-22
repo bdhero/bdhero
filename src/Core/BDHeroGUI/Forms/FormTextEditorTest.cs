@@ -48,7 +48,7 @@ namespace BDHeroGUI.Forms
                 (sender, args) => editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
 
             checkBoxShowWhitespace.CheckedChanged +=
-                (sender, args) => editor.Options.ShowTabs = editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
+                (sender, args) => editor.Options.ShowWhiteSpace = checkBoxShowWhitespace.Checked;
 
             checkBoxReadonly.CheckedChanged +=
                 (sender, args) => editor.ReadOnly = checkBoxReadonly.Checked;

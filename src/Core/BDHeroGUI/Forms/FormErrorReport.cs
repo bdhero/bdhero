@@ -33,8 +33,7 @@ namespace BDHeroGUI.Forms
 
             #region Editor options
 
-            _editor.Options.ShowSpaces = false;
-            _editor.Options.ShowLineNumbers = false;
+            _editor.Options.ShowWhiteSpace = false;
 
             if (_editor.Options.SupportsWordWrap)
                 _editor.Options.WordWrapIndent = _editor.FontSize * 4;
@@ -52,7 +51,7 @@ namespace BDHeroGUI.Forms
                 (sender, args) => _editor.Options.ShowColumnRuler = checkBoxShowRuler.Checked;
 
             checkBoxShowWhitespace.CheckedChanged +=
-                (sender, args) => _editor.Options.ShowTabs = _editor.Options.ShowSpaces = checkBoxShowWhitespace.Checked;
+                (sender, args) => _editor.Options.ShowWhiteSpace = checkBoxShowWhitespace.Checked;
 
             checkBoxWordWrap.CheckedChanged +=
                 (sender, args) => _editor.Options.WordWrap = checkBoxWordWrap.Checked;

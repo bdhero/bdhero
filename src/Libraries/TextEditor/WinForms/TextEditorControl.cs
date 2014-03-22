@@ -313,7 +313,7 @@ namespace TextEditor.WinForms
             showLineNumbers.Click += (sender, args) => Editor.Options.ShowLineNumbers = !Editor.Options.ShowLineNumbers;
 
             var showWhiteSpace = new MenuItem("Show &Whitespace");
-            showWhiteSpace.Click += (sender, args) => Editor.Options.ShowSpaces = Editor.Options.ShowTabs = !(Editor.Options.ShowSpaces && Editor.Options.ShowTabs);
+            showWhiteSpace.Click += (sender, args) => Editor.Options.ShowWhiteSpace = !Editor.Options.ShowWhiteSpace;
 
             var wordWrap = new MenuItem("Word &Wrap");
             wordWrap.Click += (sender, args) => Editor.Options.WordWrap = !Editor.Options.WordWrap;
@@ -382,7 +382,7 @@ namespace TextEditor.WinForms
                               optionsDivider.Visible = Editor.Multiline;
                               options.Visible        = Editor.Multiline;
                                   showLineNumbers.Checked = Editor.Options.ShowLineNumbers;
-                                  showWhiteSpace.Checked  = Editor.Options.ShowSpaces && Editor.Options.ShowTabs;
+                                  showWhiteSpace.Checked  = Editor.Options.ShowWhiteSpace;
                                   wordWrap.Checked        = Editor.Options.WordWrap;
                                       none.Checked             = !Editor.Options.ShowColumnRuler;
                                       seventy.Checked          = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 70;
@@ -514,8 +514,8 @@ namespace TextEditor.WinForms
         [DefaultValue(true)]
         public bool ShowWhiteSpace
         {
-            get { return Editor.Options.ShowTabs && Editor.Options.ShowSpaces; }
-            set { Editor.Options.ShowTabs = Editor.Options.ShowSpaces = value; }
+            get { return Editor.Options.ShowWhiteSpace; }
+            set { Editor.Options.ShowWhiteSpace = value; }
         }
 
         /// <summary>
@@ -729,8 +729,7 @@ namespace TextEditor.WinForms
                 Editor.Options.CutCopyWholeLine = false;
                 Editor.Options.ShowColumnRuler = false;
                 Editor.Options.ShowLineNumbers = false;
-                Editor.Options.ShowSpaces = false;
-                Editor.Options.ShowTabs = false;
+                Editor.Options.ShowWhiteSpace = false;
             }
 
             SetStyle(ControlStyles.FixedHeight, !Multiline);

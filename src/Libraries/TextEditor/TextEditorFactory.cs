@@ -32,8 +32,7 @@ namespace TextEditor
 
             editor.Options.CutCopyWholeLine = true;
             editor.Options.ShowLineNumbers = true;
-            editor.Options.ShowTabs = true;
-            editor.Options.ShowSpaces = true;
+            editor.Options.ShowWhiteSpace = true;
             editor.Options.ShowColumnRuler = true;
             editor.Options.ColumnRulerPosition = 80;
             editor.Options.ConvertTabsToSpaces = true;
