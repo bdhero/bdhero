@@ -111,10 +111,8 @@ namespace BDHero.ErrorReporting
             ExceptionDetailRaw = exception.ToString();
             ExceptionDetailRedacted = Redact(ExceptionDetailRaw);
 
-//            var plugins = pluginRepository.PluginsByType.Select(ToString).ToArray();
             var plugins = pluginRepository.PluginsByType.Select(ToString).ToList();
-            plugins.Insert(0, new []{ "R", "Plugin Name", "Version", "Build Date", "E" });
-            plugins.Insert(1, new []{ "-", "-", "-", "-", "-" });
+            AddPluginHeaderRows(plugins);
 
             Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, ExceptionMessageRedacted, AppUtils.AppName, AppUtils.AppVersion);
             Body = string.Format(@"
@@ -152,7 +150,8 @@ System Info
 
             for (var colIdx = 0; colIdx < numCols; colIdx++)
             {
-                var width = 0;
+                // GitHub requires a minimum of 3 characters per cell
+                var width = 3;
                 for (var rowIdx = 0; rowIdx < numRows; rowIdx++)
                 {
                     var row = rows[rowIdx];
@@ -190,6 +189,12 @@ System Info
             return string.Join(Environment.NewLine, plugins.Select((item, i) => string.Format("{0:D}. {1}", i + 1, item)));
         }
 
+        private static void AddPluginHeaderRows(IList<string[]> plugins)
+        {
+            plugins.Insert(0, new[] { "R/O", "Plugin Name", "Version", "Build Date", "E/D" });
+            plugins.Insert(1, new[] { "-", "-", "-", "-", "-" });
+        }
+
         private static string[] ToString(IPlugin plugin)
         {
             return new[]
@@ -198,7 +203,7 @@ System Info
                        plugin.Name,
                        plugin.AssemblyInfo.Version.ToString(),
                        plugin.AssemblyInfo.BuildDate.ToString("u"),
-                       plugin.Enabled ? " " : "D"
+                       plugin.Enabled ? " " : "DIS"
                    };
         }
 
