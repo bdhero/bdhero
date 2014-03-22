@@ -21,6 +21,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using BDHero.SyntaxHighlighting;
 using UILib.Extensions;
 using UILib.WinForms.Controls;
 
@@ -94,8 +95,8 @@ namespace BDHero.Plugin.FileNamer
         private void InitTextEditors()
         {
             // TODO:
-            textBoxMovieFileName.Editor.SetSyntaxFromExtension(".bdheromoviefilename");
-            textBoxTVShowFileName.Editor.SetSyntaxFromExtension(".bdherotvshowfilename");
+            textBoxMovieFileName.Editor.SetSyntaxFromExtension(MovieNameXshd.Extension);
+            textBoxTVShowFileName.Editor.SetSyntaxFromExtension(TVShowNameXshd.Extension);
         }
 
         private void InitLabelBackgrounds()

@@ -6,7 +6,7 @@
 <?xml version="1.0"?>
 <!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
 
-<SyntaxDefinition name = "BDHeroMovieFileName" extensions = ".bdheromoviefilename" extends = "FileName">
+<SyntaxDefinition name = "<#= Name #>" extensions = "<#= Extension #>" extends = "FilePath">
     <RuleSets>
         <RuleSet ignorecase = "true">
             <KeyWords name = "PlaceholderVariable" bold = "true" color = "Green" bgcolor = "#EEFFEE">

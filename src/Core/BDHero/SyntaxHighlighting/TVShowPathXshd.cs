@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace BDHeroGUI
+namespace BDHero.SyntaxHighlighting
 {
     using System.Linq;
     using System.Text;
@@ -18,9 +18,9 @@ namespace BDHeroGUI
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\projects\bdhero\src\Core\BDHeroGUI\BDHeroMovieFilePathModeXshd.tt"
+    #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    public partial class BDHeroMovieFilePathModeXshd : BDHeroMovieFilePathModeXshdBase
+    public partial class TVShowPathXshd : TVShowPathXshdBase
     {
 #line hidden
         /// <summary>
@@ -28,36 +28,49 @@ namespace BDHeroGUI
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"<?xml version=""1.0""?>
-<!-- syntaxdefinition for BDHero File Paths by Andrew C. Dvorak -->
-
-<SyntaxDefinition name = ""BDHeroMovieFilePath"" extensions = "".bdheromoviefilepath"" extends = ""FilePath"">
-    <RuleSets>
-        <RuleSet ignorecase = ""true"">
-            <KeyWords name = ""PlaceholderVariable"" bold = ""true"" color = ""Green"" bgcolor = ""#EEFFEE"">
-                ");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n<?xml version=\"1.0\"?>\n<!-- syntaxdefinition for BDHero File Paths by Andrew C. D" +
+                    "vorak -->\n\n<SyntaxDefinition name = \"");
             
-            #line 13 "C:\projects\bdhero\src\Core\BDHeroGUI\BDHeroMovieFilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Name));
+            
+            #line default
+            #line hidden
+            this.Write("\" extensions = \"");
+            
+            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Extension));
+            
+            #line default
+            #line hidden
+            this.Write("\" extends = \"FilePath\">\n    <RuleSets>\n        <RuleSet ignorecase = \"true\">\n    " +
+                    "        <KeyWords name = \"PlaceholderVariable\" bold = \"true\" color = \"Green\" bgc" +
+                    "olor = \"#EEFFEE\">\n                ");
+            
+            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
  foreach (var name in PlaceholderVariableNames) { 
             
             #line default
             #line hidden
-            this.Write("                <Key word = \"${");
+            this.Write("\n                <Key word = \"${");
             
-            #line 14 "C:\projects\bdhero\src\Core\BDHeroGUI\BDHeroMovieFilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
-            this.Write("}\" />\r\n                ");
+            this.Write("}\" />\n                ");
             
-            #line 15 "C:\projects\bdhero\src\Core\BDHeroGUI\BDHeroMovieFilePathModeXshd.tt"
+            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\TVShowPathXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("            </KeyWords>\r\n        </RuleSet>\r\n    </RuleSets>\r\n</SyntaxDefinition>" +
-                    "");
+            this.Write("\n            </KeyWords>\n        </RuleSet>\n    </RuleSets>\n</SyntaxDefinition>");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -69,7 +82,7 @@ namespace BDHeroGUI
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    public class BDHeroMovieFilePathModeXshdBase
+    public class TVShowPathXshdBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

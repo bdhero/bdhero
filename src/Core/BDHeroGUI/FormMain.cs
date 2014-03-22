@@ -30,6 +30,7 @@ using BDHero.ErrorReporting;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
+using BDHero.SyntaxHighlighting;
 using BDHero.Utils;
 using BDHeroGUI.Components;
 using BDHeroGUI.Dialogs;
@@ -240,16 +241,10 @@ namespace BDHeroGUI
             // TODO: Add setting to enable/disable
             InitNetworkStatusMonitor();
 
-            ScanOnStartup();
-
             InitAboutBox();
             InitTextEditors();
-        }
 
-        private void InitTextEditors()
-        {
-            var editor = TextEditorFactory.CreateMultiLineTextEditor();
-            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+            ScanOnStartup();
         }
 
         private void InitNetworkStatusMonitor()
@@ -259,12 +254,15 @@ namespace BDHeroGUI
             _networkStatusMonitor.TestConnectionAsync();
         }
 
-        private void ScanOnStartup()
+        private void SetIsOnline(bool isOnline)
         {
-            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
-            if (path == null)
+            toolStripStatusLabelOffline.Visible = !isOnline;
+
+            if (!isOnline || _hasCheckedForUpdateOnStartup)
                 return;
-            Scan(path);
+
+            _updateHelper.Click();
+            _hasCheckedForUpdateOnStartup = true;
         }
 
         /// <summary>
@@ -282,15 +280,18 @@ namespace BDHeroGUI
             new AboutBox(_pluginRepository).ShowDialog(this);
         }
 
-        private void SetIsOnline(bool isOnline)
+        private void InitTextEditors()
         {
-            toolStripStatusLabelOffline.Visible = !isOnline;
+            var editor = TextEditorFactory.CreateMultiLineTextEditor();
+            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+        }
 
-            if (!isOnline || _hasCheckedForUpdateOnStartup)
+        private void ScanOnStartup()
+        {
+            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
+            if (path == null)
                 return;
-
-            _updateHelper.Click();
-            _hasCheckedForUpdateOnStartup = true;
+            Scan(path);
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using BDHero.SyntaxHighlighting;
 using TextEditor;
 using TextEditor.WinForms;
 
@@ -88,7 +89,7 @@ namespace BDHeroGUI.Forms
             var editor = textEditorControl1.Editor;
 
             editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
-            editor.SetSyntaxFromExtension(".bdheromoviefilepath");
+            editor.SetSyntaxFromExtension(MoviePathXshd.Extension);
 
             editor.Text += " --- " + new string(Path.GetInvalidPathChars()) + " --- " + new string(Path.GetInvalidFileNameChars());
 
