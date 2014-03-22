@@ -93,7 +93,7 @@ namespace BDHero.Plugin.FileNamer
 
         private void InitTextEditors()
         {
-            // TODO: 
+            // TODO:
             textBoxMovieFileName.Editor.SetSyntaxFromExtension(".bdheromoviefilename");
             textBoxTVShowFileName.Editor.SetSyntaxFromExtension(".bdherotvshowfilename");
         }
