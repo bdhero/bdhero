@@ -165,6 +165,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FormErrorReport";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error Report";
             this.ResumeLayout(false);
