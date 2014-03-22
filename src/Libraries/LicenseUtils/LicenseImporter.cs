@@ -20,7 +20,6 @@ using System.Linq;
 using System.Text;
 using DotNetUtils;
 using LicenseUtils.Properties;
-using Newtonsoft.Json;
 
 namespace LicenseUtils
 {

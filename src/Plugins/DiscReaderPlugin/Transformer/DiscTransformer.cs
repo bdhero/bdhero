@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using BDHero.BDROM;
 using BDHero.JobQueue;
 using DotNetUtils.Annotations;

@@ -16,10 +16,7 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using DotNetUtils;
 using Newtonsoft.Json;
 

@@ -16,11 +16,9 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using BuildUtils;
 using DotNetUtils;
 using DotNetUtils.Crypto;

@@ -17,7 +17,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq;
 using DotNetUtils.Extensions;
 
 namespace BDHero.BDROM

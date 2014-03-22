@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using DotNetUtils;
-using DotNetUtils.Annotations;
+﻿using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 
 namespace LicenseUtils

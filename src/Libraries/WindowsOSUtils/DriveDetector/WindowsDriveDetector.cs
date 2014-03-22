@@ -19,7 +19,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.Windows;
 using DotNetUtils.Annotations;
 using OSUtils.DriveDetector;
 using NativeAPI.Win.Device;

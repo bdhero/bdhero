@@ -16,17 +16,14 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using DotNetUtils;
 using DotNetUtils.Crypto;
 using DotNetUtils.Net;
-using Newtonsoft.Json;
 using OSUtils;
 using log4net;
 using OSUtils.Info;

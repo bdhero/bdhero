@@ -28,7 +28,6 @@ using DotNetUtils;
 using DotNetUtils.Extensions;
 using I18N;
 using WatTmdb.V3;
-using Newtonsoft.Json;
 using log4net;
 
 namespace TmdbPlugin

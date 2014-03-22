@@ -48,7 +48,6 @@ using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using OSUtils.Window;
 using UILib.WinForms;
-using UILib.WinForms.Forms;
 using UpdateLib;
 
 namespace BDHeroGUI

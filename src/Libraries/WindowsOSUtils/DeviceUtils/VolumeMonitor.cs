@@ -16,10 +16,6 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management;
-using System.Text;
 using WindowsOSUtils.WMI;
 using WindowsOSUtils.WMI.Classes;
 using WindowsOSUtils.WMI.Events;

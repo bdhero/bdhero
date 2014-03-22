@@ -17,7 +17,6 @@
 
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using Newtonsoft.Json;
 
 namespace LicenseUtils
 {

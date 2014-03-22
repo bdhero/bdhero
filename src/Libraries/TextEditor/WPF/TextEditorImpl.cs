@@ -1,9 +1,6 @@
 ﻿#if !__MonoCS__
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Forms;

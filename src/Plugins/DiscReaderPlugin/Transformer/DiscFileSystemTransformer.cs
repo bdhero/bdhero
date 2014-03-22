@@ -16,11 +16,9 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;

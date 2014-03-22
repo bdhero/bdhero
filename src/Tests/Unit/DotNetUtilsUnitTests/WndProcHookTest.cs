@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using UILib.WinForms;
-using UILib.WinForms.Forms;
 
 namespace DotNetUtilsUnitTests
 {

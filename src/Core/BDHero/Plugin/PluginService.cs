@@ -16,17 +16,14 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using BDHero.Prefs;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using log4net;
 using Ninject;
 
 namespace BDHero.Plugin
@@ -36,18 +33,14 @@ namespace BDHero.Plugin
     /// </summary>
     internal class PluginService : IPluginService
     {
-        protected readonly ILog Logger;
-
         private readonly IKernel _kernel;
         private readonly IDirectoryLocator _directoryLocator;
         private readonly IPreferenceManager _preferenceManager;
         private readonly IPluginRepository _repository;
 
         [UsedImplicitly]
-        public PluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
+        public PluginService(IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
         {
-            Logger = logger;
-
             _kernel = kernel;
             _directoryLocator = directoryLocator;
             _preferenceManager = preferenceManager;
