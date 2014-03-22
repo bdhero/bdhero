@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
 using NativeAPI.Win.UXTheme;
@@ -102,6 +103,8 @@ namespace TextEditor.WinForms
 
         private ContextMenu CreateContextMenu()
         {
+            #region Edit commands
+
             var undo = new MenuItem("&Undo", (sender, args) => Editor.Undo());
             var redo = new MenuItem("&Redo", (sender, args) => Editor.Redo());
 
@@ -111,6 +114,59 @@ namespace TextEditor.WinForms
             var delete = new MenuItem("&Delete", (sender, args) => Editor.Delete());
 
             var selectAll = new MenuItem("Select &All", (sender, args) => Editor.SelectAll());
+
+            #endregion
+
+            #region Options
+
+            var optionsDivider = new MenuItem("-");
+            var options = new MenuItem("&Options");
+
+            var showLineNumbers = new MenuItem("Show &Line Numbers");
+            showLineNumbers.Click += (sender, args) => Editor.Options.ShowLineNumbers = !Editor.Options.ShowLineNumbers;
+
+            var showWhiteSpace = new MenuItem("Show &Whitespace");
+            showWhiteSpace.Click += (sender, args) => Editor.Options.ShowSpaces = Editor.Options.ShowTabs = !(Editor.Options.ShowSpaces && Editor.Options.ShowTabs);
+
+            var wordWrap = new MenuItem("Word &Wrap");
+            wordWrap.Click += (sender, args) => Editor.Options.WordWrap = !Editor.Options.WordWrap;
+
+            #region Ruler
+
+            var ruler = new MenuItem("&Ruler");
+
+            var none             = CreateRulerMenuItem("None");
+            var seventy          = CreateRulerMenuItem(70);
+            var seventyEight     = CreateRulerMenuItem(78);
+            var eighty           = CreateRulerMenuItem(80);
+            var oneHundred       = CreateRulerMenuItem(100);
+            var oneHundredTwenty = CreateRulerMenuItem(120);
+
+            ruler.MenuItems.AddRange(new[]
+                                     {
+                                         none,
+                                         new MenuItem("-"),
+                                         seventy,
+                                         seventyEight,
+                                         eighty,
+                                         oneHundred,
+                                         oneHundredTwenty,
+                                     });
+
+            #endregion
+
+            options.MenuItems.AddRange(new[]
+                                       {
+                                           showLineNumbers,
+                                           showWhiteSpace,
+                                           new MenuItem("-"),
+                                           wordWrap,
+                                           ruler,
+                                       });
+
+            #endregion
+
+            #region Menu creation
 
             var menu = new ContextMenu(new[]
                                        {
@@ -123,19 +179,62 @@ namespace TextEditor.WinForms
                                            delete,
                                            new MenuItem("-"),
                                            selectAll,
+                                           optionsDivider,
+                                           options,
                                        });
 
             menu.Popup += delegate
                           {
-                              undo.Enabled   = Editor.CanUndo   && !Editor.ReadOnly;
-                              redo.Enabled   = Editor.CanRedo   && !Editor.ReadOnly;
-                              cut.Enabled    = Editor.CanCut    && !Editor.ReadOnly;
-                              copy.Enabled   = Editor.CanCopy;
-                              paste.Enabled  = Editor.CanPaste  && !Editor.ReadOnly;
-                              delete.Enabled = Editor.CanDelete && !Editor.ReadOnly;
+                              undo.Enabled    = Editor.CanUndo   && !Editor.ReadOnly;
+                              redo.Enabled    = Editor.CanRedo   && !Editor.ReadOnly;
+                              cut.Enabled     = Editor.CanCut    && !Editor.ReadOnly;
+                              copy.Enabled    = Editor.CanCopy;
+                              paste.Enabled   = Editor.CanPaste  && !Editor.ReadOnly;
+                              delete.Enabled  = Editor.CanDelete && !Editor.ReadOnly;
+
+                              optionsDivider.Visible = Editor.Multiline;
+                              options.Visible        = Editor.Multiline;
+                                  showLineNumbers.Checked = Editor.Options.ShowLineNumbers;
+                                  showWhiteSpace.Checked  = Editor.Options.ShowSpaces && Editor.Options.ShowTabs;
+                                  wordWrap.Checked        = Editor.Options.WordWrap;
+                                      none.Checked             = !Editor.Options.ShowColumnRuler;
+                                      seventy.Checked          = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 70;
+                                      seventyEight.Checked     = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 78;
+                                      eighty.Checked           = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 80;
+                                      oneHundred.Checked       = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 100;
+                                      oneHundredTwenty.Checked = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 120;
                           };
 
+            #endregion
+
             return menu;
+        }
+
+        private MenuItem CreateRulerMenuItem(string text)
+        {
+            var item = new MenuItem(string.Format("&{0}", text)) { RadioCheck = true };
+            item.Click += (sender, args) => SetRulerColumn(0);
+            return item;
+        }
+
+        private MenuItem CreateRulerMenuItem(int col)
+        {
+            var item = new MenuItem(string.Format("&{0}", col)) { RadioCheck = true };
+            item.Click += (sender, args) => SetRulerColumn(col);
+            return item;
+        }
+
+        private void SetRulerColumn(int col)
+        {
+            if (col > 0)
+            {
+                Editor.Options.ShowColumnRuler = true;
+                Editor.Options.ColumnRulerPosition = col;
+            }
+            else
+            {
+                Editor.Options.ShowColumnRuler = false;
+            }
         }
 
         #endregion
