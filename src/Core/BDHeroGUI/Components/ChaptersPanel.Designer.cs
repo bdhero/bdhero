@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Components
 {
     partial class ChaptersPanel
@@ -47,7 +49,7 @@ namespace BDHeroGUI.Components
         {
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxSearchResults = new System.Windows.Forms.ComboBox();
-            this.listViewChapters = new UILib.Controls.ListView2();
+            this.listViewChapters = new ListView2();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderIndex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -134,7 +136,7 @@ namespace BDHeroGUI.Components
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxSearchResults;
-        private UILib.Controls.ListView2 listViewChapters;
+        private ListView2 listViewChapters;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderTime;
         private System.Windows.Forms.ColumnHeader columnHeaderIndex;

@@ -15,7 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using UILib.Dialogs.FS;
+using UILib.WinForms.Controls;
+using UILib.WinForms.Dialogs.FS;
 
 namespace BDHero.Plugin.FileNamer
 {
@@ -53,15 +54,15 @@ namespace BDHero.Plugin.FileNamer
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Subtitles", System.Windows.Forms.HorizontalAlignment.Left);
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.selectableLabelMoviePlaceholders = new UILib.Controls.SelectableLabel();
-            this.textBoxMovieFileNameExample = new UILib.Controls.SelectableLabel();
-            this.textBoxMovieDirectoryExample = new UILib.Controls.SelectableLabel();
+            this.selectableLabelMoviePlaceholders = new SelectableLabel();
+            this.textBoxMovieFileNameExample = new SelectableLabel();
+            this.textBoxMovieDirectoryExample = new SelectableLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBoxMovieDirectory = new UILib.Controls.FileTextBox();
+            this.textBoxMovieDirectory = new FileTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.hyperlinkLabelTVShowReleaseDateFormat = new UILib.Controls.HyperlinkLabel();
+            this.hyperlinkLabelTVShowReleaseDateFormat = new HyperlinkLabel();
             this.label15 = new System.Windows.Forms.Label();
             this.textBoxTVShowReleaseDateFormat = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -70,11 +71,11 @@ namespace BDHero.Plugin.FileNamer
             this.comboBoxSeasonNumberFormat = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.selectableLabelTVShowPlaceholders = new UILib.Controls.SelectableLabel();
-            this.textBoxTVShowFileNameExample = new UILib.Controls.SelectableLabel();
-            this.textBoxTVShowDirectoryExample = new UILib.Controls.SelectableLabel();
+            this.selectableLabelTVShowPlaceholders = new SelectableLabel();
+            this.textBoxTVShowFileNameExample = new SelectableLabel();
+            this.textBoxTVShowDirectoryExample = new SelectableLabel();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBoxTVShowDirectory = new UILib.Controls.FileTextBox();
+            this.textBoxTVShowDirectory = new FileTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -83,7 +84,7 @@ namespace BDHero.Plugin.FileNamer
             this.checkBoxReplaceSpaces = new System.Windows.Forms.CheckBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
-            this.listViewCodecNames = new UILib.Controls.ListView2();
+            this.listViewCodecNames = new ListView2();
             this.columnHeaderLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -177,7 +178,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxMovieDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxMovieDirectory.DialogTitle = null;
-            this.textBoxMovieDirectory.DialogType = UILib.Dialogs.FS.FileSystemDialogType.OpenDirectory;
+            this.textBoxMovieDirectory.DialogType = FileSystemDialogType.OpenDirectory;
             this.textBoxMovieDirectory.FileTypes = null;
             this.textBoxMovieDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxMovieDirectory.Name = "textBoxMovieDirectory";
@@ -361,7 +362,7 @@ namespace BDHero.Plugin.FileNamer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTVShowDirectory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxTVShowDirectory.DialogTitle = null;
-            this.textBoxTVShowDirectory.DialogType = UILib.Dialogs.FS.FileSystemDialogType.OpenDirectory;
+            this.textBoxTVShowDirectory.DialogType = FileSystemDialogType.OpenDirectory;
             this.textBoxTVShowDirectory.FileTypes = null;
             this.textBoxTVShowDirectory.Location = new System.Drawing.Point(117, 25);
             this.textBoxTVShowDirectory.Name = "textBoxTVShowDirectory";
@@ -663,23 +664,23 @@ namespace BDHero.Plugin.FileNamer
 
         #endregion
 
-        private UILib.Controls.FileTextBox textBoxMovieDirectory;
+        private FileTextBox textBoxMovieDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label6;
-        private UILib.Controls.SelectableLabel textBoxMovieFileNameExample;
-        private UILib.Controls.SelectableLabel textBoxMovieDirectoryExample;
+        private SelectableLabel textBoxMovieFileNameExample;
+        private SelectableLabel textBoxMovieDirectoryExample;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private UILib.Controls.SelectableLabel selectableLabelMoviePlaceholders;
+        private SelectableLabel selectableLabelMoviePlaceholders;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private UILib.Controls.SelectableLabel selectableLabelTVShowPlaceholders;
-        private UILib.Controls.SelectableLabel textBoxTVShowFileNameExample;
-        private UILib.Controls.SelectableLabel textBoxTVShowDirectoryExample;
+        private SelectableLabel selectableLabelTVShowPlaceholders;
+        private SelectableLabel textBoxTVShowFileNameExample;
+        private SelectableLabel textBoxTVShowDirectoryExample;
         private System.Windows.Forms.Label label9;
-        private UILib.Controls.FileTextBox textBoxTVShowDirectory;
+        private FileTextBox textBoxTVShowDirectory;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
@@ -692,11 +693,11 @@ namespace BDHero.Plugin.FileNamer
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.TextBox textBoxReplaceSpacesWith;
         private System.Windows.Forms.CheckBox checkBoxReplaceSpaces;
-        private UILib.Controls.ListView2 listViewCodecNames;
+        private ListView2 listViewCodecNames;
         private System.Windows.Forms.ColumnHeader columnHeaderLabel;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
-        private UILib.Controls.HyperlinkLabel hyperlinkLabelTVShowReleaseDateFormat;
+        private HyperlinkLabel hyperlinkLabelTVShowReleaseDateFormat;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBoxTVShowReleaseDateFormat;
         private System.Windows.Forms.Button buttonDefault;

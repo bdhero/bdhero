@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
-using UILib.Forms;
+using UILib.WinForms;
+using UILib.WinForms.Forms;
 
 namespace DotNetUtilsUnitTests
 {

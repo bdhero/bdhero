@@ -1,4 +1,6 @@
-﻿namespace LicenseUtils.Controls
+﻿using UILib.WinForms.Controls;
+
+namespace LicenseUtils.Controls
 {
     partial class AuthorPanel
     {
@@ -30,9 +32,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelNotice = new UILib.Controls.SelectableLabel();
-            this.emailLabel = new UILib.Controls.EmailLabel();
-            this.hyperlinkLabel = new UILib.Controls.HyperlinkLabel();
+            this.labelNotice = new SelectableLabel();
+            this.emailLabel = new EmailLabel();
+            this.hyperlinkLabel = new HyperlinkLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,8 +104,8 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private UILib.Controls.EmailLabel emailLabel;
-        private UILib.Controls.HyperlinkLabel hyperlinkLabel;
-        private UILib.Controls.SelectableLabel labelNotice;
+        private EmailLabel emailLabel;
+        private HyperlinkLabel hyperlinkLabel;
+        private SelectableLabel labelNotice;
     }
 }

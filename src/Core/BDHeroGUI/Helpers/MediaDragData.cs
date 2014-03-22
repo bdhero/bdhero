@@ -23,7 +23,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
 using DotNetUtils.FS;
-using UILib.Forms;
+using UILib.WinForms;
+using UILib.WinForms.Forms;
 
 namespace BDHeroGUI.Helpers
 {

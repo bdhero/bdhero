@@ -27,7 +27,7 @@ using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
-using UILib.Controls;
+using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Components
 {

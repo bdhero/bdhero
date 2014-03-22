@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using DotNetUtils.Extensions;
-using UILib.Controls;
+using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Helpers
 {

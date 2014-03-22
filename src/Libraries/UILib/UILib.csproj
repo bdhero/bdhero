@@ -55,67 +55,70 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\EmailAddress.cs" />
-    <Compile Include="Controls\EmailLabel.cs">
+    <Compile Include="WinForms\Controls\EmailAddress.cs" />
+    <Compile Include="WinForms\Controls\EmailLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\FileTextBox.cs">
+    <Compile Include="WinForms\Controls\FileTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\FileTextBox.Designer.cs">
+    <Compile Include="WinForms\Controls\FileTextBox.Designer.cs">
       <DependentUpon>FileTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Hyperlink.cs" />
-    <Compile Include="Controls\HyperlinkLabel.cs">
+    <Compile Include="WinForms\Controls\Hyperlink.cs" />
+    <Compile Include="WinForms\Controls\HyperlinkLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\LinkLabel2.cs">
+    <Compile Include="WinForms\Controls\LinkLabel2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ListView2.cs">
+    <Compile Include="WinForms\Controls\ListView2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ListViewColumnSorter.cs" />
-    <Compile Include="Controls\ProgressBar2.cs">
+    <Compile Include="WinForms\Controls\ListViewColumnSorter.cs" />
+    <Compile Include="WinForms\Controls\ProgressBar2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SelectableLabel.cs">
+    <Compile Include="WinForms\Controls\SelectableLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SelectablePictureBox.cs">
+    <Compile Include="WinForms\Controls\SelectablePictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SelectableStatusStrip.cs">
+    <Compile Include="WinForms\Controls\SelectableStatusStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SplitButton.cs">
+    <Compile Include="WinForms\Controls\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SplitContainerWithDivider.cs">
+    <Compile Include="WinForms\Controls\SplitContainerWithDivider.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\FS\FileSystemDialogType.cs" />
-    <Compile Include="Dialogs\FS\FolderBrowserDialog2.cs" />
-    <Compile Include="Dialogs\FS\FolderBrowserDialog3.cs" />
-    <Compile Include="Dialogs\FS\IFileSystemDialog.cs" />
-    <Compile Include="Dialogs\FS\OpenFileDialog2.cs" />
-    <Compile Include="Dialogs\FS\SaveFileDialog2.cs" />
-    <Compile Include="Forms\DetailForm.cs">
+    <Compile Include="WinForms\Dialogs\FS\FileSystemDialogType.cs" />
+    <Compile Include="WinForms\Dialogs\FS\FolderBrowserDialog2.cs" />
+    <Compile Include="WinForms\Dialogs\FS\FolderBrowserDialog3.cs" />
+    <Compile Include="WinForms\Dialogs\FS\IFileSystemDialog.cs" />
+    <Compile Include="WinForms\Dialogs\FS\OpenFileDialog2.cs" />
+    <Compile Include="WinForms\Dialogs\FS\SaveFileDialog2.cs" />
+    <Compile Include="WinForms\Forms\DetailForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DetailForm.Designer.cs">
+    <Compile Include="WinForms\Forms\DetailForm.Designer.cs">
       <DependentUpon>DetailForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DragUtils.cs" />
-    <Compile Include="Forms\ExternalDragProvider.cs" />
-    <Compile Include="Forms\WndProcEventHandler.cs" />
-    <Compile Include="Forms\WndProcHook.cs" />
+    <Compile Include="WinForms\DragUtils.cs" />
+    <Compile Include="WinForms\ExternalDragProvider.cs" />
+    <Compile Include="WinForms\WndProcEventHandler.cs" />
+    <Compile Include="WinForms\WndProcHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WPF\WpfKeyboardUtils.cs" />
+    <Compile Include="WPF\WpfWndProcEventHandler.cs" />
+    <Compile Include="WPF\WpfWndProcHook.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
@@ -135,10 +138,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\FileTextBox.resx">
+    <EmbeddedResource Include="WinForms\Controls\FileTextBox.resx">
       <DependentUpon>FileTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DetailForm.resx">
+    <EmbeddedResource Include="WinForms\Forms\DetailForm.resx">
       <DependentUpon>DetailForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Components
 {
     partial class AudioTrackListView
@@ -45,7 +47,7 @@ namespace BDHeroGUI.Components
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewAudioTracks = new UILib.Controls.ListView2();
+            this.listViewAudioTracks = new ListView2();
             this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderChannels = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLanguage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -119,7 +121,7 @@ namespace BDHeroGUI.Components
 
         #endregion
 
-        private UILib.Controls.ListView2 listViewAudioTracks;
+        private ListView2 listViewAudioTracks;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderLanguage;
         private System.Windows.Forms.ColumnHeader columnHeaderChannels;

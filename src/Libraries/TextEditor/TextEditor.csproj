@@ -128,10 +128,6 @@
       <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
       <Name>UILib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WpfUtils\WpfUtils.csproj">
-      <Project>{CAD66ABF-D84D-48F0-8D6F-9BDD2D9E3C9D}</Project>
-      <Name>WpfUtils</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

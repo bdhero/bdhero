@@ -17,7 +17,7 @@
 
 using System.Windows.Forms;
 using LicenseUtils.Forms;
-using UILib.Controls;
+using UILib.WinForms.Controls;
 
 namespace LicenseUtils.Controls
 {

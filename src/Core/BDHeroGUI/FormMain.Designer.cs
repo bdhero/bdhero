@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using UILib.Controls;
-using UILib.Dialogs.FS;
+using UILib.WinForms.Controls;
+using UILib.WinForms.Dialogs.FS;
 
 namespace BDHeroGUI
 {
@@ -59,17 +59,17 @@ namespace BDHeroGUI
             this.buttonCancelConvert = new System.Windows.Forms.Button();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.panelRoot = new System.Windows.Forms.Panel();
-            this.linkLabelNameProviderPreferences = new UILib.Controls.LinkLabel2();
-            this.textBoxInput = new UILib.Controls.FileTextBox();
-            this.splitContainerMain = new UILib.Controls.SplitContainerWithDivider();
-            this.splitContainerTop = new UILib.Controls.SplitContainerWithDivider();
+            this.linkLabelNameProviderPreferences = new LinkLabel2();
+            this.textBoxInput = new FileTextBox();
+            this.splitContainerMain = new SplitContainerWithDivider();
+            this.splitContainerTop = new SplitContainerWithDivider();
             this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
             this.mediaPanel = new BDHeroGUI.Components.MediaPanel();
-            this.splitContainerWithDivider1 = new UILib.Controls.SplitContainerWithDivider();
+            this.splitContainerWithDivider1 = new SplitContainerWithDivider();
             this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
             this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
-            this.textBoxOutput = new UILib.Controls.FileTextBox();
-            this.progressBar = new UILib.Controls.ProgressBar2();
+            this.textBoxOutput = new FileTextBox();
+            this.progressBar = new ProgressBar2();
             this.menuStripTop = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBDROMFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +105,7 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new UILib.Controls.SelectableStatusStrip();
+            this.statusStrip1 = new SelectableStatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -255,7 +255,7 @@ namespace BDHeroGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxInput.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxInput.DialogTitle = "Select a BD-ROM folder:";
-            this.textBoxInput.DialogType = UILib.Dialogs.FS.FileSystemDialogType.OpenDirectory;
+            this.textBoxInput.DialogType = FileSystemDialogType.OpenDirectory;
             this.textBoxInput.FileTypes = null;
             this.textBoxInput.Location = new System.Drawing.Point(93, 3);
             this.textBoxInput.Name = "textBoxInput";
@@ -364,7 +364,7 @@ namespace BDHeroGUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxOutput.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.textBoxOutput.DialogTitle = "Save MKV file:";
-            this.textBoxOutput.DialogType = UILib.Dialogs.FS.FileSystemDialogType.SaveFile;
+            this.textBoxOutput.DialogType = FileSystemDialogType.SaveFile;
             this.textBoxOutput.FileTypes = null;
             this.textBoxOutput.Location = new System.Drawing.Point(93, 407);
             this.textBoxOutput.Name = "textBoxOutput";
@@ -740,17 +740,17 @@ namespace BDHeroGUI
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private UILib.Controls.FileTextBox textBoxInput;
+        private FileTextBox textBoxInput;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxStatus;
         private System.Windows.Forms.Button buttonScan;
-        private UILib.Controls.ProgressBar2 progressBar;
+        private ProgressBar2 progressBar;
         private System.Windows.Forms.Button buttonCancelScan;
-        private UILib.Controls.FileTextBox textBoxOutput;
+        private FileTextBox textBoxOutput;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonCancelConvert;
         private System.Windows.Forms.Button buttonConvert;
-        private UILib.Controls.SplitContainerWithDivider splitContainerMain;
+        private SplitContainerWithDivider splitContainerMain;
         private Components.TracksPanel tracksPanel;
         private SplitContainerWithDivider splitContainerTop;
         private Components.PlaylistListView playlistListView;
@@ -791,7 +791,7 @@ namespace BDHeroGUI
         private SplitContainerWithDivider splitContainerWithDivider1;
         private Components.ChaptersPanel chaptersPanel;
         private LinkLabel2 linkLabelNameProviderPreferences;
-        private UILib.Controls.SelectableStatusStrip statusStrip1;
+        private SelectableStatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelOffline;
         private System.Windows.Forms.ToolStripMenuItem newInstanceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;

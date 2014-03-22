@@ -1,4 +1,6 @@
-﻿namespace LicenseUtils.Controls
+﻿using UILib.WinForms.Controls;
+
+namespace LicenseUtils.Controls
 {
     partial class WorkPanel
     {
@@ -30,15 +32,15 @@
         {
             this.components = new System.ComponentModel.Container();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelProject = new UILib.Controls.HyperlinkLabel();
-            this.labelSource = new UILib.Controls.HyperlinkLabel();
-            this.labelPackage = new UILib.Controls.HyperlinkLabel();
-            this.labelArticle = new UILib.Controls.HyperlinkLabel();
+            this.labelProject = new HyperlinkLabel();
+            this.labelSource = new HyperlinkLabel();
+            this.labelPackage = new HyperlinkLabel();
+            this.labelArticle = new HyperlinkLabel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelLicense = new UILib.Controls.LinkLabel2();
+            this.labelLicense = new LinkLabel2();
             this.labelNoLicense = new System.Windows.Forms.Label();
             this.panelAuthors = new System.Windows.Forms.Panel();
-            this.labelWorkName = new UILib.Controls.SelectableLabel();
+            this.labelWorkName = new SelectableLabel();
             this.toolTipLicenseLink = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -186,15 +188,15 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private UILib.Controls.HyperlinkLabel labelProject;
-        private UILib.Controls.HyperlinkLabel labelSource;
-        private UILib.Controls.HyperlinkLabel labelPackage;
-        private UILib.Controls.HyperlinkLabel labelArticle;
+        private HyperlinkLabel labelProject;
+        private HyperlinkLabel labelSource;
+        private HyperlinkLabel labelPackage;
+        private HyperlinkLabel labelArticle;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private UILib.Controls.LinkLabel2 labelLicense;
+        private LinkLabel2 labelLicense;
         private System.Windows.Forms.Label labelNoLicense;
         private System.Windows.Forms.Panel panelAuthors;
-        private UILib.Controls.SelectableLabel labelWorkName;
+        private SelectableLabel labelWorkName;
         private System.Windows.Forms.ToolTip toolTipLicenseLink;
     }
 }

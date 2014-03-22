@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Forms
 {
     sealed partial class AboutBox
@@ -52,10 +54,10 @@ namespace BDHeroGUI.Forms
             this.tabPageCredit = new System.Windows.Forms.TabPage();
             this.creditPanel = new System.Windows.Forms.Panel();
             this.tabPageSysInfo = new System.Windows.Forms.TabPage();
-            this.linkLabelSourceCode = new UILib.Controls.HyperlinkLabel();
-            this.labelCopyright = new UILib.Controls.SelectableLabel();
-            this.labelProductName = new UILib.Controls.SelectableLabel();
-            this.labelBuildDate = new UILib.Controls.SelectableLabel();
+            this.linkLabelSourceCode = new HyperlinkLabel();
+            this.labelCopyright = new SelectableLabel();
+            this.labelProductName = new SelectableLabel();
+            this.labelBuildDate = new SelectableLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPageCredit.SuspendLayout();
@@ -229,16 +231,16 @@ namespace BDHeroGUI.Forms
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBoxLogo;
-        private UILib.Controls.SelectableLabel labelProductName;
-        private UILib.Controls.SelectableLabel labelCopyright;
+        private SelectableLabel labelProductName;
+        private SelectableLabel labelCopyright;
         private System.Windows.Forms.Button buttonOk;
-        private UILib.Controls.HyperlinkLabel linkLabelSourceCode;
+        private HyperlinkLabel linkLabelSourceCode;
         private System.Windows.Forms.TextBox textBoxSystemInfo;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageSysInfo;
         private System.Windows.Forms.TabPage tabPageCredit;
         private System.Windows.Forms.Panel creditPanel;
-        private UILib.Controls.SelectableLabel labelBuildDate;
+        private SelectableLabel labelBuildDate;
 
     }
 }

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using UILib.Controls;
+using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Components
 {
@@ -56,7 +56,7 @@ namespace BDHeroGUI.Components
             "Theatrical",
             "English",
             "Bogus, Low Quality"}, -1);
-            this.listView = new UILib.Controls.ListView2();
+            this.listView = new ListView2();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderChapterCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,7 +66,7 @@ namespace BDHeroGUI.Components
             this.columnHeaderVideoLanguage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderWarnings = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxShowAllPlaylists = new System.Windows.Forms.CheckBox();
-            this.linkLabelShowFilterWindow = new UILib.Controls.LinkLabel2();
+            this.linkLabelShowFilterWindow = new LinkLabel2();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 

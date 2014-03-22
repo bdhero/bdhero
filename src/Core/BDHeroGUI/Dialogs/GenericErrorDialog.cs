@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 using BDHero.ErrorReporting;
-using UILib.Forms;
+using UILib.WinForms.Forms;
 
 namespace BDHeroGUI.Dialogs
 {

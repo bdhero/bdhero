@@ -1,4 +1,6 @@
-﻿namespace LicenseUtils.Forms
+﻿using UILib.WinForms.Controls;
+
+namespace LicenseUtils.Forms
 {
     partial class LicenseForm
     {
@@ -29,17 +31,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.labelLicenseName = new UILib.Controls.SelectableLabel();
+            this.labelLicenseName = new SelectableLabel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.hyperlinkLabelUrl = new UILib.Controls.HyperlinkLabel();
-            this.hyperlinkLabelTlDrUrl = new UILib.Controls.HyperlinkLabel();
+            this.hyperlinkLabelUrl = new HyperlinkLabel();
+            this.hyperlinkLabelTlDrUrl = new HyperlinkLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageFormatted = new System.Windows.Forms.TabPage();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.tabPagePlainText = new System.Windows.Forms.TabPage();
             this.textBoxPlainText = new System.Windows.Forms.RichTextBox();
             this.buttonOk = new System.Windows.Forms.Button();
-            this.labelWorkName = new UILib.Controls.SelectableLabel();
+            this.labelWorkName = new SelectableLabel();
             this.buttonPrint = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -230,10 +232,10 @@
 
         #endregion
 
-        private UILib.Controls.SelectableLabel labelLicenseName;
+        private SelectableLabel labelLicenseName;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private UILib.Controls.HyperlinkLabel hyperlinkLabelUrl;
-        private UILib.Controls.HyperlinkLabel hyperlinkLabelTlDrUrl;
+        private HyperlinkLabel hyperlinkLabelUrl;
+        private HyperlinkLabel hyperlinkLabelTlDrUrl;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPageFormatted;
         private System.Windows.Forms.TabPage tabPagePlainText;
@@ -241,7 +243,7 @@
         private System.Windows.Forms.Button buttonPrint;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.RichTextBox textBoxPlainText;
-        private UILib.Controls.SelectableLabel labelWorkName;
+        private SelectableLabel labelWorkName;
 
     }
 }

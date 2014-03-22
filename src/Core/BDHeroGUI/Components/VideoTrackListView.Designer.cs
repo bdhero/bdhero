@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Components
 {
     partial class VideoTrackListView
@@ -45,7 +47,7 @@ namespace BDHeroGUI.Components
         /// </summary>
         private void InitializeComponent()
         {
-            this.listViewVideoTracks = new UILib.Controls.ListView2();
+            this.listViewVideoTracks = new ListView2();
             this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderResolution = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFrameRate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -128,7 +130,7 @@ namespace BDHeroGUI.Components
 
         #endregion
 
-        private UILib.Controls.ListView2 listViewVideoTracks;
+        private ListView2 listViewVideoTracks;
         private System.Windows.Forms.ColumnHeader columnHeaderCodec;
         private System.Windows.Forms.ColumnHeader columnHeaderResolution;
         private System.Windows.Forms.ColumnHeader columnHeaderFrameRate;

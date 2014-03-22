@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Forms
 {
     partial class FormMediaCustom
@@ -47,8 +49,8 @@ namespace BDHeroGUI.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.linkLabelURL = new UILib.Controls.LinkLabel2();
-            this.linkLabelBrowse = new UILib.Controls.LinkLabel2();
+            this.linkLabelURL = new LinkLabel2();
+            this.linkLabelBrowse = new LinkLabel2();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
@@ -251,8 +253,8 @@ namespace BDHeroGUI.Forms
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Label label3;
-        private UILib.Controls.LinkLabel2 linkLabelURL;
-        private UILib.Controls.LinkLabel2 linkLabelBrowse;
+        private LinkLabel2 linkLabelURL;
+        private LinkLabel2 linkLabelBrowse;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip toolTipPictureBox;
 

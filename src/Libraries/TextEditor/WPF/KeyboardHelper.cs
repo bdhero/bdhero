@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using DotNetUtils.Annotations;
 using NativeAPI.Win.User;
-using WpfUtils;
+using UILib.WPF;
 
 namespace TextEditor.WPF
 {

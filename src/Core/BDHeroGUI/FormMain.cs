@@ -46,7 +46,8 @@ using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using OSUtils.Window;
-using UILib.Forms;
+using UILib.WinForms;
+using UILib.WinForms.Forms;
 using UpdateLib;
 
 namespace BDHeroGUI

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Forms
 {
     partial class FormDiscInfo
@@ -48,7 +50,7 @@ namespace BDHeroGUI.Forms
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.labelQuickSummary = new UILib.Controls.SelectableLabel();
+            this.labelQuickSummary = new SelectableLabel();
             this.groupBoxJacket = new System.Windows.Forms.GroupBox();
             this.pictureBoxJacket = new System.Windows.Forms.PictureBox();
             this.contextMenuStripJacket = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -202,7 +204,7 @@ namespace BDHeroGUI.Forms
         private Components.DiscInfoMetadataPanel discInfoMetadataPanel;
         private System.Windows.Forms.Button buttonClose;
         private Components.DiscInfoFeaturesPanel discInfoFeaturesPanel;
-        private UILib.Controls.SelectableLabel labelQuickSummary;
+        private SelectableLabel labelQuickSummary;
         private System.Windows.Forms.GroupBox groupBoxJacket;
         private System.Windows.Forms.PictureBox pictureBoxJacket;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripJacket;

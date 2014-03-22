@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using UILib.WinForms.Controls;
+
 namespace BDHeroGUI.Components
 {
     partial class MediaPanel
@@ -48,9 +50,9 @@ namespace BDHeroGUI.Components
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.linkLabelCustom = new UILib.Controls.LinkLabel2();
+            this.linkLabelCustom = new LinkLabel2();
             this.comboBoxMedia = new System.Windows.Forms.ComboBox();
-            this.linkLabelSearch = new UILib.Controls.LinkLabel2();
+            this.linkLabelSearch = new LinkLabel2();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -160,8 +162,8 @@ namespace BDHeroGUI.Components
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.PictureBox pictureBox;
-        private UILib.Controls.LinkLabel2 linkLabelSearch;
+        private LinkLabel2 linkLabelSearch;
         private System.Windows.Forms.ComboBox comboBoxMedia;
-        private UILib.Controls.LinkLabel2 linkLabelCustom;
+        private LinkLabel2 linkLabelCustom;
     }
 }

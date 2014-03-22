@@ -22,7 +22,7 @@ using BDHero.JobQueue;
 using BDHeroGUI.Helpers;
 using DotNetUtils.FS;
 using I18N;
-using UILib.Dialogs.FS;
+using UILib.WinForms.Dialogs.FS;
 
 namespace BDHeroGUI.Forms
 {
