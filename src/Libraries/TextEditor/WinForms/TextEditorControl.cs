@@ -81,6 +81,193 @@ namespace TextEditor.WinForms
 
         #region Browsable properties and events
 
+#if true
+
+        #region Context menu
+
+        /// <summary>
+        ///     Gets or sets whether a standard context menu (cut, copy, paste, etc.) is available.
+        /// </summary>
+        [Browsable(true)]
+        [Description("Determines whether the user can enter multiple lines of text.")]
+        [DefaultValue(true)]
+        public bool StandardContextMenu
+        {
+            get { return base.ContextMenuStrip != null; }
+            set
+            {
+                if (value == StandardContextMenu)
+                    return;
+
+                ContextMenuStrip = value ? CreateContextMenuStrip() : null;
+            }
+        }
+
+        private static ToolStripSeparator CreateContextMenuSeparator()
+        {
+            return new ToolStripSeparator();
+        }
+
+        private void OptionsMenuItemOnClick(Action action)
+        {
+            Console.WriteLine("OptionsMenuItemOnClick()");
+            action();
+        }
+
+        private void OptionsDropDownOnClosing(object sender, ToolStripDropDownClosingEventArgs args)
+        {
+            Console.WriteLine("OptionsDropDownOnClosing({0}) - args = {1}", sender, args);
+            if (args.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+            {
+                args.Cancel = true;
+            }
+        }
+
+        private ContextMenuStrip CreateContextMenuStrip()
+        {
+            #region Edit commands
+
+            var undo = new ToolStripMenuItem("&Undo", null, (sender, args) => Editor.Undo());
+            var redo = new ToolStripMenuItem("&Redo", null, (sender, args) => Editor.Redo());
+
+            var cut = new ToolStripMenuItem("Cu&t", null, (sender, args) => Editor.Cut());
+            var copy = new ToolStripMenuItem("&Copy", null, (sender, args) => Editor.Copy());
+            var paste = new ToolStripMenuItem("&Paste", null, (sender, args) => Editor.Paste());
+            var delete = new ToolStripMenuItem("&Delete", null, (sender, args) => Editor.Delete());
+
+            var selectAll = new ToolStripMenuItem("Select &All", null, (sender, args) => Editor.SelectAll());
+
+            #endregion
+
+            #region Options
+
+            var optionsDivider = CreateContextMenuSeparator();
+            var options = new ToolStripMenuItem("&Options");
+            options.DropDown.Closing += OptionsDropDownOnClosing;
+
+            var showLineNumbers = new ToolStripMenuItem("Show &Line Numbers");
+            showLineNumbers.Click += (sender, args) => OptionsMenuItemOnClick(() => Editor.Options.ShowLineNumbers = !Editor.Options.ShowLineNumbers);
+
+            var showWhiteSpace = new ToolStripMenuItem("Show &Whitespace");
+            showWhiteSpace.Click += (sender, args) => OptionsMenuItemOnClick(() => Editor.Options.ShowSpaces = Editor.Options.ShowTabs = !(Editor.Options.ShowSpaces && Editor.Options.ShowTabs));
+
+            var wordWrap = new ToolStripMenuItem("Word &Wrap");
+            wordWrap.Click += (sender, args) => OptionsMenuItemOnClick(() => Editor.Options.WordWrap = !Editor.Options.WordWrap);
+
+            #region Ruler
+
+            var ruler = new ToolStripMenuItem("&Ruler");
+            ruler.DropDown.Closing += OptionsDropDownOnClosing;
+
+            var none             = CreateRulerMenuItem("None");
+            var seventy          = CreateRulerMenuItem(70);
+            var seventyEight     = CreateRulerMenuItem(78);
+            var eighty           = CreateRulerMenuItem(80);
+            var oneHundred       = CreateRulerMenuItem(100);
+            var oneHundredTwenty = CreateRulerMenuItem(120);
+
+            ruler.DropDownItems.AddRange(new ToolStripItem[]
+                                         {
+                                             none,
+                                             new ToolStripSeparator(),
+                                             seventy,
+                                             seventyEight,
+                                             eighty,
+                                             oneHundred,
+                                             oneHundredTwenty,
+                                         });
+
+            #endregion
+
+            options.DropDownItems.AddRange(new ToolStripItem[]
+                                           {
+                                               showLineNumbers,
+                                               showWhiteSpace,
+                                               CreateContextMenuSeparator(),
+                                               wordWrap,
+                                               ruler,
+                                           });
+
+            #endregion
+
+            #region Menu creation
+
+            var menu = new ContextMenuStrip();
+            menu.Items.AddRange(new ToolStripItem[]
+                                {
+                                    undo,
+                                    redo,
+                                    CreateContextMenuSeparator(),
+                                    cut,
+                                    copy,
+                                    paste,
+                                    delete,
+                                    CreateContextMenuSeparator(),
+                                    selectAll,
+                                    optionsDivider,
+                                    options,
+                                });
+
+            menu.Opened += delegate
+                           {
+                               undo.Enabled    = Editor.CanUndo   && !Editor.ReadOnly;
+                               redo.Enabled    = Editor.CanRedo   && !Editor.ReadOnly;
+                               cut.Enabled     = Editor.CanCut    && !Editor.ReadOnly;
+                               copy.Enabled    = Editor.CanCopy;
+                               paste.Enabled   = Editor.CanPaste  && !Editor.ReadOnly;
+                               delete.Enabled  = Editor.CanDelete && !Editor.ReadOnly;
+
+                               optionsDivider.Visible = Editor.Multiline;
+                               options.Visible        = Editor.Multiline;
+                                   showLineNumbers.Checked = Editor.Options.ShowLineNumbers;
+                                   showWhiteSpace.Checked  = Editor.Options.ShowSpaces && Editor.Options.ShowTabs;
+                                   wordWrap.Checked        = Editor.Options.WordWrap;
+                                       none.Checked             = !Editor.Options.ShowColumnRuler;
+                                       seventy.Checked          = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 70;
+                                       seventyEight.Checked     = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 78;
+                                       eighty.Checked           = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 80;
+                                       oneHundred.Checked       = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 100;
+                                       oneHundredTwenty.Checked = Editor.Options.ShowColumnRuler && Editor.Options.ColumnRulerPosition == 120;
+                           };
+
+            menu.RenderMode = ToolStripRenderMode.Professional;
+
+            #endregion
+
+            return menu;
+        }
+
+        private ToolStripMenuItem CreateRulerMenuItem(string text)
+        {
+            var item = new ToolStripMenuItem(string.Format("&{0}", text));
+            item.Click += (sender, args) => OptionsMenuItemOnClick(() => SetRulerColumn(0));
+            return item;
+        }
+
+        private ToolStripMenuItem CreateRulerMenuItem(int col)
+        {
+            var item = new ToolStripMenuItem(string.Format("&{0}", col));
+            item.Click += (sender, args) => OptionsMenuItemOnClick(() => SetRulerColumn(col));
+            return item;
+        }
+
+        private void SetRulerColumn(int col)
+        {
+            if (col > 0)
+            {
+                Editor.Options.ShowColumnRuler = true;
+                Editor.Options.ColumnRulerPosition = col;
+            }
+            else
+            {
+                Editor.Options.ShowColumnRuler = false;
+            }
+        }
+
+        #endregion
+
+#else
+
         #region Context menu
 
         /// <summary>
@@ -238,6 +425,8 @@ namespace TextEditor.WinForms
         }
 
         #endregion
+
+#endif
 
         #region Text property
 
