@@ -2,7 +2,11 @@
 
 namespace TextEditor
 {
-    public class TextEditorFactory
+    /// <summary>
+    ///     Static factory class that creates <see cref="ITextEditor"/> instances by selecting the most appropriate
+    ///     implementation for the current operating system and setting sensible default values.
+    /// </summary>
+    public static class TextEditorFactory
     {
         private static ITextEditor CreateTextEditor()
         {
@@ -24,6 +28,10 @@ namespace TextEditor
             return editor;
         }
 
+        /// <summary>
+        ///     Creates and returns a new <see cref="ITextEditor"/> instance configured for multiline input.
+        /// </summary>
+        /// <returns></returns>
         public static ITextEditor CreateMultiLineTextEditor()
         {
             var editor = CreateTextEditor();
@@ -44,6 +52,10 @@ namespace TextEditor
             return editor;
         }
 
+        /// <summary>
+        ///     Creates and returns a new <see cref="ITextEditor"/> instance configured for a single line of input.
+        /// </summary>
+        /// <returns></returns>
         public static ITextEditor CreateSingleLineTextEditor()
         {
             var editor = CreateTextEditor();

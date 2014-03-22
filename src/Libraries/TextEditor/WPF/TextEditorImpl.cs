@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using DotNetUtils.Extensions;
@@ -18,19 +17,6 @@ using Control = System.Windows.Forms.Control;
 
 namespace TextEditor.WPF
 {
-    internal class ElementHostImpl : ElementHost
-    {
-        public void MouseEnter()
-        {
-            OnMouseEnter(EventArgs.Empty);
-        }
-
-        public void MouseLeave()
-        {
-            OnMouseLeave(EventArgs.Empty);
-        }
-    }
-
     internal class TextEditorImpl : ITextEditor
     {
         private readonly ICSharpCode.AvalonEdit.TextEditor _editor
@@ -68,12 +54,12 @@ namespace TextEditor.WPF
 
         private void EditorOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)
         {
-            _elementHost.MouseEnter();
+            _elementHost.TriggerMouseEnter();
         }
 
         private void EditorOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
         {
-            _elementHost.MouseLeave();
+            _elementHost.TriggerMouseLeave();
         }
 
         #region Code completion
@@ -290,13 +276,13 @@ namespace TextEditor.WPF
 
         #region Syntax highlighting
 
-        public void LoadSyntaxDefinitions(ISyntaxModeProvider syntaxModeFileProvider)
+        public void LoadSyntaxDefinitions(ISyntaxModeProvider provider)
         {
             var manager = HighlightingManager.Instance;
 
-            foreach (var syntaxMode in syntaxModeFileProvider.SyntaxModes)
+            foreach (var syntaxMode in provider.SyntaxModes)
             {
-                using (var reader = syntaxModeFileProvider.GetSyntaxModeFile(syntaxMode))
+                using (var reader = provider.GetSyntaxModeFile(syntaxMode))
                 {
                     var xshdSyntaxDefinition = HighlightingLoader.LoadXshd(reader);
                     var highlightingDefinition = HighlightingLoader.Load(xshdSyntaxDefinition, manager);

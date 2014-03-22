@@ -6,8 +6,12 @@ using DotNetUtils.Extensions;
 using NativeAPI.Win.UXTheme;
 using UILib.Extensions;
 
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 namespace TextEditor.WinForms
 {
+    /// <summary>
+    ///     Windows Forms control that wraps a <see cref="ITextEditor"/> object.
+    /// </summary>
     [DefaultProperty("Text")]
     [DefaultEvent("TextChanged")]
     public class TextEditorControl : Control
@@ -24,6 +28,9 @@ namespace TextEditor.WinForms
         private Padding _borderPadding;
         private BorderStyle _borderStyle;
 
+        /// <summary>
+        ///     Constructs a new <see cref="TextEditorControl"/> instance.
+        /// </summary>
         public TextEditorControl()
         {
             Editor = TextEditorFactory.CreateMultiLineTextEditor();

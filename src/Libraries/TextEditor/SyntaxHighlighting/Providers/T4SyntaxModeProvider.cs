@@ -22,7 +22,7 @@ namespace TextEditor.SyntaxHighlighting.Providers
 
         /// <summary>
         ///     Constructs a new <see cref="T4SyntaxModeProvider"/> instance with the default list of syntax modes
-        ///     stored in the <see cref="TextEditor.Resources.Syntax.Definitions"/> namespace.
+        ///     stored in the <see cref="TextEditor.SyntaxHighlighting.Definitions"/> namespace.
         /// </summary>
         public T4SyntaxModeProvider()
             : this(DefaultModels)

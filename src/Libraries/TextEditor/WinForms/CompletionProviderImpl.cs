@@ -11,31 +11,56 @@ using ICSharpCode.TextEditor.Gui.CompletionWindow;
 
 namespace TextEditor.WinForms
 {
+    /// <summary>
+    ///     Provides code completion for <see cref="TextEditorImpl"/>.
+    /// </summary>
     public class CompletionProviderImpl : ICompletionDataProvider
     {
-        private readonly ImageList imageList;
+        private readonly ImageList _imageList;
 
+        /// <summary>
+        ///     Constructs a new <see cref="CompletionProviderImpl"/> instance with the given parameters.
+        /// </summary>
+        /// <param name="imageList">
+        ///     List of icon images to display along side the code completion entries.
+        /// </param>
         public CompletionProviderImpl(ImageList imageList)
         {
-            this.imageList = imageList;
+            _imageList = imageList;
         }
 
+        /// <summary>
+        ///     Gets the list of icon images to display along side the code completion entries.
+        /// </summary>
         public ImageList ImageList
         {
-            get { return imageList; }
+            get { return _imageList; }
         }
 
+        /// <summary>
+        ///     I have no idea what this property does.
+        /// </summary>
         public string PreSelection
         {
             get { return null; }
         }
 
-        // -1 for "no default selected"
+        /// <summary>
+        ///     Gets the index of the completion entry to automatically select when the completion window opens.
+        ///     <c>-1</c> indicates "no default selected".
+        /// </summary>
         public int DefaultIndex
         {
             get { return 0; }
         }
 
+        /// <summary>
+        ///     Determines the type and function of the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        ///     Character pressed by the user.
+        /// </param>
+        /// <returns></returns>
         public CompletionDataProviderKeyResult ProcessKey(char key)
         {
             if (char.IsLetterOrDigit(key) || key == '_')
@@ -46,8 +71,13 @@ namespace TextEditor.WinForms
         }
 
         /// <summary>
-        /// Called when entry should be inserted. Forward to the insertion action of the completion data.
+        ///     Called when a completion entry should be inserted. Forward to the insertion action of the completion data.
         /// </summary>
+        /// <param name="data"></param>
+        /// <param name="textArea"></param>
+        /// <param name="insertionOffset"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool InsertAction(ICompletionData data, TextArea textArea, int insertionOffset, char key)
         {
             var prevWord = GetCharsToLeftOfCursor(textArea);
@@ -66,6 +96,13 @@ namespace TextEditor.WinForms
             return data.InsertAction(textArea, key);
         }
 
+        /// <summary>
+        ///     Generates a list of code completions relevant to the given parameters.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="textArea"></param>
+        /// <param name="charTyped"></param>
+        /// <returns></returns>
         public ICompletionData[] GenerateCompletionData(string fileName, TextArea textArea, char charTyped)
         {
             var allCompletions = AllCompletions();

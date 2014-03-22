@@ -287,10 +287,10 @@ namespace TextEditor.WinForms
 
         #region Syntax highlighting
 
-        public void LoadSyntaxDefinitions(ISyntaxModeProvider syntaxModeFileProvider)
+        public void LoadSyntaxDefinitions(ISyntaxModeProvider provider)
         {
             var manager = HighlightingManager.Manager;
-            manager.AddSyntaxModeFileProvider(new SyntaxModeProviderAdapter(syntaxModeFileProvider));
+            manager.AddSyntaxModeFileProvider(new SyntaxModeProviderAdapter(provider));
         }
 
         public void SetSyntax(StandardSyntaxType type)
