@@ -33,5 +33,15 @@
         bool ShowTabs { get; set; }
 
         #endregion
+
+        #region Word wrapping
+
+        bool SupportsWordWrap { get; }
+
+        bool WordWrap { get; set; }
+
+        double WordWrapIndent { get; set; }
+
+        #endregion
     }
 }
