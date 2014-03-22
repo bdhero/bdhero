@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
+using BDHeroGUI.Forms;
 using DotNetUtils.Annotations;
 using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -184,7 +185,7 @@ namespace BDHeroGUI.Dialogs
             }
             if (args.LinkText == EditReportHref)
             {
-                MessageBox.Show(owner, "Edit report contents");
+                new FormErrorReport(_report).ShowDialog(owner);
             }
         }
 

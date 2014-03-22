@@ -291,7 +291,7 @@ namespace BDHeroGUI
 
         private void ShowErrorDialog(string title, Exception exception, bool isReportable = true)
         {
-            var report = new ErrorReport(exception);
+            var report = new ErrorReport(exception, _pluginRepository, _directoryLocator);
 
             IErrorDialog dialog;
 

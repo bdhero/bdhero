@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BDHero.Plugin;
+using BDHero.Startup;
 using DotNetUtils;
+using OSUtils.Info;
 
 namespace BDHero.ErrorReporting
 {
@@ -97,7 +101,7 @@ namespace BDHero.ErrorReporting
         /// </summary>
         public readonly string ExceptionDetailRedacted;
 
-        public ErrorReport(Exception exception)
+        public ErrorReport(Exception exception, IPluginRepository pluginRepository, IDirectoryLocator directoryLocator)
         {
             exception = GetBaseException(exception);
 
@@ -107,8 +111,95 @@ namespace BDHero.ErrorReporting
             ExceptionDetailRaw = exception.ToString();
             ExceptionDetailRedacted = Redact(ExceptionDetailRaw);
 
+//            var plugins = pluginRepository.PluginsByType.Select(ToString).ToArray();
+            var plugins = pluginRepository.PluginsByType.Select(ToString).ToList();
+            plugins.Insert(0, new []{ "R", "Plugin Name", "Version", "Build Date", "E" });
+            plugins.Insert(1, new []{ "-", "-", "-", "-", "-" });
+
             Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, ExceptionMessageRedacted, AppUtils.AppName, AppUtils.AppVersion);
-            Body = string.Format("{0} v{1}:\n\n{2}", AppUtils.AppName, AppUtils.AppVersion, FormatAsMarkdownCode(ExceptionDetailRedacted));
+            Body = string.Format(@"
+{0} v{1}{2} (built on {3:u})
+
+Stack Trace
+-----------
+
+{4}
+
+Plugins
+-------
+
+{5}
+
+System Info
+-----------
+
+{6}
+".TrimStart(),
+                AppUtils.AppName,
+                AppUtils.AppVersion,
+                directoryLocator.IsPortable ? " portable" : "",
+                AppUtils.BuildDate,
+                FormatAsMarkdownCode(ExceptionDetailRedacted),
+                FormatAsMarkdownTable(plugins.ToArray()),
+                FormatAsMarkdownCode(SystemInfo.Instance.ToString()));
+        }
+
+        private static string FormatAsMarkdownTable(string[][] rows)
+        {
+            var numRows = rows.Count();
+            var numCols = rows.First().Count();
+            var widths = new List<int>(numCols);
+
+            for (var colIdx = 0; colIdx < numCols; colIdx++)
+            {
+                var width = 0;
+                for (var rowIdx = 0; rowIdx < numRows; rowIdx++)
+                {
+                    var row = rows[rowIdx];
+                    var col = row[colIdx];
+                    if (col.Length > width)
+                        width = col.Length;
+                }
+                widths.Add(width);
+            }
+
+            var lines = new List<string>(numRows);
+
+            for (var rowIdx = 0; rowIdx < numRows; rowIdx++)
+            {
+                var cells = new List<string>(numCols);
+                for (var colIdx = 0; colIdx < numCols; colIdx++)
+                {
+                    var row = rows[rowIdx];
+                    var col = row[colIdx];
+                    var width = widths[colIdx];
+
+                    if (col == "-")
+                        cells.Add(new string('-', width));
+                    else
+                        cells.Add(string.Format("{0,-" + width + "}", col));
+                }
+                lines.Add(string.Format("{0} {1} {0}", "|", string.Join(" | ", cells)));
+            }
+
+            return string.Join(Environment.NewLine, lines);
+        }
+
+        private static string FormatAsMarkdownList(IEnumerable<string> plugins)
+        {
+            return string.Join(Environment.NewLine, plugins.Select((item, i) => string.Format("{0:D}. {1}", i + 1, item)));
+        }
+
+        private static string[] ToString(IPlugin plugin)
+        {
+            return new[]
+                   {
+                       plugin.RunOrder.ToString("D"),
+                       plugin.Name,
+                       plugin.AssemblyInfo.Version.ToString(),
+                       plugin.AssemblyInfo.BuildDate.ToString("u"),
+                       plugin.Enabled ? " " : "D"
+                   };
         }
 
         private static string FormatAsMarkdownCode(string str)
