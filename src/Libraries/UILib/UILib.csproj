@@ -78,6 +78,7 @@
     <Compile Include="WinForms\Controls\HyperlinkLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WinForms\Controls\ITextBox.cs" />
     <Compile Include="WinForms\Controls\LinkLabel2.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -103,6 +104,7 @@
     <Compile Include="WinForms\Controls\SplitContainerWithDivider.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WinForms\Controls\StandardTextBox.cs" />
     <Compile Include="WinForms\Dialogs\FS\FileSystemDialogType.cs" />
     <Compile Include="WinForms\Dialogs\FS\FolderBrowserDialog2.cs" />
     <Compile Include="WinForms\Dialogs\FS\FolderBrowserDialog3.cs" />

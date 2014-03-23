@@ -48,8 +48,8 @@ namespace UILib.WinForms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         public string SelectedPath
         {
-            get { return textBoxPath.Text; }
-            set { textBoxPath.Text = value; }
+            get { return _textBox.Text; }
+            set { _textBox.Text = value; }
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace UILib.WinForms.Controls
         [DefaultValue(false)]
         public bool ReadOnly
         {
-            get { return textBoxPath.ReadOnly; }
+            get { return _textBox.ReadOnly; }
             set
             {
-                textBoxPath.ReadOnly = value;
+                _textBox.ReadOnly = value;
                 buttonBrowse.Enabled = !value;
             }
         }
@@ -143,8 +143,8 @@ namespace UILib.WinForms.Controls
         /// </summary>
         public new BorderStyle BorderStyle
         {
-            get { return textBoxPath.BorderStyle; }
-            set { textBoxPath.BorderStyle = value; }
+            get { return _textBox.BorderStyle; }
+            set { _textBox.BorderStyle = value; }
         }
 
         /// <summary>
@@ -162,10 +162,20 @@ namespace UILib.WinForms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         public event EventHandler SelectedPathChanged;
 
+        private readonly ITextBox _textBox;
+
         /// <summary>
         /// Constructs a new FileTextBox component.
         /// </summary>
         public FileTextBox()
+            : this(new StandardTextBox())
+        {
+        }
+
+        /// <summary>
+        /// Constructs a new FileTextBox component.
+        /// </summary>
+        protected FileTextBox(ITextBox textBox)
         {
             InitializeComponent();
 
@@ -173,10 +183,21 @@ namespace UILib.WinForms.Controls
             OverwritePrompt = true;
             AllowAnyExtension = true;
 
-            textBoxPath.TextChanged += (sender, args) => OnTextChanged(args);
             buttonBrowse.Click += ShowDialog;
 
-            textBoxPath.SelectVariablesOnClick();
+            _textBox = textBox;
+            _textBox.Control.Size = textBoxDummy.Size;
+            _textBox.Control.Location = textBoxDummy.Location;
+            _textBox.Control.Dock = textBoxDummy.Dock;
+            _textBox.Control.Anchor = textBoxDummy.Anchor;
+            _textBox.Control.Font = textBoxDummy.Font;
+            _textBox.Control.TabIndex = textBoxDummy.TabIndex;
+
+            var parent = textBoxDummy.Parent;
+            parent.Controls.Remove(textBoxDummy);
+            parent.Controls.Add(_textBox.Control);
+
+            _textBox.TextChanged += (sender, args) => OnTextChanged(args);
         }
 
         /// <summary>
@@ -184,7 +205,7 @@ namespace UILib.WinForms.Controls
         /// </summary>
         public void Highlight()
         {
-            textBoxPath.Highlight();
+            textBoxDummy.Highlight();
         }
 
         /// <summary>
@@ -192,7 +213,7 @@ namespace UILib.WinForms.Controls
         /// </summary>
         public void UnHighlight()
         {
-            textBoxPath.UnHighlight();
+            textBoxDummy.UnHighlight();
         }
 
         /// <summary>

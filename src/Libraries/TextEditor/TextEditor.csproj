@@ -90,6 +90,9 @@
     <Compile Include="StandardSyntaxType.cs" />
     <Compile Include="WinForms\CompletionControllerImpl.cs" />
     <Compile Include="WinForms\CompletionProviderImpl.cs" />
+    <Compile Include="WinForms\SyntaxHighlightingFileTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WinForms\TextEditorContextMenuStrip.cs">
       <SubType>Component</SubType>
     </Compile>
