@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Extensions;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using TextEditor.Extensions;
 using TextEditor.SyntaxHighlighting.Providers;
@@ -336,8 +337,15 @@ namespace TextEditor.WinForms
             set
             {
                 var selections = Selections.ToList();
-                selections.Reverse();
-                selections.ForEach(selection => _editor.Document.Replace(selection.Offset, selection.Length, value));
+                if (selections.Any())
+                {
+                    selections.Reverse();
+                    selections.ForEach(selection => _editor.Document.Replace(selection.Offset, selection.Length, value));
+                }
+                else
+                {
+                    _editor.Document.Insert(CaretOffset, value);
+                }
             }
         }
 
