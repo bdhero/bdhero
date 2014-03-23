@@ -459,16 +459,16 @@ namespace TextEditor.WinForms
 
             var rects = GetAdjustedRects(returnIfAnchored);
 
-            AdjustParentRect(rects.ParentRect);
-            AdjustChildRect(rects.ChildRect);
+            AdjustParentRect(rects.Parent);
+            AdjustChildRect(rects.Child);
         }
 
-        private void AdjustParentRect(Rect rect)
+        private void AdjustParentRect(Rectangle rect)
         {
             Size = rect.Size;
         }
 
-        private void AdjustChildRect(Rect rect)
+        private void AdjustChildRect(Rectangle rect)
         {
             Editor.Control.Size = rect.Size;
             Editor.Control.Location = rect.Location;
@@ -476,7 +476,7 @@ namespace TextEditor.WinForms
 
         private void AdjustChildRect()
         {
-            AdjustChildRect(GetAdjustedRects(false).ChildRect);
+            AdjustChildRect(GetAdjustedRects(false).Child);
         }
 
         private RectSet GetAdjustedRects(bool returnIfAnchored)
@@ -494,7 +494,7 @@ namespace TextEditor.WinForms
             if (returnIfAnchored &&
                 (Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
             {
-                return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+                return new RectSet(new Rectangle(parentLocation, parentSize), new Rectangle(childLocation, childSize));
             }
 
             var lrPad = CalculatedPadding.Left + CalculatedPadding.Right;
@@ -507,7 +507,7 @@ namespace TextEditor.WinForms
                 childSize = new Size(parentSize.Width - lrPad,
                                      parentSize.Height - tbPad);
 
-                return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+                return new RectSet(new Rectangle(parentLocation, parentSize), new Rectangle(childLocation, childSize));
             }
 
             // --- Singleline
@@ -532,30 +532,18 @@ namespace TextEditor.WinForms
             childSize = new Size(parentWidth + Editor.VerticalScrollBarWidthAllowance - lrPad,
                                  parentHeight + Editor.HorizontalScrollBarHeightAllowance);
 
-            return new RectSet(new Rect(parentSize, parentLocation), new Rect(childSize, childLocation));
+            return new RectSet(new Rectangle(parentLocation, parentSize), new Rectangle(childLocation, childSize));
         }
 
         private class RectSet
         {
-            public readonly Rect ParentRect;
-            public readonly Rect ChildRect;
+            public readonly Rectangle Parent;
+            public readonly Rectangle Child;
 
-            public RectSet(Rect parentRect, Rect childRect)
+            public RectSet(Rectangle parent, Rectangle child)
             {
-                ParentRect = parentRect;
-                ChildRect = childRect;
-            }
-        }
-
-        private class Rect
-        {
-            public readonly Size Size;
-            public readonly Point Location;
-
-            public Rect(Size size, Point location)
-            {
-                Size = size;
-                Location = location;
+                Parent = parent;
+                Child = child;
             }
         }
 
