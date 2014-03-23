@@ -157,6 +157,10 @@ namespace TextEditor.WinForms
         [Description("Triggered whenever the value of the BorderStyle property changes.")]
         public event EventHandler BorderStyleChanged;
 
+        /// <summary>
+        ///     Notifies <see cref="BorderStyleChanged"/> listeners whenever the value of the <see cref="BorderStyle"/> property changes.
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnBorderStyleChanged(EventArgs args = null)
         {
             if (BorderStyleChanged != null)
@@ -284,6 +288,10 @@ namespace TextEditor.WinForms
 
         #region Padding
 
+        /// <summary>
+        ///     Gets the full amount of padding required to accommodate the requested <see cref="Padding"/> value
+        ///     and the editor's border, if applicable.
+        /// </summary>
         protected virtual Padding CalculatedPadding
         {
             get
@@ -406,6 +414,10 @@ namespace TextEditor.WinForms
         [RefreshProperties(RefreshProperties.All)]
         public event EventHandler MultilineChanged;
 
+        /// <summary>
+        ///     Notifies <see cref="MultilineChanged"/> listeners whenever the value of the <see cref="Multiline"/> property changes.
+        /// </summary>
+        /// <param name="args"></param>
         protected virtual void OnMultilineChanged(EventArgs args)
         {
             if (!Multiline)
