@@ -17,7 +17,6 @@
 
 using System;
 using System.Windows.Forms;
-using DotNetUtils.Extensions;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using UILib.Extensions;
 
