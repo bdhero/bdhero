@@ -25,7 +25,7 @@ using UILib.WinForms.Dialogs.FS;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    /// Simple wrapper control that contains a <see cref="TextBox"/> and a "Browse" <see cref="Button"/>
+    /// Simple wrapper control that contains a <see cref="System.Windows.Forms.TextBox"/> and a "Browse" <see cref="Button"/>
     /// to let users select files or folders from standard system dialogs.
     /// </summary>
     public partial class FileTextBox : UserControl
@@ -48,8 +48,8 @@ namespace UILib.WinForms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         public string SelectedPath
         {
-            get { return _textBox.Text; }
-            set { _textBox.Text = value; }
+            get { return TextBox.Text; }
+            set { TextBox.Text = value; }
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace UILib.WinForms.Controls
         [DefaultValue(false)]
         public bool ReadOnly
         {
-            get { return _textBox.ReadOnly; }
+            get { return TextBox.ReadOnly; }
             set
             {
-                _textBox.ReadOnly = value;
+                TextBox.ReadOnly = value;
                 buttonBrowse.Enabled = !value;
             }
         }
@@ -143,8 +143,8 @@ namespace UILib.WinForms.Controls
         /// </summary>
         public new BorderStyle BorderStyle
         {
-            get { return _textBox.BorderStyle; }
-            set { _textBox.BorderStyle = value; }
+            get { return TextBox.BorderStyle; }
+            set { TextBox.BorderStyle = value; }
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace UILib.WinForms.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         public event EventHandler SelectedPathChanged;
 
-        private readonly ITextBox _textBox;
+        protected readonly ITextBox TextBox;
 
         /// <summary>
         /// Constructs a new FileTextBox component.
@@ -185,19 +185,19 @@ namespace UILib.WinForms.Controls
 
             buttonBrowse.Click += ShowDialog;
 
-            _textBox = textBox;
-            _textBox.Control.Size = textBoxDummy.Size;
-            _textBox.Control.Location = textBoxDummy.Location;
-            _textBox.Control.Dock = textBoxDummy.Dock;
-            _textBox.Control.Anchor = textBoxDummy.Anchor;
-            _textBox.Control.Font = textBoxDummy.Font;
-            _textBox.Control.TabIndex = textBoxDummy.TabIndex;
+            TextBox = textBox;
+            TextBox.Control.Size = textBoxDummy.Size;
+            TextBox.Control.Location = textBoxDummy.Location;
+            TextBox.Control.Dock = textBoxDummy.Dock;
+            TextBox.Control.Anchor = textBoxDummy.Anchor;
+            TextBox.Control.Font = textBoxDummy.Font;
+            TextBox.Control.TabIndex = textBoxDummy.TabIndex;
 
             var parent = textBoxDummy.Parent;
             parent.Controls.Remove(textBoxDummy);
-            parent.Controls.Add(_textBox.Control);
+            parent.Controls.Add(TextBox.Control);
 
-            _textBox.TextChanged += (sender, args) => OnTextChanged(args);
+            TextBox.TextChanged += (sender, args) => OnTextChanged(args);
         }
 
         /// <summary>

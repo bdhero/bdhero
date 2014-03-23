@@ -10,18 +10,34 @@ namespace TextEditor.WinForms
             : base(new SyntaxHighlightingTextBox())
         {
         }
+
+        private SyntaxHighlightingTextBox HighlightingTextBox
+        {
+            get { return TextBox as SyntaxHighlightingTextBox; }
+        }
+
+        public ITextEditor Editor
+        {
+            get { return HighlightingTextBox.Editor; }
+        }
     }
 
     internal class SyntaxHighlightingTextBox : ITextBox
     {
         private readonly TextEditorControl _control;
 
+        internal ITextEditor Editor
+        {
+            get { return _control.Editor; }
+        }
+
         public SyntaxHighlightingTextBox()
         {
             _control = new TextEditorControl();
-            _control.Multiline = false;
-            _control.TextChanged += (sender, args) => OnTextChanged(args);
-            _control.Editor.SetSyntax(StandardSyntaxType.FilePath);
+
+            Editor.Multiline = false;
+            Editor.TextChanged += (sender, args) => OnTextChanged(args);
+            Editor.SetSyntax(StandardSyntaxType.FilePath);
         }
 
         public Control Control

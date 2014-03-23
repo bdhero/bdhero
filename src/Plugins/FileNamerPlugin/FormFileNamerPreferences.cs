@@ -94,7 +94,9 @@ namespace BDHero.Plugin.FileNamer
 
         private void InitTextEditors()
         {
-            // TODO:
+            textBoxMovieDirectory.Editor.SetSyntaxFromExtension(MoviePathXshd.Extension);
+            textBoxTVShowDirectory.Editor.SetSyntaxFromExtension(TVShowPathXshd.Extension);
+
             textBoxMovieFileName.Editor.SetSyntaxFromExtension(MovieNameXshd.Extension);
             textBoxTVShowFileName.Editor.SetSyntaxFromExtension(TVShowNameXshd.Extension);
         }
