@@ -16,7 +16,7 @@ namespace TextEditor.SyntaxHighlighting.Providers
         {
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyName = assembly.GetName().Name;
-            var prefix = string.Format("{0}.Resources.Syntax.Definitions.", assemblyName);
+            var prefix = string.Format("{0}.SyntaxHighlighting.Definitions.", assemblyName);
             var fullFileNames = fileNames.Select(fileName => prefix + fileName).ToArray();
 
             foreach (var fullName in fullFileNames)
