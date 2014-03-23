@@ -21,12 +21,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BDHero;
 using BDHero.BDROM;
 using BDHero.ErrorReporting;
+using BDHero.Exceptions;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
@@ -372,11 +374,12 @@ namespace BDHeroGUI
         /// </returns>
         private static bool IsID10TError(Exception e)
         {
-            return (e is System.IO.DirectoryNotFoundException ||
-                    e is System.IO.DriveNotFoundException ||
-                    e is System.IO.FileNotFoundException ||
-                    e is System.IO.PathTooLongException ||
-                    e is System.Net.WebException);
+            return (e is ID10TException ||
+                    e is DirectoryNotFoundException ||
+                    e is DriveNotFoundException ||
+                    e is FileNotFoundException ||
+                    e is PathTooLongException ||
+                    e is WebException);
         }
 
         #endregion

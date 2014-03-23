@@ -15,9 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using BDHero.BDROM;
+using BDHero.Exceptions;
 using BDHero.Plugin.DiscReader.Transformer;
 using BDInfo;
 
@@ -56,9 +59,7 @@ namespace BDHero.Plugin.DiscReader
 
             Host.ReportProgress(this, 0.0, "Scanning BD-ROM...");
 
-            var bdrom = new BDInfo.BDROM(bdromPath);
-            bdrom.ScanProgress += BDROMOnScanProgress;
-            bdrom.Scan(cancellationToken);
+            var bdrom = ScanBDROM(cancellationToken, bdromPath);
 
             if (cancellationToken.IsCancellationRequested)
                 return null;
@@ -70,6 +71,26 @@ namespace BDHero.Plugin.DiscReader
             Host.ReportProgress(this, 100.0, "Finished scanning BD-ROM");
 
             return disc;
+        }
+
+        private BDInfo.BDROM ScanBDROM(CancellationToken cancellationToken, string bdromPath)
+        {
+            try
+            {
+                var bdrom = new BDInfo.BDROM(bdromPath);
+                bdrom.ScanProgress += BDROMOnScanProgress;
+                bdrom.Scan(cancellationToken);
+                return bdrom;
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException ||
+                    e is IOException)
+                {
+                    throw new ID10TException(e.Message, e);
+                }
+                throw;
+            }
         }
 
         private void BDROMOnScanProgress(BDROMScanProgressState bdromState)
