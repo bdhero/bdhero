@@ -54,6 +54,16 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\BDHeroCLI\BDHeroCLI.csproj">
+      <Project>{f8f1988d-a66d-4646-a533-5ec367656c9e}</Project>
+      <Name>BDHeroCLI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\BDHeroGUI\BDHeroGUI.csproj">
+      <Project>{0a807dfe-9f38-418e-a811-649b9ad78102}</Project>
+      <Name>BDHeroGUI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="$(ProjectDir)\$(ProjectName).targets" Condition="Exists('$(ProjectDir)\$(ProjectName).targets')" />
