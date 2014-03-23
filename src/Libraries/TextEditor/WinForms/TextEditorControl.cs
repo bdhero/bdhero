@@ -551,11 +551,11 @@ namespace TextEditor.WinForms
 
         #region Font
 
-        // TODO: Implement this
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
-//            AdjustHeight(false);
+            Editor.FontSize = FontSizeConverter.GetWpfFontSize(Font.Size);
+            AdjustRects(false);
         }
 
         #endregion
