@@ -78,6 +78,7 @@
     <Compile Include="ErrorReporting\ErrorReportResultUpdated.cs" />
     <Compile Include="ErrorReporting\IErrorReportResult.cs" />
     <Compile Include="ErrorReporting\IErrorReportResultVisitor.cs" />
+    <Compile Include="Exceptions\ID10TException.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
