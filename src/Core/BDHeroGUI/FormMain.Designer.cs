@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using TextEditor.WinForms;
 using UILib.WinForms.Controls;
 using UILib.WinForms.Dialogs.FS;
 
@@ -60,7 +61,7 @@ namespace BDHeroGUI
             this.buttonConvert = new System.Windows.Forms.Button();
             this.panelRoot = new System.Windows.Forms.Panel();
             this.linkLabelNameProviderPreferences = new LinkLabel2();
-            this.textBoxInput = new FileTextBox();
+            this.textBoxInput = new SyntaxHighlightingFileTextBox();
             this.splitContainerMain = new SplitContainerWithDivider();
             this.splitContainerTop = new SplitContainerWithDivider();
             this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
@@ -68,7 +69,7 @@ namespace BDHeroGUI
             this.splitContainerWithDivider1 = new SplitContainerWithDivider();
             this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
             this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
-            this.textBoxOutput = new FileTextBox();
+            this.textBoxOutput = new SyntaxHighlightingFileTextBox();
             this.progressBar = new ProgressBar2();
             this.menuStripTop = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -740,13 +741,13 @@ namespace BDHeroGUI
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private FileTextBox textBoxInput;
+        private SyntaxHighlightingFileTextBox textBoxInput;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxStatus;
         private System.Windows.Forms.Button buttonScan;
         private ProgressBar2 progressBar;
         private System.Windows.Forms.Button buttonCancelScan;
-        private FileTextBox textBoxOutput;
+        private SyntaxHighlightingFileTextBox textBoxOutput;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonCancelConvert;
         private System.Windows.Forms.Button buttonConvert;

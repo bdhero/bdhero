@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using TextEditor.WinForms;
 using UILib.WinForms.Controls;
 using UILib.WinForms.Dialogs.FS;
 
@@ -58,7 +59,7 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxMovieFileNameExample = new UILib.WinForms.Controls.SelectableLabel();
             this.textBoxMovieDirectoryExample = new UILib.WinForms.Controls.SelectableLabel();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBoxMovieDirectory = new UILib.WinForms.Controls.FileTextBox();
+            this.textBoxMovieDirectory = new SyntaxHighlightingFileTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -75,7 +76,7 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxTVShowFileNameExample = new UILib.WinForms.Controls.SelectableLabel();
             this.textBoxTVShowDirectoryExample = new UILib.WinForms.Controls.SelectableLabel();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBoxTVShowDirectory = new UILib.WinForms.Controls.FileTextBox();
+            this.textBoxTVShowDirectory = new SyntaxHighlightingFileTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -664,7 +665,7 @@ namespace BDHero.Plugin.FileNamer
 
         #endregion
 
-        private FileTextBox textBoxMovieDirectory;
+        private SyntaxHighlightingFileTextBox textBoxMovieDirectory;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -680,7 +681,7 @@ namespace BDHero.Plugin.FileNamer
         private SelectableLabel textBoxTVShowFileNameExample;
         private SelectableLabel textBoxTVShowDirectoryExample;
         private System.Windows.Forms.Label label9;
-        private FileTextBox textBoxTVShowDirectory;
+        private SyntaxHighlightingFileTextBox textBoxTVShowDirectory;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
