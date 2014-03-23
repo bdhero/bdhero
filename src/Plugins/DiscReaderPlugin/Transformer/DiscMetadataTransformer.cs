@@ -184,7 +184,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
             if (discInf == null)
                 return null;
             var parser = new FileIniDataParser();
-            var data = parser.LoadFile(discInf.FullName);
+            var data = parser.ReadFile(discInf.FullName);
             var discData = data["disc"];
             var anyDVDDiscInf = new AnyDVDDiscInf
                 {
