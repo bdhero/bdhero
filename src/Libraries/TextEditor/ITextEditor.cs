@@ -149,6 +149,22 @@ namespace TextEditor
         /// </summary>
         int SelectionLength { get; }
 
+        /// <summary>
+        ///     Gets or sets the offset position (index) of the caret.
+        /// </summary>
+        int CaretOffset { get; set; }
+
+        /// <summary>
+        ///     Selects the given region of text.
+        /// </summary>
+        /// <param name="selection"></param>
+        void Select(Selection selection);
+
+        /// <summary>
+        ///     Clears the current selection so that no text is selected.
+        /// </summary>
+        void ClearSelection();
+
         #endregion
 
         #region History

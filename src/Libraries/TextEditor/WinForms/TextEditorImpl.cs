@@ -346,6 +346,30 @@ namespace TextEditor.WinForms
             get { return Selections.Any() ? Selections.Sum(selection => selection.Length) : 0; }
         }
 
+        public int CaretOffset
+        {
+            get { return _editor.ActiveTextAreaControl.Caret.Offset; }
+            set
+            {
+                var doc = _editor.Document;
+                var caret = _editor.ActiveTextAreaControl.Caret;
+                caret.Position = caret.ValidatePosition(doc.OffsetToPosition(value));
+            }
+        }
+
+        public void Select(Selection selection)
+        {
+            _editor.ActiveTextAreaControl.SelectionManager.SetSelection(
+                new TextLocation(selection.StartColumn, selection.StartLine),
+                new TextLocation(selection.EndColumn, selection.EndLine)
+                );
+        }
+
+        public void ClearSelection()
+        {
+            _editor.ActiveTextAreaControl.SelectionManager.ClearSelection();
+        }
+
         #endregion
 
         #region History

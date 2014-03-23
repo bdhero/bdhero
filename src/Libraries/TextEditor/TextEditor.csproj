@@ -68,6 +68,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Selection.cs" />
     <Compile Include="SyntaxHighlighting\Definitions\FileNameModeXshd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using DotNetUtils.Extensions;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using TextEditor.SyntaxHighlighting.Providers;
@@ -352,6 +354,18 @@ namespace TextEditor.WPF
         {
             get { return _editor.CaretOffset; }
             set { _editor.CaretOffset = value; }
+        }
+
+        public void Select(Selection selection)
+        {
+            var start = new TextViewPosition(selection.StartLine, selection.StartColumn);
+            var end = new TextViewPosition(selection.EndLine, selection.EndColumn);
+            _editor.TextArea.Selection = new RectangleSelection(_editor.TextArea, start, end);
+        }
+
+        public void ClearSelection()
+        {
+            _editor.TextArea.ClearSelection();
         }
 
         #endregion
