@@ -47,8 +47,14 @@ namespace TextEditor.WinForms
 
         public string Text
         {
-            get { return _control.Text; }
-            set { _control.Text = value; }
+            get { return Editor.Text; }
+            set
+            {
+                Editor.SelectAll();
+                Editor.SelectedText = value;
+                Editor.ClearSelection();
+                Editor.CaretOffset = Text.Length;
+            }
         }
 
         public bool ReadOnly
