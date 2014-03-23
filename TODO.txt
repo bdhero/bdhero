@@ -1,6 +1,10 @@
 Chores
 ======
 
+[ ] Normalize line endings
+[ ] Add WyDay to LicenseUtils (SplitButton, LinkLabel2, etc.)
+[ ] Create new library that calls the native or managed API for each OS (e.g., DrawThemedTextBoxBorder)
+
 [ ] Use HandleRef instead of IntPtr
 
 [ ] Use try/catch around P/Invoke calls instead of #if !__MonoCS__?
@@ -58,16 +62,19 @@ Bugs
 Features
 ========
 
+[ ] Windows Taskbar: use version-specific App ID to avoid IE 8/9/10 thinapp issue
+
 [ ] Code Completion:
     [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
     [ ] Handle "%UserName%| \" (caret placed at the '|')
     [ ] Handle "%|\" (caret placed at the '|')
     [ ] TAB/ENTER key: disable default behavior when code completion window is open
     [ ] Broken on Mono
+    [ ] Home/end key should jump to start/end of line when completion window is open (WPF)
 
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
-[ ] Smarter path redaction: replace letters with 'X' instead of completely removing path
+[ ] Smarter path redaction: replace letters with 'X' instead of completely removing path?
 [ ] Only allow error reporting for most recent version of BDHero
     - Older versions need to upgrade
 [ ] Allow user to edit error report details
