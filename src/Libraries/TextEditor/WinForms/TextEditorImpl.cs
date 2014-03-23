@@ -178,24 +178,21 @@ namespace TextEditor.WinForms
 
         #region Multiline
 
+        private bool _multiline;
+
         public bool Multiline
         {
             get
             {
-                return _editor.HorizontalScroll.Enabled &&
-                       _editor.VerticalScroll.Enabled &&
-
-                       _editor.ActiveTextAreaControl.HScrollBar.Enabled &&
-                       _editor.ActiveTextAreaControl.VScrollBar.Enabled &&
-
-                       _editor.ActiveTextAreaControl.HScrollBar.Visible &&
-                       _editor.ActiveTextAreaControl.VScrollBar.Visible;
+                return _multiline;
             }
             set
             {
                 var changed = value != Multiline;
 
-                _editor.HorizontalScroll.Enabled =
+                _multiline =
+
+                    _editor.HorizontalScroll.Enabled =
                     _editor.VerticalScroll.Enabled =
 
                     _editor.ActiveTextAreaControl.HScrollBar.Enabled =
