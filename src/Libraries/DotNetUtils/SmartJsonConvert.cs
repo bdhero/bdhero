@@ -78,7 +78,7 @@ namespace DotNetUtils
     /// <seealso cref="http://stackoverflow.com/a/8877076/467582"/>
     internal class SnakeCaseContractResolver : DefaultContractResolver
     {
-        private static readonly Regex PascalCaseRegex = new Regex("([a-z])([A-Z])");
+        private static readonly Regex PascalCaseRegex = new Regex("([a-z]|[A-Z]+)([A-Z])");
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
