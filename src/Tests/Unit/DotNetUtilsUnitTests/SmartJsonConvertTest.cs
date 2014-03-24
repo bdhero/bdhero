@@ -12,7 +12,8 @@ namespace DotNetUtilsUnitTests
                                                       "\"LASTNAME\":\"Doe\"," +
                                                       "\"email_address\":\"a@b.com\"," +
                                                       "\"PhOnE_NuMbEr\":\"1234567890\"," +
-                                                      "\"zip_code\":\"53217\"" +
+                                                      "\"zip_code\":\"53217\"," +
+                                                      "\"md5\":\"abcdef\"" +
                                                       "}";
 
         private static readonly Person ExpectedObject = new Person
@@ -22,6 +23,7 @@ namespace DotNetUtilsUnitTests
                                                             EmailAddress = "a@b.com",
                                                             PhoneNumer = "1234567890",
                                                             ZIPCode = "53217",
+                                                            MD5 = "abcdef",
                                                         };
 
         [Test]
@@ -52,6 +54,8 @@ namespace DotNetUtilsUnitTests
         public string PhoneNumer { get; set; }
 
         public string ZIPCode { get; set; }
+
+        public string MD5 { get; set; }
 
         protected bool Equals(Person other)
         {
