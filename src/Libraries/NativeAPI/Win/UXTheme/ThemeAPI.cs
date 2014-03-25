@@ -8,6 +8,9 @@ namespace NativeAPI.Win.UXTheme
 {
     public static class ThemeAPI
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         ///     Paints an OS-native background and border on the given control.
         /// </summary>
@@ -34,16 +37,25 @@ namespace NativeAPI.Win.UXTheme
                 if (DrawThemedTextBoxBorderNative(hWnd, g, bounds, state))
                     return;
             }
-            catch (DllNotFoundException)
+            catch (DllNotFoundException ex)
             {
                 // Non-Windows OS
+                LogNativeException("Probably non-Windows OS?", ex);
             }
-            catch (EntryPointNotFoundException)
+            catch (EntryPointNotFoundException ex)
             {
                 // Older version of Windows (pre-XP)?
+                LogNativeException("Probably older version of Windows (pre-XP)?", ex);
             }
 
             DrawThemedTextBoxBorderManaged(g, bounds, state);
+        }
+
+        private static void LogNativeException(string message, Exception ex)
+        {
+            var fullMessage = string.Format("DrawThemedTextBoxBorderNative() failed - {0} (OS = {1})",
+                                            message, Environment.OSVersion);
+            Logger.Info(fullMessage, ex);
         }
 
         #region Native Windows API
