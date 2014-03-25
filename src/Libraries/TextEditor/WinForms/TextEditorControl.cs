@@ -76,20 +76,26 @@ namespace TextEditor.WinForms
 
         private void BindMouseEvents()
         {
-            MouseEnter += ControlOnMouseEnter;
-            MouseLeave += ControlOnMouseLeave;
+            BindMouseEvents(this);
+            this.Descendants().ForEach(BindMouseEvents);
+        }
 
-            this.Descendants().ForEach(control => control.MouseEnter += ControlOnMouseEnter);
-            this.Descendants().ForEach(control => control.MouseLeave += ControlOnMouseLeave);
+        private void BindMouseEvents(Control control)
+        {
+            control.MouseEnter += ControlOnMouseEnter;
+            control.MouseLeave += ControlOnMouseLeave;
         }
 
         private void BindFocusEvents()
         {
-            GotFocus += OnGotFocus;
-            LostFocus += OnLostFocus;
+            BindFocusEvents(this);
+            this.Descendants().ForEach(BindFocusEvents);
+        }
 
-            this.Descendants().ForEach(control => control.GotFocus += OnGotFocus);
-            this.Descendants().ForEach(control => control.LostFocus += OnLostFocus);
+        private void BindFocusEvents(Control control)
+        {
+            control.GotFocus += OnGotFocus;
+            control.LostFocus += OnLostFocus;
         }
 
         #endregion
