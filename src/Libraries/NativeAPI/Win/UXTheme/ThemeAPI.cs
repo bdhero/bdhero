@@ -117,29 +117,12 @@ namespace NativeAPI.Win.UXTheme
         {
             var theme = Windows8Theme;
 
-            var bitmap = new Bitmap(bounds.Width, bounds.Height, g);
-            var textBox = new TextBox
-                     {
-                         Size = new Size(bounds.Width, bounds.Height),
-                         Multiline = true,
-                         ScrollBars = ScrollBars.None,
-                     };
+            var color = (state == TextBoxState.Disabled) ? theme.BorderColorDisabled :
+                        (state == TextBoxState.Hot)      ? theme.BorderColorHot :
+                        (state == TextBoxState.Focused)  ? theme.BorderColorFocused :
+                                                           theme.BorderColorNormal;
 
-            textBox.DrawToBitmap(bitmap, bounds);
-
-            g.DrawImage(bitmap, bounds.Location);
-
-            if (state == TextBoxState.Normal)
-                ControlPaint.DrawBorder(g, bounds, theme.BorderColorNormal, ButtonBorderStyle.Solid);
-
-            if (state == TextBoxState.Disabled)
-                ControlPaint.DrawBorder(g, bounds, theme.BorderColorDisabled, ButtonBorderStyle.Solid);
-
-            if (state == TextBoxState.Hot)
-                ControlPaint.DrawBorder(g, bounds, theme.BorderColorHot, ButtonBorderStyle.Solid);
-
-            if (state == TextBoxState.Focused)
-                ControlPaint.DrawBorder(g, bounds, theme.BorderColorFocused, ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(g, bounds, color, ButtonBorderStyle.Solid);
         }
 
         #endregion
