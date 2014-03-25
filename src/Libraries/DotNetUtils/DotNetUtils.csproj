@@ -107,6 +107,7 @@
     <Compile Include="TaskUtils\ThreadInvoker.cs" />
     <Compile Include="TaskUtils\TaskBuilder.cs" />
     <Compile Include="FS\TempFileRegistrar.cs" />
+    <Compile Include="Throttle.cs" />
     <Compile Include="ToStringBuilder.cs" />
     <Compile Include="XmlTextEncoder.cs" />
   </ItemGroup>

@@ -109,7 +109,6 @@
     <Compile Include="WinForms\TextEditorImpl.cs" />
     <Compile Include="WinForms\TextEditorOptionsImpl.cs" />
     <Compile Include="WPF\TextEditorImpl.cs" />
-    <Compile Include="WPF\Throttle.cs" />
     <Compile Include="WPF\WpfExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
