@@ -16,6 +16,9 @@ namespace TextEditor.WinForms
     [DefaultEvent("TextChanged")]
     public class TextEditorControl : Control
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         ///     Gets the underlying editor for the control.
         /// </summary>
@@ -275,6 +278,13 @@ namespace TextEditor.WinForms
 
         private void PaintBorder(PaintEventArgs e)
         {
+            // Occurs when switching from Aero to Classic theme in Windows Vista or newer
+            if (e.ClipRectangle.IsEmpty)
+            {
+                Logger.Warn("PaintBorder() - PaintEventArgs.ClipRectangle is empty; ignoring paint request");
+                return;
+            }
+
             if (BorderStyle == BorderStyle.None)
                 return;
 
