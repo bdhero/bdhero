@@ -129,6 +129,9 @@ namespace NativeAPI.Win.UXTheme
 
             g.DrawImage(bitmap, bounds.Location);
 
+            if (state == TextBoxState.Normal)
+                ControlPaint.DrawBorder(g, bounds, theme.BorderColorNormal, ButtonBorderStyle.Solid);
+
             if (state == TextBoxState.Disabled)
                 ControlPaint.DrawBorder(g, bounds, theme.BorderColorDisabled, ButtonBorderStyle.Solid);
 
