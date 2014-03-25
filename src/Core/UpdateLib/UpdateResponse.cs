@@ -80,7 +80,7 @@ namespace UpdateLib
     public class PackageList
     {
         public Package Setup { get; set; }
-        public Package Zip { get; set; }
+        public Package Portable { get; set; }
     }
 
     public class Package

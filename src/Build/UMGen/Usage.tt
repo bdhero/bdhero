@@ -29,19 +29,9 @@ OPTIONS:
     --setup PATH
         Sets the path to the setup (installer) application.
 
-    -x PATH
-    --sfx PATH
-        Sets the path to the self-extracting archive application.
-
-    -7 PATH
-    --7z PATH
-    --7zip PATH
-    --sevenZip PATH
-        Sets the path to the 7-Zip archive.
-
-    -z PATH
-    --zip PATH
-        Sets the path to the Zip archive.
+    -p PATH
+    --portable PATH
+        Sets the path to the portable ZIP archive.
 
     -o PATH
     --output PATH

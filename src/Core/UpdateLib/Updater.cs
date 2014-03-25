@@ -231,7 +231,7 @@ namespace UpdateLib
 
         private Package GetPackage(Platform platform)
         {
-            return IsPortable ? platform.Packages.Zip : platform.Packages.Setup;
+            return IsPortable ? platform.Packages.Portable : platform.Packages.Setup;
         }
 
         /// <exception cref="IOException">
