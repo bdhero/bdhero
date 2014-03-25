@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+#define DISABLE_UPDATER
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,9 +75,11 @@ namespace BDHeroGUI
         private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
 
+#if ENABLE_UPDATER
         private readonly Updater _updater;
         private readonly UpdateHelper _updateHelper;
         private bool _hasCheckedForUpdateOnStartup;
+#endif
 
         private readonly ToolTip _progressBarToolTip;
 
@@ -101,7 +105,11 @@ namespace BDHeroGUI
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
                         IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
-                        INetworkStatusMonitor networkStatusMonitor, Updater updater)
+                        INetworkStatusMonitor networkStatusMonitor
+#if ENABLE_UPDATER
+                        , Updater updater
+#endif
+            )
         {
             InitializeComponent();
 
@@ -118,9 +126,15 @@ namespace BDHeroGUI
             _windowMenuFactory = windowMenuFactory;
             _networkStatusMonitor = networkStatusMonitor;
 
+            
+#if ENABLE_UPDATER
             _updater = updater;
             _updater.IsPortable = _directoryLocator.IsPortable;
             _updateHelper = new UpdateHelper(_updater, AppUtils.AppVersion) { AllowDownload = false };
+#else
+            updateToolStripMenuItem.Visible = false;
+            checkForUpdatesToolStripMenuItem.Enabled = false;
+#endif
 
             _progressBarToolTip = new ToolTip();
             _progressBarToolTip.SetToolTip(progressBar, null);
@@ -136,7 +150,8 @@ namespace BDHeroGUI
 
             mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
-
+            
+#if ENABLE_UPDATER
             var updateObserver = new FormMainUpdateObserver(this,
                                                             checkForUpdatesToolStripMenuItem,
                                                             updateToolStripMenuItem,
@@ -144,6 +159,7 @@ namespace BDHeroGUI
             updateObserver.BeforeInstallUpdate += update => DisableUpdates();
             SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
             _updateHelper.RegisterObserver(updateObserver);
+#endif
 
             FormClosing += OnFormClosing;
 
@@ -203,12 +219,14 @@ namespace BDHeroGUI
                 args.Cancel = true;
             }
         }
-
+        
+#if ENABLE_UPDATER
         private void DisableUpdates()
         {
             _updateHelper.AllowInstallUpdate = false;
             _updater.CancelDownload();
         }
+#endif
 
         private void OnLoad(object sender, EventArgs eventArgs)
         {
@@ -259,12 +277,14 @@ namespace BDHeroGUI
         private void SetIsOnline(bool isOnline)
         {
             toolStripStatusLabelOffline.Visible = !isOnline;
-
+            
+#if ENABLE_UPDATER
             if (!isOnline || _hasCheckedForUpdateOnStartup)
                 return;
 
             _updateHelper.Click();
             _hasCheckedForUpdateOnStartup = true;
+#endif
         }
 
         /// <summary>
@@ -374,6 +394,7 @@ namespace BDHeroGUI
         /// </returns>
         private static bool IsID10TError(Exception e)
         {
+            return false;
             return (e is ID10TException ||
                     e is DirectoryNotFoundException ||
                     e is DriveNotFoundException ||
@@ -1014,7 +1035,9 @@ namespace BDHeroGUI
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if ENABLE_UPDATER
             _updateHelper.Click();
+#endif
         }
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1024,7 +1047,9 @@ namespace BDHeroGUI
 
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
+#if ENABLE_UPDATER
             _updateHelper.Click();
+#endif
         }
 
         #endregion
