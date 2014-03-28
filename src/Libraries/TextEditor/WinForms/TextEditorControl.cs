@@ -53,31 +53,116 @@ namespace TextEditor.WinForms
             Controls.Add(Editor.Control);
         }
 
+        ~TextEditorControl()
+        {
+            UnbindEvents();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UnbindEvents();
+            }
+            base.Dispose(disposing);
+        }
+
         #region Event binding
 
         private void BindEvents()
         {
-            Editor.TextChanged += (s, e) => OnTextChanged(e);
-            Editor.FontSizeChanged += (s, e) => OnFontChanged(e);
-            Editor.MultilineChanged += (s, e) => OnMultilineChanged(e);
+            Editor.TextChanged += EditorOnTextChanged;
+            Editor.FontSizeChanged += EditorOnFontSizeChanged;
+            Editor.MultilineChanged += EditorOnMultilineChanged;
 
-            HandleCreated += (s, e) => BindMouseEvents();
-            HandleCreated += (s, e) => BindFocusEvents();
-            HandleCreated += (s, e) => AdjustRects(true);
-
-            PaddingChanged += (s, e) => OnPaddingChanged();
-            BorderStyleChanged += (s, e) => AdjustBorderPadding();
+            HandleCreated += OnHandleCreated;
 
             // Prevent border artifacts
-            Resize += (s, e) => Invalidate();
+            Resize += OnResize;
 
-            PaintBackground += (s, e) => PaintBorder(e);
+            PaddingChanged += OnPaddingChanged;
+            BorderStyleChanged += OnBorderStyleChanged;
+
+            PaintBackground += OnPaintBackground;
         }
+
+        private void UnbindEvents()
+        {
+            Editor.TextChanged -= EditorOnTextChanged;
+            Editor.FontSizeChanged -= EditorOnFontSizeChanged;
+            Editor.MultilineChanged -= EditorOnMultilineChanged;
+
+            HandleCreated -= OnHandleCreated;
+
+            UnbindMouseEvents();
+            UnbindFocusEvents();
+
+            Resize -= OnResize;
+
+            PaddingChanged -= OnPaddingChanged;
+            BorderStyleChanged -= OnBorderStyleChanged;
+
+            PaintBackground -= OnPaintBackground;
+        }
+
+        #region Event handler proxy methods
+
+        private void EditorOnTextChanged(object sender, EventArgs e)
+        {
+            OnTextChanged(e);
+        }
+
+        private void EditorOnFontSizeChanged(object sender, EventArgs e)
+        {
+            OnFontChanged(e);
+        }
+
+        private void EditorOnMultilineChanged(object sender, EventArgs e)
+        {
+            OnMultilineChanged(e);
+        }
+
+        private void OnHandleCreated(object sender, EventArgs e)
+        {
+            BindMouseEvents();
+            BindFocusEvents();
+            AdjustRects(true);
+        }
+
+        private void OnPaddingChanged(object sender, EventArgs e)
+        {
+            OnPaddingChanged();
+        }
+
+        private void OnBorderStyleChanged(object sender, EventArgs e)
+        {
+            AdjustBorderPadding();
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            Invalidate();
+        }
+
+        private void OnPaintBackground(object sender, PaintEventArgs e)
+        {
+            PaintBorder(e);
+        }
+
+        #endregion
+
+        #region Mouse events
 
         private void BindMouseEvents()
         {
             BindMouseEvents(this);
             this.Descendants().ForEach(BindMouseEvents);
+        }
+
+        private void UnbindMouseEvents()
+        {
+            UnbindMouseEvents(this);
+            this.Descendants().ForEach(UnbindMouseEvents);
         }
 
         private void BindMouseEvents(Control control)
@@ -86,10 +171,26 @@ namespace TextEditor.WinForms
             control.MouseLeave += ControlOnMouseLeave;
         }
 
+        private void UnbindMouseEvents(Control control)
+        {
+            control.MouseEnter -= ControlOnMouseEnter;
+            control.MouseLeave -= ControlOnMouseLeave;
+        }
+
+        #endregion
+
+        #region Focus events
+
         private void BindFocusEvents()
         {
             BindFocusEvents(this);
             this.Descendants().ForEach(BindFocusEvents);
+        }
+
+        private void UnbindFocusEvents()
+        {
+            UnbindFocusEvents(this);
+            this.Descendants().ForEach(UnbindFocusEvents);
         }
 
         private void BindFocusEvents(Control control)
@@ -97,6 +198,14 @@ namespace TextEditor.WinForms
             control.GotFocus += OnGotFocus;
             control.LostFocus += OnLostFocus;
         }
+
+        private void UnbindFocusEvents(Control control)
+        {
+            control.GotFocus -= OnGotFocus;
+            control.LostFocus -= OnLostFocus;
+        }
+
+        #endregion
 
         #endregion
 

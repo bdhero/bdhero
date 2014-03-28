@@ -46,7 +46,6 @@ namespace BDHeroGUI.Dialogs
         private readonly INetworkStatusMonitor _networkStatusMonitor;
         private readonly ErrorReport _report;
         private readonly IList<IErrorReportResultVisitor> _reportResultVisitors = new List<IErrorReportResultVisitor>();
-        private TaskDialogCommandLink _submitButton;
 
         public Windows7ErrorDialog(INetworkStatusMonitor networkStatusMonitor, ErrorReport report)
         {
@@ -70,73 +69,120 @@ namespace BDHeroGUI.Dialogs
             _reportResultVisitors.Remove(visitor);
         }
 
-        private DialogResult ShowDialog([CanBeNull] IWin32Window owner, bool isReportable)
+        private static TaskDialog CreateTaskDialog()
         {
-            var dialog = new TaskDialog
-                         {
-                             Icon = TaskDialogStandardIcon.Error,
-                             Cancelable = true,
-                             DetailsExpanded = false,
-                             HyperlinksEnabled = true,
-                             StartupLocation = TaskDialogStartupLocation.CenterOwner,
-                         };
-
-            if (owner != null)
-                dialog.OwnerWindowHandle = owner.Handle;
-
-            if (Title != null)
-                dialog.Caption = Title;
-
-            if (Heading != null)
-                dialog.InstructionText = Heading;
-
-            if (Message != null)
-                dialog.Text = Message;
-
-            if (StackTrace != null)
-            {
-                dialog.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
-                dialog.DetailsCollapsedLabel = "Show &details";
-                dialog.DetailsExpandedLabel = "Hide &details";
-                dialog.DetailsExpandedText = StackTrace; // _exception.ToString(),
-                dialog.FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", CopyDetailsHref);
-            }
-
-            dialog.HyperlinkClick += (sender, args) => OnHyperlinkClick(dialog, owner, args);
-
-            if (isReportable)
-            {
-                _submitButton = CreateSubmitButton(dialog);
-
-                dialog.Controls.Add(_submitButton);
-                dialog.Controls.Add(CreateDeclineButton(dialog));
-
-                if (dialog.FooterText != null)
-                    dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}", EditReportHref, dialog.FooterText);
-            }
-
-            _networkStatusMonitor.NetworkStatusChanged += OnNetworkStatusChanged;
-
-            // TaskButtonDialogBase.Enabled's documentation states: "The enabled state can cannot be changed before the dialog is shown."
-            // So we need to set a short timer to disable the button *after* the dialog is shown.
-            var timer = new System.Timers.Timer(100);
-            timer.Elapsed += (a, b) => OnNetworkStatusChanged(_networkStatusMonitor.IsOnline);
-            timer.AutoReset = false;
-            timer.Start();
-
-            var result = dialog.Show().ToDialogResult();
-
-            _networkStatusMonitor.NetworkStatusChanged -= OnNetworkStatusChanged;
-
-            return result;
+            return new TaskDialog
+                   {
+                       Icon = TaskDialogStandardIcon.Error,
+                       Cancelable = true,
+                       DetailsExpanded = false,
+                       HyperlinksEnabled = true,
+                       StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                   };
         }
 
-        private void OnNetworkStatusChanged(bool isConnectedToInternet)
+        private DialogResult ShowDialog([CanBeNull] IWin32Window owner, bool isReportable)
         {
-            if (_submitButton == null)
+            using (var dialog = CreateTaskDialog())
+            {
+                if (owner != null)
+                    dialog.OwnerWindowHandle = owner.Handle;
+
+                if (Title != null)
+                    dialog.Caption = Title;
+
+                if (Heading != null)
+                    dialog.InstructionText = Heading;
+
+                if (Message != null)
+                    dialog.Text = Message;
+
+                if (StackTrace != null)
+                {
+                    dialog.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
+                    dialog.DetailsCollapsedLabel = "Show &details";
+                    dialog.DetailsExpandedLabel = "Hide &details";
+                    dialog.DetailsExpandedText = StackTrace; // _exception.ToString(),
+                    dialog.FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", CopyDetailsHref);
+                }
+
+                var linkOnClick = CreateDialogOnHyperlinkClickHandler(dialog, owner);
+
+                dialog.HyperlinkClick += linkOnClick;
+
+                NetworkStatusChangedEventHandler nwStatusOnChanged = null;
+                EventHandler dialogOnOpened = null;
+
+                if (isReportable)
+                {
+                    var submitButton = CreateSubmitButton(dialog);
+
+                    dialog.Controls.Add(submitButton);
+                    dialog.Controls.Add(CreateDeclineButton(dialog));
+
+                    if (dialog.FooterText != null)
+                        dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}",
+                                                          EditReportHref, dialog.FooterText);
+
+                    nwStatusOnChanged = CreateNetworkStatusChangedEventHandler(submitButton);
+                    _networkStatusMonitor.NetworkStatusChanged += nwStatusOnChanged;
+
+                    // TaskButtonDialogBase.Enabled's documentation states: "The enabled state can cannot be changed before the dialog is shown."
+                    // So we need to set a short timer to disable the button *after* the dialog is shown.
+//                    var timer = new System.Timers.Timer(100);
+//                    timer.Elapsed += (a, b) => 
+//                    timer.AutoReset = false;
+//                    timer.Start();
+
+                    dialogOnOpened = CreateDialogOnOpened(submitButton);
+                    dialog.Opened += dialogOnOpened;
+                }
+
+                var result = dialog.Show().ToDialogResult();
+
+                #region Cleanup
+
+                dialog.HyperlinkClick -= linkOnClick;
+
+                if (nwStatusOnChanged != null)
+                {
+                    _networkStatusMonitor.NetworkStatusChanged -= nwStatusOnChanged;
+                }
+
+                if (dialogOnOpened != null)
+                {
+                    dialog.Opened -= dialogOnOpened;
+                }
+
+                #endregion
+
+                return result;
+            }
+        }
+
+        private EventHandler<TaskDialogHyperlinkClickedEventArgs> CreateDialogOnHyperlinkClickHandler(
+            TaskDialog dialog, [CanBeNull] IWin32Window owner)
+        {
+            return (s, e) => OnHyperlinkClick(dialog, owner, e);
+        }
+
+        private NetworkStatusChangedEventHandler CreateNetworkStatusChangedEventHandler(
+            [CanBeNull] TaskDialogCommandLink submitButton)
+        {
+            return isConnectedToInternet => OnNetworkStatusChanged(submitButton, isConnectedToInternet);
+        }
+
+        private EventHandler CreateDialogOnOpened([CanBeNull] TaskDialogCommandLink submitButton)
+        {
+            return (o, args) => OnNetworkStatusChanged(submitButton, _networkStatusMonitor.IsOnline);
+        }
+
+        private void OnNetworkStatusChanged([CanBeNull] TaskDialogCommandLink submitButton, bool isConnectedToInternet)
+        {
+            if (submitButton == null)
                 return;
 
-            _submitButton.Enabled = isConnectedToInternet;
+            submitButton.Enabled = isConnectedToInternet;
         }
 
         private TaskDialogCommandLink CreateSubmitButton(TaskDialog dialog)
@@ -187,10 +233,13 @@ namespace BDHeroGUI.Dialogs
             }
             if (args.LinkText == EditReportHref)
             {
-                var result = new FormErrorReport(_report, _networkStatusMonitor).ShowDialog(owner);
-                if (result == DialogResult.OK || result == DialogResult.Yes)
+                using (var form = new FormErrorReport(_report, _networkStatusMonitor))
                 {
-                    Submit(dialog);
+                    var result = form.ShowDialog(owner);
+                    if (result == DialogResult.OK || result == DialogResult.Yes)
+                    {
+                        Submit(dialog);
+                    }
                 }
             }
         }
