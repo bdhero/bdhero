@@ -1,13 +1,17 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 
 namespace TextEditor.WinForms
 {
     internal class TextEditorContextMenuStrip : ContextMenuStrip
     {
         private readonly ITextEditor _editor;
+
+        private readonly List<EventHandler> _eventHandlers = new List<EventHandler>();
 
         private readonly ToolStripMenuItem _undo;
         private readonly ToolStripMenuItem _redo;
@@ -32,36 +36,21 @@ namespace TextEditor.WinForms
         private readonly ToolStripMenuItem _oneHundred;
         private readonly ToolStripMenuItem _oneHundredTwenty;
 
-        private static ToolStripMenuItem CreateMenuItem(string text, Action clickAction = null)
-        {
-            var item = new ToolStripMenuItem(text, null);
-            if (clickAction != null)
-            {
-                item.Click += (sender, args) => clickAction();
-            }
-            return item;
-        }
-
-        private ToolStripMenuItem CreateOptionsMenuItem(string text, [NotNull] Action clickAction)
-        {
-            return CreateMenuItem(text, () => OptionsMenuItemOnClick(clickAction));
-        }
-
         public TextEditorContextMenuStrip(ITextEditor editor)
         {
             _editor = editor;
 
             #region Edit commands
 
-            _undo = CreateMenuItem("&Undo", () => _editor.Undo());
-            _redo = CreateMenuItem("&Redo", () => _editor.Redo());
+            _undo = CreateMenuItem("&Undo", Undo);
+            _redo = CreateMenuItem("&Redo", Redo);
 
-            _cut = CreateMenuItem("Cu&t", () => _editor.Cut());
-            _copy = CreateMenuItem("&Copy", () => _editor.Copy());
-            _paste = CreateMenuItem("&Paste", () => _editor.Paste());
-            _delete = CreateMenuItem("&Delete", () => _editor.Delete());
+            _cut = CreateMenuItem("Cu&t", Cut);
+            _copy = CreateMenuItem("&Copy", Copy);
+            _paste = CreateMenuItem("&Paste", Paste);
+            _delete = CreateMenuItem("&Delete", Delete);
 
-            _selectAll = CreateMenuItem("Select &All", () => _editor.SelectAll());
+            _selectAll = CreateMenuItem("Select &All", SelectAll);
 
             #endregion
 
@@ -72,9 +61,9 @@ namespace TextEditor.WinForms
             _options = CreateMenuItem("&Options");
             _options.DropDown.Closing += OptionsDropDownOnClosing;
 
-            _showLineNumbers = CreateOptionsMenuItem("Show &Line Numbers", () => _editor.Options.ShowLineNumbers = !_editor.Options.ShowLineNumbers);
-            _showWhiteSpace = CreateOptionsMenuItem("Show &Whitespace", () => _editor.Options.ShowWhiteSpace = !_editor.Options.ShowWhiteSpace);
-            _wordWrap = CreateOptionsMenuItem("Word &Wrap", () => _editor.Options.WordWrap = !_editor.Options.WordWrap);
+            _showLineNumbers = CreateOptionsMenuItem("Show &Line Numbers", ToggleShowLineNumbers);
+            _showWhiteSpace = CreateOptionsMenuItem("Show &Whitespace", ToggleShowWhiteSpace);
+            _wordWrap = CreateOptionsMenuItem("Word &Wrap", ToggleWordWrap);
 
             #region Ruler
 
@@ -134,6 +123,88 @@ namespace TextEditor.WinForms
             #endregion
         }
 
+        ~TextEditorContextMenuStrip()
+        {
+            UnbindEvents();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UnbindEvents();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void UnbindEvents()
+        {
+            Items.OfType<ToolStripMenuItem>().ForEach(UnbindClickEvents);
+            _eventHandlers.Clear();
+        }
+
+        private void UnbindClickEvents(ToolStripMenuItem item)
+        {
+            foreach (var handler in _eventHandlers)
+            {
+                item.Click -= handler;
+            }
+        }
+
+        #region Actions
+
+        private void Undo()
+        {
+            _editor.Undo();
+        }
+
+        private void Redo()
+        {
+            _editor.Redo();
+        }
+
+        private void Cut()
+        {
+            _editor.Cut();
+        }
+
+        private void Copy()
+        {
+            _editor.Copy();
+        }
+
+        private void Paste()
+        {
+            _editor.Paste();
+        }
+
+        private void Delete()
+        {
+            _editor.Delete();
+        }
+
+        private void SelectAll()
+        {
+            _editor.SelectAll();
+        }
+
+        private void ToggleShowLineNumbers()
+        {
+            _editor.Options.ShowLineNumbers = !_editor.Options.ShowLineNumbers;
+        }
+
+        private void ToggleShowWhiteSpace()
+        {
+            _editor.Options.ShowWhiteSpace = !_editor.Options.ShowWhiteSpace;
+        }
+
+        private void ToggleWordWrap()
+        {
+            _editor.Options.WordWrap = !_editor.Options.WordWrap;
+        }
+
+        #endregion
+
         private void SetMenuItemStates()
         {
             SetEditCommandMenuItemStates();
@@ -187,6 +258,25 @@ namespace TextEditor.WinForms
             SetMenuItemStates();
         }
 
+        #region Creation
+
+        private ToolStripMenuItem CreateMenuItem(string text, Action clickAction = null)
+        {
+            var item = new ToolStripMenuItem(text, null);
+            if (clickAction != null)
+            {
+                EventHandler handler = (sender, args) => clickAction();
+                _eventHandlers.Add(handler);
+                item.Click += handler;
+            }
+            return item;
+        }
+
+        private ToolStripMenuItem CreateOptionsMenuItem(string text, [NotNull] Action clickAction)
+        {
+            return CreateMenuItem(text, () => OptionsMenuItemOnClick(clickAction));
+        }
+
         private static ToolStripSeparator CreateSeparator()
         {
             return new ToolStripSeparator();
@@ -205,6 +295,8 @@ namespace TextEditor.WinForms
             item.Click += (sender, args) => OptionsMenuItemOnClick(() => SetRulerColumn(col));
             return item;
         }
+
+        #endregion
 
         private void SetRulerColumn(int col)
         {
