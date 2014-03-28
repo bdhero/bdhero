@@ -62,33 +62,16 @@ Bugs
 Features
 ========
 
-[ ] Windows Taskbar: use version-specific App ID to avoid IE 8/9/10 thinapp issue
-
-[ ] Code Completion:
-    [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
-    [ ] Handle "%UserName%| \" (caret placed at the '|')
-    [ ] Handle "%|\" (caret placed at the '|')
-    [ ] TAB/ENTER key: disable default behavior when code completion window is open
-    [ ] Broken on Mono
-    [ ] Home/end key should jump to start/end of line when completion window is open (WPF)
-
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
-[ ] Smarter path redaction: replace letters with 'X' instead of completely removing path?
-[ ] Only allow error reporting for most recent version of BDHero
-    - Older versions need to upgrade
-[ ] Allow user to edit error report details
+[ ] Error Reporting
+    [ ] Only allow error reporting for most recent version of BDHero
+        - Older versions need to upgrade
 
 [ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
 [ ] Add "use last folder" option to File Namer preference dialog
 [ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
 [ ] Add "Disc Info" icons to main form
-
-[ ] Error Reporting
-    [ ] Check if same exception was already reported
-    [ ] Allow user to edit report before sending
-    [ ] Include list of plugins in report
-    [ ] Allow user to use their own GitHub OAuth token
 
 [ ] Cache folder?
 
@@ -107,17 +90,6 @@ Features
 
 [ ] Remember window size and position (support aero snap) w/ preference to enable/disable
 [ ] "Resize Window" form: handle maximized/aero snap
-
-[ ] Use more features from WinAPI Code Pack:
-    [X] CommonOpenFileDialog
-            Windows API Code Pack 1.1\source\Samples\Shell\CommonFileDialogsDemo\CS\CommonFileDialogsDemo\Form1.cs, line 266
-    [.] TaskDialog
-            Windows API Code Pack 1.1\source\Samples\TaskDialogDemo\CS\TaskDialogDemo\
-            Windows API Code Pack 1.1\source\Samples\Shell\TabbedThumbnailDemo\CS\Winforms\Form1.cs, line 107
-    [X] NetworkListManager
-            Windows API Code Pack 1.1\source\Samples\NetworkDemo\CS\Window1.xaml, line 20
-    [ ] StockIcons
-            Windows API Code Pack 1.1\source\Samples\Shell\StockIconsDemo\CS\StockIconsDemo\Window1.xaml.cs, line 23
 
 [ ] Decide whether to keep or remove subtitle track count in Playlist.IsPossibleMainFeature
 
@@ -204,6 +176,16 @@ Backlog
 
 [ ] Add Windows 7 Taskbar buttons for pause/resume and cancel
 [ ] Add Windows 7 Taskbar jump lists?
+
+[ ] Code Completion:
+    [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
+    [ ] Handle "%UserName%| \" (caret placed at the '|')
+    [ ] Handle "%|\" (caret placed at the '|')
+    [ ] TAB/ENTER key: disable default behavior when code completion window is open
+    [ ] Broken on Mono
+    [ ] Home/end key should jump to start/end of line when completion window is open (WPF)
+
+[ ] Allow user to use their own GitHub OAuth token (for error reporting, etc.)
 
 Chris' Plugins
 ==============
