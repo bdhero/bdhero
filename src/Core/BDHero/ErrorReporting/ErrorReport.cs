@@ -225,7 +225,6 @@ System Info
 
         private static string Redact(string raw)
         {
-            // TODO: Smarter sanitizing: replace letters in path with 'X' instead of completely removing them
             var sanitized = raw;
             sanitized = WindowsPathQuoted.Replace(sanitized, Redacted);
             sanitized = WindowsPathUnquoted.Replace(sanitized, Redacted);
