@@ -74,7 +74,7 @@ namespace NativeAPI.Win.UXTheme
                 var state = style == TextBoxState.Disabled ? VisualStyle.EDITBORDER_NOSCROLLSTATES.EPSN_DISABLED :
                             style == TextBoxState.Hot      ? VisualStyle.EDITBORDER_NOSCROLLSTATES.EPSN_HOT :
                             style == TextBoxState.Focused  ? VisualStyle.EDITBORDER_NOSCROLLSTATES.EPSN_FOCUSED :
-                                                                   VisualStyle.EDITBORDER_NOSCROLLSTATES.EPSN_NORMAL;
+                                                             VisualStyle.EDITBORDER_NOSCROLLSTATES.EPSN_NORMAL;
 
                 using (var graphicsDeviceContext = new SafeGraphicsDeviceContextHandle(g))
                 {
