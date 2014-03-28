@@ -1069,6 +1069,11 @@ namespace BDHeroGUI
             ShowAboutBox();
         }
 
+        private void forceGarbageCollectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GC.Collect();
+        }
+
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
 #if ENABLE_UPDATER
