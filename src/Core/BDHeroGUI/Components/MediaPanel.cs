@@ -214,7 +214,10 @@ namespace BDHeroGUI.Components
 
         private void linkLabelCustom_Click(object sender, EventArgs e)
         {
-            new FormMediaCustom(SelectedReleaseMedium as Movie).ShowDialog(this);
+            using (var form = new FormMediaCustom(SelectedReleaseMedium as Movie))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

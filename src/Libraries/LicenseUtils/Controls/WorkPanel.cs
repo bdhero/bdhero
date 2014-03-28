@@ -90,7 +90,10 @@ namespace LicenseUtils.Controls
 
         private void labelLicense_Click(object sender, System.EventArgs e)
         {
-            new LicenseForm(_work).ShowDialog(this);
+            using (var form = new LicenseForm(_work))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

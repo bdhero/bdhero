@@ -61,7 +61,12 @@ namespace BDHeroGUI.Components
 
         public void ShowFilterWindow()
         {
-            var result = new FormTrackFilter(_filter).ShowDialog(this);
+            DialogResult result;
+
+            using (var form = new FormTrackFilter(_filter))
+            {
+                result = form.ShowDialog(this);
+            }
 
             if (result == DialogResult.OK)
             {

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using BDHeroGUI.Forms;
 using OSUtils.Window;
 
@@ -44,10 +45,18 @@ namespace BDHeroGUI.Components
             EnsureSeparatorExists();
 
             var resizeMenuItem = _factory.CreateMenuItem("&Resize...");
-            resizeMenuItem.Clicked += delegate { new FormResizeWindow(_form).ShowDialog(_form); };
+            resizeMenuItem.Clicked += ResizeMenuItemOnClicked;
             _menu.InsertMenu(_pos++, resizeMenuItem);
 
             return this;
+        }
+
+        private void ResizeMenuItemOnClicked(object sender, EventArgs eventArgs)
+        {
+            using (var form = new FormResizeWindow(_form))
+            {
+                form.ShowDialog(_form);
+            }
         }
 
         public StandardWindowMenuBuilder AlwaysOnTop()

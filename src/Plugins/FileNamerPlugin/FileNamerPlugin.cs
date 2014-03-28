@@ -107,9 +107,14 @@ namespace BDHero.Plugin.FileNamer
 
         private DialogResult EditPluginPreferenceHandler(Form parent)
         {
+            DialogResult result;
+
             // FormFileNamerPreferences automatically copies the user's changes to
             // Preferences if the user hits "Save".
-            var result = new FormFileNamerPreferences(Preferences).ShowDialog(parent);
+            using (var form = new FormFileNamerPreferences(Preferences))
+            {
+                result = form.ShowDialog(parent);
+            }
 
             if (result == DialogResult.OK)
             {

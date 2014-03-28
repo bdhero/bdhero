@@ -31,6 +31,7 @@ using BDHero;
 using BDHero.BDROM;
 using BDHero.ErrorReporting;
 using BDHero.Exceptions;
+using BDHero.JobQueue;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
@@ -294,12 +295,22 @@ namespace BDHeroGUI
         /// </summary>
         private void InitAboutBox()
         {
-            Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
+            Task.Factory.StartNew(InitAboutBoxImpl);
+        }
+
+        private void InitAboutBoxImpl()
+        {
+            using (var form = new AboutBox(_pluginRepository))
+            {
+            }
         }
 
         private void ShowAboutBox()
         {
-            new AboutBox(_pluginRepository).ShowDialog(this);
+            using (var form = new AboutBox(_pluginRepository))
+            {
+                form.ShowDialog(this);
+            }
         }
 
         private void InitTextEditors()
@@ -626,11 +637,21 @@ namespace BDHeroGUI
 
             if (job == null) return;
 
-            var form = new FormMetadataSearch(job.SearchQuery);
+            DialogResult result;
+            SearchQuery searchQuery;
 
-            if (DialogResult.OK != form.ShowDialog(this)) return;
+            using (var form = new FormMetadataSearch(job.SearchQuery))
+            {
+                result = form.ShowDialog(this);
+                searchQuery = form.SearchQuery;
+            }
 
-            job.SearchQuery = form.SearchQuery;
+            if (DialogResult.OK != result)
+            {
+                return;
+            }
+
+            job.SearchQuery = searchQuery;
 
             _controller
                 .CreateMetadataTask(CreateCancellationTokenSource().Token, GetMetadataStart, GetMetadataFail, GetMetadataSucceed)
@@ -982,9 +1003,12 @@ namespace BDHeroGUI
 
         private void discInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_controller.Job != null)
+            if (_controller.Job == null)
+                return;
+
+            using (var form = new FormDiscInfo(_controller.Job.Disc, _windowMenuFactory))
             {
-                new FormDiscInfo(_controller.Job.Disc, _windowMenuFactory).ShowDialog(this);
+                form.ShowDialog(this);
             }
         }
 

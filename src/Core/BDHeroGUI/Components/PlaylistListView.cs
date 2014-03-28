@@ -296,7 +296,12 @@ namespace BDHeroGUI.Components
 
         public void ShowFilterWindow()
         {
-            var result = new FormPlaylistFilter(_filter).ShowDialog(this);
+            DialogResult result;
+
+            using (var form = new FormPlaylistFilter(_filter))
+            {
+                result = form.ShowDialog(this);
+            }
 
             if (result == DialogResult.OK)
             {

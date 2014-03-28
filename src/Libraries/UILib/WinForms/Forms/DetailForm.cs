@@ -164,7 +164,10 @@ namespace UILib.WinForms.Forms
 
         public static DialogResult ShowExceptionDetail(IWin32Window window, string title, string message, string detail)
         {
-            return new DetailForm(title, message, detail, MessageBoxIcon.Error).ShowDialog(window);
+            using (var form = new DetailForm(title, message, detail, MessageBoxIcon.Error))
+            {
+                return form.ShowDialog(window);
+            }
         }
 
         #region UI Events
