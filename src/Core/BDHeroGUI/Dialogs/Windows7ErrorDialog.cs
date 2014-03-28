@@ -224,23 +224,37 @@ namespace BDHeroGUI.Dialogs
 
         private void OnHyperlinkClick(TaskDialog dialog, [CanBeNull] IWin32Window owner, TaskDialogHyperlinkClickedEventArgs args)
         {
-            if (args.LinkText == CopyDetailsHref)
+            switch (args.LinkText)
             {
-                Clipboard.SetText(_report.ExceptionDetailRaw);
-                MessageBox.Show(owner, "Error details copied to clipboard.", "Copied!",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                case CopyDetailsHref:
+                    CopyDetailsToClipboard(owner);
+                    return;
+
+                case EditReportHref:
+                    EditErrorReport(dialog, owner);
+                    return;
             }
-            if (args.LinkText == EditReportHref)
+        }
+
+        private void CopyDetailsToClipboard(IWin32Window owner)
+        {
+            Clipboard.SetText(_report.ExceptionDetailRaw);
+            MessageBox.Show(owner, "Error details copied to clipboard.", "Copied!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void EditErrorReport(TaskDialog dialog, IWin32Window owner)
+        {
+            DialogResult result;
+
+            using (var form = new FormErrorReport(_report, _networkStatusMonitor))
             {
-                using (var form = new FormErrorReport(_report, _networkStatusMonitor))
-                {
-                    var result = form.ShowDialog(owner);
-                    if (result == DialogResult.OK || result == DialogResult.Yes)
-                    {
-                        Submit(dialog);
-                    }
-                }
+                result = form.ShowDialog(owner);
+            }
+
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                Submit(dialog);
             }
         }
 
