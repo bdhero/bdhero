@@ -19,6 +19,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using UILib.Extensions;
 
 namespace UILib.WinForms.Controls
@@ -110,11 +111,11 @@ namespace UILib.WinForms.Controls
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            if (!UseCustomColors)
-            {
-                base.OnPaintBackground(e);
-            }
-            // None... Helps control the flicker.
+            // Helps control the flicker.
+            if (UseCustomColors && VisualStyleInformation.IsEnabledByUser)
+                return;
+
+            base.OnPaintBackground(e);
         }
 
         /// <seealso cref="http://stackoverflow.com/a/7490884/467582"/>
