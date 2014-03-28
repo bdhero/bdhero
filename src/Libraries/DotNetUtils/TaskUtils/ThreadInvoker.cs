@@ -42,7 +42,7 @@ namespace DotNetUtils.TaskUtils
 
         public void InvokeOnUIThreadSync(ThreadAction action)
         {
-            StartTask(action, _cancellationToken).Wait(1000, _cancellationToken);
+            StartTask(action, _cancellationToken).Wait(1000);
         }
 
         public void InvokeOnUIThreadAsync(ThreadAction action)
