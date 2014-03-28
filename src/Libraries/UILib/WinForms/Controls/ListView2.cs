@@ -59,6 +59,8 @@ namespace UILib.WinForms.Controls
             // Automatically resize the last column to take up all remaining free space
             Resize += delegate
                       {
+                          if (IsDisposed || Disposing) { return; }
+
                           // listView.AutoSizeLastColumn() calls listView.ResumeDrawing(), which raises the Resize event.
                           // To prevent multiple recursive invocations of the Resize event, we make sure it's not already in progress.
                           if (isResizing) { return; }

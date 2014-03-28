@@ -52,6 +52,12 @@ namespace UILib.Extensions
         public static void AutoSizeLastColumn(this ListView listView)
         {
 #if !__MonoCS__
+            var form = listView.FindForm();
+
+            // Form hasn't opened yet or is closing
+            if (form == null)
+                return;
+
             listView.SuspendDrawing();
 
             var columnHeaders = listView.Columns.OfType<ColumnHeader>().ToArray();
