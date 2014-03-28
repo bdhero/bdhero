@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using BDHeroGUI.Forms;
@@ -46,6 +47,8 @@ namespace BDHeroGUI.Dialogs
         private readonly INetworkStatusMonitor _networkStatusMonitor;
         private readonly ErrorReport _report;
         private readonly IList<IErrorReportResultVisitor> _reportResultVisitors = new List<IErrorReportResultVisitor>();
+
+        private IErrorReportResult _errorReportResult;
 
         public Windows7ErrorDialog(INetworkStatusMonitor networkStatusMonitor, ErrorReport report)
         {
@@ -102,7 +105,7 @@ namespace BDHeroGUI.Dialogs
                     dialog.ExpansionMode = TaskDialogExpandedDetailsLocation.ExpandFooter;
                     dialog.DetailsCollapsedLabel = "Show &details";
                     dialog.DetailsExpandedLabel = "Hide &details";
-                    dialog.DetailsExpandedText = StackTrace; // _exception.ToString(),
+                    dialog.DetailsExpandedText = StackTrace;
                     dialog.FooterText = string.Format("<a href=\"{0}\">Copy to clipboard</a>", CopyDetailsHref);
                 }
 
@@ -116,9 +119,10 @@ namespace BDHeroGUI.Dialogs
                 if (isReportable)
                 {
                     var submitButton = CreateSubmitButton(dialog);
+                    var declineButton = CreateDeclineButton(dialog);
 
                     dialog.Controls.Add(submitButton);
-                    dialog.Controls.Add(CreateDeclineButton(dialog));
+                    dialog.Controls.Add(declineButton);
 
                     if (dialog.FooterText != null)
                         dialog.FooterText = string.Format("<a href=\"{0}\">View report contents</a> - {1}",
@@ -126,13 +130,6 @@ namespace BDHeroGUI.Dialogs
 
                     nwStatusOnChanged = CreateNetworkStatusChangedEventHandler(submitButton);
                     _networkStatusMonitor.NetworkStatusChanged += nwStatusOnChanged;
-
-                    // TaskButtonDialogBase.Enabled's documentation states: "The enabled state can cannot be changed before the dialog is shown."
-                    // So we need to set a short timer to disable the button *after* the dialog is shown.
-//                    var timer = new System.Timers.Timer(100);
-//                    timer.Elapsed += (a, b) => 
-//                    timer.AutoReset = false;
-//                    timer.Start();
 
                     dialogOnOpened = CreateDialogOnOpened(submitButton);
                     dialog.Opened += dialogOnOpened;
@@ -174,6 +171,7 @@ namespace BDHeroGUI.Dialogs
 
         private EventHandler CreateDialogOnOpened([CanBeNull] TaskDialogCommandLink submitButton)
         {
+            // TaskButtonDialogBase.Enabled's documentation states: "The enabled state can cannot be changed before the dialog is shown."
             return (o, args) => OnNetworkStatusChanged(submitButton, _networkStatusMonitor.IsOnline);
         }
 
@@ -194,14 +192,23 @@ namespace BDHeroGUI.Dialogs
 
         private void Submit(TaskDialog dialog)
         {
-            IErrorReportResult result = null;
             new TaskBuilder()
                 .OnCurrentThread()
-                .DoWork((invoker, token) => result = ErrorReporter.Report(_report))
-                .Succeed(() => OnErrorReportCompleted(result))
+                .DoWork(ErrorReportOnDoWork)
+                .Succeed(ErrorReportOnSucceed)
                 .Build()
                 .Start();
             dialog.Close(TaskDialogResult.Yes);
+        }
+
+        private void ErrorReportOnDoWork(IThreadInvoker threadInvoker, CancellationToken cancellationToken)
+        {
+            _errorReportResult = ErrorReporter.Report(_report);
+        }
+
+        private void ErrorReportOnSucceed()
+        {
+            OnErrorReportCompleted(_errorReportResult);
         }
 
         private void OnErrorReportCompleted([NotNull] IErrorReportResult result)
@@ -213,6 +220,8 @@ namespace BDHeroGUI.Dialogs
             {
                 result.Accept(visitor);
             }
+
+            _reportResultVisitors.Clear();
         }
 
         private static TaskDialogCommandLink CreateDeclineButton(TaskDialog dialog)
