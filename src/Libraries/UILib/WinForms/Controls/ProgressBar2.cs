@@ -46,7 +46,7 @@ namespace UILib.WinForms.Controls
 
         private double _valuePercent;
 
-        public Func<double, string> GenerateText;
+        public ProgressBarTextGenerator GenerateText;
 
         public bool TextOutline { get; set; }
 
@@ -191,4 +191,6 @@ namespace UILib.WinForms.Controls
             }
         }
     }
+
+    public delegate string ProgressBarTextGenerator(double valuePercent);
 }
