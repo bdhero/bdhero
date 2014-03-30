@@ -57,6 +57,9 @@ namespace UILib.WinForms.Controls
         public Color TextOutlineColor { get; set; }
         public int TextOutlineWidth { get; set; }
 
+        public Color BackColorTop { get; set; }
+        public Color BackColorBottom { get; set; }
+
         /// <summary>
         /// Gets or sets whether the progress bar should use custom background gradients
         /// to indicate its state (e.g., paused, error, success) or the standard Windows gradient (green).
@@ -84,32 +87,32 @@ namespace UILib.WinForms.Controls
 
         public void SetError()
         {
-            ForeColor = Color.Red;
-            BackColor = Color.DarkRed;
+            BackColorTop = Color.Red;
+            BackColorBottom = Color.DarkRed;
         }
 
         public void SetPaused()
         {
-            ForeColor = Color.LightGoldenrodYellow;
-            BackColor = Color.Yellow;
+            BackColorTop = Color.LightGoldenrodYellow;
+            BackColorBottom = Color.Yellow;
         }
 
         public void SetInfo()
         {
-            ForeColor = Color.LightSkyBlue;
-            BackColor = Color.DeepSkyBlue;
+            BackColorTop = Color.LightSkyBlue;
+            BackColorBottom = Color.DeepSkyBlue;
         }
 
         public void SetSuccess()
         {
-            ForeColor = Color.GreenYellow;
-            BackColor = Color.Green;
+            BackColorTop = Color.GreenYellow;
+            BackColorBottom = Color.Green;
         }
 
         public void SetMuted()
         {
-            ForeColor = Color.DarkGray;
-            BackColor = Color.Gray;
+            BackColorTop = Color.DarkGray;
+            BackColorBottom = Color.Gray;
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -145,7 +148,7 @@ namespace UILib.WinForms.Controls
                     rect.Width = (int)(rect.Width * ((double)Value / Maximum));
                     if (rect.Width == 0) rect.Width = 1; // Can't draw rec with width of 0.
 
-                    LinearGradientBrush brush = new LinearGradientBrush(rect, ForeColor, BackColor, LinearGradientMode.Vertical);
+                    LinearGradientBrush brush = new LinearGradientBrush(rect, BackColorTop, BackColorBottom, LinearGradientMode.Vertical);
                     offscreen.FillRectangle(brush, inset, inset, rect.Width, rect.Height);
 
                     var g = e.Graphics;
