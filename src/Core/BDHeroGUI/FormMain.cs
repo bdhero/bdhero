@@ -270,9 +270,13 @@ namespace BDHeroGUI
 
         private void InitNetworkStatusMonitor()
         {
-            var taskBuilder = new TaskBuilder().OnCurrentThread();
-            _networkStatusMonitor.NetworkStatusChanged += isOnline => taskBuilder.Succeed(() => SetIsOnline(isOnline)).Build().Start();
+            _networkStatusMonitor.NetworkStatusChanged += NetworkStatusMonitorOnNetworkStatusChanged;
             _networkStatusMonitor.TestConnectionAsync();
+        }
+
+        private void NetworkStatusMonitorOnNetworkStatusChanged(bool isConnectedToInternet)
+        {
+            Invoke(new Action(() => SetIsOnline(isConnectedToInternet)));
         }
 
         private void SetIsOnline(bool isOnline)
