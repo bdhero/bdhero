@@ -531,7 +531,7 @@ namespace BDHeroGUI
             {
                 if (plugin is INameProviderPlugin)
                 {
-                    RenameSync();
+                    RenameAsync();
                 }
             }
         }
@@ -720,15 +720,24 @@ namespace BDHeroGUI
 
         #region File renamer
 
-        private void RenameSync()
+        private bool _isRenaming;
+
+        private void RenameAsync()
         {
             if (_controller.Job == null)
                 return;
+
+            if (_isRenaming)
+                return;
+
+            _isRenaming = true;
+
             new Promise<Null>(this)
-                .Work(promise => _controller.RenameSync(null))
+                .Work(p => _controller.RenameSync(null))
+                .Done(p => textBoxOutput.Text = _controller.Job.OutputPath)
+                .Always(p => _isRenaming = false)
                 .Start()
-                .Wait(1000);
-            textBoxOutput.Text = _controller.Job.OutputPath;
+                ;
         }
 
         #endregion
@@ -1157,7 +1166,7 @@ namespace BDHeroGUI
 
         private void MediaPanelOnSelectedMediaChanged(object sender, EventArgs eventArgs)
         {
-            RenameSync();
+            RenameAsync();
         }
 
         private void PlaylistListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs args)
@@ -1169,7 +1178,7 @@ namespace BDHeroGUI
             tracksPanel.SetPlaylist(playlist, _controller.Job.Disc.Languages.ToArray());
             chaptersPanel.Playlist = playlist;
 
-            RenameSync();
+            RenameAsync();
         }
 
         private void PlaylistListViewOnShowAllChanged(object sender, EventArgs eventArgs)
@@ -1179,13 +1188,13 @@ namespace BDHeroGUI
 
         private void PlaylistListViewOnPlaylistReconfigured(Playlist playlist)
         {
-            RenameSync();
+            RenameAsync();
         }
 
         private void TracksPanelOnPlaylistReconfigured(Playlist playlist)
         {
             playlistListView.ReconfigurePlaylist(playlist);
-            RenameSync();
+            RenameAsync();
         }
 
         #endregion
