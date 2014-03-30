@@ -98,5 +98,17 @@ namespace DotNetUtils.Concurrency
                 }
             }
         }
+
+        /// <summary>
+        /// Implicitly converts the given <see cref="AtomicValue{T}"/> object to its wrapped inner value.
+        /// </summary>
+        /// <param name="atomicValue"></param>
+        /// <returns>
+        ///     <see cref="Value"/>.
+        /// </returns>
+        public static implicit operator T(AtomicValue<T> atomicValue)
+        {
+            return atomicValue.Value;
+        }
     }
 }
