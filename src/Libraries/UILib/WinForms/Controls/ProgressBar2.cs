@@ -32,7 +32,12 @@ namespace UILib.WinForms.Controls
     public class ProgressBar2 : ProgressBar
     {
         /// <summary>
-        /// Gets or sets the value of the progress bar from 0.0 to 100.0.
+        /// From <c>0.0</c> to <c>100.0</c>.
+        /// </summary>
+        private double _valuePercent;
+
+        /// <summary>
+        /// Gets or sets the value of the progress bar from <c>0.0</c> to <c>100.0</c>.
         /// </summary>
         public double ValuePercent
         {
@@ -43,8 +48,6 @@ namespace UILib.WinForms.Controls
                 Value = (int) (value * Maximum / 100.0);
             }
         }
-
-        private double _valuePercent;
 
         public ProgressBarTextGenerator GenerateText;
 
