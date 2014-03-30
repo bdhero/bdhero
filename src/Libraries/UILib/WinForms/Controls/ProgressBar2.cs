@@ -74,7 +74,7 @@ namespace UILib.WinForms.Controls
 //            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.SetDoubleBuffered(true);
 
-            GenerateText = d => string.Format("{0:0.00}%", d);
+            GenerateText = valuePercent => string.Format("{0:0.00}%", valuePercent);
 
             TextColor = Brushes.Black;
             TextOutline = true;
