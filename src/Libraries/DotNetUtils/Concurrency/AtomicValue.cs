@@ -60,7 +60,7 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        /// Gets or sets the value atomically, waiting 
+        /// Gets or sets the value atomically.  Waits for at most <see cref="MaxWait"/> before giving up.
         /// </summary>
         public T Value
         {
