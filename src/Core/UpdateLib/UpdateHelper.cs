@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using DotNetUtils;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using DotNetUtils.Net;
@@ -95,16 +96,14 @@ namespace UpdateLib
             // Prevent user from checking for updates while another check is already in progress
             _updatesButtonClickAction = null;
 
-            var task =
-                new TaskBuilder()
-                    .OnCurrentThread()
-                    .BeforeStart(OnBeforeStart)
-                    .DoWork(OnDoWork)
-                    .Fail(OnFail)
-                    .Succeed(OnSucceed)
-                    .Build();
-
-            task.Start();
+            new Promise<Null>()
+                .Before(OnBeforeStart)
+                .Work(OnDoWork)
+                .Fail(OnFail)
+                .Canceled(OnFail)
+                .Done(OnSucceed)
+                .Start()
+                ;
         }
 
         public void InstallUpdateIfAvailable()
@@ -123,44 +122,41 @@ namespace UpdateLib
             _updater.InstallUpdate();
         }
 
-        private void OnBeforeStart()
+        private void OnBeforeStart(IPromise<Null> promise)
         {
             Logger.Info("Checking for updates");
             Notify(observer => observer.OnBeforeCheckForUpdate());
         }
 
-        private void OnUpdateReadyToDownload(CancellationToken cancellationToken)
+        private void OnUpdateReadyToDownload()
         {
             Logger.Info(string.Format("Version {0} is available", _updater.LatestUpdate.Version));
             Notify(observer => observer.OnUpdateReadyToDownload(_updater.LatestUpdate));
         }
 
-        private void OnBeforeDownload(CancellationToken cancellationToken)
+        private void OnBeforeDownload()
         {
             Logger.Info(string.Format("Downloading version {0}", _updater.LatestUpdate.Version));
             Notify(observer => observer.OnBeforeDownloadUpdate(_updater.LatestUpdate));
         }
 
-        private void OnDoWork(IThreadInvoker invoker, CancellationToken token)
+        private void OnDoWork(IPromise<Null> promise)
         {
             _updater.CheckForUpdate(_currentVersion);
 
             if (!_updater.IsUpdateAvailable)
                 return;
 
-            invoker.InvokeOnUIThreadSync(OnUpdateReadyToDownload);
+            promise.UIInvoker.InvokeSync(OnUpdateReadyToDownload);
 
             if (!AllowDownload)
                 return;
 
-            invoker.InvokeOnUIThreadSync(OnBeforeDownload);
+            promise.UIInvoker.InvokeSync(OnBeforeDownload);
 
-            _updater.DownloadProgressChanged += delegate(FileDownloadProgress progress)
-                {
-                    invoker.InvokeOnUIThreadSync(cancellationToken => ProgressChanged(progress));
-                };
+            _updater.DownloadProgressChanged += progress => promise.UIInvoker.InvokeSync(() => ProgressChanged(progress));
 
-            token.Register(_updater.CancelDownload);
+            promise.Canceled(_ => _updater.CancelDownload());
 
             _updater.DownloadUpdate();
         }
@@ -179,14 +175,14 @@ namespace UpdateLib
             Notify(observer => observer.OnUpdateDownloadProgressChanged(_updater.LatestUpdate, progress));
         }
 
-        private void OnFail(ExceptionEventArgs args)
+        private void OnFail(IPromise<Null> promise)
         {
             _updatesButtonClickAction = CheckForUpdatesAsync;
-            Logger.Error("Error checking for update", args.Exception);
-            Notify(observer => observer.OnUpdateException(args.Exception));
+            Logger.Error("Error checking for update", promise.LastException);
+            Notify(observer => observer.OnUpdateException(promise.LastException));
         }
 
-        private void OnSucceed()
+        private void OnSucceed(IPromise<Null> promise)
         {
             if (_updater.IsUpdateAvailable)
             {

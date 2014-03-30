@@ -25,6 +25,7 @@ using BDHero.Plugin;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using Mono.Options;
 using ProcessUtils;
@@ -136,10 +137,10 @@ namespace BDHeroCLI
 
         private void InitController()
         {
-            _controller.ScanStarted += ControllerOnScanStarted;
+            _controller.BeforeScanStart += ControllerOnBeforeScanStart;
             _controller.ScanSucceeded += ControllerOnScanSucceeded;
             _controller.PluginProgressUpdated += ControllerOnPluginProgressUpdated;
-            _controller.SetEventScheduler();
+            _controller.SetUIContextCurrentThread();
         }
 
         private void ExecuteStages()
@@ -165,16 +166,16 @@ namespace BDHeroCLI
         {
             var cancellationToken = new CancellationToken();
             var scanTask = _controller.CreateScanTask(cancellationToken, bdromPath, mkvPath);
-            scanTask.Start();
-            return scanTask.Result;
+            scanTask.Start().Wait();
+            return scanTask.IsCompleted && scanTask.Result;
         }
 
         private bool Convert()
         {
             var cancellationToken = new CancellationToken();
             var convertTask = _controller.CreateConvertTask(cancellationToken);
-            convertTask.Start();
-            return convertTask.Result;
+            convertTask.Start().Wait();
+            return convertTask.IsCompleted && convertTask.Result;
         }
 
         private static void ShowHelp(int exitCode = 0)
@@ -190,12 +191,12 @@ namespace BDHeroCLI
             Console.Error.WriteLine("{0} v{1} - compiled {2}", AssemblyUtils.GetAssemblyName(), AssemblyUtils.GetAssemblyVersion(), AssemblyUtils.GetLinkerTimestamp());
         }
 
-        private static void ControllerOnScanStarted()
+        private static void ControllerOnBeforeScanStart(IPromise<bool> promise)
         {
             Console.WriteLine();
         }
 
-        private static void ControllerOnScanSucceeded()
+        private static void ControllerOnScanSucceeded(IPromise<bool> promise)
         {
             Console.WriteLine();
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~");

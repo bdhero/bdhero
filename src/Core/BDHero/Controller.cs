@@ -18,14 +18,17 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using BDHero.Plugin;
 using BDHero.JobQueue;
 using BDHero.Prefs;
 using DotNetUtils;
+using DotNetUtils.Concurrency;
 using DotNetUtils.FS;
 using DotNetUtils.TaskUtils;
 
@@ -41,7 +44,9 @@ namespace BDHero
         /// <summary>
         /// Needed for <see cref="ProgressProviderOnUpdated"/> to invoke progress update callbacks on the correct thread.
         /// </summary>
-        private TaskScheduler _callbackScheduler;
+        private ISynchronizeInvoke _uiContext;
+
+        private IInvoker _uiInvoker;
 
         private readonly ConcurrentDictionary<Guid, int> _progressMap = new ConcurrentDictionary<Guid, int>();
 
@@ -58,15 +63,15 @@ namespace BDHero
 
         #region Events
 
-        public event TaskStartedEventHandler ScanStarted;
-        public event TaskSucceededEventHandler ScanSucceeded;
-        public event ExceptionEventHandler ScanFailed;
-        public event TaskCompletedEventHandler ScanCompleted;
+        public event BeforePromiseHandler<bool> BeforeScanStart;
+        public event SuccessPromiseHandler<bool> ScanSucceeded;
+        public event FailurePromiseHandler<bool> ScanFailed;
+        public event AlwaysPromiseHandler<bool> ScanCompleted;
 
-        public event TaskStartedEventHandler ConvertStarted;
-        public event TaskSucceededEventHandler ConvertSucceeded;
-        public event ExceptionEventHandler ConvertFailed;
-        public event TaskCompletedEventHandler ConvertCompleted;
+        public event BeforePromiseHandler<bool> ConvertStarted;
+        public event SuccessPromiseHandler<bool> ConvertSucceeded;
+        public event FailurePromiseHandler<bool> ConvertFailed;
+        public event AlwaysPromiseHandler<bool> ConvertCompleted;
 
         public event PluginProgressHandler PluginProgressUpdated;
         public event UnhandledExceptionEventHandler UnhandledException;
@@ -79,13 +84,16 @@ namespace BDHero
             _preferenceManager = preferenceManager;
         }
 
-        public void SetEventScheduler(TaskScheduler scheduler = null)
+        public void SetUIContextCurrentThread()
         {
-            // Get the calling thread's context
-            _callbackScheduler = scheduler ??
-                                (SynchronizationContext.Current != null
-                                     ? TaskScheduler.FromCurrentSynchronizationContext()
-                                     : TaskScheduler.Default);
+            _uiContext = new Control();
+            _uiInvoker = new Invoker(_uiContext);
+        }
+
+        public void SetUIContext(ISynchronizeInvoke uiContext)
+        {
+            _uiContext = uiContext;
+            _uiInvoker = new Invoker(_uiContext);
         }
 
         #region User-invokable tasks
@@ -95,7 +103,7 @@ namespace BDHero
             CreateRenamePhase(CancellationToken.None, mkvPath)();
         }
 
-        public Task<bool> CreateMetadataTask(CancellationToken cancellationToken, TaskStartedEventHandler start, ExceptionEventHandler fail, TaskSucceededEventHandler succeed, string mkvPath = null)
+        public IPromise<bool> CreateMetadataTask(CancellationToken cancellationToken, BeforePromiseHandler<bool> start, FailurePromiseHandler<bool> fail, SuccessPromiseHandler<bool> succeed, string mkvPath = null)
         {
             var token = cancellationToken;
             var optionalPhases = new[] { CreateGetMetadataPhase(token), CreateAutoDetectPhase(token), CreateRenamePhase(token, mkvPath) };
@@ -113,7 +121,7 @@ namespace BDHero
 
         #region Stages
 
-        public Task<bool> CreateScanTask(CancellationToken cancellationToken, string bdromPath, string mkvPath = null)
+        public IPromise<bool> CreateScanTask(CancellationToken cancellationToken, string bdromPath, string mkvPath = null)
         {
             SaveRecentBDROMBeforeScan(bdromPath);
             var token = cancellationToken;
@@ -144,7 +152,7 @@ namespace BDHero
             return () => Rename(cancellationToken, mkvPath);
         }
 
-        public Task<bool> CreateConvertTask(CancellationToken cancellationToken, string mkvPath = null)
+        public IPromise<bool> CreateConvertTask(CancellationToken cancellationToken, string mkvPath = null)
         {
             if (!string.IsNullOrWhiteSpace(mkvPath))
                 Job.OutputPath = mkvPath;
@@ -176,38 +184,37 @@ namespace BDHero
         /// Task object that returns <c>false</c> if the operation was canceled by the user or
         /// the critical phase threw an exception; otherwise <c>true</c>.
         /// </returns>
-        private Task<bool> CreateStageTask(CancellationToken cancellationToken, TaskStartedEventHandler beforeStart, CriticalPhase criticalPhase, IEnumerable<OptionalPhase> optionalPhases, ExceptionEventHandler fail, TaskSucceededEventHandler succeed)
+        private IPromise<bool> CreateStageTask(CancellationToken cancellationToken, BeforePromiseHandler<bool> beforeStart, CriticalPhase criticalPhase, IEnumerable<OptionalPhase> optionalPhases, FailurePromiseHandler<bool> fail, SuccessPromiseHandler<bool> succeed)
         {
             var canContinue = CreateCanContinueFunc(cancellationToken);
-            return new TaskBuilder()
-                .OnThread(_callbackScheduler)
+            return new SimplePromise(_uiContext)
                 .CancelWith(cancellationToken)
-                .BeforeStart(beforeStart)
+                .Before(beforeStart)
                 .Fail(fail)
-                .DoWork(delegate(IThreadInvoker invoker, CancellationToken token)
-                    {
-                        cancellationToken.Register(() => Logger.Warn("User canceled current operation"));
+                .Canceled(promise => fail(promise)) // TODO: Fix warning
+                .Work(delegate(IPromise<bool> promise)
+                      {
+                          cancellationToken.Register(() => Logger.Warn("User canceled current operation"));
 
-                        if (criticalPhase())
-                        {
-                            foreach (var phase in optionalPhases.TakeWhile(phase => canContinue()))
-                            {
-                                phase();
-                            }
+                          if (criticalPhase())
+                          {
+                              foreach (var phase in optionalPhases.TakeWhile(phase => canContinue()))
+                              {
+                                  phase();
+                              }
 
-                            if (canContinue())
-                            {
-                                invoker.InvokeOnUIThreadAsync(_ => succeed());
-                                return;
-                            }
-                        }
+                              if (canContinue())
+                              {
+                                  _uiInvoker.InvokeAsync(() => succeed(promise));
+                                  return;
+                              }
+                          }
 
-                        // TODO: How should we handle exceptions here?
-                        // The rest of the code assumes exceptions are being handled by the plugin runner.
-                        invoker.InvokeOnUIThreadAsync(_ => fail(new ExceptionEventArgs()));
-                    })
-                .Build()
-            ;
+                          // TODO: How should we handle exceptions here?
+                          // The rest of the code assumes exceptions are being handled by the plugin runner.
+                          _uiInvoker.InvokeAsync(() => fail(promise));
+                      })
+                ;
         }
 
         private static Func<bool> CreateCanContinueFunc(CancellationToken cancellationToken)
@@ -215,62 +222,66 @@ namespace BDHero
             return () => !cancellationToken.IsCancellationRequested;
         }
 
-        /// <summary>
-        /// Creates an asynchronous Task object that executes the given plugin on a background thread and
-        /// invokes all other callbacks (success, failure, etc.) on the UI thread.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <param name="plugin"></param>
-        /// <param name="pluginRunner"></param>
-        /// <returns></returns>
-        private Task<bool> RunPluginSync(CancellationToken cancellationToken, IPlugin plugin, ExecutePluginHandler pluginRunner)
+        private IPromise<bool> RunPluginSync(CancellationToken cancellationToken, IPlugin plugin, ExecutePluginHandler pluginRunner)
         {
-            var task = new TaskBuilder()
-                .OnThread(_callbackScheduler)
-                .CancelWith(cancellationToken)
-                .BeforeStart(delegate
-                    {
-                        var progressProvider = _pluginRepository.GetProgressProvider(plugin);
+            var promise =
+                new SimplePromise(_uiContext)
+                    .CancelWith(cancellationToken)
+                    .Before(delegate
+                            {
+                                var progressProvider = _pluginRepository.GetProgressProvider(plugin);
 
-                        progressProvider.Updated -= ProgressProviderOnUpdated;
-                        progressProvider.Updated += ProgressProviderOnUpdated;
+                                progressProvider.Updated -= ProgressProviderOnUpdated;
+                                progressProvider.Updated += ProgressProviderOnUpdated;
 
-                        progressProvider.Reset();
-                        progressProvider.Start();
-                    })
-                .DoWork(delegate(IThreadInvoker invoker, CancellationToken token)
-                    {
-                        pluginRunner(token);
-                    })
-                .Fail(delegate(ExceptionEventArgs args)
-                    {
-                        var progressProvider = _pluginRepository.GetProgressProvider(plugin);
-                        if (args.Exception is OperationCanceledException)
-                        {
-                            progressProvider.Cancel();
-                        }
-                        else
-                        {
-                            progressProvider.Error(args.Exception);
-                            HandleUnhandledException(args.Exception);
-                        }
-                    })
-                .Succeed(delegate
-                    {
-                        var progressProvider = _pluginRepository.GetProgressProvider(plugin);
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            progressProvider.Cancel();
-                        }
-                        else
-                        {
-                            progressProvider.Succeed();
-                        }
-                    })
-                .Build()
-            ;
-            task.RunSynchronously();
-            return task;
+                                progressProvider.Reset();
+                                progressProvider.Start();
+                            })
+                    .Work(delegate
+                          {
+                              pluginRunner(cancellationToken);
+                          })
+                    .Fail(delegate(IPromise<bool> p)
+                          {
+                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
+                              if (p.LastException is OperationCanceledException)
+                              {
+                                  progressProvider.Cancel();
+                              }
+                              else
+                              {
+                                  progressProvider.Error(p.LastException);
+                                  HandleUnhandledException(p.LastException);
+                              }
+                          })
+                    .Canceled(delegate(IPromise<bool> p)
+                          {
+                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
+                              if (p.LastException is OperationCanceledException)
+                              {
+                                  progressProvider.Cancel();
+                              }
+                              else
+                              {
+                                  progressProvider.Error(p.LastException);
+                                  HandleUnhandledException(p.LastException);
+                              }
+                          }) // TODO: Remove duplication w/ Fail
+                    .Done(delegate
+                          {
+                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
+                              if (cancellationToken.IsCancellationRequested)
+                              {
+                                  progressProvider.Cancel();
+                              }
+                              else
+                              {
+                                  progressProvider.Succeed();
+                              }
+                          })
+                ;
+            promise.Start().Wait();
+            return promise;
         }
 
         #endregion
@@ -403,7 +414,7 @@ namespace BDHero
 
         private void PostProcess(CancellationToken cancellationToken, IPostProcessorPlugin plugin)
         {
-            RunPluginSync(cancellationToken, plugin, token => plugin.PostProcess(token, Job)).RunSynchronously();
+            RunPluginSync(cancellationToken, plugin, token => plugin.PostProcess(token, Job));
         }
 
         #endregion
@@ -416,31 +427,33 @@ namespace BDHero
         {
             if (PluginProgressUpdated != null)
             {
-                // Marshal event back to UI thread
-                Task.Factory.StartNew(delegate
-                    {
-                        var guid = progressProvider.Plugin.AssemblyInfo.Guid;
-                        var hashCode = progressProvider.GetHashCode();
-
-                        var containsKey = _progressMap.ContainsKey(guid);
-                        var prevHashCode = containsKey ? _progressMap[guid] : -1;
-
-                        Logger.DebugFormat(
-                            "ProgressProviderOnUpdated() - Plugin \"{0}\": prev progress hashCode = {1}, cur progress hashCode = {2}",
-                            progressProvider.Plugin.Name, prevHashCode, hashCode
-                        );
-
-                        // Progress hasn't changed since last update
-                        if (containsKey && prevHashCode == hashCode)
-                            return;
-
-                        _progressMap[guid] = hashCode;
-
-                        Logger.Debug("ProgressProviderOnUpdated() - Calling PluginProgressUpdated event handlers");
-
-                        PluginProgressUpdated(progressProvider.Plugin, progressProvider);
-                    }, CancellationToken.None, TaskCreationOptions.None, _callbackScheduler);
+                _uiInvoker.InvokeAsync(() => ProgressProviderOnUpdatedSync(progressProvider));
             }
+        }
+
+        private void ProgressProviderOnUpdatedSync(ProgressProvider progressProvider)
+        {
+            var guid = progressProvider.Plugin.AssemblyInfo.Guid;
+            var hashCode = progressProvider.GetHashCode();
+
+            var containsKey = _progressMap.ContainsKey(guid);
+            var prevHashCode = containsKey ? _progressMap[guid] : -1;
+
+            Logger.DebugFormat("ProgressProviderOnUpdated() - Plugin \"{0}\": prev progress hashCode = {1}, cur progress hashCode = {2}",
+                               progressProvider.Plugin.Name, prevHashCode, hashCode
+                );
+
+            // Progress hasn't changed since last update
+            if (containsKey && prevHashCode == hashCode)
+            {
+                return;
+            }
+
+            _progressMap[guid] = hashCode;
+
+            Logger.Debug("ProgressProviderOnUpdated() - Calling PluginProgressUpdated event handlers");
+
+            PluginProgressUpdated(progressProvider.Plugin, progressProvider);
         }
 
         #endregion
@@ -459,62 +472,62 @@ namespace BDHero
 
         #region Event calling methods
 
-        private void ScanStart()
+        private void ScanStart(IPromise<bool> promise)
         {
-            if (ScanStarted != null)
-                ScanStarted();
+            if (BeforeScanStart != null)
+                BeforeScanStart(promise);
         }
 
-        private void ScanFail(ExceptionEventArgs args)
+        private void ScanFail(IPromise<bool> promise)
         {
             if (ScanFailed != null)
-                ScanFailed(args);
+                ScanFailed(promise);
 
-            ScanComplete();
+            ScanComplete(promise);
         }
 
-        private void ScanSucceed()
+        private void ScanSucceed(IPromise<bool> promise)
         {
             SaveRecentBDROMAfterSuccessfulScan(Job.Disc.FileSystem.Directories.Root.FullName);
 
             if (ScanSucceeded != null)
-                ScanSucceeded();
+                ScanSucceeded(promise);
 
-            ScanComplete();
+            ScanComplete(promise);
         }
 
-        private void ScanComplete()
+        private void ScanComplete(IPromise<bool> promise)
         {
             if (ScanCompleted != null)
-                ScanCompleted();
+                ScanCompleted(promise);
         }
 
-        private void ConvertStart()
+        private void ConvertStart(IPromise<bool> promise)
         {
             if (ConvertStarted != null)
-                ConvertStarted();
+                ConvertStarted(promise);
         }
 
-        private void ConvertFail(ExceptionEventArgs args)
+        private void ConvertFail(IPromise<bool> promise)
         {
             if (ConvertFailed != null)
-                ConvertFailed(args);
+                ConvertFailed(promise);
 
-            ConvertComplete();
+            ConvertComplete(promise);
         }
 
-        private void ConvertSucceed()
+        private void ConvertSucceed(IPromise<bool> promise)
         {
             if (ConvertSucceeded != null)
-                ConvertSucceeded();
+                ConvertSucceeded(promise);
 
-            ConvertComplete();
+            ConvertComplete(promise);
         }
 
-        private void ConvertComplete()
+        private void ConvertComplete(IPromise<bool> promise)
         {
             if (ConvertCompleted != null)
-                ConvertCompleted();
+                ConvertCompleted(promise);
         }
 
         #endregion

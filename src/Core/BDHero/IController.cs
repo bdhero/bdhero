@@ -17,11 +17,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
-using System.Threading.Tasks;
 using BDHero.JobQueue;
 using BDHero.Plugin;
 using DotNetUtils;
+using DotNetUtils.Concurrency;
 using DotNetUtils.TaskUtils;
 
 namespace BDHero
@@ -38,52 +39,66 @@ namespace BDHero
 
         #region Events
 
+        #region Scan
+
         /// <summary>
         /// Invoked immediately before the scanning stage starts.
         /// </summary>
-        event TaskStartedEventHandler ScanStarted;
+        event BeforePromiseHandler<bool> BeforeScanStart;
 
         /// <summary>
         /// Invoked when the scanning stage completes successfully.
         /// </summary>
-        event TaskSucceededEventHandler ScanSucceeded;
+        event SuccessPromiseHandler<bool> ScanSucceeded;
 
         /// <summary>
         /// Invoked when the scanning stage aborts because of an error.
         /// </summary>
-        event ExceptionEventHandler ScanFailed;
+        event FailurePromiseHandler<bool> ScanFailed;
 
         /// <summary>
         /// Invoked when the scanning stage completes, regardless of whether the it succeeded or failed.
         /// This event always occurs after the <see cref="ScanSucceeded"/> and <see cref="ScanFailed"/> events.
         /// </summary>
-        event TaskCompletedEventHandler ScanCompleted;
+        event AlwaysPromiseHandler<bool> ScanCompleted;
+
+        #endregion
+
+        #region Convert
 
         /// <summary>
         /// Invoked immediately before the conversion stage starts.
         /// </summary>
-        event TaskStartedEventHandler ConvertStarted;
+        event BeforePromiseHandler<bool> ConvertStarted;
 
         /// <summary>
         /// Invoked when the conversion stage completes successfully.
         /// </summary>
-        event TaskSucceededEventHandler ConvertSucceeded;
+        event SuccessPromiseHandler<bool> ConvertSucceeded;
 
         /// <summary>
         /// Invoked when the conversion stage aborts because of an error.
         /// </summary>
-        event ExceptionEventHandler ConvertFailed;
+        event FailurePromiseHandler<bool> ConvertFailed;
 
         /// <summary>
         /// Invoked when the conversion stage completes, regardless of whether the it succeeded or failed.
         /// This event always occurs after the <see cref="ConvertSucceeded"/> and <see cref="ConvertFailed"/> events.
         /// </summary>
-        event TaskCompletedEventHandler ConvertCompleted;
+        event AlwaysPromiseHandler<bool> ConvertCompleted;
+
+        #endregion
+
+        #region Progress
 
         /// <summary>
         /// Invoked whenever an <see cref="IPlugin"/>'s state or progress changes.
         /// </summary>
         event PluginProgressHandler PluginProgressUpdated;
+
+        #endregion
+
+        #region Unhandled Exceptions
 
         /// <summary>
         /// Invoked when an exception is thrown by an <see cref="IPlugin"/>.
@@ -92,14 +107,18 @@ namespace BDHero
 
         #endregion
 
+        #endregion
+
         #region Methods
+
+        void SetUIContextCurrentThread();
 
         /// <summary>
         /// Sets the <c>TaskScheduler</c> that will be used to invoke event callbacks.
         /// This ensures that events are always invoked from the appropriate thread.
         /// </summary>
-        /// <param name="scheduler">Scheduler to use for event callbacks.  If none is specified, the calling thread's scheduler will be used.</param>
-        void SetEventScheduler(TaskScheduler scheduler = null);
+        /// <param name="uiContext">Scheduler to use for event callbacks.  If none is specified, the calling thread's scheduler will be used.</param>
+        void SetUIContext(ISynchronizeInvoke uiContext);
 
         /// <summary>
         /// Runs all <see cref="INameProviderPlugin"/>s synchronously.
@@ -117,7 +136,7 @@ namespace BDHero
         /// <param name="succeed">Callback that will be invoked if the task succeeds</param>
         /// <param name="mkvPath">Optional path to the output directory or MKV file</param>
         /// <returns>Task that returns <c>true</c> if the task succeeded; otherwise <c>false</c></returns>
-        Task<bool> CreateMetadataTask(CancellationToken cancellationToken, TaskStartedEventHandler start, ExceptionEventHandler fail, TaskSucceededEventHandler succeed, string mkvPath = null);
+        IPromise<bool> CreateMetadataTask(CancellationToken cancellationToken, BeforePromiseHandler<bool> start, FailurePromiseHandler<bool> fail, SuccessPromiseHandler<bool> succeed, string mkvPath = null);
 
         /// <summary>
         /// Scans a BD-ROM, retrieves metadata, auto-detects the type of each playlist and track, and renames tracks and output file names.
@@ -126,7 +145,7 @@ namespace BDHero
         /// <param name="bdromPath">Path to the BD-ROM directory</param>
         /// <param name="mkvPath">Optional path to the output directory or MKV file</param>
         /// <returns>Task that returns <c>true</c> if the scan succeeded; otherwise <c>false</c></returns>
-        Task<bool> CreateScanTask(CancellationToken cancellationToken, string bdromPath, string mkvPath = null);
+        IPromise<bool> CreateScanTask(CancellationToken cancellationToken, string bdromPath, string mkvPath = null);
 
         /// <summary>
         /// Muxes the BD-ROM to MKV and runs any post-processing plugins.
@@ -134,7 +153,7 @@ namespace BDHero
         /// <param name="cancellationToken"></param>
         /// <param name="mkvPath">Optional path to the MKV output file or directory (if overridden by the user)</param>
         /// <returns>Task that returns <c>true</c> if all muxing plugins succeeded; otherwise <c>false</c></returns>
-        Task<bool> CreateConvertTask(CancellationToken cancellationToken, string mkvPath = null);
+        IPromise<bool> CreateConvertTask(CancellationToken cancellationToken, string mkvPath = null);
 
         #endregion
     }

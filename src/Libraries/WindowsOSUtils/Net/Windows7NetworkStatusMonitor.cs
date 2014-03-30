@@ -17,9 +17,7 @@
 
 using System;
 using System.Net.NetworkInformation;
-using System.Threading;
 using DotNetUtils.Annotations;
-using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Net;
 using OSUtils.Net;
 
@@ -55,8 +53,6 @@ namespace WindowsOSUtils.Net
             }
         }
 
-#pragma warning disable 1591
-
         public bool IsOnline
         {
             get { return NetworkListManager.IsConnectedToInternet; }
@@ -66,15 +62,8 @@ namespace WindowsOSUtils.Net
 
         public void TestConnectionAsync()
         {
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork(DoNothing)
-                .Finally(NotifyObservers)
-                .Build()
-                .Start();
+            NotifyObservers();
         }
-
-#pragma warning restore 1591
 
         /// <summary>
         ///     Constructs a new <see cref="Windows7NetworkStatusMonitor"/> object.
@@ -89,10 +78,6 @@ namespace WindowsOSUtils.Net
         {
             if (NetworkStatusChanged != null)
                 NetworkStatusChanged(IsOnline);
-        }
-
-        private void DoNothing(IThreadInvoker threadinvoker, CancellationToken cancellationtoken)
-        {
         }
     }
 }

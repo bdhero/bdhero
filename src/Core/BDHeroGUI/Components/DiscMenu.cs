@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.TaskUtils;
 using OSUtils.DriveDetector;
 using UILib.WinForms;
@@ -225,13 +226,12 @@ namespace BDHeroGUI.Components
 
             var menuItems = new ToolStripItem[0];
 
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork((invoker, token) => menuItems = CreateToolStripItems(Drives))
-                .Succeed(() => UpdateMenu(menuItems))
-                .Fail(args => Logger.Error("Error occurred while scanning for discs", args.Exception))
-                .Finally(() => _isScanning = false)
-                .Build()
+            new Promise<Null>(Parent)
+                .Work(promise => menuItems = CreateToolStripItems(Drives))
+                .Done(promise => UpdateMenu(menuItems))
+                .Fail(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException))
+                .Canceled(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException)) // TODO: Remove duplication
+                .Always(promise => _isScanning = false)
                 .Start();
         }
 

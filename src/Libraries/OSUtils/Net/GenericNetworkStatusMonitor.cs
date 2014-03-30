@@ -20,6 +20,7 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.TaskUtils;
 
 namespace OSUtils.Net
@@ -55,22 +56,23 @@ namespace OSUtils.Net
 
         private void TestConnectionAsync(bool notify)
         {
-            var taskBuilder =
-                new TaskBuilder()
-                    .OnCurrentThread()
-                    .DoWork(TestConnection)
+            var promise =
+                new SimplePromise()
+                    .Work(TestConnection)
                     .Fail(Fail)
-                    .Succeed(Succeed);
+                    .Canceled(Fail)
+                    .Done(Done)
+                ;
 
             if (notify)
             {
-                taskBuilder.Finally(NotifyObservers);
+                promise.Always(NotifyObservers);
             }
 
-            taskBuilder.Build().Start();
+            promise.Start();
         }
 
-        private static void TestConnection(IThreadInvoker threadInvoker, CancellationToken cancellationToken)
+        private static void TestConnection(IPromise<bool> promise)
         {
             // ReSharper disable once UnusedVariable
             using (var client = new WebClient())
@@ -85,17 +87,17 @@ namespace OSUtils.Net
             }
         }
 
-        private void Fail(ExceptionEventArgs args)
+        private void Fail(IPromise<bool> promise)
         {
             IsOnline = false;
         }
 
-        private void Succeed()
+        private void Done(IPromise<bool> promise)
         {
             IsOnline = true;
         }
 
-        private void NotifyObservers()
+        private void NotifyObservers(IPromise<bool> promise)
         {
             if (NetworkStatusChanged != null)
                 NetworkStatusChanged(IsOnline);

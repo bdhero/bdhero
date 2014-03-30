@@ -43,6 +43,7 @@ using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using DotNetUtils.TaskUtils;
@@ -445,7 +446,7 @@ namespace BDHeroGUI
 
         private void InitController()
         {
-            _controller.ScanStarted += ControllerOnScanStarted;
+            _controller.BeforeScanStart += ControllerOnBeforeScanStart;
             _controller.ScanSucceeded += ControllerOnScanSucceeded;
             _controller.ScanFailed += ControllerOnScanFailed;
             _controller.ScanCompleted += ControllerOnScanCompleted;
@@ -663,7 +664,7 @@ namespace BDHeroGUI
                 ;
         }
 
-        private void GetMetadataStart()
+        private void GetMetadataStart(IPromise<bool> promise)
         {
             buttonScan.Text = "Searching...";
             textBoxStatus.Text = "Searching for metadata...";
@@ -671,7 +672,7 @@ namespace BDHeroGUI
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
-        private void GetMetadataSucceed()
+        private void GetMetadataSucceed(IPromise<bool> promise)
         {
             // TODO: Centralize button text
             buttonScan.Text = "Scan";
@@ -691,7 +692,7 @@ namespace BDHeroGUI
             }
         }
 
-        private void GetMetadataFail(ExceptionEventArgs args)
+        private void GetMetadataFail(IPromise<bool> promise)
         {
             // TODO: Centralize button text
             buttonScan.Text = "Scan";
@@ -707,9 +708,9 @@ namespace BDHeroGUI
                 _taskbarItem.Error();
             }
 
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowErrorDialog("Error: Metadata Search Failed", args.Exception);
+                ShowErrorDialog("Error: Metadata Search Failed", promise.LastException);
             }
 
             EnableControls(true);
@@ -723,7 +724,10 @@ namespace BDHeroGUI
         {
             if (_controller.Job == null)
                 return;
-            _controller.RenameSync(null);
+            new Promise<Null>(this)
+                .Work(promise => _controller.RenameSync(null))
+                .Start()
+                .Wait(1000);
             textBoxOutput.Text = _controller.Job.OutputPath;
         }
 
@@ -798,7 +802,7 @@ namespace BDHeroGUI
             if (path != null)
                 textBoxInput.Text = path;
 
-            _controller.SetEventScheduler();
+            _controller.SetUIContext(this);
 
             // TODO: Let File Namer plugin handle this
             var outputDirectory = FileUtils.ContainsFileName(textBoxOutput.Text)
@@ -824,7 +828,7 @@ namespace BDHeroGUI
 
             _controller.Job.SelectedPlaylistIndex = _controller.Job.Disc.Playlists.IndexOf(selectedPlaylist);
 
-            _controller.SetEventScheduler();
+            _controller.SetUIContext(this);
 
             _controller
                 .CreateConvertTask(CreateCancellationTokenSource().Token, textBoxOutput.Text)
@@ -835,7 +839,7 @@ namespace BDHeroGUI
 
         #region Scan events
 
-        private void ControllerOnScanStarted()
+        private void ControllerOnBeforeScanStart(IPromise<bool> promise)
         {
             _stage = Stage.Scan;
             buttonScan.Text = "Scanning...";
@@ -844,7 +848,7 @@ namespace BDHeroGUI
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
-        private void ControllerOnScanSucceeded()
+        private void ControllerOnScanSucceeded(IPromise<bool> promise)
         {
             textBoxOutput.Text = _controller.Job.OutputPath;
             AppendStatus("Scan succeeded!");
@@ -853,7 +857,7 @@ namespace BDHeroGUI
             PromptForMetadataIfNeeded();
         }
 
-        private void ControllerOnScanFailed(ExceptionEventArgs args)
+        private void ControllerOnScanFailed(IPromise<bool> promise)
         {
             if (IsCancellationRequested)
             {
@@ -865,13 +869,13 @@ namespace BDHeroGUI
                 AppendStatus("Scan failed!");
                 _taskbarItem.Error();
             }
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowErrorDialog("Error: Scan Failed", args.Exception);
+                ShowErrorDialog("Error: Scan Failed", promise.LastException);
             }
         }
 
-        private void ControllerOnScanCompleted()
+        private void ControllerOnScanCompleted(IPromise<bool> promise)
         {
             _stage = Stage.None;
             buttonScan.Text = "Scan";
@@ -882,7 +886,7 @@ namespace BDHeroGUI
 
         #region Convert events
 
-        private void ControllerOnConvertStarted()
+        private void ControllerOnConvertStarted(IPromise<bool> promise)
         {
             _stage = Stage.Convert;
             buttonConvert.Text = "Converting...";
@@ -891,13 +895,13 @@ namespace BDHeroGUI
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
-        private void ControllerOnConvertSucceeded()
+        private void ControllerOnConvertSucceeded(IPromise<bool> promise)
         {
             AppendStatus("Convert succeeded!");
             _taskbarItem.NoProgress();
         }
 
-        private void ControllerOnConvertFailed(ExceptionEventArgs args)
+        private void ControllerOnConvertFailed(IPromise<bool> promise)
         {
             if (IsCancellationRequested)
             {
@@ -909,13 +913,13 @@ namespace BDHeroGUI
                 AppendStatus("Convert failed!");
                 _taskbarItem.Error();
             }
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowErrorDialog("Error: Convert Failed", args.Exception);
+                ShowErrorDialog("Error: Convert Failed", promise.LastException);
             }
         }
 
-        private void ControllerOnConvertCompleted()
+        private void ControllerOnConvertCompleted(IPromise<bool> promise)
         {
             _stage = Stage.None;
             buttonConvert.Text = "Convert";

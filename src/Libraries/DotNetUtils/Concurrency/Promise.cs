@@ -26,36 +26,57 @@ using Timer = System.Timers.Timer;
 
 namespace DotNetUtils.Concurrency
 {
-    public class TimerPromise : IPromise
+    public class SimplePromise : Promise<bool>
+    {
+        public SimplePromise()
+        {
+        }
+
+        public SimplePromise(ISynchronizeInvoke synchronizingObject) : base(synchronizingObject)
+        {
+        }
+
+        protected override void BeforeDispatchCompletionEvents()
+        {
+            Result = !IsCancellationRequested && !(LastException is OperationCanceledException);
+        }
+    }
+
+    /// <summary>
+    ///     Default implementation of the <see cref="IPromise{TResult}"/> interface.
+    /// </summary>
+    public class Promise<TResult> : IPromise<TResult>
     {
         private delegate void ProgressPromiseHandler(object state);
 
-        private static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1/10);
+        private static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1d/10d);
 
         private readonly AtomicValue<Exception> _lastException = new AtomicValue<Exception>();
 
+        private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim();
+
         #region Event handlers
 
-        private readonly ConcurrentLinkedSet<BeforePromiseHandler> _beforeHandlers =
-            new ConcurrentLinkedSet<BeforePromiseHandler>();
+        private readonly ConcurrentLinkedSet<BeforePromiseHandler<TResult>> _beforeHandlers =
+            new ConcurrentLinkedSet<BeforePromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<DoWorkPromiseHandler> _doWorkHandlers =
-            new ConcurrentLinkedSet<DoWorkPromiseHandler>();
+        private readonly ConcurrentLinkedSet<DoWorkPromiseHandler<TResult>> _doWorkHandlers =
+            new ConcurrentLinkedSet<DoWorkPromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<CancellationRequestedPromiseHandler> _cancellationRequestedHandlers =
-            new ConcurrentLinkedSet<CancellationRequestedPromiseHandler>();
+        private readonly ConcurrentLinkedSet<CancellationRequestedPromiseHandler<TResult>> _cancellationRequestedHandlers =
+            new ConcurrentLinkedSet<CancellationRequestedPromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<CanceledPromiseHandler> _canceledHandlers =
-            new ConcurrentLinkedSet<CanceledPromiseHandler>();
+        private readonly ConcurrentLinkedSet<CanceledPromiseHandler<TResult>> _canceledHandlers =
+            new ConcurrentLinkedSet<CanceledPromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<SuccessPromiseHandler> _successHandlers =
-            new ConcurrentLinkedSet<SuccessPromiseHandler>();
+        private readonly ConcurrentLinkedSet<SuccessPromiseHandler<TResult>> _successHandlers =
+            new ConcurrentLinkedSet<SuccessPromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<FailurePromiseHandler> _failureHandlers =
-            new ConcurrentLinkedSet<FailurePromiseHandler>();
+        private readonly ConcurrentLinkedSet<FailurePromiseHandler<TResult>> _failureHandlers =
+            new ConcurrentLinkedSet<FailurePromiseHandler<TResult>>();
 
-        private readonly ConcurrentLinkedSet<AlwaysPromiseHandler> _alwaysHandlers =
-            new ConcurrentLinkedSet<AlwaysPromiseHandler>();
+        private readonly ConcurrentLinkedSet<AlwaysPromiseHandler<TResult>> _alwaysHandlers =
+            new ConcurrentLinkedSet<AlwaysPromiseHandler<TResult>>();
 
         private readonly ConcurrentMultiValueDictionary<Type, ProgressPromiseHandler> _progressHandlers =
             new ConcurrentMultiValueDictionary<Type, ProgressPromiseHandler>();
@@ -75,21 +96,66 @@ namespace DotNetUtils.Concurrency
 
         private volatile bool _hasStarted;
 
+        private readonly IInvoker _uiInvoker;
+
         private readonly Timer _timer = new Timer(DefaultInterval.TotalMilliseconds) { AutoReset = true };
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public TimerPromise()
+        /// <summary>
+        ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
+        ///     the <b>current thread</b>.
+        /// </summary>
+        public Promise()
             : this(new Control())
         {
         }
 
-        public TimerPromise(ISynchronizeInvoke synchronizingObject)
+        /// <summary>
+        ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
+        ///     the given <paramref name="synchronizingObject"/>'s owner thread.
+        /// </summary>
+        /// <param name="synchronizingObject"></param>
+        public Promise(ISynchronizeInvoke synchronizingObject)
         {
+            _uiInvoker = new Invoker(synchronizingObject);
             _timer.SynchronizingObject = synchronizingObject;
             _timer.Elapsed += OnTimerElapsed;
             _cancellationTokenSource.Token.Register(OnCancellationRequested);
         }
+
+        #region Public result
+
+        private readonly AtomicValue<TResult> _result = new AtomicValue<TResult>();
+        private readonly AtomicValue<bool> _hasResult = new AtomicValue<bool>();
+
+        public TResult Result
+        {
+            get
+            {
+                if (!_hasResult)
+                {
+                    throw new InvalidOperationException("Promise.Result has not been set.");
+                }
+                return _result;
+            }
+            set
+            {
+                _result.Value = value;
+                _hasResult.Value = true;
+            }
+        }
+
+        #endregion
+
+        #region Public invoker
+
+        public IInvoker UIInvoker
+        {
+            get { return _uiInvoker; }
+        }
+
+        #endregion
 
         #region Public properties
 
@@ -110,47 +176,52 @@ namespace DotNetUtils.Concurrency
             get { return _cancellationTokenSource.IsCancellationRequested; }
         }
 
+        public bool IsCompleted
+        {
+            get { return _stopped.IsSet; }
+        }
+
         #endregion
 
         #region Public event handlers
 
-        public IPromise Before(BeforePromiseHandler handler)
+        public IPromise<TResult> Before(BeforePromiseHandler<TResult> handler)
         {
             _beforeHandlers.Add(handler);
             return this;
         }
 
-        public IPromise DoWork(DoWorkPromiseHandler handler)
+        public IPromise<TResult> Work(DoWorkPromiseHandler<TResult> handler)
         {
             _doWorkHandlers.Add(handler);
             return this;
         }
 
-        public IPromise CancellationRequested(CancellationRequestedPromiseHandler handler)
+        public IPromise<TResult> CancellationRequested(CancellationRequestedPromiseHandler<TResult> handler)
         {
             _cancellationRequestedHandlers.Add(handler);
             return this;
         }
 
-        public IPromise Canceled(CanceledPromiseHandler handler)
+        public IPromise<TResult> Canceled(CanceledPromiseHandler<TResult> handler)
         {
             _canceledHandlers.Add(handler);
             return this;
         }
 
-        public IPromise Fail(FailurePromiseHandler handler)
+        public IPromise<TResult> Fail(FailurePromiseHandler<TResult> handler)
         {
             _failureHandlers.Add(handler);
             return this;
         }
 
-        public IPromise Succeed(SuccessPromiseHandler handler)
+        public IPromise<TResult> Done(SuccessPromiseHandler<TResult> handler)
         {
             _successHandlers.Add(handler);
             return this;
         }
 
-        public IPromise Always(AlwaysPromiseHandler handler)
+        public IPromise<TResult> Always(AlwaysPromiseHandler<TResult> handler)
         {
             _alwaysHandlers.Add(handler);
             return this;
@@ -160,14 +231,14 @@ namespace DotNetUtils.Concurrency
 
         #region Public progress handlers
 
-        public IPromise Progress<TState>(ProgressPromiseHandler<TState> handler) where TState : class
+        public IPromise<TResult> Progress<TState>(ProgressPromiseHandler<TResult, TState> handler) where TState : class
         {
             var handlerWrapper = new ProgressPromiseHandler(o => handler(this, o as TState));
             _progressHandlers.Enqueue(typeof(TState), handlerWrapper);
             return this;
         }
 
-        public IPromise Progress<TState>(TState state) where TState : class
+        public IPromise<TResult> Progress<TState>(TState state) where TState : class
         {
             _progressEventStates.Enqueue(typeof(TState), state);
             return this;
@@ -177,17 +248,48 @@ namespace DotNetUtils.Concurrency
 
         #region Public control methods
 
-        public void Start()
+        public IPromise<TResult> Start()
         {
             PreventMultipleStarts();
             InvokeBeforeHandlers();
             StartTimer();
             StartTask();
+            return this;
         }
 
-        public void Cancel()
+        public IPromise<TResult> Cancel()
+        {
+            CancelImpl();
+            return this;
+        }
+
+        public IPromise<TResult> CancelWith(CancellationToken token)
+        {
+            token.Register(CancelImpl);
+            return this;
+        }
+
+        private void CancelImpl()
         {
             _cancellationTokenSource.Cancel();
+        }
+
+        public IPromise<TResult> Wait()
+        {
+            _stopped.Wait();
+            return this;
+        }
+
+        public IPromise<TResult> Wait(int millisecondsTimeout)
+        {
+            _stopped.Wait(millisecondsTimeout);
+            return this;
+        }
+
+        public IPromise<TResult> Wait(TimeSpan timeout)
+        {
+            _stopped.Wait(timeout);
+            return this;
         }
 
         #endregion
@@ -198,7 +300,7 @@ namespace DotNetUtils.Concurrency
         {
             if (_hasStarted)
             {
-                throw new InvalidOperationException("TimerPromise.Start() cannot be called more than once");
+                throw new InvalidOperationException("Promise.Start() cannot be called more than once");
             }
 
             _hasStarted = true;
@@ -222,6 +324,12 @@ namespace DotNetUtils.Concurrency
             _timer.Start();
         }
 
+        private void StopTimer()
+        {
+            _timer.Stop();
+            _stopped.Set();
+        }
+
         private void StartTask()
         {
             Task.Factory.StartNew(TryDoWork, _cancellationTokenSource.Token);
@@ -234,7 +342,7 @@ namespace DotNetUtils.Concurrency
         {
             try
             {
-                DoWork();
+                Work();
             }
             catch (Exception exception)
             {
@@ -249,7 +357,7 @@ namespace DotNetUtils.Concurrency
         /// <remarks>
         /// Background thread.
         /// </remarks>
-        private void DoWork()
+        private void Work()
         {
             foreach (var doWorkHandler in _doWorkHandlers.ToList())
             {
@@ -272,6 +380,8 @@ namespace DotNetUtils.Concurrency
         private void OnCancellationRequested()
         {
             _cancellationRequestQueue.Enqueue(DateTime.Now);
+            if (LastException == null)
+                LastException = new OperationCanceledException();
         }
 
         private void DispatchEvents()
@@ -319,17 +429,27 @@ namespace DotNetUtils.Concurrency
         private void DispatchCompletionEvents()
         {
             DateTime dateTime;
-            if (!_finishedQueue.TryDequeue(out dateTime)) return;
+            if (!_finishedQueue.TryDequeue(out dateTime))
+                return;
+
+            BeforeDispatchCompletionEvents();
 
             DispatchCanceledEvents();
             DispatchFailEvents();
             DispatchSuccessEvents();
             DispatchAlwaysEvents();
+
+            StopTimer();
+        }
+
+        protected virtual void BeforeDispatchCompletionEvents()
+        {
         }
 
         private void DispatchCanceledEvents()
         {
-            if (!IsCancellationRequested) return;
+            if (!IsCancellationRequested)
+                return;
 
             var handlers = _canceledHandlers.ToList();
             foreach (var handler in handlers)
@@ -340,7 +460,8 @@ namespace DotNetUtils.Concurrency
 
         private void DispatchFailEvents()
         {
-            if (LastException == null) return;
+            if (IsCancellationRequested || LastException == null)
+                return;
 
             var handlers = _failureHandlers.ToList();
             foreach (var handler in handlers)
@@ -351,7 +472,8 @@ namespace DotNetUtils.Concurrency
 
         private void DispatchSuccessEvents()
         {
-            if (IsCancellationRequested || LastException != null) return;
+            if (IsCancellationRequested || LastException != null)
+                return;
 
             var handlers = _successHandlers.ToList();
             foreach (var handler in handlers)

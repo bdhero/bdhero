@@ -64,7 +64,7 @@
     <Compile Include="Concurrency\ConcurrentLinkedSet.cs" />
     <Compile Include="Concurrency\ConcurrentMultiValueDictionary.cs" />
     <Compile Include="Concurrency\IPromise.cs" />
-    <Compile Include="Concurrency\TimerPromise.cs" />
+    <Compile Include="Concurrency\Promise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="FS\FileType.cs" />
@@ -97,15 +97,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SmartJsonConvert.cs" />
-    <Compile Include="TaskUtils\IThreadInvoker.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="TaskUtils\ProgressEstimator.cs" />
     <Compile Include="TaskUtils\ProgressSample.cs" />
     <Compile Include="TaskUtils\ProgressSampleState.cs" />
     <Compile Include="TaskUtils\ProgressSampleUnit.cs" />
-    <Compile Include="TaskUtils\TaskDelegates.cs" />
-    <Compile Include="TaskUtils\ThreadInvoker.cs" />
-    <Compile Include="TaskUtils\TaskBuilder.cs" />
     <Compile Include="FS\TempFileRegistrar.cs" />
     <Compile Include="Throttle.cs" />
     <Compile Include="ToStringBuilder.cs" />

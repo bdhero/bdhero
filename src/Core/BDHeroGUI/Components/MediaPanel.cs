@@ -25,6 +25,7 @@ using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.TaskUtils;
 using UILib.WinForms.Controls;
@@ -179,23 +180,26 @@ namespace BDHeroGUI.Components
             var coverArt = medium.CoverArtImages.FirstOrDefault();
             if (coverArt == null) return;
 
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork(delegate
-                {
-                    var image = coverArt.Image;
-                    Logger.DebugFormat("Finished loading poster image: {0}", image);
-                })
-                .Fail(delegate(ExceptionEventArgs args)
-                {
-                    Logger.Error("Unable to fetch poster image", args.Exception);
-                    SelectedCoverArt = null;
-                })
-                .Succeed(delegate
-                {
-                    SelectedCoverArt = coverArt;
-                })
-                .Build()
+            new Promise<Null>()
+                .Work(delegate
+                      {
+                          var image = coverArt.Image;
+                          Logger.DebugFormat("Finished loading poster image: {0}", image);
+                      })
+                .Fail(delegate(IPromise<Null> promise)
+                      {
+                          Logger.Error("Unable to fetch poster image", promise.LastException);
+                          SelectedCoverArt = null;
+                      })
+                .Canceled(delegate(IPromise<Null> promise)
+                      {
+                          Logger.Error("Unable to fetch poster image", promise.LastException);
+                          SelectedCoverArt = null;
+                      }) // TODO: Remove duplication w/ Fail
+                .Done(delegate
+                      {
+                          SelectedCoverArt = coverArt;
+                      })
                 .Start()
                 ;
         }
