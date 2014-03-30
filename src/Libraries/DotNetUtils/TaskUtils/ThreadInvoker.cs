@@ -25,6 +25,9 @@ namespace DotNetUtils.TaskUtils
     /// </summary>
     public class ThreadInvoker : IThreadInvoker
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly TaskScheduler _callbackThread;
 
         private readonly CancellationToken _cancellationToken;
@@ -42,7 +45,10 @@ namespace DotNetUtils.TaskUtils
 
         public void InvokeOnUIThreadSync(ThreadAction action)
         {
-            StartTask(action, _cancellationToken).Wait(1000);
+            if (!StartTask(action, _cancellationToken).Wait(1000))
+            {
+                Logger.Warn("Synchronous action failed to complete within 1000ms");
+            }
         }
 
         public void InvokeOnUIThreadAsync(ThreadAction action)
