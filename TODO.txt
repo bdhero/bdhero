@@ -1,23 +1,17 @@
 Chores
 ======
 
-[ ] Normalize line endings
 [ ] Add WyDay to LicenseUtils (SplitButton, LinkLabel2, etc.)
 [ ] Create new library that calls the native or managed API for each OS (e.g., DrawThemedTextBoxBorder)
 
 [ ] Use HandleRef instead of IntPtr
-
 [ ] Use try/catch around P/Invoke calls instead of #if !__MonoCS__?
-
-[ ] Remove Mono compile-time checks (via #if __MonoCS__) and use runtime checks instead: http://stackoverflow.com/a/329072/467582.  Don't compile w/ Xamarin Studio - only use Visual Studio.
 
 [ ] Normalize capitalization of Win32 classes/structs/enums
 
 [ ] Missing XML comment for publicly visible type or member ...
 
 [ ] Break up DotNetUtils into separate projects
-
-[ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
 
 [ ] Test silent installs and updates
 [ ] Add /portable command line arg
@@ -118,6 +112,11 @@ Important
 ---------
 
 2. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
+
+Meh
+---
+
+[ ] Remove Mono compile-time checks (via #if __MonoCS__) and use runtime checks instead: http://stackoverflow.com/a/329072/467582.  Don't compile w/ Xamarin Studio - only use Visual Studio.
 
 Backlog
 =======
