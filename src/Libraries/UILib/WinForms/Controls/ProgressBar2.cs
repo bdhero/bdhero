@@ -139,34 +139,38 @@ namespace UILib.WinForms.Controls
             {
                 using (Graphics offscreen = Graphics.FromImage(offscreenImage))
                 {
-                    Rectangle rect = new Rectangle(0, 0, Width, Height);
+                    var rect = new Rectangle(0, 0, Width, Height);
 
+                    // Draw empty progress bar on systems with themes enabled
                     if (ProgressBarRenderer.IsSupported)
                         ProgressBarRenderer.DrawHorizontalBar(offscreen, rect);
 
-                    rect.Inflate(new Size(-inset, -inset)); // Deflate inner rect.
+                    // Deflate inner rect.
+                    rect.Inflate(new Size(-inset, -inset));
                     rect.Width = (int)(rect.Width * ((double)Value / Maximum));
-                    if (rect.Width == 0) rect.Width = 1; // Can't draw rec with width of 0.
 
-                    LinearGradientBrush brush = new LinearGradientBrush(rect, BackColorTop, BackColorBottom, LinearGradientMode.Vertical);
+                    // Can't draw rec with width of 0.
+                    if (rect.Width == 0)
+                        rect.Width = 1;
+
+                    var brush = new LinearGradientBrush(rect, BackColorTop, BackColorBottom, LinearGradientMode.Vertical);
                     offscreen.FillRectangle(brush, inset, inset, rect.Width, rect.Height);
 
                     var g = e.Graphics;
 
                     g.DrawImage(offscreenImage, 0, 0);
 
-                    // Use high quality rendering
-                    // See http://stackoverflow.com/a/4200875/467582
-                    g.InterpolationMode = InterpolationMode.High;
-                    g.SmoothingMode = SmoothingMode.HighQuality;
-//                    g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-//                    g.CompositingQuality = CompositingQuality.HighQuality;
-
                     if (GenerateText != null)
                     {
+
+                        // Use high quality rendering
+                        // See http://stackoverflow.com/a/4200875/467582
+                        g.InterpolationMode = InterpolationMode.High;
+                        g.SmoothingMode = SmoothingMode.HighQuality;
+//                        g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+//                        g.CompositingQuality = CompositingQuality.HighQuality;
+
                         var text = GenerateText(ValuePercent);
-                        var style = (int) FontStyle.Regular;
-                        var emSize = Font.Size * 1.5f;
 
                         SizeF len = g.MeasureString(text, Font);
 
@@ -177,6 +181,9 @@ namespace UILib.WinForms.Controls
                         // Draw the custom text
                         if (TextOutline)
                         {
+                            var style = (int)FontStyle.Regular;
+                            var emSize = Font.Size * 1.5f;
+
                             // See http://stackoverflow.com/a/4200875/467582
                             var graphicsPath = new GraphicsPath();
                             graphicsPath.AddString(text, Font.FontFamily, style, emSize, location, StringFormat.GenericTypographic); // Brushes.Black, location);
