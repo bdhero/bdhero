@@ -335,7 +335,7 @@ namespace TextEditor.WPF
         public string SelectedText
         {
             get { return _editor.SelectedText; }
-            set { _editor.SelectedText = value; }
+            set { _editor.SelectedText = value ?? ""; }
         }
 
         public int SelectionStart

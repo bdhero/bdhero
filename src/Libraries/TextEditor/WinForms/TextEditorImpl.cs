@@ -336,6 +336,8 @@ namespace TextEditor.WinForms
             get { return string.Join("\n", Selections.Select(selection => selection.SelectedText)); }
             set
             {
+                value = value ?? "";
+
                 var selections = Selections.ToList();
                 if (selections.Any())
                 {
