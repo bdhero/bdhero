@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
 namespace DotNetUtils.Concurrency
@@ -77,6 +78,11 @@ namespace DotNetUtils.Concurrency
         private readonly Timer _timer = new Timer(DefaultInterval.TotalMilliseconds) { AutoReset = true };
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        public TimerPromise()
+            : this(new Control())
+        {
+        }
 
         public TimerPromise(ISynchronizeInvoke synchronizingObject)
         {
