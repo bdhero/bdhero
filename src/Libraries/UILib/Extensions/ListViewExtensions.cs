@@ -52,24 +52,22 @@ namespace UILib.Extensions
         public static void AutoSizeLastColumn(this ListView listView)
         {
 #if !__MonoCS__
-            var form = listView.FindForm();
-
-            // Form hasn't opened yet or is closing
-            if (form == null)
+            if (listView.AnyParent(parent => parent.Disposing || parent.IsDisposed))
                 return;
 
-            listView.SuspendDrawing();
-
             var columnHeaders = listView.Columns.OfType<ColumnHeader>().ToArray();
+            if (!columnHeaders.Any())
+                return;
+
             var maxDisplayIndex = columnHeaders.Max(header => header.DisplayIndex);
             var lastColumn = columnHeaders.LastOrDefault(header => header.DisplayIndex == maxDisplayIndex);
             if (lastColumn != null)
             {
+                listView.SuspendDrawing();
                 lastColumn.AutoResize();
                 lastColumn.Width -= 2; // TODO: Figure out why this is necessary on some ListViews (e.g., FormFileNamerPreferences)
+                listView.ResumeDrawing();
             }
-
-            listView.ResumeDrawing();
 #endif
         }
 
