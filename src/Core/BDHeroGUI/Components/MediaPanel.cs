@@ -179,7 +179,7 @@ namespace BDHeroGUI.Components
             var coverArt = medium.CoverArtImages.FirstOrDefault();
             if (coverArt == null) return;
 
-            new EmptyPromise()
+            new EmptyPromise(this)
                 .Work(delegate
                       {
                           var image = coverArt.Image;
