@@ -97,7 +97,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SmartJsonConvert.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="TaskUtils\ProgressEstimator.cs" />
     <Compile Include="TaskUtils\ProgressSample.cs" />
     <Compile Include="TaskUtils\ProgressSampleState.cs" />
