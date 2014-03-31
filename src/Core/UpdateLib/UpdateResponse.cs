@@ -92,7 +92,9 @@ namespace UpdateLib
         [JsonProperty(PropertyName = "filename")]
         public string FileName { get; set; }
 
+        [JsonProperty(PropertyName = "sha1")]
         public string SHA1 { get; set; }
+
         public long Size { get; set; }
     }
 }
