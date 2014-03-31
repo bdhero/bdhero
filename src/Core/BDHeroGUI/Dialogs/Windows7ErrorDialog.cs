@@ -26,15 +26,17 @@ using DotNetUtils.Concurrency;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OSUtils.Net;
 using UILib.Extensions;
+using UpdateLib;
 
 namespace BDHeroGUI.Dialogs
 {
     public class Windows7ErrorDialog : IErrorDialog
     {
         private const string CopyDetailsHref = "copy_details";
-        private const string EditReportHref = "edit_report";
-        private const string SubmitButtonTextOnline = "&Report This Error\nNo questions asked!";
-        private const string SubmitButtonTextOffline = "&Report This Error (Internet access required)\nNo questions asked!";
+        private const string EditReportHref  = "edit_report";
+        private const string SubmitButtonTextOnline  = "&Report This Error\nNo questions asked!";
+        private const string SubmitButtonTextOffline = "&Report This Error\nInternet access required";
+        private const string SubmitButtonTextUpdate  = "&Report This Error\nProgram update required";
 
         /// <summary>
         ///     Indicates whether this feature is supported on the current platform.
@@ -44,16 +46,19 @@ namespace BDHeroGUI.Dialogs
             get { return TaskDialog.IsPlatformSupported; }
         }
 
-        private readonly INetworkStatusMonitor _networkStatusMonitor;
         private readonly ErrorReport _report;
+        private readonly INetworkStatusMonitor _networkStatusMonitor;
+        private readonly UpdateClient _updateClient;
+
         private readonly IList<IErrorReportResultVisitor> _reportResultVisitors = new List<IErrorReportResultVisitor>();
 
         private IErrorReportResult _errorReportResult;
 
-        public Windows7ErrorDialog(INetworkStatusMonitor networkStatusMonitor, ErrorReport report)
+        public Windows7ErrorDialog(ErrorReport report, INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient)
         {
-            _networkStatusMonitor = networkStatusMonitor;
             _report = report;
+            _networkStatusMonitor = networkStatusMonitor;
+            _updateClient = updateClient;
 
             // Defaults
             Title = "Error";
@@ -180,12 +185,16 @@ namespace BDHeroGUI.Dialogs
             if (submitButton == null)
                 return;
 
-            submitButton.Enabled = isConnectedToInternet;
+            submitButton.Enabled = isConnectedToInternet && !_updateClient.IsUpdateAvailable;
         }
 
         private TaskDialogCommandLink CreateSubmitButton(TaskDialog dialog)
         {
-            var sendButton = new TaskDialogCommandLink("submitButton", _networkStatusMonitor.IsOnline ? SubmitButtonTextOnline : SubmitButtonTextOffline);
+            var text = _updateClient.IsUpdateAvailable ? SubmitButtonTextUpdate :
+                       _networkStatusMonitor.IsOnline  ? SubmitButtonTextOnline :
+                                                         SubmitButtonTextOffline;
+
+            var sendButton = new TaskDialogCommandLink("submitButton", text);
             sendButton.Click += (sender, args) => Submit(dialog);
             return sendButton;
         }
@@ -254,7 +263,7 @@ namespace BDHeroGUI.Dialogs
         {
             DialogResult result;
 
-            using (var form = new FormErrorReport(_report, _networkStatusMonitor))
+            using (var form = new FormErrorReport(_report, _networkStatusMonitor, _updateClient))
             {
                 result = form.ShowDialog(owner);
             }

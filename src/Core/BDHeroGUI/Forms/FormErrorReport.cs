@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
+using DotNetUtils;
 using OSUtils.Net;
 using TextEditor;
 using TextEditor.WinForms;
+using UpdateLib;
 
 namespace BDHeroGUI.Forms
 {
@@ -11,15 +13,17 @@ namespace BDHeroGUI.Forms
     {
         private readonly ErrorReport _report;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
+        private readonly UpdateClient _updateClient;
 
         private readonly ITextEditor _editor;
 
-        public FormErrorReport(ErrorReport report, INetworkStatusMonitor networkStatusMonitor)
+        public FormErrorReport(ErrorReport report, INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient)
         {
             InitializeComponent();
 
             _report = report;
             _networkStatusMonitor = networkStatusMonitor;
+            _updateClient = updateClient;
 
             var editorControl = new TextEditorControl();
             _editor = editorControl.Editor;
@@ -47,12 +51,19 @@ namespace BDHeroGUI.Forms
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
+            if (_updateClient.IsUpdateAvailable)
+            {
+                var message = string.Format("{0} is out of date.  To report errors, you need the latest version." + "\n" +
+                                            "You can download the latest and greatest from the Help menu.", AppUtils.ProductName);
+                MessageBox.Show(this, message, "Update required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (!_networkStatusMonitor.IsOnline)
             {
-                MessageBox.Show(this,
-                                "You do not appear to be connected to the Internet." + "\n" +
-                                "Please reconnect and try again.",
-                                "Internet connection required", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var message = string.Format("You do not appear to be connected to the Internet." + "\n" +
+                                            "Please reconnect and try again.");
+                MessageBox.Show(this, message, "Internet connection required", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

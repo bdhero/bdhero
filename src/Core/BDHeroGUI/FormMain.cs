@@ -560,7 +560,7 @@ namespace BDHeroGUI
 
             if (Windows7ErrorDialog.IsPlatformSupported)
             {
-                dialog = new Windows7ErrorDialog(_networkStatusMonitor, report);
+                dialog = new Windows7ErrorDialog(report, _networkStatusMonitor, _updateClient);
             }
             else
             {
