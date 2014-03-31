@@ -78,6 +78,18 @@ namespace UILib.Extensions
             return new Size(widthDelta, heightDelta);
         }
 
+        public static bool AnyParent(this Control control, Func<Control, bool> test)
+        {
+            var parent = control.Parent;
+            while (parent != null)
+            {
+                if (test(parent))
+                    return true;
+                parent = parent.Parent;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Recursively iterates over the control's child controls and returns a collection of all descendant controls.
         /// </summary>
