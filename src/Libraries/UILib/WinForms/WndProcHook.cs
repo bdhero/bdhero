@@ -10,9 +10,9 @@ namespace UILib.WinForms
     /// </summary>
     /// <seealso cref="http://stackoverflow.com/a/3539204/467582"/>
     /// <seealso cref="http://msdn.microsoft.com/en-us/library/system.windows.forms.nativewindow(v=vs.100).aspx"/>
-    public class WndProcHook : NativeWindow
+    public class WndProcHook
     {
-        private readonly Control _control;
+        private readonly WndProcHookImpl _impl;
 
         /// <summary>
         ///     Invoked whenever the hooked control's <see cref="Control.WndProc"/> method is called.
@@ -28,44 +28,78 @@ namespace UILib.WinForms
         /// </param>
         public WndProcHook(Control control)
         {
-            _control = control;
-
-            if (_control == null)
-                return;
-
-            _control.HandleCreated += HandleCreated;
-            _control.HandleDestroyed += HandleDestroyed;
-
-            if (_control.IsHandleCreated)
-                HijackHandle();
+            _impl = new WndProcHookImpl(control);
+            _impl.WndProcMessage += OnWndProcMessage;
         }
 
-        protected override void WndProc(ref Message m)
+        /// <summary>
+        ///     Invokes the default window procedure associated with this window. 
+        /// </summary>
+        /// <param name="m">
+        ///     The message that is currently being processed. 
+        /// </param>
+        public void DefWndProc(ref Message m)
         {
-            var args = new HandledEventArgs();
+            _impl.DefWndProc(ref m);
+        }
 
+        private void OnWndProcMessage(ref Message message, HandledEventArgs args)
+        {
             if (WndProcMessage != null)
-                WndProcMessage(ref m, args);
-
-            if (args.Handled)
-                return;
-
-            base.WndProc(ref m);
+                WndProcMessage(ref message, args);
         }
 
-        private void HandleCreated(object sender, EventArgs args)
+        #region Private implementation
+
+        private class WndProcHookImpl : NativeWindow
         {
-            HijackHandle();
+            private readonly Control _control;
+
+            public event WndProcEventHandler WndProcMessage;
+
+            public WndProcHookImpl(Control control)
+            {
+                _control = control;
+
+                if (_control == null)
+                    return;
+
+                _control.HandleCreated += HandleCreated;
+                _control.HandleDestroyed += HandleDestroyed;
+
+                if (_control.IsHandleCreated)
+                    HijackHandle();
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                var args = new HandledEventArgs();
+
+                if (WndProcMessage != null)
+                    WndProcMessage(ref m, args);
+
+                if (args.Handled)
+                    return;
+
+                base.WndProc(ref m);
+            }
+
+            private void HandleCreated(object sender, EventArgs args)
+            {
+                HijackHandle();
+            }
+
+            private void HandleDestroyed(object sender, EventArgs eventArgs)
+            {
+                ReleaseHandle();
+            }
+
+            private void HijackHandle()
+            {
+                AssignHandle(_control.Handle);
+            }
         }
 
-        private void HandleDestroyed(object sender, EventArgs eventArgs)
-        {
-            ReleaseHandle();
-        }
-
-        private void HijackHandle()
-        {
-            AssignHandle(_control.Handle);
-        }
+        #endregion
     }
 }
