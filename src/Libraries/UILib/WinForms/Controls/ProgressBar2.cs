@@ -89,6 +89,11 @@ namespace UILib.WinForms.Controls
         {
             BackColorTop = top;
             BackColorBottom = bottom;
+
+            // Helps control the flicker.
+            if (UseCustomColors && VisualStyleInformation.IsEnabledByUser)
+                return;
+
             Invalidate();
         }
 
