@@ -72,10 +72,9 @@ namespace BDHeroGUI
         private readonly ITaskbarItem _taskbarItem;
         private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
-
         private readonly UpdateClient _updateClient;
 
-        private readonly ToolTip _progressBarToolTip;
+        private readonly ToolTip _progressBarToolTip = new ToolTip();
 
         private bool _isRunning;
         private CancellationTokenSource _cancellationTokenSource;
@@ -108,6 +107,7 @@ namespace BDHeroGUI
             InitializeComponent();
 
             Load += OnLoad;
+            FormClosing += OnFormClosing;
 
             _logger = logger;
             _directoryLocator = directoryLocator;
@@ -121,13 +121,40 @@ namespace BDHeroGUI
             _networkStatusMonitor = networkStatusMonitor;
             _updateClient = updateClient;
 
-            updateToolStripMenuItem.Visible = false;
-
-            _progressBarToolTip = new ToolTip();
-            _progressBarToolTip.SetToolTip(progressBar, null);
-
             progressBar.UseCustomColors = true;
             progressBar.GenerateText = percentComplete => string.Format("{0}: {1:0.00}%", _state, percentComplete);
+
+            var recentFiles = _preferenceManager.Preferences.RecentFiles;
+            if (recentFiles.RememberRecentFiles && recentFiles.RecentBDROMPaths.Any())
+            {
+                textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
+            }
+
+            InitTaskBarId();
+
+            debugToolStripMenuItem.Visible = false;
+            updateToolStripMenuItem.Visible = false;
+            toolStripStatusLabelOffline.Visible = false;
+        }
+
+        private void OnLoad(object sender, EventArgs eventArgs)
+        {
+            Text += " v" + AppUtils.AppVersion;
+
+            ParseArgs();
+
+            LogDirectoryPaths();
+            LoadPlugins();
+            LogPlugins();
+
+            InitController();
+            InitPluginMenu();
+            InitSystemMenu();
+            InitDriveDetector();
+            InitNetworkStatusMonitor(); // TODO: Add setting to enable/disable
+            InitUpdateCheck();          // TODO: Add setting to enable/disable
+
+            #region UI event binding
 
             playlistListView.ItemSelectionChanged += PlaylistListViewOnItemSelectionChanged;
             playlistListView.ShowAllChanged += PlaylistListViewOnShowAllChanged;
@@ -138,30 +165,27 @@ namespace BDHeroGUI
             mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
 
-            FormClosing += OnFormClosing;
+            #endregion
 
-            var recentFiles = _preferenceManager.Preferences.RecentFiles;
-            if (recentFiles.RememberRecentFiles && recentFiles.RecentBDROMPaths.Any())
-            {
-                textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
-            }
+            EnableControls(true);
+            splitContainerTop.Enabled = false;
+            splitContainerMain.Enabled = false;
 
-            InitSystemMenu();
+            this.EnableSelectAll();
 
-            InitTaskBarId();
+            textBoxOutput.FileTypes = new[]
+                {
+                    new FileType
+                        {
+                            Description = "Matroska video file",
+                            Extensions = new[] {".mkv"}
+                        }
+                };
 
-            debugToolStripMenuItem.Visible = false;
-        }
+            InitAboutBox();
+            InitTextEditor();
 
-        private void InitTaskBarId()
-        {
-            if (TaskbarManager.IsPlatformSupported)
-            {
-                var manager = TaskbarManager.Instance;
-                manager.ApplicationId = string.Format("{0}.{1}.{2}.{3:s}",
-                                                      AppUtils.ProductName, AppUtils.AppName,
-                                                      AppUtils.AppVersion, AppUtils.BuildDate);
-            }
+            ScanOnStartup();
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
@@ -199,83 +223,11 @@ namespace BDHeroGUI
             }
         }
 
-        private void OnLoad(object sender, EventArgs eventArgs)
+        #endregion
+
+        private void Invoke(Action action)
         {
-            Text += " v" + AppUtils.AppVersion;
-
-            LogDirectoryPaths();
-            LoadPlugins();
-            LogPlugins();
-            InitController();
-            InitPluginMenu();
-            InitUpdateCheck();
-
-            EnableControls(true);
-            splitContainerTop.Enabled = false;
-            splitContainerMain.Enabled = false;
-
-            this.EnableSelectAll();
-
-            textBoxOutput.FileTypes = new[]
-                {
-                    new FileType
-                        {
-                            Description = "Matroska video file",
-                            Extensions = new[] {".mkv"}
-                        }
-                };
-
-            InitDriveDetector();
-
-            toolStripStatusLabelOffline.Visible = false;
-
-            // TODO: Add setting to enable/disable
-            InitNetworkStatusMonitor();
-
-            InitAboutBox();
-            InitTextEditors();
-
-            ParseArgs();
-
-            ScanOnStartup();
-        }
-
-        private void InitNetworkStatusMonitor()
-        {
-            _networkStatusMonitor.NetworkStatusChanged += NetworkStatusMonitorOnNetworkStatusChanged;
-            _networkStatusMonitor.TestConnectionAsync();
-        }
-
-        private void NetworkStatusMonitorOnNetworkStatusChanged(bool isConnectedToInternet)
-        {
-            Invoke(new Action(() => SetIsOnline(isConnectedToInternet)));
-        }
-
-        private void SetIsOnline(bool isOnline)
-        {
-            toolStripStatusLabelOffline.Visible = !isOnline;
-
-            if (!isOnline)
-                return;
-
-            _updateClient.CheckForUpdateAsync();
-        }
-
-        /// <summary>
-        ///     The <see cref="AboutBox"/> takes several seconds to initialize the first time
-        ///     it is constructed, so preemptively instantiate it in a
-        ///     background thread to speed up loading when the user actually opens it.
-        /// </summary>
-        private void InitAboutBox()
-        {
-            Task.Factory.StartNew(InitAboutBoxImpl);
-        }
-
-        private void InitAboutBoxImpl()
-        {
-            using (var form = new AboutBox(_pluginRepository))
-            {
-            }
+            base.Invoke(action);
         }
 
         private void ShowAboutBox()
@@ -286,11 +238,24 @@ namespace BDHeroGUI
             }
         }
 
-        private void InitTextEditors()
+        #region Initialization
+
+        #region Taskbar ID
+
+        private static void InitTaskBarId()
         {
-            var editor = TextEditorFactory.CreateMultiLineTextEditor();
-            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+            if (!TaskbarManager.IsPlatformSupported)
+                return;
+
+            var manager = TaskbarManager.Instance;
+            manager.ApplicationId = string.Format("{0}.{1}.{2}.{3:s}",
+                                                  AppUtils.ProductName, AppUtils.AppName,
+                                                  AppUtils.AppVersion, AppUtils.BuildDate);
         }
+
+        #endregion
+
+        #region Command-line argument parsing
 
         private void ParseArgs()
         {
@@ -300,103 +265,9 @@ namespace BDHeroGUI
             }
         }
 
-        private void ScanOnStartup()
-        {
-            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
-            if (path == null)
-                return;
-            Scan(path);
-        }
-
         #endregion
 
-        #region Error Reporting
-
-        private void ShowErrorDialog(string title, Exception exception, bool isReportable = true)
-        {
-            var report = new ErrorReport(exception, _pluginRepository, _directoryLocator);
-
-            IErrorDialog dialog;
-
-            if (Windows7ErrorDialog.IsPlatformSupported)
-            {
-                dialog = new Windows7ErrorDialog(_networkStatusMonitor, report);
-            }
-            else
-            {
-                dialog = new GenericErrorDialog(report);
-            }
-
-            dialog.Title = title;
-
-            dialog.AddResultVisitor(this);
-
-            if (isReportable && !IsID10TError(exception))
-            {
-                dialog.ShowReportable(this);
-            }
-            else
-            {
-                dialog.ShowNonReportable(this);
-            }
-        }
-
-        private void ShowNonReportableErrorDialog(Exception exception)
-        {
-            const string title = "Unable to submit error report";
-            ShowErrorDialog(title, exception, false);
-        }
-
-        public void Visit(ErrorReportResultCreated result)
-        {
-            var panel = new ToolStripControlBuilder()
-                .AddLabel("Submitted")
-                .AddHyperlink(result)
-                .Build();
-            statusStrip1.Items.Add(panel);
-        }
-
-        public void Visit(ErrorReportResultUpdated result)
-        {
-            var panel = new ToolStripControlBuilder()
-                .AddLabel("Updated")
-                .AddHyperlink(result)
-                .Build();
-            statusStrip1.Items.Add(panel);
-        }
-
-        public void Visit(ErrorReportResultFailed result)
-        {
-            var panel = new ToolStripControlBuilder()
-                .AddImage(Properties.Resources.error_circle)
-                .AddLabel("Unable to submit error report")
-                .AddLink("(details)", (sender, args) => ShowNonReportableErrorDialog(result.Exception))
-                .Build();
-            statusStrip1.Items.Add(panel);
-        }
-
-        /// <summary>
-        ///     Determines if the given exception is likely due to user error (ID10T).
-        /// </summary>
-        /// <param name="e">
-        ///     Exception that was thrown elsewhere in the application.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the given exception is likely due to user error; otherwise <c>false</c>.
-        /// </returns>
-        private static bool IsID10TError(Exception e)
-        {
-            return (e is ID10TException ||
-                    e is DirectoryNotFoundException ||
-                    e is DriveNotFoundException ||
-                    e is FileNotFoundException ||
-                    e is PathTooLongException ||
-                    e is WebException);
-        }
-
-        #endregion
-
-        #region Initialization
+        #region Logging
 
         private void LogDirectoryPaths()
         {
@@ -409,6 +280,10 @@ namespace BDHeroGUI
             _logger.InfoFormat("LogDir = {0}", _directoryLocator.LogDir);
         }
 
+        #endregion
+
+        #region Plugins
+
         private void LoadPlugins()
         {
             _pluginLoader.LoadPlugins();
@@ -418,6 +293,10 @@ namespace BDHeroGUI
         {
             _pluginLoader.LogPlugins();
         }
+
+        #endregion
+
+        #region Controller events
 
         private void InitController()
         {
@@ -554,30 +433,13 @@ namespace BDHeroGUI
 
         #endregion
 
-        #region Updates
+        #region System menu
 
-        private void InitUpdateCheck()
+        private void InitSystemMenu()
         {
-//            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
-
-            var updateObserver = new FormMainUpdateObserver(checkForUpdatesToolStripMenuItem,
-                                                            updateToolStripMenuItem,
-                                                            downloadUpdateToolStripMenuItem);
-
-            _updateClient.CurrentVersion = AppUtils.AppVersion;
-            _updateClient.IsPortable = _directoryLocator.IsPortable;
-
-            _updateClient.Checking += updater => Invoke(new Action(updateObserver.Checking));
-            _updateClient.UpdateFound += updater => Invoke(new Action(() => updateObserver.UpdateFound(_updateClient.LatestUpdate)));
-            _updateClient.UpdateNotFound += updater => Invoke(new Action(updateObserver.NoUpdateFound));
-            _updateClient.Error += (updater, exception) => Invoke(new Action(() => updateObserver.Error(exception)));
-
-            downloadUpdateToolStripMenuItem.ToolTipText = AppConstants.DownloadPageUrl;
-        }
-
-        private void OpenDownloadPageInBrowser()
-        {
-            FileUtils.OpenUrl(AppConstants.DownloadPageUrl);
+            new StandardWindowMenuBuilder(this, _windowMenuFactory)
+                .Resize()
+                .AlwaysOnTop();
         }
 
         #endregion
@@ -592,13 +454,184 @@ namespace BDHeroGUI
 
         #endregion
 
-        #region System menu
+        #region Network status
 
-        private void InitSystemMenu()
+        private void InitNetworkStatusMonitor()
         {
-            new StandardWindowMenuBuilder(this, _windowMenuFactory)
-                .Resize()
-                .AlwaysOnTop();
+            _networkStatusMonitor.NetworkStatusChanged += NetworkStatusMonitorOnNetworkStatusChanged;
+            _networkStatusMonitor.TestConnectionAsync();
+        }
+
+        private void NetworkStatusMonitorOnNetworkStatusChanged(bool isConnectedToInternet)
+        {
+            Invoke(() => SetIsOnline(isConnectedToInternet));
+        }
+
+        private void SetIsOnline(bool isOnline)
+        {
+            toolStripStatusLabelOffline.Visible = !isOnline;
+
+            if (!isOnline)
+                return;
+
+            _updateClient.CheckForUpdateAsync();
+        }
+
+        #endregion
+
+        #region Updates
+
+        private void InitUpdateCheck()
+        {
+//            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
+
+            var updateObserver = new FormMainUpdateObserver(checkForUpdatesToolStripMenuItem,
+                                                            updateToolStripMenuItem,
+                                                            downloadUpdateToolStripMenuItem);
+
+            _updateClient.CurrentVersion = AppUtils.AppVersion;
+            _updateClient.IsPortable = _directoryLocator.IsPortable;
+
+            _updateClient.Checking += updater => Invoke(updateObserver.Checking);
+            _updateClient.UpdateFound += updater => Invoke(() => updateObserver.UpdateFound(_updateClient.LatestUpdate));
+            _updateClient.UpdateNotFound += updater => Invoke(updateObserver.NoUpdateFound);
+            _updateClient.Error += (updater, exception) => Invoke(() => updateObserver.Error(exception));
+
+            downloadUpdateToolStripMenuItem.ToolTipText = AppConstants.DownloadPageUrl;
+        }
+
+        private void OpenDownloadPageInBrowser()
+        {
+            FileUtils.OpenUrl(AppConstants.DownloadPageUrl);
+        }
+
+        #endregion
+
+        #region Assembly cache priming
+
+        /// <summary>
+        ///     The <see cref="AboutBox"/> takes several seconds to initialize the first time
+        ///     it is constructed, so preemptively instantiate it in a
+        ///     background thread to speed up loading when the user actually opens it.
+        /// </summary>
+        private void InitAboutBox()
+        {
+            Task.Factory.StartNew(InitAboutBoxImpl);
+        }
+
+        private void InitAboutBoxImpl()
+        {
+            using (var form = new AboutBox(_pluginRepository))
+            {
+            }
+        }
+
+        private static void InitTextEditor()
+        {
+            // Syntax definitions are loaded globally for all TextEditor instances,
+            // so we only need to call this method once on startup.
+            var editor = TextEditorFactory.CreateMultiLineTextEditor();
+            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+        }
+
+        #endregion
+
+        #region Scan on startup
+
+        private void ScanOnStartup()
+        {
+            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
+            if (path == null)
+                return;
+            Scan(path);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Error Reporting
+
+        private void ShowErrorDialog(string title, Exception exception, bool isReportable = true)
+        {
+            var report = new ErrorReport(exception, _pluginRepository, _directoryLocator);
+
+            IErrorDialog dialog;
+
+            if (Windows7ErrorDialog.IsPlatformSupported)
+            {
+                dialog = new Windows7ErrorDialog(_networkStatusMonitor, report);
+            }
+            else
+            {
+                dialog = new GenericErrorDialog(report);
+            }
+
+            dialog.Title = title;
+
+            dialog.AddResultVisitor(this);
+
+            if (isReportable && !IsID10TError(exception))
+            {
+                dialog.ShowReportable(this);
+            }
+            else
+            {
+                dialog.ShowNonReportable(this);
+            }
+        }
+
+        private void ShowNonReportableErrorDialog(Exception exception)
+        {
+            const string title = "Unable to submit error report";
+            ShowErrorDialog(title, exception, false);
+        }
+
+        public void Visit(ErrorReportResultCreated result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddLabel("Submitted")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultUpdated result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddLabel("Updated")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultFailed result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddImage(Properties.Resources.error_circle)
+                .AddLabel("Unable to submit error report")
+                .AddLink("(details)", (sender, args) => ShowNonReportableErrorDialog(result.Exception))
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        /// <summary>
+        ///     Determines if the given exception is likely due to user error (ID10T).
+        /// </summary>
+        /// <param name="e">
+        ///     Exception that was thrown elsewhere in the application.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the given exception is likely due to user error; otherwise <c>false</c>.
+        /// </returns>
+        private static bool IsID10TError(Exception e)
+        {
+            return (e is ID10TException ||
+                    e is DirectoryNotFoundException ||
+                    e is DriveNotFoundException ||
+                    e is FileNotFoundException ||
+                    e is PathTooLongException ||
+                    e is WebException);
         }
 
         #endregion
