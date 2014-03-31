@@ -186,7 +186,6 @@ namespace BDHero
         /// </returns>
         private IPromise<bool> CreateStageTask(CancellationToken cancellationToken, BeforePromiseHandler<bool> beforeStart, CriticalPhase criticalPhase, IEnumerable<OptionalPhase> optionalPhases, FailurePromiseHandler<bool> fail, SuccessPromiseHandler<bool> succeed)
         {
-            var canContinue = CreateCanContinueFunc(cancellationToken);
             return new SimplePromise(_uiContext)
                 .CancelWith(cancellationToken)
                 .Before(beforeStart)
@@ -198,12 +197,12 @@ namespace BDHero
 
                           if (criticalPhase())
                           {
-                              foreach (var phase in optionalPhases.TakeWhile(phase => canContinue()))
+                              foreach (var phase in optionalPhases.TakeWhile(phase => CanContinue(promise)))
                               {
                                   phase();
                               }
 
-                              if (canContinue())
+                              if (CanContinue(promise))
                               {
                                   _uiInvoker.InvokeAsync(() => succeed(promise));
                                   return;
@@ -217,9 +216,9 @@ namespace BDHero
                 ;
         }
 
-        private static Func<bool> CreateCanContinueFunc(CancellationToken cancellationToken)
+        private static bool CanContinue(IPromise<bool> promise)
         {
-            return () => !cancellationToken.IsCancellationRequested;
+            return !promise.IsCancellationRequested && promise.LastException == null;
         }
 
         private IPromise<bool> RunPluginSync(CancellationToken cancellationToken, IPlugin plugin, ExecutePluginHandler pluginRunner)
@@ -243,30 +242,13 @@ namespace BDHero
                           })
                     .Fail(delegate(IPromise<bool> p)
                           {
-                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
-                              if (p.LastException is OperationCanceledException)
-                              {
-                                  progressProvider.Cancel();
-                              }
-                              else
-                              {
-                                  progressProvider.Error(p.LastException);
-                                  HandleUnhandledException(p.LastException);
-                              }
+                              _pluginRepository.GetProgressProvider(plugin).Error(p.LastException);
+                              HandleUnhandledException(p.LastException);
                           })
-                    .Canceled(delegate(IPromise<bool> p)
-                          {
-                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
-                              if (p.LastException is OperationCanceledException)
+                    .Canceled(delegate
                               {
-                                  progressProvider.Cancel();
-                              }
-                              else
-                              {
-                                  progressProvider.Error(p.LastException);
-                                  HandleUnhandledException(p.LastException);
-                              }
-                          }) // TODO: Remove duplication w/ Fail
+                                  _pluginRepository.GetProgressProvider(plugin).Cancel();
+                              })
                     .Done(delegate
                           {
                               var progressProvider = _pluginRepository.GetProgressProvider(plugin);

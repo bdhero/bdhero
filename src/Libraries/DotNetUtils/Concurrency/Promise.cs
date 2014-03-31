@@ -38,7 +38,7 @@ namespace DotNetUtils.Concurrency
 
         protected override void BeforeDispatchCompletionEvents()
         {
-            Result = !IsCancellationRequested && !(LastException is OperationCanceledException);
+            Result = !IsCancellationRequested && LastException == null;
         }
     }
 
@@ -344,6 +344,10 @@ namespace DotNetUtils.Concurrency
             {
                 Work();
             }
+            catch (OperationCanceledException)
+            {
+                // Ignore
+            }
             catch (Exception exception)
             {
                 LastException = exception;
@@ -380,8 +384,6 @@ namespace DotNetUtils.Concurrency
         private void OnCancellationRequested()
         {
             _cancellationRequestQueue.Enqueue(DateTime.Now);
-            if (LastException == null)
-                LastException = new OperationCanceledException();
         }
 
         private void DispatchEvents()
