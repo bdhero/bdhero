@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TextEditor")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2014 Andrew C. Dvorak")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
