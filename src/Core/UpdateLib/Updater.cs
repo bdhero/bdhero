@@ -183,7 +183,7 @@ namespace UpdateLib
                 HttpRequest.BeforeRequestGlobal += NotifyBeforeRequest;
                 var json = HttpRequest.Get("http://update.bdhero.org/update.json");
                 var response = SmartJsonConvert.DeserializeObject<UpdateResponse>(json);
-                _latestUpdate = FromResponse(response);
+                _latestUpdate = Update.FromResponse(response, IsPortable);
                 _state = UpdaterClientState.Ready;
                 _hasChecked = true;
             }
@@ -197,41 +197,6 @@ namespace UpdateLib
             {
                 HttpRequest.BeforeRequestGlobal -= NotifyBeforeRequest;
             }
-        }
-
-        private Update FromResponse(UpdateResponse response)
-        {
-            var mirror = response.Mirrors.First();
-            var platform = GetPlatform(response);
-            var package = GetPackage(platform);
-
-            // No package available for the user's OS
-            if (package == null)
-            {
-                return null;
-            }
-
-            var version = response.Version;
-            var filename = package.FileName;
-            var uri = mirror + filename;
-
-            return new Update(version, filename, uri, package.SHA1, package.Size);
-        }
-
-        private static Platform GetPlatform(UpdateResponse response)
-        {
-            var platforms = response.Platforms;
-            var osType = SystemInfo.Instance.OS.Type;
-            if (OSType.Mac == osType)
-                return platforms.Mac;
-            if (OSType.Linux == osType)
-                return platforms.Linux;
-            return platforms.Windows;
-        }
-
-        private Package GetPackage(Platform platform)
-        {
-            return IsPortable ? platform.Packages.Portable : platform.Packages.Setup;
         }
 
         /// <exception cref="IOException">

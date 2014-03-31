@@ -16,6 +16,10 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
+using DotNetUtils.Annotations;
+using OSUtils;
+using OSUtils.Info;
 
 namespace UpdateLib
 {
@@ -35,5 +39,47 @@ namespace UpdateLib
             SHA1 = sha1;
             Size = size;
         }
+
+        #region Response conversion
+
+        [CanBeNull]
+        public static Update FromResponse([NotNull] UpdateResponse response, bool isPortable)
+        {
+            var mirror = response.Mirrors.First();
+            var platform = GetPlatform(response);
+            var package = GetPackage(platform, isPortable);
+
+            // No package available for the user's OS
+            if (package == null)
+            {
+                return null;
+            }
+
+            var version = response.Version;
+            var filename = package.FileName;
+            var uri = mirror + filename;
+
+            return new Update(version, filename, uri, package.SHA1, package.Size);
+        }
+
+        [NotNull]
+        private static Platform GetPlatform([NotNull] UpdateResponse response)
+        {
+            var platforms = response.Platforms;
+            var osType = SystemInfo.Instance.OS.Type;
+            if (OSType.Mac == osType)
+                return platforms.Mac;
+            if (OSType.Linux == osType)
+                return platforms.Linux;
+            return platforms.Windows;
+        }
+
+        [CanBeNull]
+        private static Package GetPackage([NotNull] Platform platform, bool isPortable)
+        {
+            return isPortable ? platform.Packages.Portable : platform.Packages.Setup;
+        }
+
+        #endregion
     }
 }
