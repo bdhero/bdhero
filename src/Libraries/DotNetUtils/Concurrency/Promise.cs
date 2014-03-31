@@ -26,14 +26,17 @@ using Timer = System.Timers.Timer;
 
 namespace DotNetUtils.Concurrency
 {
+    internal static class PromiseStatic
+    {
+        internal static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1d / 10d);
+    }
+
     /// <summary>
     ///     Default implementation of the <see cref="IPromise{TResult}"/> interface.
     /// </summary>
     public class Promise<TResult> : IPromise<TResult>
     {
         private delegate void ProgressPromiseHandler(object state);
-
-        private static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1d/10d);
 
         private readonly AtomicValue<Exception> _lastException = new AtomicValue<Exception>();
 
@@ -82,7 +85,7 @@ namespace DotNetUtils.Concurrency
 
         private readonly IInvoker _uiInvoker;
 
-        private readonly Timer _timer = new Timer(DefaultInterval.TotalMilliseconds) { AutoReset = true };
+        private readonly Timer _timer = new Timer(PromiseStatic.DefaultInterval.TotalMilliseconds) { AutoReset = true };
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
