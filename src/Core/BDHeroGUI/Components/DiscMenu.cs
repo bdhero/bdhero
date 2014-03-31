@@ -230,7 +230,6 @@ namespace BDHeroGUI.Components
                 .Work(promise => menuItems = CreateToolStripItems(Drives))
                 .Done(promise => UpdateMenu(menuItems))
                 .Fail(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException))
-                .Canceled(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException)) // TODO: Remove duplication
                 .Always(promise => _isScanning = false)
                 .Start();
         }

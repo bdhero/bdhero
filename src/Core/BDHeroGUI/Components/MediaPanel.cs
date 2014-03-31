@@ -191,11 +191,6 @@ namespace BDHeroGUI.Components
                           Logger.Error("Unable to fetch poster image", promise.LastException);
                           SelectedCoverArt = null;
                       })
-                .Canceled(delegate(IPromise<Null> promise)
-                      {
-                          Logger.Error("Unable to fetch poster image", promise.LastException);
-                          SelectedCoverArt = null;
-                      }) // TODO: Remove duplication w/ Fail
                 .Done(delegate
                       {
                           SelectedCoverArt = coverArt;
