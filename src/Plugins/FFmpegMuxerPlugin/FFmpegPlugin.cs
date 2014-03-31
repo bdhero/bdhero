@@ -101,9 +101,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             if (_exception == null) return;
 
-            if (_exception is OperationCanceledException)
-                throw new OperationCanceledException("FFmpeg was canceled", _exception);
-            throw new FFmpegException("Error occurred while muxing with FFmpeg", _exception);
+            throw _exception;
         }
 
         private void OnProgressUpdated(FFmpeg ffmpeg, ProgressState progressState, CancellationToken cancellationToken)
