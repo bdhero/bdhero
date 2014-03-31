@@ -79,7 +79,7 @@ namespace DotNetUtils.Concurrency
 
         private volatile bool _hasStarted;
 
-        private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim(true);
 
         private readonly IInvoker _uiInvoker;
 
@@ -240,6 +240,14 @@ namespace DotNetUtils.Concurrency
         public IPromise<TResult> Start()
         {
             PreventMultipleStarts();
+
+            if (IsCancellationRequested)
+            {
+                return this;
+            }
+
+            _stopped.Reset();
+
             InvokeBeforeHandlers();
             StartTimer();
             StartTask();
@@ -255,6 +263,10 @@ namespace DotNetUtils.Concurrency
         public IPromise<TResult> CancelWith(CancellationToken token)
         {
             token.Register(CancelImpl);
+            if (token.IsCancellationRequested)
+            {
+                CancelImpl();
+            }
             return this;
         }
 
@@ -263,21 +275,29 @@ namespace DotNetUtils.Concurrency
             _cancellationTokenSource.Cancel();
         }
 
+        private bool ShouldWait
+        {
+            get { return !IsCancellationRequested && !IsCompleted; }
+        }
+
         public IPromise<TResult> Wait()
         {
-            _stopped.Wait();
+            if (ShouldWait)
+                _stopped.Wait();
             return this;
         }
 
         public IPromise<TResult> Wait(int millisecondsTimeout)
         {
-            _stopped.Wait(millisecondsTimeout);
+            if (ShouldWait)
+                _stopped.Wait(millisecondsTimeout);
             return this;
         }
 
         public IPromise<TResult> Wait(TimeSpan timeout)
         {
-            _stopped.Wait(timeout);
+            if (ShouldWait)
+                _stopped.Wait(timeout);
             return this;
         }
 
@@ -322,6 +342,11 @@ namespace DotNetUtils.Concurrency
         private void StartTask()
         {
             Task.Factory.StartNew(TryDoWork, _cancellationTokenSource.Token);
+
+            if (IsCancellationRequested)
+            {
+                FinishWork();
+            }
         }
 
         private void FinishWork()
