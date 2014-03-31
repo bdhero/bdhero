@@ -58,11 +58,9 @@ Bugs
 Features
 ========
 
-[ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
+[ ] UPDATE Build/Tools NuGet Package!!!
 
-[ ] Error Reporting
-    [ ] Only allow error reporting for most recent version of BDHero
-        - Older versions need to upgrade
+[ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
 [ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
 [ ] Add "use last folder" option to File Namer preference dialog
