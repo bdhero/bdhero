@@ -124,7 +124,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             {
                 if (state == NonInteractiveProcessState.Killed)
                 {
-                    _exception = exception ?? new OperationCanceledException(string.Format("FFmpeg exited with state: {0}", state));
+                    _exception = exception ?? new OperationCanceledException("FFmpeg was canceled");
                 }
                 else
                 {
