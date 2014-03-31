@@ -60,6 +60,29 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
+        /// Mutates the underlying value atomically and returns the old value.
+        /// </summary>
+        /// <param name="mutator"></param>
+        /// <returns>The previous value.</returns>
+        public T GetAndSet(AtomicValueMutator<T> mutator)
+        {
+            if (_lock.TryEnterWriteLock(MaxWait))
+            {
+                try
+                {
+                    var oldValue = _value;
+                    _value = mutator(oldValue);
+                    return oldValue;
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+            return default(T);
+        }
+
+        /// <summary>
         /// Gets or sets the value atomically.  Waits for at most <see cref="MaxWait"/> before giving up.
         /// </summary>
         public T Value
