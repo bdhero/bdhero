@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using DotNetUtils.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -79,7 +80,10 @@ namespace UpdateLib
 
     public class PackageList
     {
+        [CanBeNull]
         public Package Setup { get; set; }
+
+        [CanBeNull]
         public Package Portable { get; set; }
     }
 
