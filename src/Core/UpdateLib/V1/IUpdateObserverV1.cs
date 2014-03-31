@@ -18,9 +18,9 @@
 using System;
 using DotNetUtils.Net;
 
-namespace UpdateLib
+namespace UpdateLib.V1
 {
-    public interface IUpdateObserver
+    public interface IUpdateObserverV1
     {
         void OnBeforeCheckForUpdate();
         void OnUpdateReadyToDownload(Update update);

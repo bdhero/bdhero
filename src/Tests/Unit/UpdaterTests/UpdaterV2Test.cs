@@ -8,21 +8,20 @@ using Ninject.Activation;
 using Ninject.Modules;
 using UpdateLib;
 using log4net;
-using UpdateLib.V2;
 
 namespace UpdaterTests
 {
     [TestFixture]
     public class UpdaterV2Test
     {
-        private UpdaterV2 _updater;
+        private UpdateClient _updater;
         private ManualResetEventSlim _barrier;
         private string _events;
 
         [SetUp]
         public void SetUpClient()
         {
-            _updater = new UpdaterV2();
+            _updater = new UpdateClient();
             _barrier = new ManualResetEventSlim();
             _events = "";
 

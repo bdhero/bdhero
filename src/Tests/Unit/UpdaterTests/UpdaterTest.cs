@@ -7,6 +7,7 @@ using Ninject.Activation;
 using Ninject.Modules;
 using UpdateLib;
 using log4net;
+using UpdateLib.V1;
 
 namespace UpdaterTests
 {
@@ -15,12 +16,12 @@ namespace UpdaterTests
     {
         private readonly IKernel _kernel = TestInjectorFactory.CreateContainer();
 
-        private Updater _updater;
+        private UpdaterV1 _updater;
 
         [SetUp]
         public void SetUpClient()
         {
-            _updater = _kernel.Get<Updater>();
+            _updater = _kernel.Get<UpdaterV1>();
             _updater.IsPortable = false;
             _updater.BeforeRequest += UpdaterOnBeforeRequest;
         }

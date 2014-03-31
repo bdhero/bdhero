@@ -5,12 +5,12 @@ using DotNetUtils;
 using DotNetUtils.Annotations;
 using RestSharp;
 
-namespace UpdateLib.V2
+namespace UpdateLib
 {
     /// <summary>
     ///     Update client that checks for application updates.
     /// </summary>
-    public class UpdaterV2
+    public class UpdateClient
     {
 //        public const string DefaultUpdateManifestBaseUrl = "http://update.bdhero.org";
         public const string DefaultUpdateManifestBaseUrl = "http://192.168.0.151:8080";
@@ -105,9 +105,9 @@ namespace UpdateLib.V2
         private readonly ManualResetEventSlim _isChecking = new ManualResetEventSlim();
 
         /// <summary>
-        ///     Constructs a new <see cref="UpdaterV2"/> instance.
+        ///     Constructs a new <see cref="UpdateClient"/> instance.
         /// </summary>
-        public UpdaterV2()
+        public UpdateClient()
         {
             UpdateManifestBaseUrl = DefaultUpdateManifestBaseUrl;
             UpdateManifestFilePath = DefaultUpdateManifestFilePath;
@@ -193,9 +193,9 @@ namespace UpdateLib.V2
         }
     }
 
-    public delegate void UpdaterV2CheckingForUpdateEventHandler(UpdaterV2 updater);
-    public delegate void UpdaterV2UpdateFoundEventHandler(UpdaterV2 updater);
-    public delegate void UpdaterV2UpdateNotFoundEventHandler(UpdaterV2 updater);
-    public delegate void UpdaterV2CheckedEventHandler(UpdaterV2 updater);
-    public delegate void UpdaterV2ErrorCheckingForUpdateEventHandler(UpdaterV2 updater, Exception exception);
+    public delegate void UpdaterV2CheckingForUpdateEventHandler(UpdateClient updater);
+    public delegate void UpdaterV2UpdateFoundEventHandler(UpdateClient updater);
+    public delegate void UpdaterV2UpdateNotFoundEventHandler(UpdateClient updater);
+    public delegate void UpdaterV2CheckedEventHandler(UpdateClient updater);
+    public delegate void UpdaterV2ErrorCheckingForUpdateEventHandler(UpdateClient updater, Exception exception);
 }

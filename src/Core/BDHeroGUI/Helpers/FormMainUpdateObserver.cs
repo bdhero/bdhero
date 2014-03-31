@@ -21,11 +21,12 @@ using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Net;
 using UpdateLib;
+using UpdateLib.V1;
 using WebBrowserUtils;
 
 namespace BDHeroGUI.Helpers
 {
-    public class FormMainUpdateObserver : IUpdateObserver
+    public class FormMainUpdateObserver : IUpdateObserverV1
     {
         private readonly Form _form;
         private readonly ToolStripItem _menuItem;

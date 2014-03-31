@@ -24,17 +24,17 @@ using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using DotNetUtils.Net;
 
-namespace UpdateLib
+namespace UpdateLib.V1
 {
-    public class UpdateHelper
+    public class UpdateHelperV1
     {
         private static readonly log4net.ILog Logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ISet<IUpdateObserver> _observerSet = new HashSet<IUpdateObserver>();
-        private readonly IList<IUpdateObserver> _observerList = new List<IUpdateObserver>();
+        private readonly ISet<IUpdateObserverV1> _observerSet = new HashSet<IUpdateObserverV1>();
+        private readonly IList<IUpdateObserverV1> _observerList = new List<IUpdateObserverV1>();
 
-        private readonly Updater _updater;
+        private readonly UpdaterV1 _updater;
         private readonly Version _currentVersion;
 
         private UpdateButtonClickEventHandler _updatesButtonClickAction;
@@ -52,7 +52,7 @@ namespace UpdateLib
             get { return !_observerList.Any() || _observerList.Last().ShouldInstallUpdate(_updater.LatestUpdate); }
         }
 
-        public UpdateHelper(Updater updater, Version currentVersion)
+        public UpdateHelperV1(UpdaterV1 updater, Version currentVersion)
         {
             _updater = updater;
             _currentVersion = currentVersion;
@@ -62,21 +62,21 @@ namespace UpdateLib
 
         #region Observers
 
-        public void RegisterObserver(IUpdateObserver observer)
+        public void RegisterObserver(IUpdateObserverV1 observer)
         {
             if (_observerSet.Contains(observer)) return;
             _observerSet.Add(observer);
             _observerList.Add(observer);
         }
 
-        public void UnregisterObserver(IUpdateObserver observer)
+        public void UnregisterObserver(IUpdateObserverV1 observer)
         {
             if (!_observerSet.Contains(observer)) return;
             _observerSet.Remove(observer);
             _observerList.Remove(observer);
         }
 
-        private void Notify(Action<IUpdateObserver> action)
+        private void Notify(Action<IUpdateObserverV1> action)
         {
             _observerList.Reverse().ForEach(action);
         }

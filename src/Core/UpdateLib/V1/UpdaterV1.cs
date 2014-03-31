@@ -24,13 +24,11 @@ using System.Threading;
 using DotNetUtils;
 using DotNetUtils.Crypto;
 using DotNetUtils.Net;
-using OSUtils;
 using log4net;
-using OSUtils.Info;
 
-namespace UpdateLib
+namespace UpdateLib.V1
 {
-    public class Updater
+    public class UpdaterV1
     {
         private readonly ILog _logger;
 
@@ -49,7 +47,7 @@ namespace UpdateLib
 
         public bool IsPortable = true;
 
-        public Updater(ILog logger)
+        public UpdaterV1(ILog logger)
         {
             _logger = logger;
         }
@@ -105,7 +103,7 @@ namespace UpdateLib
             DownloadUpdateSync(_latestUpdate);
         }
 
-        // TODO: Move this to WindowsUpdaterClient class and make Updater an interface, abstract class, or composite class
+        // TODO: Move this to WindowsUpdaterClient class and make UpdaterV1 an interface, abstract class, or composite class
         public void InstallUpdate()
         {
             _logger.Info("Installing update");

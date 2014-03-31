@@ -19,7 +19,8 @@ namespace BDHero.Utils
 {
     public static class AppConstants
     {
-        public const string ProjectHomepage   = @"https://github.com/bdhero/bdhero";
+        public const string ProjectHomepage   = @"http://bdhero.org/";
+        public const string DownloadPageUrl   = @"http://bdhero.org/";
         public const string SourceCodeUrl     = @"https://github.com/bdhero/bdhero";
         public const string DocumentationUrl  = @"https://github.com/bdhero/bdhero/wiki";
         public const string BugReportUrl      = @"https://github.com/bdhero/bdhero/issues/new";
