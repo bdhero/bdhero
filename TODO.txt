@@ -35,8 +35,12 @@ Chores
 Bugs
 ====
 
-[ ] THREADING IN XP: FileNamerPlugin: FormMain.RenameSync() -> Controller.RunPluginSync()
-    [ ] Also: Update check throws ComponentModifiedInOtherThread exception (or w/e it's called)
+[ ] Cancel first scan _AFTER_ BDInfoDiscReaderPlugin has ran, but _BEFORE_ the optional plugins complete:
+    No items show up in the playlist or track ListViews, but the controls are enabled and "Disc Info" is populated.
+
+[ ] CTRL + I doesn't work in TextEditorControls in FormMain
+
+[ ] "Filter Playlists" and "Filter Tracks" settings no longer work
 
 [ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
 
@@ -45,8 +49,6 @@ Bugs
 
 [ ] The Wolverine: FFmpeg fails without any error message (same as other X-Men/Wolverine movie(s)?)
 [ ] FFmpeg: error messages (e.g., "Permission denied") do not get logged with -loglevel fatal
-
-[ ] XP: ProgressBar2 black background
 
 [ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
 
