@@ -997,6 +997,9 @@ namespace BDHeroGUI
 
         #region Progress events
 
+        private double _lastProgressPercentComplete;
+        private string _lastProgressPercentCompleteStr;
+
         private void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
             SetLastControllerEventTimeStamp();
@@ -1026,15 +1029,18 @@ namespace BDHeroGUI
                 AppendStatus(line);
             }
 
-            progressBar.ValuePercent = progressProvider.PercentComplete;
-            _progressBarToolTip.SetToolTip(progressBar, string.Format("{0}: {1}", progressProvider.State, percentCompleteStr));
-            _taskbarItem.Progress = progressProvider.PercentComplete;
+            _lastProgressPercentComplete = progressProvider.PercentComplete;
+            _lastProgressPercentCompleteStr = percentCompleteStr;
 
             UpdateProgressBars();
         }
 
         private void UpdateProgressBars()
         {
+            progressBar.ValuePercent = _lastProgressPercentComplete;
+            _progressBarToolTip.SetToolTip(progressBar, string.Format("{0}: {1}", _state, _lastProgressPercentCompleteStr));
+            _taskbarItem.Progress = _lastProgressPercentComplete;
+
             switch (_state)
             {
                 case ProgressProviderState.Error:
