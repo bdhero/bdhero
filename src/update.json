@@ -12,9 +12,7 @@
           "sha1": "b5ec9f005df0417a6aadd1be75c90f1df128e0f1",
           "size": 10705120
         },
-        "sfx": null,
-        "sevenZip": null,
-        "zip": {
+        "portable": {
           "filename": "bdhero-0.8.5.2.zip",
           "sha1": "b6c2305d808fb3b708713680ce344245dc14682b",
           "size": 13983673
