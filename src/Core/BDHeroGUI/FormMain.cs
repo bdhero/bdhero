@@ -800,6 +800,30 @@ namespace BDHeroGUI
 
         #endregion
 
+        #region Controller timestamping
+
+        private void SetLastControllerEventTimeStamp()
+        {
+            _lastControllerEvent = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Gets whether the user is allowed to press the "Scan" or "Convert" buttons.
+        /// </summary>
+        /// <remarks>
+        /// If the user presses "Scan" and "Cancel" in succession too quickly, it can goof up the state of the controller
+        /// and/or plugins because the cancel event may get received <i>after</i> the subsequent "Scan" event,
+        /// which causes <see cref="ProgressProvider"/> to throw an exception when its <see cref="ProgressProvider.Reset"/>
+        /// method is called.  To prevent this from happening, we must enforce a one second delay between actions performed
+        /// on the controller.
+        /// </remarks>
+        private bool PermitScanOrConvert
+        {
+            get { return DateTime.Now - _lastControllerEvent > TimeSpan.FromSeconds(0.5); }
+        }
+
+        #endregion
+
         #region Scan & Convert stages
 
         /// <summary>
@@ -808,6 +832,9 @@ namespace BDHeroGUI
         /// <param name="path">Optional path to the root BD-ROM folder.  If specified, the "Source BD-ROM" textbox will be populated with this path.</param>
         private void Scan(string path = null)
         {
+            if (!PermitScanOrConvert)
+                return;
+
             if (path != null)
                 textBoxInput.Text = path;
 
@@ -827,6 +854,9 @@ namespace BDHeroGUI
         /// </summary>
         private void Convert()
         {
+            if (!PermitScanOrConvert)
+                return;
+
             var selectedPlaylist = playlistListView.SelectedPlaylist;
             if (selectedPlaylist == null)
             {
@@ -846,10 +876,13 @@ namespace BDHeroGUI
 
         #endregion
 
+        private DateTime _lastControllerEvent;
+
         #region Scan events
 
         private void ControllerOnBeforeScanStart(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             _stage = Stage.Scan;
             buttonScan.Text = "Scanning...";
             textBoxStatus.Text = "Scan started...";
@@ -859,6 +892,7 @@ namespace BDHeroGUI
 
         private void ControllerOnScanSucceeded(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             textBoxOutput.Text = _controller.Job.OutputPath;
             AppendStatus("Scan succeeded!");
             _taskbarItem.NoProgress();
@@ -868,6 +902,7 @@ namespace BDHeroGUI
 
         private void ControllerOnScanFailed(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             if (IsCancellationRequested)
             {
                 AppendStatus("Scan canceled!");
@@ -886,6 +921,7 @@ namespace BDHeroGUI
 
         private void ControllerOnScanCompleted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             _stage = Stage.None;
             buttonScan.Text = "Scan";
             EnableControls(true);
@@ -897,6 +933,7 @@ namespace BDHeroGUI
 
         private void ControllerOnConvertStarted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             _stage = Stage.Convert;
             buttonConvert.Text = "Converting...";
             AppendStatus("Convert started...");
@@ -906,12 +943,14 @@ namespace BDHeroGUI
 
         private void ControllerOnConvertSucceeded(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             AppendStatus("Convert succeeded!");
             _taskbarItem.NoProgress();
         }
 
         private void ControllerOnConvertFailed(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             if (IsCancellationRequested)
             {
                 AppendStatus("Convert canceled!");
@@ -930,6 +969,7 @@ namespace BDHeroGUI
 
         private void ControllerOnConvertCompleted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
             _stage = Stage.None;
             buttonConvert.Text = "Convert";
             EnableControls(true);
@@ -941,6 +981,7 @@ namespace BDHeroGUI
 
         private void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
+            SetLastControllerEventTimeStamp();
             if (!_isRunning)
                 return;
 
@@ -985,6 +1026,7 @@ namespace BDHeroGUI
 
         private void ControllerOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
+            SetLastControllerEventTimeStamp();
             var caption = string.Format("{0} Error", AppUtils.AppName);
             ShowErrorDialog(caption, args.ExceptionObject as Exception);
         }
