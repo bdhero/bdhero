@@ -99,7 +99,9 @@ namespace DotNetUtils.Concurrency
         ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
         ///     the given <paramref name="synchronizingObject"/>'s owner thread.
         /// </summary>
-        /// <param name="synchronizingObject"></param>
+        /// <param name="synchronizingObject">
+        ///     Object whose owner thread will be used to invoke UI callbacks.
+        /// </param>
         public Promise(ISynchronizeInvoke synchronizingObject)
         {
             _uiInvoker = new UIInvoker(synchronizingObject);
@@ -428,6 +430,11 @@ namespace DotNetUtils.Concurrency
             StopTimer();
         }
 
+        /// <summary>
+        ///     Called immediately prior to <see cref="DispatchCompletionEvents"/>.
+        ///     Subclasses may override this method to set the value of <see cref="Result"/> before any completion events
+        ///     are invoked.
+        /// </summary>
         protected virtual void BeforeDispatchCompletionEvents()
         {
         }
