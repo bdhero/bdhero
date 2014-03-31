@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -30,7 +29,7 @@ namespace DotNetUtils.Concurrency
     internal static class PromiseStatic
     {
         internal static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1d / 10d);
-        internal static readonly AtomicInteger AtomicIdCounter = new AtomicInteger();
+        internal static readonly AtomicInteger AtomicLogIdCounter = new AtomicInteger();
     }
 
     /// <summary>
@@ -82,19 +81,24 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        private readonly int _id = PromiseStatic.AtomicIdCounter.GetAndIncrement();
-
         private volatile bool _hasStarted;
+
+        private readonly int _logId = PromiseStatic.AtomicLogIdCounter.GetAndIncrement();
+
+        private readonly IInvoker _uiInvoker;
 
         private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim(true);
 
-        private readonly IInvoker _uiInvoker;
+        private readonly AtomicValue<TResult> _result = new AtomicValue<TResult>();
+        private readonly AtomicValue<bool> _hasResult = new AtomicValue<bool>();
 
         private readonly Timer _timer = new Timer(PromiseStatic.DefaultInterval.TotalMilliseconds) { AutoReset = true };
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly AtomicValue<Exception> _lastException = new AtomicValue<Exception>();
+
+        #region Constructors
 
         /// <summary>
         ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
@@ -115,16 +119,34 @@ namespace DotNetUtils.Concurrency
         public Promise(ISynchronizeInvoke synchronizingObject)
         {
             LogDebug("Promise() C'TOR");
+
             _uiInvoker = new UIInvoker(synchronizingObject);
             _timer.SynchronizingObject = synchronizingObject;
             _timer.Elapsed += OnTimerElapsed;
             _cancellationTokenSource.Token.Register(OnCancellationRequested);
         }
 
-        #region Public result
+        #endregion
 
-        private readonly AtomicValue<TResult> _result = new AtomicValue<TResult>();
-        private readonly AtomicValue<bool> _hasResult = new AtomicValue<bool>();
+        #region Events
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            LogDebug("OnTimerElapsed()");
+            DispatchEvents();
+        }
+
+        private void OnCancellationRequested()
+        {
+            LogDebug("OnCancellationRequested()");
+            _cancellationRequestQueue.Enqueue(DateTime.Now);
+        }
+
+        #endregion
+
+        #region Public
+
+        #region Result
 
         public TResult Result
         {
@@ -145,7 +167,7 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        #region Public invoker
+        #region UI invoker
 
         public IInvoker UIInvoker
         {
@@ -154,7 +176,7 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        #region Public properties
+        #region Properties
 
         public TimeSpan Interval
         {
@@ -180,7 +202,7 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        #region Public event handlers
+        #region Event handlers
 
         public IPromise<TResult> Before(BeforePromiseHandler<TResult> handler)
         {
@@ -226,7 +248,7 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        #region Public progress handlers
+        #region Progress handlers
 
         public IPromise<TResult> Progress<TState>(ProgressPromiseHandler<TResult, TState> handler) where TState : class
         {
@@ -243,31 +265,15 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
-        private void LogDebug(string format, params object[] args)
-        {
-            format = string.Format("{0} - [{1,-5}, {2,-5}] - {3}", _id, IsCancellationRequested, IsCompleted, format);
-            if (args.Any())
-                Logger.DebugFormat(format, args);
-            else
-                Logger.Debug(format);
-        }
-
-        private void LogWarn(string format, params object[] args)
-        {
-            format = string.Format("{0} - [{1,-5}, {2,-5}] - {3}", _id, IsCancellationRequested, IsCompleted, format);
-            if (args.Any())
-                Logger.WarnFormat(format, args);
-            else
-                Logger.Warn(format);
-        }
-
-        #region Public control methods
+        #region Start
 
         public IPromise<TResult> Start()
         {
             LogDebug("Start()");
 
             PreventMultipleStarts();
+
+            _hasStarted = true;
 
             if (IsCancellationRequested)
             {
@@ -280,8 +286,13 @@ namespace DotNetUtils.Concurrency
             InvokeBeforeHandlers();
             StartTimer();
             StartTask();
+
             return this;
         }
+
+        #endregion
+
+        #region Cancel
 
         public IPromise<TResult> Cancel()
         {
@@ -301,11 +312,9 @@ namespace DotNetUtils.Concurrency
             return this;
         }
 
-        private void CancelImpl()
-        {
-            LogDebug("CancelImpl()");
-            _cancellationTokenSource.Cancel();
-        }
+        #endregion
+
+        #region Wait
 
         private bool ShouldWait
         {
@@ -315,36 +324,52 @@ namespace DotNetUtils.Concurrency
         public IPromise<TResult> Wait()
         {
             var time = DateTime.Now.ToString("O");
+
             LogDebug("Wait() - {0} - before...", time);
+
             if (ShouldWait)
                 _stopped.Wait();
+
             LogDebug("Wait() - {0} - after", time);
+            
             return this;
         }
 
         public IPromise<TResult> Wait(int millisecondsTimeout)
         {
             var time = DateTime.Now.ToString("O");
+
             LogDebug("Wait({0}) - {1} - before...", millisecondsTimeout, time);
+
             if (ShouldWait)
                 _stopped.Wait(millisecondsTimeout);
+
             LogDebug("Wait({0}) - {1} - after...", millisecondsTimeout, time);
+
             return this;
         }
 
         public IPromise<TResult> Wait(TimeSpan timeout)
         {
             var time = DateTime.Now.ToString("O");
+
             LogDebug("Wait({0}) - {1} - before...", timeout, time);
+
             if (ShouldWait)
                 _stopped.Wait(timeout);
+
             LogDebug("Wait({0}) - {1} - after...", timeout, time);
+
             return this;
         }
 
         #endregion
 
-        #region Private methods
+        #endregion
+
+        #region Private
+
+        #region Start
 
         private void PreventMultipleStarts()
         {
@@ -352,8 +377,6 @@ namespace DotNetUtils.Concurrency
             {
                 throw new InvalidOperationException("Promise.Start() cannot be called more than once");
             }
-
-            _hasStarted = true;
         }
 
         private void InvokeBeforeHandlers()
@@ -375,13 +398,6 @@ namespace DotNetUtils.Concurrency
             _timer.Start();
         }
 
-        private void StopTimer()
-        {
-            LogDebug("StopTimer()");
-            _timer.Stop();
-            _stopped.Set();
-        }
-
         private void StartTask()
         {
             LogDebug("StartTask()");
@@ -394,10 +410,9 @@ namespace DotNetUtils.Concurrency
             }
         }
 
-        private void FinishWork()
-        {
-            _finishedQueue.Enqueue(DateTime.Now);
-        }
+        #endregion
+
+        #region Work
 
         /// <remarks>
         /// Background thread.
@@ -440,17 +455,26 @@ namespace DotNetUtils.Concurrency
             _successQueue.Enqueue(DateTime.Now);
         }
 
-        private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void FinishWork()
         {
-            LogDebug("OnTimerElapsed()");
-            DispatchEvents();
+            _finishedQueue.Enqueue(DateTime.Now);
         }
 
-        private void OnCancellationRequested()
+        #endregion
+
+        #region Cancel
+
+        private void CancelImpl()
         {
-            LogDebug("OnCancellationRequested()");
-            _cancellationRequestQueue.Enqueue(DateTime.Now);
+            LogDebug("CancelImpl()");
+            _cancellationTokenSource.Cancel();
         }
+
+        #endregion
+
+        #region Event dispatch
+
+        #region Main loop
 
         private void DispatchEvents()
         {
@@ -459,6 +483,10 @@ namespace DotNetUtils.Concurrency
             DispatchCancellationRequestedEvents();
             DispatchCompletionEvents();
         }
+
+        #endregion
+
+        #region Progress events
 
         private void DispatchProgressEvents()
         {
@@ -484,6 +512,10 @@ namespace DotNetUtils.Concurrency
             }
         }
 
+        #endregion
+
+        #region Cancellation requested events
+
         private void DispatchCancellationRequestedEvents()
         {
             var i = 0;
@@ -498,6 +530,10 @@ namespace DotNetUtils.Concurrency
                 }
             }
         }
+
+        #endregion
+
+        #region Completion events
 
         private void DispatchCompletionEvents()
         {
@@ -578,6 +614,38 @@ namespace DotNetUtils.Concurrency
                 handler(this);
             }
         }
+
+        private void StopTimer()
+        {
+            LogDebug("StopTimer()");
+            _timer.Stop();
+            _stopped.Set();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Logging
+
+        private string GetLogFormat(string format)
+        {
+            return string.Format("{0} - [{1,-5}, {2,-5}] - {3}", _logId, IsCancellationRequested, IsCompleted, format);
+        }
+
+        private void LogDebug(string format, params object[] args)
+        {
+            format = GetLogFormat(format);
+            Logger.DebugFormat(format, args);
+        }
+
+        private void LogWarn(string format, params object[] args)
+        {
+            format = GetLogFormat(format);
+            Logger.WarnFormat(format, args);
+        }
+
+        #endregion
 
         #endregion
     }
