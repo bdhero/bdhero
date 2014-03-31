@@ -60,6 +60,7 @@
     <Compile Include="AppUtils.cs" />
     <Compile Include="AssemblyUtils.cs" />
     <Compile Include="Attributes\FileSizeAttribute.cs" />
+    <Compile Include="Concurrency\AtomicInteger.cs" />
     <Compile Include="Concurrency\AtomicValue.cs" />
     <Compile Include="Concurrency\AtomicValueMutator.cs" />
     <Compile Include="Concurrency\ConcurrentLinkedSet.cs" />
