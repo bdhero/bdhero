@@ -22,15 +22,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BDHero.Plugin;
 using BDHero.JobQueue;
 using BDHero.Prefs;
-using DotNetUtils;
 using DotNetUtils.Concurrency;
 using DotNetUtils.FS;
-using DotNetUtils.TaskUtils;
 
 namespace BDHero
 {

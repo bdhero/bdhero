@@ -25,7 +25,6 @@ using System.Windows.Forms.Design;
 using BDHero.Utils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
-using DotNetUtils.TaskUtils;
 using OSUtils.DriveDetector;
 using UILib.WinForms;
 

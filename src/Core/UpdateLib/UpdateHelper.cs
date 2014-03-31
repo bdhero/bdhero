@@ -18,13 +18,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using DotNetUtils;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using DotNetUtils.Net;
-using DotNetUtils.TaskUtils;
 
 namespace UpdateLib
 {

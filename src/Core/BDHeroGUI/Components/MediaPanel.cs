@@ -23,11 +23,9 @@ using System.Windows.Forms;
 using BDHero.JobQueue;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
-using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
-using DotNetUtils.TaskUtils;
 using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Components

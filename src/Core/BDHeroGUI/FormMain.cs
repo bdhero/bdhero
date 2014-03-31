@@ -46,9 +46,7 @@ using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
-using DotNetUtils.TaskUtils;
 using log4net;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using OSUtils.DriveDetector;
 using OSUtils.Net;
@@ -57,7 +55,6 @@ using OSUtils.Window;
 using TextEditor;
 using UILib.Extensions;
 using UILib.WinForms;
-using UpdateLib;
 
 namespace BDHeroGUI
 {

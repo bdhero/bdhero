@@ -19,7 +19,6 @@ using System;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHeroGUI.Components;
-using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using OSUtils.Window;
 using UILib.Extensions;

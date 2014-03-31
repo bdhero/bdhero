@@ -21,9 +21,7 @@ using System.ComponentModel;
 using System.Threading;
 using BDHero.JobQueue;
 using BDHero.Plugin;
-using DotNetUtils;
 using DotNetUtils.Concurrency;
-using DotNetUtils.TaskUtils;
 
 namespace BDHero
 {

@@ -17,11 +17,8 @@
 
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Threading;
-using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
-using DotNetUtils.TaskUtils;
 
 namespace OSUtils.Net
 {

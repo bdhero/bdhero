@@ -17,13 +17,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using BDHeroGUI.Forms;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
-using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OSUtils.Net;
 using UILib.Extensions;
