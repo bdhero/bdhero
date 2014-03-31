@@ -880,19 +880,25 @@ namespace BDHeroGUI
         private void ControllerOnBeforeScanStart(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             _stage = Stage.Scan;
+
             buttonScan.Text = "Scanning...";
             textBoxStatus.Text = "Scan started...";
             EnableControls(false);
+
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
         private void ControllerOnScanSucceeded(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             textBoxOutput.Text = _controller.Job.OutputPath;
             AppendStatus("Scan succeeded!");
-            _taskbarItem.NoProgress();
+
+            _state = ProgressProviderState.Success;
+
             RefreshUI();
             PromptForMetadataIfNeeded();
         }
@@ -900,15 +906,16 @@ namespace BDHeroGUI
         private void ControllerOnScanFailed(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             if (IsCancellationRequested)
             {
                 AppendStatus("Scan canceled!");
-                _taskbarItem.NoProgress();
+                _state = ProgressProviderState.Canceled;
             }
             else
             {
                 AppendStatus("Scan failed!");
-                _taskbarItem.Error();
+                _state = ProgressProviderState.Error;
             }
             if (promise.LastException != null)
             {
@@ -919,9 +926,13 @@ namespace BDHeroGUI
         private void ControllerOnScanCompleted(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             _stage = Stage.None;
+            
             buttonScan.Text = "Scan";
             EnableControls(true);
+
+            UpdateProgressBars();
         }
 
         #endregion
@@ -931,32 +942,38 @@ namespace BDHeroGUI
         private void ControllerOnConvertStarted(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             _stage = Stage.Convert;
+
             buttonConvert.Text = "Converting...";
             AppendStatus("Convert started...");
             EnableControls(false);
+            
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
         private void ControllerOnConvertSucceeded(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             AppendStatus("Convert succeeded!");
-            _taskbarItem.NoProgress();
+
+            _state = ProgressProviderState.Success;
         }
 
         private void ControllerOnConvertFailed(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             if (IsCancellationRequested)
             {
                 AppendStatus("Convert canceled!");
-                _taskbarItem.NoProgress();
+                _state = ProgressProviderState.Canceled;
             }
             else
             {
                 AppendStatus("Convert failed!");
-                _taskbarItem.Error();
+                _state = ProgressProviderState.Error;
             }
             if (promise.LastException != null)
             {
@@ -967,9 +984,13 @@ namespace BDHeroGUI
         private void ControllerOnConvertCompleted(IPromise<bool> promise)
         {
             SetLastControllerEventTimeStamp();
+
             _stage = Stage.None;
+            
             buttonConvert.Text = "Convert";
             EnableControls(true);
+
+            UpdateProgressBars();
         }
 
         #endregion
@@ -979,10 +1000,19 @@ namespace BDHeroGUI
         private void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
             SetLastControllerEventTimeStamp();
-            if (!_isRunning)
-                return;
 
-            _state = progressProvider.State;
+            if (!_isRunning && progressProvider.State == ProgressProviderState.Running)
+            {
+            }
+            else
+            {
+                _state = progressProvider.State;
+            }
+
+            if (!_isRunning && _state == ProgressProviderState.Running)
+            {
+                _logger.Warn("State mismatch: _isRunning == false but _state == Running");
+            }
 
             var percentCompleteStr = (progressProvider.PercentComplete/100.0).ToString("P");
             var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
@@ -990,13 +1020,22 @@ namespace BDHeroGUI
                                      progressProvider.Status,
                                      progressProvider.RunTime.ToStringShort(),
                                      progressProvider.TimeRemaining.ToStringShort());
-            AppendStatus(line);
+
+            if (_isRunning)
+            {
+                AppendStatus(line);
+            }
 
             progressBar.ValuePercent = progressProvider.PercentComplete;
             _progressBarToolTip.SetToolTip(progressBar, string.Format("{0}: {1}", progressProvider.State, percentCompleteStr));
             _taskbarItem.Progress = progressProvider.PercentComplete;
 
-            switch (progressProvider.State)
+            UpdateProgressBars();
+        }
+
+        private void UpdateProgressBars()
+        {
+            switch (_state)
             {
                 case ProgressProviderState.Error:
                     progressBar.SetError();
@@ -1008,6 +1047,10 @@ namespace BDHeroGUI
                     break;
                 case ProgressProviderState.Canceled:
                     progressBar.SetMuted();
+                    _taskbarItem.NoProgress();
+                    break;
+                case ProgressProviderState.Success:
+                    progressBar.SetSuccess();
                     _taskbarItem.NoProgress();
                     break;
                 default:
