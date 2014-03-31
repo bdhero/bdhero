@@ -321,6 +321,11 @@ namespace DotNetUtils.Concurrency
             Task.Factory.StartNew(TryDoWork, _cancellationTokenSource.Token);
         }
 
+        private void FinishWork()
+        {
+            _finishedQueue.Enqueue(DateTime.Now);
+        }
+
         /// <remarks>
         /// Background thread.
         /// </remarks>
@@ -340,7 +345,7 @@ namespace DotNetUtils.Concurrency
             }
             finally
             {
-                _finishedQueue.Enqueue(DateTime.Now);
+                FinishWork();
             }
         }
 
