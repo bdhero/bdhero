@@ -38,10 +38,6 @@ namespace DotNetUtils.Concurrency
     {
         private delegate void ProgressPromiseHandler(object state);
 
-        private readonly AtomicValue<Exception> _lastException = new AtomicValue<Exception>();
-
-        private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim();
-
         #region Event handlers
 
         private readonly ConcurrentLinkedSet<BeforePromiseHandler<TResult>> _beforeHandlers =
@@ -83,11 +79,15 @@ namespace DotNetUtils.Concurrency
 
         private volatile bool _hasStarted;
 
+        private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim();
+
         private readonly IInvoker _uiInvoker;
 
         private readonly Timer _timer = new Timer(PromiseStatic.DefaultInterval.TotalMilliseconds) { AutoReset = true };
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        private readonly AtomicValue<Exception> _lastException = new AtomicValue<Exception>();
 
         /// <summary>
         ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
