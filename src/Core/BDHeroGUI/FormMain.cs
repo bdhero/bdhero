@@ -1130,6 +1130,11 @@ namespace BDHeroGUI
             GC.Collect();
         }
 
+        private void appendDividerToLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _logger.Info("\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n");
+        }
+
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
 #if ENABLE_UPDATER

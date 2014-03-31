@@ -64,12 +64,17 @@ namespace BDHeroGUI
             this.textBoxInput = new TextEditor.WinForms.SyntaxHighlightingFileTextBox();
             this.splitContainerMain = new UILib.WinForms.Controls.SplitContainerWithDivider();
             this.splitContainerTop = new UILib.WinForms.Controls.SplitContainerWithDivider();
+            this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
+            this.mediaPanel = new BDHeroGUI.Components.MediaPanel();
             this.splitContainerWithDivider1 = new UILib.WinForms.Controls.SplitContainerWithDivider();
+            this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
+            this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
             this.textBoxOutput = new TextEditor.WinForms.SyntaxHighlightingFileTextBox();
             this.progressBar = new UILib.WinForms.Controls.ProgressBar2();
             this.menuStripTop = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBDROMFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDiscToolStripMenuItem = new BDHeroGUI.Components.DiscMenu(this.components);
             this.rescanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.searchForMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,17 +104,13 @@ namespace BDHeroGUI
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.forceGarbageCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new UILib.WinForms.Controls.SelectableStatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
-            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.forceGarbageCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.playlistListView = new BDHeroGUI.Components.PlaylistListView();
-            this.mediaPanel = new BDHeroGUI.Components.MediaPanel();
-            this.tracksPanel = new BDHeroGUI.Components.TracksPanel();
-            this.chaptersPanel = new BDHeroGUI.Components.ChaptersPanel();
-            this.openDiscToolStripMenuItem = new BDHeroGUI.Components.DiscMenu(this.components);
+            this.appendDividerToLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -306,6 +307,25 @@ namespace BDHeroGUI
             this.splitContainerTop.SplitterDistance = 711;
             this.splitContainerTop.TabIndex = 7;
             // 
+            // playlistListView
+            // 
+            this.playlistListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.playlistListView.Location = new System.Drawing.Point(0, 0);
+            this.playlistListView.Name = "playlistListView";
+            this.playlistListView.Playlists = null;
+            this.playlistListView.SelectedPlaylist = null;
+            this.playlistListView.ShowAll = false;
+            this.playlistListView.Size = new System.Drawing.Size(711, 105);
+            this.playlistListView.TabIndex = 1;
+            // 
+            // mediaPanel
+            // 
+            this.mediaPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mediaPanel.Location = new System.Drawing.Point(0, 0);
+            this.mediaPanel.Name = "mediaPanel";
+            this.mediaPanel.Size = new System.Drawing.Size(433, 105);
+            this.mediaPanel.TabIndex = 0;
+            // 
             // splitContainerWithDivider1
             // 
             this.splitContainerWithDivider1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -322,6 +342,24 @@ namespace BDHeroGUI
             this.splitContainerWithDivider1.Size = new System.Drawing.Size(1148, 260);
             this.splitContainerWithDivider1.SplitterDistance = 791;
             this.splitContainerWithDivider1.TabIndex = 1;
+            // 
+            // tracksPanel
+            // 
+            this.tracksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tracksPanel.Location = new System.Drawing.Point(0, 0);
+            this.tracksPanel.Name = "tracksPanel";
+            this.tracksPanel.ShowAll = false;
+            this.tracksPanel.Size = new System.Drawing.Size(791, 260);
+            this.tracksPanel.TabIndex = 0;
+            // 
+            // chaptersPanel
+            // 
+            this.chaptersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chaptersPanel.Location = new System.Drawing.Point(0, 0);
+            this.chaptersPanel.Name = "chaptersPanel";
+            this.chaptersPanel.Playlist = null;
+            this.chaptersPanel.Size = new System.Drawing.Size(353, 260);
+            this.chaptersPanel.TabIndex = 0;
             // 
             // textBoxOutput
             // 
@@ -342,6 +380,8 @@ namespace BDHeroGUI
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.BackColorBottom = System.Drawing.Color.Empty;
+            this.progressBar.BackColorTop = System.Drawing.Color.Empty;
             this.progressBar.Location = new System.Drawing.Point(3, 513);
             this.progressBar.Maximum = 100000;
             this.progressBar.Name = "progressBar";
@@ -393,6 +433,13 @@ namespace BDHeroGUI
             this.openBDROMFolderToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.openBDROMFolderToolStripMenuItem.Text = "&Open BD-ROM Folder...";
             this.openBDROMFolderToolStripMenuItem.Click += new System.EventHandler(this.openBDROMFolderToolStripMenuItem_Click);
+            // 
+            // openDiscToolStripMenuItem
+            // 
+            this.openDiscToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.cd;
+            this.openDiscToolStripMenuItem.Name = "openDiscToolStripMenuItem";
+            this.openDiscToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.openDiscToolStripMenuItem.Text = "Open &Disc";
             // 
             // rescanToolStripMenuItem
             // 
@@ -619,6 +666,24 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem.Text = "&About BDHero";
             this.aboutBDHeroToolStripMenuItem.Click += new System.EventHandler(this.aboutBDHeroToolStripMenuItem_Click);
             // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.forceGarbageCollectionToolStripMenuItem,
+            this.appendDividerToLogToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // forceGarbageCollectionToolStripMenuItem
+            // 
+            this.forceGarbageCollectionToolStripMenuItem.Name = "forceGarbageCollectionToolStripMenuItem";
+            this.forceGarbageCollectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.G)));
+            this.forceGarbageCollectionToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.forceGarbageCollectionToolStripMenuItem.Text = "Force &Garbage Collection";
+            this.forceGarbageCollectionToolStripMenuItem.Click += new System.EventHandler(this.forceGarbageCollectionToolStripMenuItem_Click);
+            // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -656,66 +721,14 @@ namespace BDHeroGUI
             this.toolStripStatusLabelOffline.Size = new System.Drawing.Size(257, 17);
             this.toolStripStatusLabelOffline.Text = "Offline: metadata search may be unavailable";
             // 
-            // debugToolStripMenuItem
+            // appendDividerToLogToolStripMenuItem
             // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.forceGarbageCollectionToolStripMenuItem});
-            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.debugToolStripMenuItem.Text = "Debug";
-            // 
-            // forceGarbageCollectionToolStripMenuItem
-            // 
-            this.forceGarbageCollectionToolStripMenuItem.Name = "forceGarbageCollectionToolStripMenuItem";
-            this.forceGarbageCollectionToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.G)));
-            this.forceGarbageCollectionToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.forceGarbageCollectionToolStripMenuItem.Text = "Force &Garbage Collection";
-            this.forceGarbageCollectionToolStripMenuItem.Click += new System.EventHandler(this.forceGarbageCollectionToolStripMenuItem_Click);
-            // 
-            // playlistListView
-            // 
-            this.playlistListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.playlistListView.Location = new System.Drawing.Point(0, 0);
-            this.playlistListView.Name = "playlistListView";
-            this.playlistListView.Playlists = null;
-            this.playlistListView.SelectedPlaylist = null;
-            this.playlistListView.ShowAll = false;
-            this.playlistListView.Size = new System.Drawing.Size(711, 105);
-            this.playlistListView.TabIndex = 1;
-            // 
-            // mediaPanel
-            // 
-            this.mediaPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mediaPanel.Location = new System.Drawing.Point(0, 0);
-            this.mediaPanel.Name = "mediaPanel";
-            this.mediaPanel.Size = new System.Drawing.Size(433, 105);
-            this.mediaPanel.TabIndex = 0;
-            // 
-            // tracksPanel
-            // 
-            this.tracksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tracksPanel.Location = new System.Drawing.Point(0, 0);
-            this.tracksPanel.Name = "tracksPanel";
-            this.tracksPanel.ShowAll = false;
-            this.tracksPanel.Size = new System.Drawing.Size(791, 260);
-            this.tracksPanel.TabIndex = 0;
-            // 
-            // chaptersPanel
-            // 
-            this.chaptersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chaptersPanel.Location = new System.Drawing.Point(0, 0);
-            this.chaptersPanel.Name = "chaptersPanel";
-            this.chaptersPanel.Playlist = null;
-            this.chaptersPanel.Size = new System.Drawing.Size(353, 260);
-            this.chaptersPanel.TabIndex = 0;
-            // 
-            // openDiscToolStripMenuItem
-            // 
-            this.openDiscToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.cd;
-            this.openDiscToolStripMenuItem.Name = "openDiscToolStripMenuItem";
-            this.openDiscToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.openDiscToolStripMenuItem.Text = "Open &Disc";
+            this.appendDividerToLogToolStripMenuItem.Name = "appendDividerToLogToolStripMenuItem";
+            this.appendDividerToLogToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.L)));
+            this.appendDividerToLogToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.appendDividerToLogToolStripMenuItem.Text = "Append Divider to &Log";
+            this.appendDividerToLogToolStripMenuItem.Click += new System.EventHandler(this.appendDividerToLogToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -819,6 +832,7 @@ namespace BDHeroGUI
         private System.Windows.Forms.ToolStripMenuItem downloadUpdateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forceGarbageCollectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem appendDividerToLogToolStripMenuItem;
     }
 }
 
