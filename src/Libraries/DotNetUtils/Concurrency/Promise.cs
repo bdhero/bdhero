@@ -26,22 +26,6 @@ using Timer = System.Timers.Timer;
 
 namespace DotNetUtils.Concurrency
 {
-    public class SimplePromise : Promise<bool>
-    {
-        public SimplePromise()
-        {
-        }
-
-        public SimplePromise(ISynchronizeInvoke synchronizingObject) : base(synchronizingObject)
-        {
-        }
-
-        protected override void BeforeDispatchCompletionEvents()
-        {
-            Result = !IsCancellationRequested && LastException == null;
-        }
-    }
-
     /// <summary>
     ///     Default implementation of the <see cref="IPromise{TResult}"/> interface.
     /// </summary>
@@ -118,7 +102,7 @@ namespace DotNetUtils.Concurrency
         /// <param name="synchronizingObject"></param>
         public Promise(ISynchronizeInvoke synchronizingObject)
         {
-            _uiInvoker = new Invoker(synchronizingObject);
+            _uiInvoker = new UIInvoker(synchronizingObject);
             _timer.SynchronizingObject = synchronizingObject;
             _timer.Elapsed += OnTimerElapsed;
             _cancellationTokenSource.Token.Register(OnCancellationRequested);

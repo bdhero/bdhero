@@ -23,6 +23,7 @@ using System.Windows.Forms;
 using BDHero.JobQueue;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
+using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
@@ -178,13 +179,13 @@ namespace BDHeroGUI.Components
             var coverArt = medium.CoverArtImages.FirstOrDefault();
             if (coverArt == null) return;
 
-            new Promise<Null>()
+            new EmptyPromise()
                 .Work(delegate
                       {
                           var image = coverArt.Image;
                           Logger.DebugFormat("Finished loading poster image: {0}", image);
                       })
-                .Fail(delegate(IPromise<Null> promise)
+                .Fail(delegate(IPromise<Nil> promise)
                       {
                           Logger.Error("Unable to fetch poster image", promise.LastException);
                           SelectedCoverArt = null;

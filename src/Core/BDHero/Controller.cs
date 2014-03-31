@@ -84,13 +84,13 @@ namespace BDHero
         public void SetUIContextCurrentThread()
         {
             _uiContext = new Control();
-            _uiInvoker = new Invoker(_uiContext);
+            _uiInvoker = new UIInvoker(_uiContext);
         }
 
         public void SetUIContext(ISynchronizeInvoke uiContext)
         {
             _uiContext = uiContext;
-            _uiInvoker = new Invoker(_uiContext);
+            _uiInvoker = new UIInvoker(_uiContext);
         }
 
         #region User-invokable tasks

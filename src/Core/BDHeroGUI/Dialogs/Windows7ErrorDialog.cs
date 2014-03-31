@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
 using BDHeroGUI.Forms;
+using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -191,19 +192,19 @@ namespace BDHeroGUI.Dialogs
 
         private void Submit(TaskDialog dialog)
         {
-            new Promise<Null>()
+            new EmptyPromise()
                 .Work(ErrorReportOnDoWork)
                 .Done(ErrorReportOnSucceed)
                 .Start();
             dialog.Close(TaskDialogResult.Yes);
         }
 
-        private void ErrorReportOnDoWork(IPromise<Null> promise)
+        private void ErrorReportOnDoWork(IPromise<Nil> promise)
         {
             _errorReportResult = ErrorReporter.Report(_report);
         }
 
-        private void ErrorReportOnSucceed(IPromise<Null> promise)
+        private void ErrorReportOnSucceed(IPromise<Nil> promise)
         {
             OnErrorReportCompleted(_errorReportResult);
         }

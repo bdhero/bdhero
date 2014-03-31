@@ -23,6 +23,7 @@ using System.Security;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
+using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using OSUtils.DriveDetector;
@@ -225,7 +226,7 @@ namespace BDHeroGUI.Components
 
             var menuItems = new ToolStripItem[0];
 
-            new Promise<Null>(Parent)
+            new EmptyPromise(Parent)
                 .Work(promise => menuItems = CreateToolStripItems(Drives))
                 .Done(promise => UpdateMenu(menuItems))
                 .Fail(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException))

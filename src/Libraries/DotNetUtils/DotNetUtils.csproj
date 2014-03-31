@@ -63,9 +63,13 @@
     <Compile Include="Concurrency\AtomicValue.cs" />
     <Compile Include="Concurrency\ConcurrentLinkedSet.cs" />
     <Compile Include="Concurrency\ConcurrentMultiValueDictionary.cs" />
+    <Compile Include="Concurrency\EmptyPromise.cs" />
+    <Compile Include="Concurrency\IInvoker.cs" />
     <Compile Include="Concurrency\IPromise.cs" />
     <Compile Include="Concurrency\Promise.cs" />
     <Compile Include="Concurrency\PromiseDelegates.cs" />
+    <Compile Include="Concurrency\SimplePromise.cs" />
+    <Compile Include="Concurrency\UIInvoker.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Crypto\CryptoHashAlgorithm.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="Net\FileDownloadState.cs" />
     <Compile Include="Net\HttpRequest.cs" />
     <Compile Include="Net\HttpRequestMethod.cs" />
+    <Compile Include="Nil.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionUtils.cs" />

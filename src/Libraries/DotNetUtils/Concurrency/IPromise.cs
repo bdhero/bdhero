@@ -16,42 +16,11 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.ComponentModel;
 using System.Threading;
 using DotNetUtils.Annotations;
 
 namespace DotNetUtils.Concurrency
 {
-    public struct Null
-    {
-    }
-
-    public interface IInvoker
-    {
-        void InvokeSync(Action action);
-        void InvokeAsync(Action action);
-    }
-
-    public class Invoker : IInvoker
-    {
-        private readonly ISynchronizeInvoke _uiContext;
-
-        public Invoker(ISynchronizeInvoke uiContext)
-        {
-            _uiContext = uiContext;
-        }
-
-        public void InvokeSync(Action action)
-        {
-            _uiContext.Invoke(action, new object[0]);
-        }
-
-        public void InvokeAsync(Action action)
-        {
-            _uiContext.BeginInvoke(action, new object[0]);
-        }
-    }
-
     /// <summary>
     /// Specifies an interface for a background thread that communicates with the UI thread via events and returns a
     /// value of type <typeparamref name="TResult"/>.

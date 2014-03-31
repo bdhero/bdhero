@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetUtils;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
@@ -93,7 +94,7 @@ namespace UpdateLib
             // Prevent user from checking for updates while another check is already in progress
             _updatesButtonClickAction = null;
 
-            new Promise<Null>()
+            new EmptyPromise()
                 .Before(OnBeforeStart)
                 .Work(OnDoWork)
                 .Fail(OnFail)
@@ -119,7 +120,7 @@ namespace UpdateLib
             _updater.InstallUpdate();
         }
 
-        private void OnBeforeStart(IPromise<Null> promise)
+        private void OnBeforeStart(IPromise<Nil> promise)
         {
             Logger.Info("Checking for updates");
             Notify(observer => observer.OnBeforeCheckForUpdate());
@@ -137,7 +138,7 @@ namespace UpdateLib
             Notify(observer => observer.OnBeforeDownloadUpdate(_updater.LatestUpdate));
         }
 
-        private void OnDoWork(IPromise<Null> promise)
+        private void OnDoWork(IPromise<Nil> promise)
         {
             _updater.CheckForUpdate(_currentVersion);
 
@@ -172,14 +173,14 @@ namespace UpdateLib
             Notify(observer => observer.OnUpdateDownloadProgressChanged(_updater.LatestUpdate, progress));
         }
 
-        private void OnFail(IPromise<Null> promise)
+        private void OnFail(IPromise<Nil> promise)
         {
             _updatesButtonClickAction = CheckForUpdatesAsync;
             Logger.Error("Error checking for update", promise.LastException);
             Notify(observer => observer.OnUpdateException(promise.LastException));
         }
 
-        private void OnSucceed(IPromise<Null> promise)
+        private void OnSucceed(IPromise<Nil> promise)
         {
             if (_updater.IsUpdateAvailable)
             {

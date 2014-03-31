@@ -729,7 +729,7 @@ namespace BDHeroGUI
 
             _isRenaming = true;
 
-            new Promise<Null>(this)
+            new EmptyPromise(this)
                 .Work(p => _controller.RenameSync(null))
                 .Done(p => textBoxOutput.Text = _controller.Job.OutputPath)
                 .Always(p => _isRenaming = false)
