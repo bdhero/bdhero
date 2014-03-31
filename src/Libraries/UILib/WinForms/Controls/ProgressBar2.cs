@@ -85,39 +85,36 @@ namespace UILib.WinForms.Controls
             TextOutlineWidth = 2;
         }
 
+        private void SetBackgroundGradient(Color top, Color bottom)
+        {
+            BackColorTop = top;
+            BackColorBottom = bottom;
+            Invalidate();
+        }
+
         public void SetError()
         {
-            BackColorTop = Color.Red;
-            BackColorBottom = Color.DarkRed;
-            Invalidate();
+            SetBackgroundGradient(Color.Red, Color.DarkRed);
         }
 
         public void SetPaused()
         {
-            BackColorTop = Color.LightGoldenrodYellow;
-            BackColorBottom = Color.Yellow;
-            Invalidate();
+            SetBackgroundGradient(Color.LightGoldenrodYellow, Color.Yellow);
         }
 
         public void SetInfo()
         {
-            BackColorTop = Color.LightSkyBlue;
-            BackColorBottom = Color.DeepSkyBlue;
-            Invalidate();
+            SetBackgroundGradient(Color.LightSkyBlue, Color.DeepSkyBlue);
         }
 
         public void SetSuccess()
         {
-            BackColorTop = Color.GreenYellow;
-            BackColorBottom = Color.Green;
-            Invalidate();
+            SetBackgroundGradient(Color.GreenYellow, Color.Green);
         }
 
         public void SetMuted()
         {
-            BackColorTop = Color.DarkGray;
-            BackColorBottom = Color.Gray;
-            Invalidate();
+            SetBackgroundGradient(Color.DarkGray, Color.Gray);
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
