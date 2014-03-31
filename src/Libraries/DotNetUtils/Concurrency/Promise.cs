@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -29,6 +30,7 @@ namespace DotNetUtils.Concurrency
     internal static class PromiseStatic
     {
         internal static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(1d / 10d);
+        internal static readonly AtomicInteger AtomicIdCounter = new AtomicInteger();
     }
 
     /// <summary>
@@ -36,6 +38,9 @@ namespace DotNetUtils.Concurrency
     /// </summary>
     public class Promise<TResult> : IPromise<TResult>
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private delegate void ProgressPromiseHandler(object state);
 
         #region Event handlers
@@ -77,6 +82,8 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
+        private readonly int _id = PromiseStatic.AtomicIdCounter.GetAndIncrement();
+
         private volatile bool _hasStarted;
 
         private readonly ManualResetEventSlim _stopped = new ManualResetEventSlim(true);
@@ -107,6 +114,7 @@ namespace DotNetUtils.Concurrency
         /// </param>
         public Promise(ISynchronizeInvoke synchronizingObject)
         {
+            LogDebug("Promise() C'TOR");
             _uiInvoker = new UIInvoker(synchronizingObject);
             _timer.SynchronizingObject = synchronizingObject;
             _timer.Elapsed += OnTimerElapsed;
@@ -235,14 +243,35 @@ namespace DotNetUtils.Concurrency
 
         #endregion
 
+        private void LogDebug(string format, params object[] args)
+        {
+            format = string.Format("{0} - [{1,-5}, {2,-5}] - {3}", _id, IsCancellationRequested, IsCompleted, format);
+            if (args.Any())
+                Logger.DebugFormat(format, args);
+            else
+                Logger.Debug(format);
+        }
+
+        private void LogWarn(string format, params object[] args)
+        {
+            format = string.Format("{0} - [{1,-5}, {2,-5}] - {3}", _id, IsCancellationRequested, IsCompleted, format);
+            if (args.Any())
+                Logger.WarnFormat(format, args);
+            else
+                Logger.Warn(format);
+        }
+
         #region Public control methods
 
         public IPromise<TResult> Start()
         {
+            LogDebug("Start()");
+
             PreventMultipleStarts();
 
             if (IsCancellationRequested)
             {
+                LogWarn("Start() - Already cancelled!");
                 return this;
             }
 
@@ -256,6 +285,7 @@ namespace DotNetUtils.Concurrency
 
         public IPromise<TResult> Cancel()
         {
+            LogDebug("Cancel()");
             CancelImpl();
             return this;
         }
@@ -265,6 +295,7 @@ namespace DotNetUtils.Concurrency
             token.Register(CancelImpl);
             if (token.IsCancellationRequested)
             {
+                LogWarn("CancelWith() - ALREADY CANCELLED!?!");
                 CancelImpl();
             }
             return this;
@@ -272,6 +303,7 @@ namespace DotNetUtils.Concurrency
 
         private void CancelImpl()
         {
+            LogDebug("CancelImpl()");
             _cancellationTokenSource.Cancel();
         }
 
@@ -282,22 +314,31 @@ namespace DotNetUtils.Concurrency
 
         public IPromise<TResult> Wait()
         {
+            var time = DateTime.Now.ToString("O");
+            LogDebug("Wait() - {0} - before...", time);
             if (ShouldWait)
                 _stopped.Wait();
+            LogDebug("Wait() - {0} - after", time);
             return this;
         }
 
         public IPromise<TResult> Wait(int millisecondsTimeout)
         {
+            var time = DateTime.Now.ToString("O");
+            LogDebug("Wait({0}) - {1} - before...", millisecondsTimeout, time);
             if (ShouldWait)
                 _stopped.Wait(millisecondsTimeout);
+            LogDebug("Wait({0}) - {1} - after...", millisecondsTimeout, time);
             return this;
         }
 
         public IPromise<TResult> Wait(TimeSpan timeout)
         {
+            var time = DateTime.Now.ToString("O");
+            LogDebug("Wait({0}) - {1} - before...", timeout, time);
             if (ShouldWait)
                 _stopped.Wait(timeout);
+            LogDebug("Wait({0}) - {1} - after...", timeout, time);
             return this;
         }
 
@@ -330,17 +371,21 @@ namespace DotNetUtils.Concurrency
 
         private void StartTimer()
         {
+            LogDebug("StartTimer()");
             _timer.Start();
         }
 
         private void StopTimer()
         {
+            LogDebug("StopTimer()");
             _timer.Stop();
             _stopped.Set();
         }
 
         private void StartTask()
         {
+            LogDebug("StartTask()");
+
             Task.Factory.StartNew(TryDoWork, _cancellationTokenSource.Token);
 
             if (IsCancellationRequested)
@@ -397,16 +442,19 @@ namespace DotNetUtils.Concurrency
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            LogDebug("OnTimerElapsed()");
             DispatchEvents();
         }
 
         private void OnCancellationRequested()
         {
+            LogDebug("OnCancellationRequested()");
             _cancellationRequestQueue.Enqueue(DateTime.Now);
         }
 
         private void DispatchEvents()
         {
+            LogDebug("DispatchEvents()");
             DispatchProgressEvents();
             DispatchCancellationRequestedEvents();
             DispatchCompletionEvents();
@@ -417,6 +465,7 @@ namespace DotNetUtils.Concurrency
             var handlerTypes = _progressHandlers.GetKeys();
             var eventTypes = _progressEventStates.GetKeys();
 
+            var i = 0;
             foreach (var eventType in eventTypes)
             {
                 object state;
@@ -427,6 +476,7 @@ namespace DotNetUtils.Concurrency
                         var handlers = _progressHandlers.GetValues(handlerType);
                         foreach (var handler in handlers)
                         {
+                            LogDebug("DispatchProgressEvents() - handler {0}", i++);
                             handler(state);
                         }
                     }
@@ -436,12 +486,14 @@ namespace DotNetUtils.Concurrency
 
         private void DispatchCancellationRequestedEvents()
         {
+            var i = 0;
             DateTime dateTime;
             while (_cancellationRequestQueue.TryDequeue(out dateTime))
             {
                 var handlers = _cancellationRequestedHandlers.ToList();
                 foreach (var handler in handlers)
                 {
+                    LogDebug("DispatchCancellationRequestedEvents() - handler {0}", i++);
                     handler(this);
                 }
             }
@@ -452,6 +504,8 @@ namespace DotNetUtils.Concurrency
             DateTime dateTime;
             if (!_finishedQueue.TryDequeue(out dateTime))
                 return;
+
+            LogDebug("DispatchCompletionEvents()");
 
             BeforeDispatchCompletionEvents();
 
@@ -477,9 +531,11 @@ namespace DotNetUtils.Concurrency
             if (!IsCancellationRequested)
                 return;
 
+            var i = 0;
             var handlers = _canceledHandlers.ToList();
             foreach (var handler in handlers)
             {
+                LogDebug("DispatchCanceledEvents() - handler {0}", i++);
                 handler(this);
             }
         }
@@ -489,9 +545,11 @@ namespace DotNetUtils.Concurrency
             if (IsCancellationRequested || LastException == null)
                 return;
 
+            var i = 0;
             var handlers = _failureHandlers.ToList();
             foreach (var handler in handlers)
             {
+                LogDebug("DispatchFailEvents() - handler {0}", i++);
                 handler(this);
             }
         }
@@ -501,18 +559,22 @@ namespace DotNetUtils.Concurrency
             if (IsCancellationRequested || LastException != null)
                 return;
 
+            var i = 0;
             var handlers = _successHandlers.ToList();
             foreach (var handler in handlers)
             {
+                LogDebug("DispatchSuccessEvents() - handler {0}", i++);
                 handler(this);
             }
         }
 
         private void DispatchAlwaysEvents()
         {
+            var i = 0;
             var handlers = _alwaysHandlers.ToList();
             foreach (var handler in handlers)
             {
+                LogDebug("DispatchAlwaysEvents() - handler {0}", i++);
                 handler(this);
             }
         }
