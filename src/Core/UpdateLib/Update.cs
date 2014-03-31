@@ -27,15 +27,15 @@ namespace UpdateLib
     {
         public readonly Version Version;
         public readonly string FileName;
-        public readonly string Uri;
+        public readonly string[] Uris;
         public readonly string SHA1;
         public readonly long Size;
 
-        public Update(Version version, string fileName, string uri, string sha1, long size)
+        public Update(Version version, string fileName, string[] uris, string sha1, long size)
         {
             Version = version;
             FileName = fileName;
-            Uri = uri;
+            Uris = uris;
             SHA1 = sha1;
             Size = size;
         }
@@ -45,7 +45,6 @@ namespace UpdateLib
         [CanBeNull]
         public static Update FromResponse([NotNull] UpdateResponse response, bool isPortable)
         {
-            var mirror = response.Mirrors.First();
             var platform = GetPlatform(response);
             var package = GetPackage(platform, isPortable);
 
@@ -57,9 +56,9 @@ namespace UpdateLib
 
             var version = response.Version;
             var filename = package.FileName;
-            var uri = mirror + filename;
+            var uris = response.Mirrors.Select(mirror => mirror + filename).ToArray();
 
-            return new Update(version, filename, uri, package.SHA1, package.Size);
+            return new Update(version, filename, uris, package.SHA1, package.Size);
         }
 
         [NotNull]

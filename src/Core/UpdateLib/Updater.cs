@@ -210,7 +210,7 @@ namespace UpdateLib
             var path = Path.Combine(Path.GetTempPath(), update.FileName);
             var downloader = new FileDownloader
                 {
-                    Uri = update.Uri,
+                    Uri = update.Uris.First(),
                     Path = path,
                     CancellationToken = _cancellationTokenSource.Token
                 };
