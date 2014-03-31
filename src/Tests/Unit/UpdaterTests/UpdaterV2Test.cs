@@ -29,10 +29,10 @@ namespace UpdaterTests
             _updater.Checking += updater => _events += "Checking;";
             _updater.UpdateFound += updater => _events += "UpdateFound;";
             _updater.UpdateNotFound += updater => _events += "UpdateNotFound;";
+            _updater.Checked += updater => _events += "Checked;";
             _updater.Error += (updater, exception) => _events += "Error;";
 
-            _updater.UpdateFound += updater => _barrier.Set();
-            _updater.UpdateNotFound += updater => _barrier.Set();
+            _updater.Checked += updater => _barrier.Set();
             _updater.Error += (updater, exception) => _barrier.Set();
         }
 
@@ -50,7 +50,7 @@ namespace UpdaterTests
             Assert.IsNotNull(_updater.LatestUpdate);
             Assert.IsTrue(_updater.IsUpdateAvailable, "Expected an update to be available");
             Assert.Greater(_updater.LatestUpdate.Version, _updater.CurrentVersion, "LatestUpdate.Version should be greater than CurrentVersion");
-            Assert.AreEqual("Checking;UpdateFound;", _events);
+            Assert.AreEqual("Checking;UpdateFound;Checked;", _events);
             Assert.IsTrue(_updater.LatestUpdate.FileName.EndsWith(".zip"), "LatestUpdate.FileName should end with \".zip\"");
         }
 
@@ -67,7 +67,7 @@ namespace UpdaterTests
             Assert.IsTrue(gotResponse, "Did not receive a response from the update server within 5 seconds");
             Assert.IsNotNull(_updater.LatestUpdate);
             Assert.IsFalse(_updater.IsUpdateAvailable, "Expected no update to be available");
-            Assert.AreEqual("Checking;UpdateNotFound;", _events);
+            Assert.AreEqual("Checking;UpdateNotFound;Checked;", _events);
         }
 
         [Test]

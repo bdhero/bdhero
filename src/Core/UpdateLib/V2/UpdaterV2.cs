@@ -39,6 +39,8 @@ namespace UpdateLib.V2
 
         public event UpdaterV2UpdateNotFoundEventHandler UpdateNotFound;
 
+        public event UpdaterV2CheckedEventHandler Checked;
+
         public event UpdaterV2ErrorCheckingForUpdateEventHandler Error;
 
         #endregion
@@ -91,12 +93,6 @@ namespace UpdateLib.V2
             }
         }
 
-        private void HandleError(IRestResponse response)
-        {
-            if (Error != null)
-                Error(this, response.ErrorException);
-        }
-
         private void HandleSuccess(IRestResponse response)
         {
             var updateResponse = SmartJsonConvert.DeserializeObject<UpdateResponse>(response.Content);
@@ -113,11 +109,21 @@ namespace UpdateLib.V2
                 if (UpdateNotFound != null)
                     UpdateNotFound(this);
             }
+
+            if (Checked != null)
+                Checked(this);
+        }
+
+        private void HandleError(IRestResponse response)
+        {
+            if (Error != null)
+                Error(this, response.ErrorException);
         }
     }
 
     public delegate void UpdaterV2CheckingForUpdateEventHandler(UpdaterV2 updater);
     public delegate void UpdaterV2UpdateFoundEventHandler(UpdaterV2 updater);
     public delegate void UpdaterV2UpdateNotFoundEventHandler(UpdaterV2 updater);
+    public delegate void UpdaterV2CheckedEventHandler(UpdaterV2 updater);
     public delegate void UpdaterV2ErrorCheckingForUpdateEventHandler(UpdaterV2 updater, Exception exception);
 }
