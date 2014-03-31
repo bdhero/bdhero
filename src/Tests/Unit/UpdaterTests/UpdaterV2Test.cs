@@ -75,7 +75,7 @@ namespace UpdaterTests
         {
             _updater.CurrentVersion = new Version(0, 0, 0, 0);
             _updater.IsPortable = true;
-            _updater.UpdateManifestFileUrl += "_404";
+            _updater.UpdateManifestFilePath += "_404";
 
             _updater.CheckForUpdateAsync();
 
