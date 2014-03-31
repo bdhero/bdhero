@@ -106,11 +106,12 @@ namespace BDHeroGUI
             this.aboutBDHeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.forceGarbageCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.appendDividerToLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new UILib.WinForms.Controls.SelectableStatusStrip();
             this.toolStripStatusLabelOffline = new System.Windows.Forms.ToolStripStatusLabel();
-            this.appendDividerToLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -670,7 +671,8 @@ namespace BDHeroGUI
             // 
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.forceGarbageCollectionToolStripMenuItem,
-            this.appendDividerToLogToolStripMenuItem});
+            this.appendDividerToLogToolStripMenuItem,
+            this.textEditorToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -683,6 +685,24 @@ namespace BDHeroGUI
             this.forceGarbageCollectionToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.forceGarbageCollectionToolStripMenuItem.Text = "Force &Garbage Collection";
             this.forceGarbageCollectionToolStripMenuItem.Click += new System.EventHandler(this.forceGarbageCollectionToolStripMenuItem_Click);
+            // 
+            // appendDividerToLogToolStripMenuItem
+            // 
+            this.appendDividerToLogToolStripMenuItem.Name = "appendDividerToLogToolStripMenuItem";
+            this.appendDividerToLogToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.L)));
+            this.appendDividerToLogToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.appendDividerToLogToolStripMenuItem.Text = "Append Divider to &Log";
+            this.appendDividerToLogToolStripMenuItem.Click += new System.EventHandler(this.appendDividerToLogToolStripMenuItem_Click);
+            // 
+            // textEditorToolStripMenuItem
+            // 
+            this.textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
+            this.textEditorToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.T)));
+            this.textEditorToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.textEditorToolStripMenuItem.Text = "Open &TextEditor";
+            this.textEditorToolStripMenuItem.Click += new System.EventHandler(this.textEditorToolStripMenuItem_Click);
             // 
             // updateToolStripMenuItem
             // 
@@ -720,15 +740,6 @@ namespace BDHeroGUI
             this.toolStripStatusLabelOffline.Name = "toolStripStatusLabelOffline";
             this.toolStripStatusLabelOffline.Size = new System.Drawing.Size(257, 17);
             this.toolStripStatusLabelOffline.Text = "Offline: metadata search may be unavailable";
-            // 
-            // appendDividerToLogToolStripMenuItem
-            // 
-            this.appendDividerToLogToolStripMenuItem.Name = "appendDividerToLogToolStripMenuItem";
-            this.appendDividerToLogToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.L)));
-            this.appendDividerToLogToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.appendDividerToLogToolStripMenuItem.Text = "Append Divider to &Log";
-            this.appendDividerToLogToolStripMenuItem.Click += new System.EventHandler(this.appendDividerToLogToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -833,6 +844,7 @@ namespace BDHeroGUI
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forceGarbageCollectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem appendDividerToLogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textEditorToolStripMenuItem;
     }
 }
 

@@ -1178,6 +1178,11 @@ namespace BDHeroGUI
             _logger.Info("\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n");
         }
 
+        private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormTextEditorTest().Show(this);
+        }
+
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
 #if ENABLE_UPDATER
