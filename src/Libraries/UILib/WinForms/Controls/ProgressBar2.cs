@@ -89,30 +89,35 @@ namespace UILib.WinForms.Controls
         {
             BackColorTop = Color.Red;
             BackColorBottom = Color.DarkRed;
+            Invalidate();
         }
 
         public void SetPaused()
         {
             BackColorTop = Color.LightGoldenrodYellow;
             BackColorBottom = Color.Yellow;
+            Invalidate();
         }
 
         public void SetInfo()
         {
             BackColorTop = Color.LightSkyBlue;
             BackColorBottom = Color.DeepSkyBlue;
+            Invalidate();
         }
 
         public void SetSuccess()
         {
             BackColorTop = Color.GreenYellow;
             BackColorBottom = Color.Green;
+            Invalidate();
         }
 
         public void SetMuted()
         {
             BackColorTop = Color.DarkGray;
             BackColorBottom = Color.Gray;
+            Invalidate();
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
