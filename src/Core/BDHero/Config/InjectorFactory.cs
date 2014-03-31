@@ -27,9 +27,8 @@ using Ninject.Modules;
 using OSUtils;
 using OSUtils.Info;
 using OSUtils.Net;
-using UpdateLib;
 using log4net;
-using UpdateLib.V1;
+using UpdateLib;
 
 namespace BDHero.Config
 {
@@ -83,7 +82,7 @@ namespace BDHero.Config
             Bind<IPreferenceManager>().To<PreferenceManager>().InSingletonScope();
             Bind<IPluginRepository>().To<PluginRepository>().InSingletonScope();
             Bind<PluginLoader>().ToSelf().InSingletonScope();
-            Bind<UpdaterV1>().ToSelf().InSingletonScope();
+            Bind<UpdateClient>().ToSelf().InSingletonScope();
             Bind<IController>().To<Controller>();
 
             if (DevPluginService.IsDevMode)

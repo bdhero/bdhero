@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
-using BDHero.Startup;
 using NUnit.Framework;
-using Ninject;
-using Ninject.Activation;
-using Ninject.Modules;
 using UpdateLib;
-using log4net;
 
 namespace UpdaterTests
 {
     [TestFixture]
-    public class UpdaterV2Test
+    public class UpdateClientTest
     {
         private UpdateClient _updater;
         private ManualResetEventSlim _barrier;

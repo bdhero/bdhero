@@ -62,8 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonNullTest.cs" />
-    <Compile Include="UpdaterV2Test.cs" />
-    <Compile Include="UpdaterTest.cs" />
+    <Compile Include="UpdateClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

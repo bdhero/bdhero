@@ -44,11 +44,7 @@ namespace BDHeroGUI
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            var formMain = CreateFormMain(args, kernel);
-            formMain.ParseArgs(args);
-
-            Application.Run(formMain);
+            Application.Run(CreateFormMain(args, kernel));
 
             kernel.Get<ITempFileRegistrar>().DeleteEverything();
         }

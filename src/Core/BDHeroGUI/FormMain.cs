@@ -15,9 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-#define DISABLE_UPDATER_V1
-#define ENABLE_UPDATER_V2
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -76,15 +73,7 @@ namespace BDHeroGUI
         private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
 
-#if ENABLE_UPDATER_V1
-        private readonly UpdaterV1 _updater;
-        private readonly UpdateHelperV1 _updateHelper;
-        private bool _hasCheckedForUpdateOnStartup;
-#endif
-
-#if ENABLE_UPDATER_V2
-        private readonly UpdateClient _updateClient = new UpdateClient();
-#endif
+        private readonly UpdateClient _updateClient;
 
         private readonly ToolTip _progressBarToolTip;
 
@@ -93,6 +82,10 @@ namespace BDHeroGUI
 
         private ProgressProviderState _state = ProgressProviderState.Ready;
         private Stage _stage = Stage.None;
+
+        private DateTime _lastControllerEvent;
+        private double _lastProgressPercentComplete;
+        private string _lastProgressPercentCompleteStr;
 
         public string[] Args = new string[0];
 
@@ -110,11 +103,7 @@ namespace BDHeroGUI
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
                         IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
-                        INetworkStatusMonitor networkStatusMonitor
-#if ENABLE_UPDATER_V1
-                        , UpdaterV1 updater
-#endif
-            )
+                        INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient)
         {
             InitializeComponent();
 
@@ -130,19 +119,9 @@ namespace BDHeroGUI
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
             _windowMenuFactory = windowMenuFactory;
             _networkStatusMonitor = networkStatusMonitor;
+            _updateClient = updateClient;
 
             updateToolStripMenuItem.Visible = false;
-            checkForUpdatesToolStripMenuItem.Enabled = false;
-            
-#if ENABLE_UPDATER_V1
-            _updater = updater;
-            _updater.IsPortable = _directoryLocator.IsPortable;
-            _updateHelper = new UpdateHelperV1(_updater, AppUtils.AppVersion) { AllowDownload = false };
-#endif
-
-#if ENABLE_UPDATER_V2
-            checkForUpdatesToolStripMenuItem.Enabled = true;
-#endif
 
             _progressBarToolTip = new ToolTip();
             _progressBarToolTip.SetToolTip(progressBar, null);
@@ -158,34 +137,6 @@ namespace BDHeroGUI
 
             mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
-            
-#if ENABLE_UPDATER_V1
-            var updateObserver = new FormMainUpdateObserver(this,
-                                                            checkForUpdatesToolStripMenuItem,
-                                                            updateToolStripMenuItem,
-                                                            downloadUpdateToolStripMenuItem);
-            updateObserver.BeforeInstallUpdate += update => DisableUpdates();
-            SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
-            _updateHelper.RegisterObserver(updateObserver);
-#endif
-
-#if ENABLE_UPDATER_V2
-            var updateObserver = new FormMainUpdateObserver(this,
-                                                            checkForUpdatesToolStripMenuItem,
-                                                            updateToolStripMenuItem,
-                                                            downloadUpdateToolStripMenuItem);
-
-            _updateClient.CurrentVersion = AppUtils.AppVersion;
-            _updateClient.IsPortable = _directoryLocator.IsPortable;
-
-            _updateClient.Checking += updater => Invoke(new Action(updateObserver.OnBeforeCheckForUpdate));
-            _updateClient.UpdateFound += updater => Invoke(new Action(() => updateObserver.OnUpdateReadyToDownload(_updateClient.LatestUpdate)));
-            _updateClient.UpdateNotFound += updater => Invoke(new Action(updateObserver.OnNoUpdateAvailable));
-            _updateClient.Error += (updater, exception) => Invoke(new Action(() => updateObserver.OnUpdateException(exception)));
-
-            downloadUpdateToolStripMenuItem.Click += (sender, args) => OpenDownloadPageInBrowser();
-            downloadUpdateToolStripMenuItem.ToolTipText = AppConstants.DownloadPageUrl;
-#endif
 
             FormClosing += OnFormClosing;
 
@@ -200,14 +151,6 @@ namespace BDHeroGUI
             InitTaskBarId();
 
             debugToolStripMenuItem.Visible = false;
-        }
-
-        public void ParseArgs(params string[] args)
-        {
-            if (args.Contains("--debug"))
-            {
-                debugToolStripMenuItem.Visible = true;
-            }
         }
 
         private void InitTaskBarId()
@@ -292,6 +235,8 @@ namespace BDHeroGUI
             InitAboutBox();
             InitTextEditors();
 
+            ParseArgs();
+
             ScanOnStartup();
         }
 
@@ -309,18 +254,11 @@ namespace BDHeroGUI
         private void SetIsOnline(bool isOnline)
         {
             toolStripStatusLabelOffline.Visible = !isOnline;
-            
-#if ENABLE_UPDATER_V1
-            if (!isOnline || _hasCheckedForUpdateOnStartup)
+
+            if (!isOnline)
                 return;
 
-            _updateHelper.Click();
-            _hasCheckedForUpdateOnStartup = true;
-#endif
-
-#if ENABLE_UPDATER_V2
             _updateClient.CheckForUpdateAsync();
-#endif
         }
 
         /// <summary>
@@ -352,6 +290,14 @@ namespace BDHeroGUI
         {
             var editor = TextEditorFactory.CreateMultiLineTextEditor();
             editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+        }
+
+        private void ParseArgs()
+        {
+            if (Args.Contains("--debug"))
+            {
+                debugToolStripMenuItem.Visible = true;
+            }
         }
 
         private void ScanOnStartup()
@@ -612,22 +558,22 @@ namespace BDHeroGUI
 
         private void InitUpdateCheck()
         {
-            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
-        }
+//            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
 
-        private void InstallUpdateIfAvailable(bool silent)
-        {
-            // TODO: Re-enable when automatic updating is implemented
-//            _updateHelper.InstallUpdateIfAvailable(silent);
-        }
+            var updateObserver = new FormMainUpdateObserver(checkForUpdatesToolStripMenuItem,
+                                                            updateToolStripMenuItem,
+                                                            downloadUpdateToolStripMenuItem);
 
-#if ENABLE_UPDATER_V1
-        private void DisableUpdates()
-        {
-            _updateHelper.AllowInstallUpdate = false;
-            _updater.CancelDownload();
+            _updateClient.CurrentVersion = AppUtils.AppVersion;
+            _updateClient.IsPortable = _directoryLocator.IsPortable;
+
+            _updateClient.Checking += updater => Invoke(new Action(updateObserver.Checking));
+            _updateClient.UpdateFound += updater => Invoke(new Action(() => updateObserver.UpdateFound(_updateClient.LatestUpdate)));
+            _updateClient.UpdateNotFound += updater => Invoke(new Action(updateObserver.NoUpdateFound));
+            _updateClient.Error += (updater, exception) => Invoke(new Action(() => updateObserver.Error(exception)));
+
+            downloadUpdateToolStripMenuItem.ToolTipText = AppConstants.DownloadPageUrl;
         }
-#endif
 
         private void OpenDownloadPageInBrowser()
         {
@@ -918,8 +864,6 @@ namespace BDHeroGUI
 
         #endregion
 
-        private DateTime _lastControllerEvent;
-
         #region Scan events
 
         private void ControllerOnBeforeScanStart(IPromise<bool> promise)
@@ -1042,17 +986,11 @@ namespace BDHeroGUI
 
         #region Progress events
 
-        private double _lastProgressPercentComplete;
-        private string _lastProgressPercentCompleteStr;
-
         private void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
             SetLastControllerEventTimeStamp();
 
-            if (!_isRunning && progressProvider.State == ProgressProviderState.Running)
-            {
-            }
-            else
+            if (_isRunning || progressProvider.State != ProgressProviderState.Running)
             {
                 _state = progressProvider.State;
             }
@@ -1209,16 +1147,10 @@ namespace BDHeroGUI
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-#if ENABLE_UPDATER_V1
-            _updateHelper.Click();
-#endif
-
-#if ENABLE_UPDATER_V2
             if (_updateClient.IsUpdateAvailable)
                 OpenDownloadPageInBrowser();
             else
                 _updateClient.CheckForUpdateAsync();
-#endif
         }
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1243,9 +1175,7 @@ namespace BDHeroGUI
 
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-#if ENABLE_UPDATER_V1
-            _updateHelper.Click();
-#endif
+            OpenDownloadPageInBrowser();
         }
 
         #endregion
