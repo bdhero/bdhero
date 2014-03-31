@@ -51,6 +51,13 @@ namespace TextEditor.WinForms
             StandardContextMenu = true;
 
             Controls.Add(Editor.Control);
+
+            Editor.ReadOnlyChanged += EditorOnReadOnlyChanged;
+        }
+
+        private void EditorOnReadOnlyChanged(object sender, EventArgs eventArgs)
+        {
+            Editor.SetBackgroundColor(Editor.ReadOnly ? Color.Transparent : Color.White);
         }
 
         ~TextEditorControl()

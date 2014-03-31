@@ -12,6 +12,8 @@ using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using TextEditor.Extensions;
 using TextEditor.SyntaxHighlighting.Providers;
+using Color = System.Drawing.Color;
+using FontFamily = System.Windows.Media.FontFamily;
 using HighlightingManager = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
@@ -52,6 +54,11 @@ namespace TextEditor.WPF
             _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
 
             _elementHost.Child = _editor;
+        }
+
+        public void SetBackgroundColor(Color color)
+        {
+            _editor.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
         }
 
         private void EditorOnMouseEnter(object sender, MouseEventArgs mouseEventArgs)

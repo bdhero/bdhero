@@ -42,6 +42,14 @@ namespace TextEditor.WinForms
             _completionController = new MockCompletionController(_editor);
         }
 
+        public void SetBackgroundColor(Color color)
+        {
+            // TODO: This doesn't work
+//            _editor.BackColor = color;
+//            _editor.ActiveTextAreaControl.BackColor = color;
+//            _editor.ActiveTextAreaControl.TextArea.BackColor = color;
+        }
+
         ITextEditorOptions ITextEditor.Options
         {
             get { return _options; }

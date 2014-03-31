@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using TextEditor.SyntaxHighlighting.Providers;
@@ -23,6 +24,8 @@ namespace TextEditor
         Control Control { get; }
 
         #endregion
+
+        void SetBackgroundColor(Color color);
 
         #region Properties + Events
 
