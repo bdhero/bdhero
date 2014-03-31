@@ -15,6 +15,7 @@ namespace DotNetUtils.Concurrency
         /// </summary>
         public SimplePromise()
         {
+            Result = false;
         }
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace DotNetUtils.Concurrency
         public SimplePromise(ISynchronizeInvoke synchronizingObject)
             : base(synchronizingObject)
         {
+            Result = false;
         }
 
         protected override void BeforeDispatchCompletionEvents()
