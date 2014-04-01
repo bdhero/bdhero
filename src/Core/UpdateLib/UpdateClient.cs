@@ -12,8 +12,7 @@ namespace UpdateLib
     /// </summary>
     public class UpdateClient
     {
-//        public const string DefaultUpdateManifestBaseUrl = "http://update.bdhero.org";
-        public const string DefaultUpdateManifestBaseUrl = "http://192.168.0.151:8080";
+        public const string DefaultUpdateManifestBaseUrl = "http://update.bdhero.org";
         public const string DefaultUpdateManifestFilePath = "/update.json";
 
         #region Public properties
