@@ -51,6 +51,7 @@ using OSUtils.Net;
 using OSUtils.TaskbarUtils;
 using OSUtils.Window;
 using TextEditor;
+using TextEditor.WinForms;
 using UILib.Extensions;
 using UILib.WinForms;
 using UpdateLib;
@@ -187,6 +188,35 @@ namespace BDHeroGUI
             InitTextEditor();
 
             ScanOnStartup();
+
+            this.Descendants<TextEditorControl>().ForEach(BindTextEditorControlPreviewKeyDown);
+        }
+
+        private void BindTextEditorControlPreviewKeyDown(TextEditorControl textEditorControl)
+        {
+            textEditorControl.PreviewKeyDown += TextEditorControlOnPreviewKeyDown;
+        }
+
+        private void TextEditorControlOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // AvalonEdit captures and suppresses CTRL+I (for "Indent"),
+            // even though the command doesn't appear to actually do anything.
+            // Since we may actually want to process this key combo,
+            // TextEditorImpl and TextEditorControl proxy the key event
+            // for us to listen to.
+            if (e.Control && e.KeyCode == Keys.I)
+            {
+                // Nasty hack: To get WinForms to do what we want, we have to temporarily move focus
+                // to a _different_ control
+                var button = new Button();
+                Controls.Add(button);
+                button.Select();
+                button.Focus();
+
+                new EmptyPromise(this)
+                    .Always(promise => Controls.Remove(button))
+                    .Start();
+            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
