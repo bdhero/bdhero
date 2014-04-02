@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 
 namespace TextEditor.WPF
@@ -13,6 +14,11 @@ namespace TextEditor.WPF
         public void TriggerMouseLeave()
         {
             OnMouseLeave(EventArgs.Empty);
+        }
+
+        public void TriggerPreviewKeyDown(Keys keyData)
+        {
+            OnPreviewKeyDown(new PreviewKeyDownEventArgs(keyData));
         }
     }
 }
