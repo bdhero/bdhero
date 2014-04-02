@@ -95,7 +95,7 @@ namespace BDHero.Plugin.FileNamer
             if (FileNameVars.MovieVars.Contains(variableName) ||
                 FileNameVars.TVShowVars.Contains(variableName))
             {
-                return match.Result(@"${$1}");
+                return match.Result(@"{$1}");
             }
             return match.Value;
         }

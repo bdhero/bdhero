@@ -134,8 +134,8 @@ namespace BDHero.Plugin.FileNamer
             this.selectableLabelMoviePlaceholders.ReadOnly = true;
             this.selectableLabelMoviePlaceholders.Size = new System.Drawing.Size(679, 13);
             this.selectableLabelMoviePlaceholders.TabIndex = 0;
-            this.selectableLabelMoviePlaceholders.Text = "${volume} ${title} ${year} ${res} ${vcodec} ${acodec} ${channels} ${cut} ${vlang}" +
-    " ${alang}";
+            this.selectableLabelMoviePlaceholders.Text = "{volume} {title} {year} {res} {vcodec} {acodec} {channels} {cut} {vlang}" +
+    " {alang}";
             // 
             // textBoxMovieFileNameExample
             // 
@@ -318,8 +318,8 @@ namespace BDHero.Plugin.FileNamer
             this.selectableLabelTVShowPlaceholders.ReadOnly = true;
             this.selectableLabelTVShowPlaceholders.Size = new System.Drawing.Size(679, 13);
             this.selectableLabelTVShowPlaceholders.TabIndex = 0;
-            this.selectableLabelTVShowPlaceholders.Text = "${volume} ${title} ${date} ${res} ${vcodec} ${acodec} ${channels} ${cut} ${vlang}" +
-    " ${alang} ${episodetitle} ${season} ${episode}";
+            this.selectableLabelTVShowPlaceholders.Text = "{volume} {title} {date} {res} {vcodec} {acodec} {channels} {cut} {vlang}" +
+    " {alang} {episodetitle} {season} {episode}";
             // 
             // textBoxTVShowFileNameExample
             // 
@@ -619,7 +619,7 @@ namespace BDHero.Plugin.FileNamer
             this.textBoxTVShowFileName.ShowWhiteSpace = false;
             this.textBoxTVShowFileName.Size = new System.Drawing.Size(643, 22);
             this.textBoxTVShowFileName.TabIndex = 3;
-            this.textBoxTVShowFileName.Text = "s${season}e${episode} - ${title} (${date}) [${res}] [${acodec} ${channels}]";
+            this.textBoxTVShowFileName.Text = "s{season}e{episode} - {title} ({date}) [{res}] [{acodec} {channels}]";
             // 
             // tabPage3
             // 

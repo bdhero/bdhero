@@ -28,49 +28,46 @@ namespace BDHero.SyntaxHighlighting
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n");
-            this.Write("\n<?xml version=\"1.0\"?>\n<!-- syntaxdefinition for BDHero File Paths by Andrew C. D" +
-                    "vorak -->\n\n<SyntaxDefinition name = \"");
+            this.Write("<?xml version=\"1.0\"?>\r\n<!-- syntaxdefinition for BDHero File Paths by Andrew C. D" +
+                    "vorak -->\r\n\r\n<SyntaxDefinition name = \"");
             
-            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
+            #line 9 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Name));
             
             #line default
             #line hidden
             this.Write("\" extensions = \"");
             
-            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
+            #line 9 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Extension));
             
             #line default
             #line hidden
-            this.Write("\" extends = \"FileName\">\n    <RuleSets>\n        <RuleSet ignorecase = \"true\">\n    " +
-                    "        <KeyWords name = \"PlaceholderVariable\" bold = \"true\" color = \"Green\" bgc" +
-                    "olor = \"#EEFFEE\">\n                ");
+            this.Write("\" extends = \"FileName\">\r\n    <RuleSets>\r\n        <RuleSet ignorecase = \"true\">\r\n " +
+                    "           <KeyWords name = \"PlaceholderVariable\" bold = \"true\" color = \"Green\" " +
+                    "bgcolor = \"#EEFFEE\">\r\n                ");
             
-            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
+            #line 13 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
  foreach (var name in PlaceholderVariableNames) { 
             
             #line default
             #line hidden
-            this.Write("\n                <Key word = \"${");
+            this.Write("                <Key word = \"{");
             
-            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
+            #line 14 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
-            this.Write("}\" />\n                ");
+            this.Write("}\" />\r\n                ");
             
-            #line 1 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
+            #line 15 "C:\projects\bdhero\src\Core\BDHero\SyntaxHighlighting\MovieNameXshd.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("\n            </KeyWords>\n        </RuleSet>\n    </RuleSets>\n</SyntaxDefinition>");
+            this.Write("            </KeyWords>\r\n        </RuleSet>\r\n    </RuleSets>\r\n</SyntaxDefinition>" +
+                    "");
             return this.GenerationEnvironment.ToString();
         }
     }

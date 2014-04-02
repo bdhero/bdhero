@@ -39,12 +39,12 @@ namespace TextEditor.WPF
 
             var placeholders = new Dictionary<string, string>
                                {
-                                   { "${title}",    "Name of the movie or TV show episode." },
-                                   { "${year}",     "Year the movie was released." },
-                                   { "${res}",      "Vertical resolution of the primary video track (e.g., 1080i, 720p, 480p)." },
-                                   { "${channels}", "Number of audio channels (2.0, 5.1, 7.1, etc.)." },
-                                   { "${vcodec}",   "Primary video track codec." },
-                                   { "${acodec}",   "Primary audio track codec." },
+                                   { "{title}",    "Name of the movie or TV show episode." },
+                                   { "{year}",     "Year the movie was released." },
+                                   { "{res}",      "Vertical resolution of the primary video track (e.g., 1080i, 720p, 480p)." },
+                                   { "{channels}", "Number of audio channels (2.0, 5.1, 7.1, etc.)." },
+                                   { "{vcodec}",   "Primary video track codec." },
+                                   { "{acodec}",   "Primary audio track codec." },
                                };
 
             var placeholdersOrdered = placeholders.Select(pair => new MyCompletionData(pair.Key, pair.Value, null))

@@ -11,7 +11,7 @@
         <RuleSet ignorecase = "true">
             <KeyWords name = "PlaceholderVariable" bold = "true" color = "Green" bgcolor = "#EEFFEE">
                 <# foreach (var name in PlaceholderVariableNames) { #>
-                <Key word = "${<#= name #>}" />
+                <Key word = "{<#= name #>}" />
                 <# } #>
             </KeyWords>
         </RuleSet>
