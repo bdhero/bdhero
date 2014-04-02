@@ -31,24 +31,24 @@ namespace UILib.WinForms.Controls
     public partial class FileTextBox : UserControl
     {
         /// <summary>
-        /// Gets or sets the value of the TextBox.  Alias of <see cref="SelectedPath"/>.
+        /// Gets or sets the value of the TextBox.
         /// </summary>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string Text
         {
-            get { return SelectedPath; }
-            set { SelectedPath = value; }
+            get { return TextBox.Text; }
+            set { TextBox.Text = value; }
         }
 
         /// <summary>
-        /// Gets or sets the value of the TextBox.  Alias of <see cref="Text"/>.
+        /// Gets or sets the value of the TextBox.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         public string SelectedPath
         {
-            get { return TextBox.Text; }
+            get { return Environment.ExpandEnvironmentVariables(TextBox.Text); }
             set { TextBox.Text = value; }
         }
 

@@ -132,6 +132,7 @@ namespace BDHeroGUI
 
             InitTaskBarId();
 
+            toolsToolStripMenuItem.Visible = false;
             debugToolStripMenuItem.Visible = false;
             updateToolStripMenuItem.Visible = false;
             toolStripStatusLabelOffline.Visible = false;
@@ -697,7 +698,7 @@ namespace BDHeroGUI
         {
             // TODO: Centralize button text
             buttonScan.Text = "Scan";
-            textBoxOutput.Text = _controller.Job.OutputPath;
+            textBoxOutput.SelectedPath = _controller.Job.OutputPath;
             AppendStatus("Metadata search completed successfully!");
             _taskbarItem.NoProgress();
             RefreshUI();
@@ -755,7 +756,7 @@ namespace BDHeroGUI
 
             new EmptyPromise(this)
                 .Work(p => _controller.RenameSync(null))
-                .Done(p => textBoxOutput.Text = _controller.Job.OutputPath)
+                .Done(p => textBoxOutput.SelectedPath = _controller.Job.OutputPath)
                 .Always(p => _isRenaming = false)
                 .Start()
                 ;
@@ -857,16 +858,19 @@ namespace BDHeroGUI
                 return;
 
             if (path != null)
-                textBoxInput.Text = path;
+                textBoxInput.SelectedPath = path;
+
+            var textBoxInputPath = textBoxInput.SelectedPath;
+            var textBoxOutputPath = textBoxOutput.SelectedPath;
 
             _controller.SetUIContext(this);
 
             // TODO: Let File Namer plugin handle this
-            var outputDirectory = FileUtils.ContainsFileName(textBoxOutput.Text)
-                                      ? Path.GetDirectoryName(textBoxOutput.Text)
-                                      : textBoxOutput.Text;
+            var outputDirectory = FileUtils.ContainsFileName(textBoxOutputPath)
+                                      ? Path.GetDirectoryName(textBoxOutputPath)
+                                      : textBoxOutputPath;
             _controller
-                .CreateScanTask(CreateCancellationTokenSource().Token, textBoxInput.Text, outputDirectory)
+                .CreateScanTask(CreateCancellationTokenSource().Token, textBoxInputPath, outputDirectory)
                 .Start();
         }
 
@@ -891,7 +895,7 @@ namespace BDHeroGUI
             _controller.SetUIContext(this);
 
             _controller
-                .CreateConvertTask(CreateCancellationTokenSource().Token, textBoxOutput.Text)
+                .CreateConvertTask(CreateCancellationTokenSource().Token, textBoxOutput.SelectedPath)
                 .Start();
         }
 
@@ -916,7 +920,7 @@ namespace BDHeroGUI
         {
             SetLastControllerEventTimeStamp();
 
-            textBoxOutput.Text = _controller.Job.OutputPath;
+            textBoxOutput.SelectedPath = _controller.Job.OutputPath;
             AppendStatus("Scan succeeded!");
 
             _state = ProgressProviderState.Success;
