@@ -42,11 +42,18 @@ namespace BDHeroGUI
             if (manager.TryBypassPCA(args))
                 return;
 
+            InitAppConfig(args, kernel);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(CreateFormMain(args, kernel));
 
             kernel.Get<ITempFileRegistrar>().DeleteEverything();
+        }
+
+        private static void InitAppConfig(string[] args, IKernel kernel)
+        {
+            kernel.Get<AppConfig>().ParseArgs(args);
         }
 
         private static FormMain CreateFormMain(string[] args, IKernel kernel)
@@ -61,6 +68,7 @@ namespace BDHeroGUI
             var kernel = InjectorFactory.CreateContainer();
             kernel.Get<LogInitializer>().Initialize(LogConfigFileName, Resources.log4net_config);
             kernel.Bind<FormMain>().ToSelf();
+            kernel.Bind<AppConfig>().ToSelf().InSingletonScope();
             return kernel;
         }
     }

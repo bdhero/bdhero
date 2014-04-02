@@ -98,6 +98,7 @@
     <Compile Include="JobQueue\CoverArt.cs" />
     <Compile Include="JobQueue\ReleaseMedium.cs" />
     <Compile Include="JobQueue\Job.cs" />
+    <Compile Include="Startup\AppConfig.cs" />
     <Compile Include="Startup\DirectoryLocator.cs" />
     <Compile Include="Startup\IDirectoryLocator.cs" />
     <Compile Include="Startup\LogInitializer.cs" />

@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using BDHero.Startup;
 using DotNetUtils.Annotations;
 using GitHub;
 
@@ -24,16 +25,17 @@ namespace BDHero.ErrorReporting
 {
     public static class ErrorReporter
     {
-        private static readonly GitHubClient Client = new GitHubClient("acdvorak/bdhero-private", "131765cc986bd5fa6d09d8633c4d973fbe6dfcf9");
+        private const string DevRepo = "acdvorak/bdhero-private";
+        private const string ProdRepo = "bdhero/bdhero";
 
         [NotNull]
-        public static IErrorReportResult Report(ErrorReport report)
+        public static IErrorReportResult Report(ErrorReport report, AppConfig appConfig)
         {
 //            var x = new {foo = 123};
 
             try
             {
-                return ReportImpl(report);
+                return ReportImpl(report, appConfig);
             }
             catch (Exception ex)
             {
@@ -41,19 +43,21 @@ namespace BDHero.ErrorReporting
             }
         }
 
-        private static IErrorReportResult ReportImpl(ErrorReport report)
+        private static IErrorReportResult ReportImpl(ErrorReport report, AppConfig appConfig)
         {
-            var issues = Client.SearchIssues(report.ExceptionDetailRedacted);
+            var repo = appConfig.IsDebugMode ? DevRepo : ProdRepo;
+            var client = new GitHubClient(repo, "131765cc986bd5fa6d09d8633c4d973fbe6dfcf9");
+            var issues = client.SearchIssues(report.ExceptionDetailRedacted);
 
             if (issues.Any())
             {
                 var issue = issues.First();
-                var comment = Client.CreateIssueComment(issue, report.Body);
+                var comment = client.CreateIssueComment(issue, report.Body);
                 return new ErrorReportResultUpdated(issue, comment);
             }
             else
             {
-                var issue = Client.CreateIssue(report.Title, report.Body);
+                var issue = client.CreateIssue(report.Title, report.Body);
                 return new ErrorReportResultCreated(issue);
             }
         }

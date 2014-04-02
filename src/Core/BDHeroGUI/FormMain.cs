@@ -74,6 +74,7 @@ namespace BDHeroGUI
         private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
         private readonly UpdateClient _updateClient;
+        private readonly AppConfig _appConfig;
 
         private readonly ToolTip _progressBarToolTip = new ToolTip();
 
@@ -103,7 +104,7 @@ namespace BDHeroGUI
         public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
                         IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
-                        INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient)
+                        INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient, AppConfig appConfig)
         {
             InitializeComponent();
 
@@ -121,6 +122,7 @@ namespace BDHeroGUI
             _windowMenuFactory = windowMenuFactory;
             _networkStatusMonitor = networkStatusMonitor;
             _updateClient = updateClient;
+            _appConfig = appConfig;
 
             progressBar.UseCustomColors = true;
             progressBar.GenerateText = percentComplete => string.Format("{0}: {1:0.00}%", _state, percentComplete);
@@ -134,7 +136,7 @@ namespace BDHeroGUI
             InitTaskBarId();
 
             toolsToolStripMenuItem.Visible = false;
-            debugToolStripMenuItem.Visible = false;
+            debugToolStripMenuItem.Visible = _appConfig.IsDebugMode;
             updateToolStripMenuItem.Visible = false;
             toolStripStatusLabelOffline.Visible = false;
         }
@@ -142,8 +144,6 @@ namespace BDHeroGUI
         private void OnLoad(object sender, EventArgs eventArgs)
         {
             Text += " v" + AppUtils.AppVersion;
-
-            ParseArgs();
 
             LogDirectoryPaths();
             LoadPlugins();
@@ -287,18 +287,6 @@ namespace BDHeroGUI
             manager.ApplicationId = string.Format("{0}.{1}.{2}.{3:s}",
                                                   AppUtils.ProductName, AppUtils.AppName,
                                                   AppUtils.AppVersion, AppUtils.BuildDate);
-        }
-
-        #endregion
-
-        #region Command-line argument parsing
-
-        private void ParseArgs()
-        {
-            if (Args.Contains("--debug"))
-            {
-                debugToolStripMenuItem.Visible = true;
-            }
         }
 
         #endregion
@@ -596,7 +584,7 @@ namespace BDHeroGUI
 
             if (Windows7ErrorDialog.IsPlatformSupported)
             {
-                dialog = new Windows7ErrorDialog(report, _networkStatusMonitor, _updateClient);
+                dialog = new Windows7ErrorDialog(report, _networkStatusMonitor, _updateClient, _appConfig);
             }
             else
             {

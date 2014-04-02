@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using BDHero.ErrorReporting;
+using BDHero.Startup;
 using BDHeroGUI.Forms;
 using DotNetUtils;
 using DotNetUtils.Annotations;
@@ -49,16 +50,19 @@ namespace BDHeroGUI.Dialogs
         private readonly ErrorReport _report;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
         private readonly UpdateClient _updateClient;
+        private readonly AppConfig _appConfig;
 
         private readonly IList<IErrorReportResultVisitor> _reportResultVisitors = new List<IErrorReportResultVisitor>();
 
         private IErrorReportResult _errorReportResult;
 
-        public Windows7ErrorDialog(ErrorReport report, INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient)
+        public Windows7ErrorDialog(ErrorReport report, INetworkStatusMonitor networkStatusMonitor,
+                                   UpdateClient updateClient, AppConfig appConfig)
         {
             _report = report;
             _networkStatusMonitor = networkStatusMonitor;
             _updateClient = updateClient;
+            _appConfig = appConfig;
 
             // Defaults
             Title = "Error";
@@ -212,7 +216,7 @@ namespace BDHeroGUI.Dialogs
 
         private void ErrorReportOnDoWork(IPromise<Nil> promise)
         {
-            _errorReportResult = ErrorReporter.Report(_report);
+            _errorReportResult = ErrorReporter.Report(_report, _appConfig);
         }
 
         private void ErrorReportOnSucceed(IPromise<Nil> promise)

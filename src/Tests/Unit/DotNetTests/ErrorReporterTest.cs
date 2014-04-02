@@ -20,7 +20,7 @@ namespace DotNetTests
             }
             catch (Exception e)
             {
-                ErrorReporter.Report(new ErrorReport(e, new MockPluginRepository(), new MockDirectoryLocator()));
+                ErrorReporter.Report(new ErrorReport(e, new MockPluginRepository(), new MockDirectoryLocator()), new AppConfig { IsDebugMode = true });
             }
         }
     }
