@@ -69,6 +69,7 @@ namespace TextEditor.WPF
             _editor.PreviewKeyDown += OnPreviewKeyDown;
             _editor.MouseEnter += EditorOnMouseEnter;
             _editor.MouseLeave += EditorOnMouseLeave;
+            _editor.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
         }
 
         private void UnbindEvents()
@@ -77,6 +78,7 @@ namespace TextEditor.WPF
             _editor.PreviewKeyDown -= OnPreviewKeyDown;
             _editor.MouseEnter -= EditorOnMouseEnter;
             _editor.MouseLeave -= EditorOnMouseLeave;
+            _editor.TextArea.PreviewKeyDown -= TextAreaOnPreviewKeyDown;
         }
 
         public void SetBackgroundColor(Color color)
@@ -176,6 +178,19 @@ namespace TextEditor.WPF
             if (ReadOnly && control && (e.Key == Key.Z || e.Key == Key.Y))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void TextAreaOnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // AvalonEdit captures and suppresses CTRL+I (for "Indent"),
+            // even though the command doesn't appear to actually do anything.
+            // Since the host application may actually want to process this,
+            // we proxy it to the WinForms WPF element host.
+            var isCtrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            if (isCtrl && e.Key == Key.I)
+            {
+                _elementHost.TriggerPreviewKeyDown(Keys.Control | Keys.I);
             }
         }
 

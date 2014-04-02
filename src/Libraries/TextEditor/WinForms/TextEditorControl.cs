@@ -53,6 +53,20 @@ namespace TextEditor.WinForms
             Controls.Add(Editor.Control);
 
             Editor.ReadOnlyChanged += EditorOnReadOnlyChanged;
+
+            Editor.Control.PreviewKeyDown += ControlOnPreviewKeyDown;
+        }
+
+        private void ControlOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.I)
+            {
+                // AvalonEdit captures and suppresses CTRL+I (for "Indent"),
+                // even though the command doesn't appear to actually do anything.
+                // Since the host application may actually want to process this,
+                // we proxy it from Avalon to this control.
+                OnPreviewKeyDown(e);
+            }
         }
 
         private void EditorOnReadOnlyChanged(object sender, EventArgs eventArgs)

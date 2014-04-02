@@ -34,10 +34,19 @@ namespace TextEditor.WinForms
         public SyntaxHighlightingTextBox()
         {
             _control = new TextEditorControl();
+            _control.PreviewKeyDown += ControlOnPreviewKeyDown;
 
             Editor.Multiline = false;
             Editor.TextChanged += (sender, args) => OnTextChanged(args);
             Editor.SetSyntax(StandardSyntaxType.FilePath);
+        }
+
+        public event PreviewKeyDownEventHandler PreviewKeyDown;
+
+        private void ControlOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (PreviewKeyDown != null)
+                PreviewKeyDown(sender, e);
         }
 
         public Control Control

@@ -13,7 +13,16 @@ namespace UILib.WinForms.Controls
             _textBox = new TextBox();
             _textBox.SelectVariablesOnClick();
             _textBox.TextChanged += (sender, args) => OnTextChanged(args);
+            _textBox.PreviewKeyDown += TextBoxOnPreviewKeyDown;
         }
+
+        private void TextBoxOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (PreviewKeyDown != null)
+                PreviewKeyDown(sender, e);
+        }
+
+        public event PreviewKeyDownEventHandler PreviewKeyDown;
 
         public Control Control
         {

@@ -5,6 +5,7 @@ namespace UILib.WinForms.Controls
 {
     public interface ITextBox
     {
+        event PreviewKeyDownEventHandler PreviewKeyDown;
         Control Control { get; }
         string Text { get; set; }
         bool ReadOnly { get; set; }

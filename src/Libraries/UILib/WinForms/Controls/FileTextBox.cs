@@ -198,6 +198,7 @@ namespace UILib.WinForms.Controls
             parent.Controls.Add(TextBox.Control);
 
             TextBox.TextChanged += (sender, args) => OnTextChanged(args);
+            TextBox.PreviewKeyDown += TextBoxOnPreviewKeyDown;
         }
 
         /// <summary>
@@ -222,6 +223,12 @@ namespace UILib.WinForms.Controls
         public void Browse()
         {
             ShowDialog();
+        }
+
+        private void TextBoxOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // Proxy TextBox event to this control
+            OnPreviewKeyDown(e);
         }
 
         protected override void OnTextChanged(EventArgs e)
