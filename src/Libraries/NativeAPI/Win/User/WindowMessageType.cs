@@ -264,6 +264,57 @@ namespace NativeAPI.Win.User
         WM_GETDLGCODE = 0x0087,
 
         /// <summary>
+        ///     Posted to the window with the keyboard focus when a nonsystem key is pressed.
+        ///     A nonsystem key is a key that is pressed when the ALT key is not pressed.
+        /// </summary>
+        /// <param name="wParam">
+        ///     The virtual-key code of the nonsystem key. See <see cref="VirtualKey"/>.
+        /// </param>
+        /// <param name="lParam">
+        ///     <para>
+        ///         The repeat count, scan code, extended-key flag, context code, previous key-state flag,
+        ///         and transition-state flag, as shown following.
+        ///     </para>
+        ///     <code>
+        /// Bits   Meaning
+        /// ------ -------
+        ///  0-15  The repeat count for the current message. The value is the number of times the keystroke is autorepeated as a result of the user holding down the key. If the keystroke is held long enough, multiple messages are sent. However, the repeat count is not cumulative.
+        /// 16-23  The scan code. The value depends on the OEM.
+        /// 24     Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on an enhanced 101- or 102-key keyboard. The value is 1 if it is an extended key; otherwise, it is 0.
+        /// 25-28  Reserved; do not use.
+        /// 29     The context code. The value is always 0 for a WM_KEYDOWN message.
+        /// 30     The previous key state. The value is 1 if the key is down before the message is sent, or it is zero if the key is up.
+        /// 31     The transition state. The value is always 0 for a WM_KEYDOWN message.
+        ///     </code>
+        /// </param>
+        /// <returns>
+        ///     An application should return zero if it processes this message.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         If the <c>F10</c> key is pressed, the <c>DefWindowProc</c> function sets an internal flag.
+        ///         When <c>DefWindowProc</c> receives the <see cref="WM_KEYUP"/> message, the function checks whether the internal flag
+        ///         is set and, if so, sends a <see cref="WM_SYSCOMMAND"/> message to the top-level window.
+        ///         The <see cref="WM_SYSCOMMAND"/> parameter of the message is set to <c>SC_KEYMENU</c>.
+        ///     </para>
+        ///     <para>
+        ///         Because of the autorepeat feature, more than one <see cref="WM_KEYDOWN"/> message may be posted
+        ///         before a <see cref="WM_KEYUP"/> message is posted. The previous key state (bit 30) can be used to determine
+        ///         whether the <see cref="WM_KEYDOWN"/> message indicates the first down transition or a repeated down transition.
+        ///     </para>
+        ///     <para>
+        ///         For enhanced 101- and 102-key keyboards, extended keys are the right <c>ALT</c> and <c>CTRL</c> keys
+        ///         on the main section of the keyboard; the <c>INS</c>, <c>DEL</c>, <c>HOME</c>, <c>END</c>, <c>PAGE UP</c>, <c>PAGE DOWN</c>, and
+        ///         arrow keys in the clusters to the left of the numeric keypad; and the divide (<c>/</c>) and <c>ENTER</c> keys
+        ///         in the numeric keypad. Other keyboards may support the extended-key bit in the <c>lParam</c> parameter.
+        ///     </para>
+        ///     <para>
+        ///         Applications must pass <c>wParam</c> to <c>TranslateMessage</c> without altering it at all.
+        ///     </para>
+        /// </remarks>
+        WM_KEYDOWN = 0x0100,
+
+        /// <summary>
         ///     A window receives this message when the user chooses a command from the Window menu (formerly known
         ///     as the system or control menu) or when the user chooses the maximize button, minimize button,
         ///     restore button, or close button.
@@ -477,7 +528,6 @@ namespace NativeAPI.Win.User
         SBM_GETSCROLLINFO = 0x00ea,
         SBM_GETSCROLLBARINFO = 0x00eb,
         WM_INPUT = 0x00ff,
-        WM_KEYDOWN = 0x0100,
         WM_KEYFIRST = 0x0100,
         WM_KEYUP = 0x0101,
         WM_CHAR = 0x0102,
