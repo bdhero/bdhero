@@ -201,7 +201,9 @@ namespace BDHeroGUI.Dialogs
 
         private void Submit(TaskDialog dialog)
         {
-            new EmptyPromise()
+            var form = Control.FromHandle(dialog.OwnerWindowHandle);
+            var promise = form != null ? new EmptyPromise(form) : new EmptyPromise();
+            promise
                 .Work(ErrorReportOnDoWork)
                 .Done(ErrorReportOnSucceed)
                 .Start();
