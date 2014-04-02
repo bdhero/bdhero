@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Linq;
+using System.Windows.Forms;
+using UILib.Extensions;
 
 namespace TextEditor.Extensions
 {
@@ -19,7 +21,6 @@ namespace TextEditor.Extensions
         public static bool SelectNextControl(this Control startControl, bool forward)
         {
             var nextControl = startControl.GetNextControl(forward);
-
             if (nextControl == null)
                 return false;
 
@@ -43,6 +44,30 @@ namespace TextEditor.Extensions
         ///     or <c>null</c> if no next control was found.
         /// </returns>
         public static Control GetNextControl(this Control startControl, bool forward)
+        {
+            var nextControl = GetNextControlImpl(startControl, forward);
+
+            // Wrap around if there are no more controls in the requested direction.
+            // We only need this extra check if we're going backward.
+            // It doesn't appear to be necessary when going forward;
+            // WinForms seems to handle foward wrapping automatically.
+            if (nextControl == null && !forward)
+            {
+                var curControl = startControl;
+
+                while ((curControl = curControl.GetNextControlImpl(!forward)) != null &&
+                       curControl != startControl &&
+                       !startControl.Descendants().Contains(curControl) &&
+                       !curControl.Descendants().Contains(startControl))
+                {
+                    nextControl = curControl;
+                }
+            }
+
+            return nextControl;
+        }
+
+        private static Control GetNextControlImpl(this Control startControl, bool forward)
         {
             var curControl = startControl;
 
