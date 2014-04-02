@@ -28,18 +28,41 @@ namespace TextEditor.WinForms
 
         public TextEditorImpl()
         {
+            BindEvents();
+
+            // TODO: Dispose
+            _options = new TextEditorOptionsImpl(_editor);
+
+            // TODO: Dispose
+            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
+
+            // TODO: Dispose
+            _completionController = new MockCompletionController(_editor);
+
+            LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
+        }
+
+        ~TextEditorImpl()
+        {
+            UnbindEvents();
+        }
+
+        // TODO: Implement IDisposable
+
+        private void BindEvents()
+        {
             _editor.TextChanged += EditorOnTextChanged;
             _editor.ActiveTextAreaControl.TextArea.KeyEventHandler += TextAreaOnKeyEventHandler;
             _editor.ActiveTextAreaControl.TextArea.DoProcessDialogKey += TextAreaOnDoProcessDialogKey;
             _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown += TextAreaOnPreviewKeyDown;
+        }
 
-            _options = new TextEditorOptionsImpl(_editor);
-
-            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
-
-            LoadSyntaxDefinitions(new SmartResourceSyntaxModeProvider("MarkDown-Mode.xshd"));
-
-            _completionController = new MockCompletionController(_editor);
+        private void UnbindEvents()
+        {
+            _editor.TextChanged -= EditorOnTextChanged;
+            _editor.ActiveTextAreaControl.TextArea.KeyEventHandler -= TextAreaOnKeyEventHandler;
+            _editor.ActiveTextAreaControl.TextArea.DoProcessDialogKey -= TextAreaOnDoProcessDialogKey;
+            _editor.ActiveTextAreaControl.TextArea.PreviewKeyDown -= TextAreaOnPreviewKeyDown;
         }
 
         public void SetBackgroundColor(Color color)
