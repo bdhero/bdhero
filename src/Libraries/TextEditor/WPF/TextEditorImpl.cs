@@ -42,18 +42,41 @@ namespace TextEditor.WPF
 
         public TextEditorImpl()
         {
+            BindEvents();
+
+            // TODO: Dispose
+            _options = new TextEditorOptionsImpl(_editor);
+
+            // TODO: Dispose
+            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
+
+            // TODO: Dispose
             _completionController = new MockCompletionController(_editor);
 
+            _elementHost.Child = _editor;
+        }
+
+        ~TextEditorImpl()
+        {
+            UnbindEvents();
+        }
+
+        // TODO: Implement IDisposable
+
+        private void BindEvents()
+        {
             _editor.TextChanged += EditorOnTextChanged;
             _editor.PreviewKeyDown += OnPreviewKeyDown;
             _editor.MouseEnter += EditorOnMouseEnter;
             _editor.MouseLeave += EditorOnMouseLeave;
+        }
 
-            _options = new TextEditorOptionsImpl(_editor);
-
-            _multilineHelper = new MultilineHelper(this, NotifyTextChanged);
-
-            _elementHost.Child = _editor;
+        private void UnbindEvents()
+        {
+            _editor.TextChanged -= EditorOnTextChanged;
+            _editor.PreviewKeyDown -= OnPreviewKeyDown;
+            _editor.MouseEnter -= EditorOnMouseEnter;
+            _editor.MouseLeave -= EditorOnMouseLeave;
         }
 
         public void SetBackgroundColor(Color color)
