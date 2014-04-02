@@ -206,8 +206,13 @@ namespace BDHeroGUI
             // for us to listen to.
             if (e.Control && e.KeyCode == Keys.I)
             {
-                // Nasty hack: To get WinForms to do what we want, we have to temporarily move focus
-                // to a _different_ control
+                // Nasty hack: To get AvalonEdit/WinForms to do what we want, we have to temporarily move focus
+                // to a _different_ control so that AvalonEdit won't consume the CTRL + I key events.
+                // To do this, we create a temporary dummy button, add it to the form, move focus to it, and then
+                // remove it from the form after a very brief delay (just long enough for the key press events
+                // to get delivered to the window).  When the button is removed, WinForms automatically moves focus
+                // back to the last control that had focus prior to the dummy button, which is the AvalonEdit text editor.
+                // The user will never notice that the text editor technically lost focus for several milliseconds.  Tada!
                 var button = new Button();
                 Controls.Add(button);
                 button.Select();
