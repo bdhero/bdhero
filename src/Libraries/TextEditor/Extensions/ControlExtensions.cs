@@ -18,6 +18,32 @@ namespace TextEditor.Extensions
         /// </returns>
         public static bool SelectNextControl(this Control startControl, bool forward)
         {
+            var nextControl = startControl.GetNextControl(forward);
+
+            if (nextControl == null)
+                return false;
+
+            nextControl.Select();
+            nextControl.Focus();
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Gets the next control forward or back in the tab order.
+        /// </summary>
+        /// <param name="startControl">
+        ///     The <see cref="Control"/> to start the search with. 
+        /// </param>
+        /// <param name="forward">
+        ///     <c>true</c> to search forward in the tab order; <c>false</c> to search backward. 
+        /// </param>
+        /// <returns>
+        ///     The next control forward or back in the tab order (depending on the value of <paramref name="forward"/>),
+        ///     or <c>null</c> if no next control was found.
+        /// </returns>
+        public static Control GetNextControl(this Control startControl, bool forward)
+        {
             var curControl = startControl;
 
             while (curControl != null && curControl.Parent != null)
@@ -36,15 +62,13 @@ namespace TextEditor.Extensions
 
                 if (nextControl != null)
                 {
-                    nextControl.Select();
-                    nextControl.Focus();
-                    return true;
+                    return nextControl;
                 }
 
                 curControl = curControl.Parent;
             }
 
-            return false;
+            return null;
         }
 
         public static bool TabForward(this Control control)
