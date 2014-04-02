@@ -56,7 +56,7 @@ namespace BDHeroGUI.Components
             "Theatrical",
             "English",
             "Bogus, Low Quality"}, -1);
-            this.listView = new ListView2();
+            this.listView = new UILib.WinForms.Controls.ListView2();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLength = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderChapterCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,7 +66,7 @@ namespace BDHeroGUI.Components
             this.columnHeaderVideoLanguage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderWarnings = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxShowAllPlaylists = new System.Windows.Forms.CheckBox();
-            this.linkLabelShowFilterWindow = new LinkLabel2();
+            this.linkLabelShowFilterWindow = new UILib.WinForms.Controls.LinkLabel2();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -140,7 +140,7 @@ namespace BDHeroGUI.Components
             // columnHeaderWarnings
             // 
             this.columnHeaderWarnings.Text = "Warnings";
-            this.columnHeaderWarnings.Width = 128;
+            this.columnHeaderWarnings.Width = 126;
             // 
             // checkBoxShowAllPlaylists
             // 
@@ -157,6 +157,7 @@ namespace BDHeroGUI.Components
             // linkLabelShowFilterWindow
             // 
             this.linkLabelShowFilterWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelShowFilterWindow.DisabledColor = System.Drawing.Color.Empty;
             this.linkLabelShowFilterWindow.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.linkLabelShowFilterWindow.HoverColor = System.Drawing.Color.Empty;
             this.linkLabelShowFilterWindow.Location = new System.Drawing.Point(75, 111);
@@ -165,6 +166,7 @@ namespace BDHeroGUI.Components
             this.linkLabelShowFilterWindow.Size = new System.Drawing.Size(39, 14);
             this.linkLabelShowFilterWindow.TabIndex = 4;
             this.linkLabelShowFilterWindow.Text = "Filter...";
+            this.linkLabelShowFilterWindow.Visible = false;
             this.linkLabelShowFilterWindow.Click += new System.EventHandler(this.linkLabelShowFilterWindow_Click);
             // 
             // label1

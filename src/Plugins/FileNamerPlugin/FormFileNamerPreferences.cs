@@ -73,6 +73,8 @@ namespace BDHero.Plugin.FileNamer
             InitializeComponent();
             Load += OnLoad;
             this.EnableSelectAll();
+
+            tabControl1.TabPages.Remove(tabPage2);
         }
 
         private void OnLoad(object sender, EventArgs eventArgs)

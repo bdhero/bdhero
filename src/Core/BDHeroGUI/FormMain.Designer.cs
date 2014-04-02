@@ -519,6 +519,7 @@ namespace BDHeroGUI
             this.filterPlaylistsToolStripMenuItem.Name = "filterPlaylistsToolStripMenuItem";
             this.filterPlaylistsToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.filterPlaylistsToolStripMenuItem.Text = "Filter &Playlists...";
+            this.filterPlaylistsToolStripMenuItem.Visible = false;
             this.filterPlaylistsToolStripMenuItem.Click += new System.EventHandler(this.filterPlaylistsToolStripMenuItem_Click);
             // 
             // showAllPlaylistsToolStripMenuItem
@@ -541,6 +542,7 @@ namespace BDHeroGUI
             this.filterTracksToolStripMenuItem.Name = "filterTracksToolStripMenuItem";
             this.filterTracksToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.filterTracksToolStripMenuItem.Text = "Filter &Tracks...";
+            this.filterTracksToolStripMenuItem.Visible = false;
             this.filterTracksToolStripMenuItem.Click += new System.EventHandler(this.filterTracksToolStripMenuItem_Click);
             // 
             // showAllTracksToolStripMenuItem
@@ -573,14 +575,14 @@ namespace BDHeroGUI
             // 
             this.remuxerToolStripMenuItem.Enabled = false;
             this.remuxerToolStripMenuItem.Name = "remuxerToolStripMenuItem";
-            this.remuxerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.remuxerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.remuxerToolStripMenuItem.Text = "&Remuxer";
             this.remuxerToolStripMenuItem.ToolTipText = "Launches the Remuxer in a separate window";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(147, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -588,7 +590,7 @@ namespace BDHeroGUI
             this.optionsToolStripMenuItem.Image = global::BDHeroGUI.Properties.Resources.settings;
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options...";
             // 
             // helpToolStripMenuItem
