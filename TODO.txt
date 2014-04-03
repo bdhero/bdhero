@@ -35,6 +35,8 @@ Chores
 Bugs
 ====
 
+[ ] Taskbar pinning w/ app ID
+
 [ ] Cancel first scan _AFTER_ BDInfoDiscReaderPlugin has ran, but _BEFORE_ the optional plugins complete:
     No items show up in the playlist or track ListViews, but the controls are enabled and "Disc Info" is populated.
 
