@@ -28,6 +28,7 @@ using I18N;
 
 namespace BDHero.Plugin.AutoDetector
 {
+    [UsedImplicitly]
     public class AutoDetector : IAutoDetectorPlugin
     {
         private static readonly log4net.ILog Logger =
