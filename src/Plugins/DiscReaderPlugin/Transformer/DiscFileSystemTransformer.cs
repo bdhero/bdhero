@@ -34,28 +34,28 @@ namespace BDHero.Plugin.DiscReader.Transformer
                 {
                     Directories = new DiscFileSystem.DiscDirectories
                         {
-                            Root = bdrom.DirectoryRoot,
-                            BDMV = bdrom.DirectoryBDMV,
-                            CLIPINF = bdrom.DirectoryCLIPINF,
+                            Root     = bdrom.DirectoryRoot,
+                            BDMV     = bdrom.DirectoryBDMV,
+                            CLIPINF  = bdrom.DirectoryCLIPINF,
                             PLAYLIST = bdrom.DirectoryPLAYLIST,
-                            STREAM = bdrom.DirectorySTREAM,
-                            SSIF = bdrom.DirectorySSIF,
-                            BDMT = GetBDMTDirectory(bdrom.DirectoryBDMV),
-                            BDJO = bdrom.DirectoryBDJO,
-                            SNP = bdrom.DirectorySNP,
-                            ANY = GetDirectory("ANY!", bdrom.DirectoryRoot),
-                            MAKEMKV = GetDirectory("MAKEMKV", bdrom.DirectoryRoot),
-                            AACS = null /* assigned below */,
-                            DCOPY = null /* assigned below */
+                            STREAM   = bdrom.DirectorySTREAM,
+                            SSIF     = bdrom.DirectorySSIF,
+                            BDMT     = GetBDMTDirectory(bdrom.DirectoryBDMV),
+                            BDJO     = bdrom.DirectoryBDJO,
+                            SNP      = bdrom.DirectorySNP,
+                            ANY      = GetDirectory("ANY!", bdrom.DirectoryRoot),
+                            MAKEMKV  = GetDirectory("MAKEMKV", bdrom.DirectoryRoot),
+                            AACS     = null, /* assigned below */
+                            DCOPY    = null, /* assigned below */
                         },
                     Files = new DiscFileSystem.DiscFiles
                         {
-                            AnyDVDDiscInf = GetFile("disc.inf", bdrom.DirectoryRoot),
-                            MCMF = null, /* assigned below */
-                            BDMT = new FileInfo[0], /* assigned below */
-                            DBox = GetFile("FilmIndex.xml", bdrom.DirectoryRoot),
-                            JacketImageSmall = null, /* assigned below */
-                            JacketImageLarge = null /* assigned below */
+                            AnyDVDDiscInf    = GetFile("disc.inf", bdrom.DirectoryRoot),
+                            MCMF             = null,            /* assigned below */
+                            BDMT             = new FileInfo[0], /* assigned below */
+                            DBox             = GetFile("FilmIndex.xml", bdrom.DirectoryRoot),
+                            JacketImageSmall = null,            /* assigned below */
+                            JacketImageLarge = null,            /* assigned below */
                         }
                 };
 
