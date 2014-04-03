@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿#if !__MonoCS__
+using System.Windows;
 using System.Windows.Input;
 using DotNetUtils.Annotations;
 using UILib.WPF;
@@ -90,3 +91,4 @@ namespace TextEditor.WPF
         }
     }
 }
+#endif
