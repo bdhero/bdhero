@@ -90,19 +90,19 @@ namespace BDHero.Plugin.DiscReader.Transformer
         }
 
         [CanBeNull]
-        private static DirectoryInfo GetDirectory(string name, DirectoryInfo dir)
+        private static DirectoryInfo GetDirectory(string name, [CanBeNull] DirectoryInfo dir)
         {
             return dir != null ? dir.GetDirectories().FirstOrDefault(info => info.Name == name) : null;
         }
 
         [CanBeNull]
-        private static FileInfo GetFile(string name, DirectoryInfo dir)
+        private static FileInfo GetFile(string name, [CanBeNull] DirectoryInfo dir)
         {
             return dir != null ? dir.GetFiles().FirstOrDefault(info => info.Name == name) : null;
         }
 
         [CanBeNull]
-        private static FileInfo GetFileOrBackup(string name, DirectoryInfo dir)
+        private static FileInfo GetFileOrBackup(string name, [CanBeNull] DirectoryInfo dir)
         {
             if (dir == null)
                 return null;
@@ -114,13 +114,13 @@ namespace BDHero.Plugin.DiscReader.Transformer
         }
 
         [NotNull]
-        private static FileInfo[] GetFilesByPattern(string pattern, DirectoryInfo dir)
+        private static FileInfo[] GetFilesByPattern(string pattern, [CanBeNull] DirectoryInfo dir)
         {
             return dir != null ? dir.GetFiles(pattern) : new FileInfo[0];
         }
 
         [CanBeNull]
-        private static FileInfo GetJacketImage(JacketSize jacketSize, DirectoryInfo dir)
+        private static FileInfo GetJacketImage(JacketSize jacketSize, [CanBeNull] DirectoryInfo dir)
         {
             if (dir == null)
                 return null;
