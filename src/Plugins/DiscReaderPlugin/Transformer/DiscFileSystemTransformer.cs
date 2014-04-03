@@ -122,6 +122,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
         [CanBeNull]
         private static FileInfo GetJacketImage(JacketSize jacketSize, DirectoryInfo dir)
         {
+            if (dir == null)
+                return null;
+
             var size = jacketSize.GetDimensions();
             var files = dir.GetFiles("*.jpg", SearchOption.AllDirectories)
                            .Where(info => FileUtils.ImageFromFile(info.FullName).Size.Equals(size))
