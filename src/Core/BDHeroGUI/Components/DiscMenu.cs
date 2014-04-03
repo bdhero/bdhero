@@ -23,7 +23,6 @@ using System.Security;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
-using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using OSUtils.DriveDetector;
