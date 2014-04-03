@@ -346,6 +346,9 @@ namespace BDHero.Plugin.AutoDetector
 
         private static void SelectTrack(Track track)
         {
+            if (track == null)
+                return;
+
             track.IsBestGuess = true;
             track.Keep = true;
         }
