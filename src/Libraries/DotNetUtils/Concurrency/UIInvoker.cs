@@ -20,6 +20,10 @@ namespace DotNetUtils.Concurrency
             _uiContext = uiContext;
         }
 
+        /// <summary>
+        ///     Invokes the given <paramref name="action"/> synchronously on the underlying UI context.
+        /// </summary>
+        /// <param name="action"></param>
         public void InvokeSync(Action action)
         {
             if (_uiContext.InvokeRequired)
@@ -28,6 +32,10 @@ namespace DotNetUtils.Concurrency
                 action();
         }
 
+        /// <summary>
+        ///     Invokes the given <paramref name="action"/> asynchronously on the underlying UI context.
+        /// </summary>
+        /// <param name="action"></param>
         public void InvokeAsync(Action action)
         {
             if (_uiContext.InvokeRequired)
