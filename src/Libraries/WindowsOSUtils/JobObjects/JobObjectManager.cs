@@ -66,6 +66,12 @@ namespace WindowsOSUtils.JobObjects
                 var fileName = currentProcess.MainModule.FileName;
                 var arguments = new ArgumentList(args).ToString();
 
+                if (fileName.EndsWith(".vshost.exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    Logger.Debug("Running in Visual Studio host process - ignoring");
+                    return false;
+                }
+
                 Logger.InfoFormat("Spawning new child process outside of current job: \"{0}\" {1}", fileName, arguments);
 
                 var startInfo = new ProcessStartInfo(fileName, arguments);
