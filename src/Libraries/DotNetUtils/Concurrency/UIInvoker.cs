@@ -22,12 +22,18 @@ namespace DotNetUtils.Concurrency
 
         public void InvokeSync(Action action)
         {
-            _uiContext.Invoke(action, new object[0]);
+            if (_uiContext.InvokeRequired)
+                _uiContext.Invoke(action, new object[0]);
+            else
+                action();
         }
 
         public void InvokeAsync(Action action)
         {
-            _uiContext.BeginInvoke(action, new object[0]);
+            if (_uiContext.InvokeRequired)
+                _uiContext.BeginInvoke(action, new object[0]);
+            else
+                action();
         }
     }
 }
