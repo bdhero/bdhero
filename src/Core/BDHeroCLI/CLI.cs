@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using BDHero;
 using BDHero.Plugin;
@@ -99,13 +100,61 @@ namespace BDHeroCLI
 
         private void LogDirectoryPaths()
         {
-            _logger.InfoFormat("IsPortable = {0}", _directoryLocator.IsPortable);
-            _logger.InfoFormat("InstallDir = {0}", _directoryLocator.InstallDir);
-            _logger.InfoFormat("AppConfigDir = {0}", _directoryLocator.AppConfigDir);
-            _logger.InfoFormat("PluginConfigDir = {0}", _directoryLocator.PluginConfigDir);
-            _logger.InfoFormat("RequiredPluginDir = {0}", _directoryLocator.RequiredPluginDir);
-            _logger.InfoFormat("CustomPluginDir = {0}", _directoryLocator.CustomPluginDir);
-            _logger.InfoFormat("LogDir = {0}", _directoryLocator.LogDir);
+            var paths = new[]
+                        {
+                            _directoryLocator.InstallDir,
+                            _directoryLocator.AppConfigDir,
+                            _directoryLocator.PluginConfigDir,
+                            _directoryLocator.RequiredPluginDir,
+                            _directoryLocator.CustomPluginDir,
+                            _directoryLocator.LogDir,
+                        };
+
+            var commonRoot = GetCommonRoot(paths);
+
+            _logger.InfoFormat("IsPortable        = {0}", _directoryLocator.IsPortable);
+            _logger.InfoFormat("RootDir           = {0}", commonRoot);
+            _logger.InfoFormat("InstallDir        = {0}", SubPath(commonRoot, _directoryLocator.InstallDir       ));
+            _logger.InfoFormat("AppConfigDir      = {0}", SubPath(commonRoot, _directoryLocator.AppConfigDir     ));
+            _logger.InfoFormat("PluginConfigDir   = {0}", SubPath(commonRoot, _directoryLocator.PluginConfigDir  ));
+            _logger.InfoFormat("RequiredPluginDir = {0}", SubPath(commonRoot, _directoryLocator.RequiredPluginDir));
+            _logger.InfoFormat("CustomPluginDir   = {0}", SubPath(commonRoot, _directoryLocator.CustomPluginDir  ));
+            _logger.InfoFormat("LogDir            = {0}", SubPath(commonRoot, _directoryLocator.LogDir           ));
+        }
+
+        private static string SubPath(string commonRoot, string fullPath)
+        {
+            var subPath = fullPath.Substring(commonRoot.Length);
+            if (subPath.Any())
+                return subPath;
+            return ".";
+        }
+
+        private static string GetCommonRoot(params string[] paths)
+        {
+            if (paths.Length < 2)
+                return paths.FirstOrDefault();
+
+            var lowerPaths = paths.Select(s => s.ToLower()).ToArray();
+
+            var first = lowerPaths.First();
+            var root = new StringBuilder();
+
+            foreach (var ch in first)
+            {
+                var curRoot = root.ToString() + ch;
+
+                foreach (var path in lowerPaths.Skip(1))
+                {
+                    if (!path.StartsWith(curRoot))
+                        goto end;
+                }
+
+                root.Append(ch);
+            }
+
+            end:
+            return paths.First().Substring(0, root.Length);
         }
 
         private void LoadPlugins()
@@ -202,29 +251,41 @@ namespace BDHeroCLI
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
+        private static string _lastLine;
+
         private static void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
-            var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
-                                     plugin.Name, progressProvider.State, (progressProvider.PercentComplete / 100.0).ToString("P"),
-                                     progressProvider.Status,
-                                     progressProvider.RunTime.ToStringShort(),
-                                     progressProvider.TimeRemaining.ToStringShort());
-            if (progressProvider.State == ProgressProviderState.Running)
-            {
-                Console.WriteLine("\r{0}", line);
-            }
-            else
-            {
-                Console.WriteLine(line);
-            }
+            var line = string.Format("{0} - {1}{2}: {3} ({4} / {5})",
+                                     (progressProvider.PercentComplete / 100.0).ToString("P"),
+                                     plugin.Name,
+                                     progressProvider.State != ProgressProviderState.Running ? string.Format(" ({0})", progressProvider.State) : "",
+                                     progressProvider.ShortStatus,
+                                     progressProvider.RunTime.ToStringMicro(),
+                                     progressProvider.TimeRemaining.ToStringMicro());
+
+            if (line == _lastLine)
+                return;
+
+            // Erase previous characters by padding current line with spaces
+            var paddingCount = Console.WindowWidth - line.Length - 1;
+            if (paddingCount > 0)
+                line += new string(' ', paddingCount);
+            
+            Console.Write("\r{0}", line);
+            
+            // Move cursor back to the end of the new line text
+            if (paddingCount > 0)
+                Console.Write(new string('\b', paddingCount));
+
+            _lastLine = line;
         }
 
         private void PromptToExit()
         {
             Console.WriteLine();
-            Console.WriteLine("*** BDHero CLI Finished - press <ENTER> to exit ***");
+            Console.WriteLine("*** BDHero CLI Finished - press any key to exit ***");
             Console.WriteLine();
-            Console.Read();
+            Console.ReadKey(true);
         }
     }
 }

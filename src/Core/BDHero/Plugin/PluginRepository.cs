@@ -59,10 +59,10 @@ namespace BDHero.Plugin
         public IList<IMuxerPlugin>            MuxerPlugins            { get { return PluginsOfType<IMuxerPlugin>(); } }
         public IList<IPostProcessorPlugin>    PostProcessorPlugins    { get { return PluginsOfType<IPostProcessorPlugin>(); } }
 
-        public void ReportProgress(IPlugin plugin, double percentComplete, string status)
+        public void ReportProgress(IPlugin plugin, double percentComplete, string shortStatus, string longStatus = null)
         {
             var progressProvider = GetProgressProvider(plugin);
-            progressProvider.Update(percentComplete, status);
+            progressProvider.Update(percentComplete, shortStatus, longStatus);
         }
 
         public ProgressProvider GetProgressProvider(IPlugin plugin)

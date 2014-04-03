@@ -39,7 +39,7 @@ namespace DotNetTests
             PostProcessorPlugins = new IPostProcessorPlugin[0];
         }
 
-        public void ReportProgress(IPlugin plugin, double percentComplete, string status)
+        public void ReportProgress(IPlugin plugin, double percentComplete, string shortStatus, string longStatus = null)
         {
         }
 

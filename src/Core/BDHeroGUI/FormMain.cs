@@ -1063,7 +1063,7 @@ namespace BDHeroGUI
             var percentCompleteStr = (progressProvider.PercentComplete/100.0).ToString("P");
             var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
                                      plugin.Name, progressProvider.State, percentCompleteStr,
-                                     progressProvider.Status,
+                                     progressProvider.LongStatus,
                                      progressProvider.RunTime.ToStringShort(),
                                      progressProvider.TimeRemaining.ToStringShort());
 

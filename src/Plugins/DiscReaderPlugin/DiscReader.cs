@@ -64,7 +64,7 @@ namespace BDHero.Plugin.DiscReader
             if (cancellationToken.IsCancellationRequested)
                 return null;
 
-            Host.ReportProgress(this, 99.0, "Transforming BDInfo structure into BDHero structure...");
+            Host.ReportProgress(this, 99.0, "Transforming BDInfo => BDHero...", "Transforming BDInfo structure into BDHero structure...");
 
             var disc = DiscTransformer.Transform(bdrom);
 
@@ -101,6 +101,7 @@ namespace BDHero.Plugin.DiscReader
                 bdromState.CurFileOverall, bdromState.NumFilesOverall, bdromState.OverallProgress.ToString("0.00"));
 #endif
             Host.ReportProgress(this, bdromState.OverallProgress * .99,
+                                string.Format("{1} ({0})", bdromState.FileType, bdromState.FileName),
                                 string.Format("Scanning {0} file {1}", bdromState.FileType, bdromState.FileName));
         }
     }

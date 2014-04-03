@@ -73,11 +73,6 @@ namespace BDHero.Plugin
         /// </summary>
         private double _percentComplete;
 
-        /// <summary>
-        /// Gets or sets what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
-        /// </summary>
-        public string Status { get; private set; }
-
         #endregion
 
         #region Public getters
@@ -86,6 +81,16 @@ namespace BDHero.Plugin
         /// Gets the current state of the process.
         /// </summary>
         public ProgressProviderState State { get; protected set; }
+
+        /// <summary>
+        /// Gets a short human-readable description of what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
+        /// </summary>
+        public string ShortStatus { get; private set; }
+
+        /// <summary>
+        /// Gets a detailed human-readable description of what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
+        /// </summary>
+        public string LongStatus { get; private set; }
 
         /// <summary>
         /// Gest the total amount of time spent actively running (i.e., not paused).
@@ -690,13 +695,15 @@ namespace BDHero.Plugin
         /// Called by <see cref="IPluginHost"/> whenever an <see cref="IPlugin"/> reports a progress update.
         /// </summary>
         /// <param name="percentComplete">0.0 to 100.0</param>
-        /// <param name="status">Description of what the plugin is currently doing</param>
-        public void Update(double percentComplete, string status)
+        /// <param name="shortStatus">Short description of what the plugin is currently doing</param>
+        /// <param name="longStatus">Detailed description of what the plugin is currently doing</param>
+        public void Update(double percentComplete, string shortStatus, string longStatus = null)
         {
             LogMethodEntry();
 
             PercentComplete = percentComplete;
-            Status = status;
+            ShortStatus = shortStatus;
+            LongStatus = longStatus ?? shortStatus;
 
             NotifyObservers();
 
@@ -709,7 +716,8 @@ namespace BDHero.Plugin
             {
                 var hashCode = TimeRemaining.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) State;
-                hashCode = (hashCode*397) ^ (Status != null ? Status.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (LongStatus != null ? LongStatus.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ShortStatus != null ? ShortStatus.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ PercentComplete.GetHashCode();
                 return hashCode;
             }

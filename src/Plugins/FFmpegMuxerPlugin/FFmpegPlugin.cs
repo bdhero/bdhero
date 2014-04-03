@@ -106,12 +106,17 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private void OnProgressUpdated(FFmpeg ffmpeg, ProgressState progressState, CancellationToken cancellationToken)
         {
-            var status = string.Format("Muxing to MKV with FFmpeg: {0} - {1} @ {2} fps",
+            var shortStatus = string.Format("Muxing {0} @ {2} fps - {1}",
+                TimeSpan.FromMilliseconds(ffmpeg.CurOutTimeMs).ToStringShort(),
+                FileUtils.HumanFriendlyFileSize(ffmpeg.CurSize),
+                ffmpeg.CurFps.ToString("F0"));
+
+            var longStatus = string.Format("Muxing to MKV: {0} - {1} @ {2} fps",
                 TimeSpan.FromMilliseconds(ffmpeg.CurOutTimeMs).ToStringMedium(),
                 FileUtils.HumanFriendlyFileSize(ffmpeg.CurSize),
                 ffmpeg.CurFps.ToString("0.0"));
 
-            Host.ReportProgress(this, progressState.PercentComplete, status);
+            Host.ReportProgress(this, progressState.PercentComplete, shortStatus, longStatus);
 
             if (cancellationToken.IsCancellationRequested)
                 ffmpeg.Kill();

@@ -56,10 +56,10 @@ namespace BDHero.Plugin
             _plugin = plugin;
         }
 
-        public void ReportProgress(double percentComplete, string status)
+        public void ReportProgress(double percentComplete, string shortStatus, string longStatus = null)
         {
             if (_host != null)
-                _host.ReportProgress(_plugin, percentComplete, status);
+                _host.ReportProgress(_plugin, percentComplete, shortStatus, longStatus);
         }
     }
 }
