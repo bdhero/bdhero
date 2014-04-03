@@ -16,6 +16,7 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 
 namespace DotNetUtils.Extensions
 {
@@ -52,6 +53,32 @@ namespace DotNetUtils.Extensions
         public static string ToStringLong(this TimeSpan timeSpan)
         {
             return timeSpan.ToString(@"hh\:mm\:ss\.fffffff");
+        }
+
+        /// <summary>
+        /// Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fffffff</c> format.
+        /// </summary>
+        /// <param name="timeSpan"></param>
+        /// <returns><c>hh:mm:ss.fffffff</c></returns>
+        public static string ToStringMicro(this TimeSpan timeSpan)
+        {
+            var strings = new List<string>();
+
+            strings.Add(timeSpan.Seconds.ToString("D") + "s");
+
+            if (timeSpan.TotalMinutes >= 1)
+            {
+                strings.Add(timeSpan.Minutes.ToString("D") + "m");
+
+                if (timeSpan.TotalHours >= 1)
+                {
+                    strings.Add(timeSpan.Hours.ToString("D") + "h");
+                }
+            }
+
+            strings.Reverse();
+
+            return string.Join(" ", strings);
         }
     }
 }
