@@ -22,162 +22,168 @@ using DotNetUtils.Annotations;
 namespace BDHero.BDROM
 {
     /// <summary>
-    /// Contains important files and directories on the BD-ROM necessary for BDHero auto-detection.
+    ///     Contains important files and directories on the BD-ROM necessary for BDHero auto-detection.
     /// </summary>
     public class DiscFileSystem
     {
         /// <summary>
-        /// Contains important directories on the BD-ROM.
+        ///     Contains important directories on the BD-ROM.
         /// </summary>
         public DiscDirectories Directories;
 
         /// <summary>
-        /// Contains important files on the BD-ROM necessary for BDHero auto-detection.
+        ///     Contains important files on the BD-ROM necessary for BDHero auto-detection.
         /// </summary>
         public DiscFiles Files;
 
         /// <summary>
-        /// Contains important directories on the BD-ROM.
+        ///     Contains important directories on the BD-ROM.
         /// </summary>
         public class DiscDirectories
         {
             /// <summary>
-            /// Root BD-ROM directory.
+            ///     Root BD-ROM directory.
             /// </summary>
             /// <example>D:\</example>
             [NotNull]
             public DirectoryInfo Root;
 
             /// <summary>
-            /// BDMV directory.
+            ///     BDMV directory.
             /// </summary>
             /// <example>D:\BDMV</example>
             [NotNull]
             public DirectoryInfo BDMV;
 
             /// <summary>
-            /// Represents a BDMV/CLIPINF/XXXXX.CLPI file that contains information about
-            /// the corresponding <see cref="TSStreamFile"/> (BDMV/STREAM/XXXXX.M2TS file).
+            ///     Represents a BDMV/CLIPINF/XXXXX.CLPI file that contains information about
+            ///     the corresponding <see cref="TSStreamFile" /> (BDMV/STREAM/XXXXX.M2TS file).
             /// </summary>
             /// <example>D:\BDMV\CLIPINF</example>
             [NotNull]
             public DirectoryInfo CLIPINF;
 
             /// <summary>
-            /// Playlists (similar to DVD "titles").
+            ///     Playlists (similar to DVD "titles").
             /// </summary>
             /// <example>D:\BDMV\PLAYLIST</example>
             [NotNull]
             public DirectoryInfo PLAYLIST;
 
             /// <summary>
-            /// Stream files containing tracks.
+            ///     Stream files containing tracks.
             /// </summary>
             /// <example>D:\BDMV\STREAM</example>
             [NotNull]
             public DirectoryInfo STREAM;
 
             /// <summary>
-            /// Interleaved file streams for Blu-ray 3D.
+            ///     Interleaved file streams for Blu-ray 3D.
             /// </summary>
             /// <example>D:\BDMV\STREAM\SSIF</example>
             [CanBeNull]
             public DirectoryInfo SSIF;
 
             /// <summary>
-            /// Blu-ray metadata XML files.
+            ///     Blu-ray metadata XML files.
             /// </summary>
             /// <example>D:\BDMV\META\DL</example>
             [CanBeNull]
             public DirectoryInfo BDMT;
 
             /// <summary>
-            /// Blu-ray Java objects.
+            ///     Blu-ray Java objects.
             /// </summary>
             /// <example>D:\BDMV\BDJO</example>
             [CanBeNull]
             public DirectoryInfo BDJO;
 
             /// <summary>
-            /// PSP files.
+            ///     PSP files.
             /// </summary>
             /// <example>D:\SNP</example>
             [CanBeNull]
             public DirectoryInfo SNP;
 
             /// <summary>
-            /// <c>ANY!</c> directory created by AnyDVD HD (renamed from <c>AACS</c> by AnyDVD).
+            ///     <c>ANY!</c> directory created by AnyDVD HD (renamed from <c>AACS</c> by AnyDVD).
             /// </summary>
             [CanBeNull]
             public DirectoryInfo ANY;
 
             /// <summary>
-            /// <c>MakeMKV</c> directory created by MakeMKV.
+            ///     <c>MakeMKV</c> directory created by MakeMKV.
             /// </summary>
             [CanBeNull]
             public DirectoryInfo MAKEMKV;
 
             /// <summary>
-            /// AACS encryption files, correcting for differences between encrypted, AnyDVD HD backups, and MakeMKV backups.
+            ///     AACS encryption files, correcting for differences between encrypted, AnyDVD HD backups, and MakeMKV backups.
             /// </summary>
-            /// <example><para><c>D:\AACS</c> (encrypted)</para></example>
-            /// <example><para><c>D:\ANY!</c> (decrypted - AnyDVD HD)</para></example>
-            /// <example><para><c>D:\MakeMKV\AACS</c> (decrypted - MakeMKV)</para></example>
+            /// <example>
+            ///     <para><c>D:\AACS</c> (encrypted)</para>
+            /// </example>
+            /// <example>
+            ///     <para><c>D:\ANY!</c> (decrypted - AnyDVD HD)</para>
+            /// </example>
+            /// <example>
+            ///     <para><c>D:\MakeMKV\AACS</c> (decrypted - MakeMKV)</para>
+            /// </example>
             [CanBeNull]
             public DirectoryInfo AACS;
 
             /// <summary>
-            /// Directory containing digital copies of the film.
+            ///     Directory containing digital copies of the film.
             /// </summary>
-            /// <example><para><c>D:\DCOPY</c></para></example>
+            /// <example>
+            ///     <para>
+            ///         <c>D:\DCOPY</c>
+            ///     </para>
+            /// </example>
             [CanBeNull]
             public DirectoryInfo DCOPY;
         }
 
         /// <summary>
-        /// Contains important files on the BD-ROM necessary for BDHero auto-detection.
+        ///     Contains important files on the BD-ROM necessary for BDHero auto-detection.
         /// </summary>
         public class DiscFiles
         {
             /// <summary>
-            /// AnyDVD HD <c>disc.inf</c> file.
+            ///     AnyDVD HD <c>disc.inf</c> file.
             /// </summary>
             [CanBeNull]
             public FileInfo AnyDVDDiscInf;
 
             /// <summary>
-            /// AACS <c>mcmf.xml</c> file containing the BD's <see cref="VIsan"/>.
+            ///     AACS <c>mcmf.xml</c> file containing the BD's <see cref="VIsan" />.
             /// </summary>
             [CanBeNull]
             public FileInfo MCMF;
 
             /// <summary>
-            /// <c>bdmt_xxx.xml</c> files from the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
+            ///     <c>bdmt_xxx.xml</c> files from the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
             /// </summary>
             [NotNull]
             public FileInfo[] BDMT = new FileInfo[0];
 
             /// <summary>
-            /// D-BOX <c>FilmIndex.xml</c> file.
+            ///     D-BOX <c>FilmIndex.xml</c> file.
             /// </summary>
             [CanBeNull]
             public FileInfo DBox;
 
             /// <summary>
-            /// Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
+            ///     Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
             /// </summary>
-            /// <example>
-            /// <c>MU_jacketpicture_D1_LRG.jpg</c>
-            /// </example>
+            /// <example>MU_jacketpicture_D1_SML.jpg</example>
             [CanBeNull]
             public FileInfo JacketImageSmall;
 
             /// <summary>
-            /// Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
+            ///     Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
             /// </summary>
-            /// <example>
-            /// <c>MU_jacketpicture_D1_SML.jpg</c>
-            /// </example>
+            /// <example>MU_jacketpicture_D1_LRG.jpg</example>
             [CanBeNull]
             public FileInfo JacketImageLarge;
         }
