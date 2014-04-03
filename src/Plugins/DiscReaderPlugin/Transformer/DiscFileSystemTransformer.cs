@@ -15,13 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
-using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 
 namespace BDHero.Plugin.DiscReader.Transformer
