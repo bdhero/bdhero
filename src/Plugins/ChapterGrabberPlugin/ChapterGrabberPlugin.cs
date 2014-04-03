@@ -89,7 +89,7 @@ namespace ChapterGrabberPlugin
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                Host.ReportProgress(this, 90.0, "Comparing search results to available playlists...");
+                Host.ReportProgress(this, 90.0, "Matching results against playlists...", "Comparing search results to available playlists...");
 
                 foreach(var moviePlaylist in job.Disc.Playlists)
                 {
