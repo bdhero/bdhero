@@ -1,3 +1,4 @@
+#if !__MonoCS__
 using System;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
@@ -22,3 +23,4 @@ namespace TextEditor.WPF
         }
     }
 }
+#endif
