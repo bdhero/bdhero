@@ -132,40 +132,4 @@ namespace BDHero.Plugin.DiscReader.Transformer
             return files.FirstOrDefault();
         }
     }
-
-    // TODO: Externalize
-    public enum JacketSize
-    {
-        /// <summary>
-        ///     416 x 240
-        /// </summary>
-        [Size(416, 240)]
-        Small,
-
-        /// <summary>
-        ///     640 x 360
-        /// </summary>
-        [Size(640, 360)]
-        Large
-    }
-
-    // TODO: Externalize
-    [AttributeUsage(AttributeTargets.Field)]
-    public class SizeAttribute : Attribute
-    {
-        public Size Size { get; set; }
-
-        public SizeAttribute(int width, int height)
-        {
-            Size = new Size(width, height);
-        }
-    }
-
-    public static class JacketSizeExtensions
-    {
-        public static Size GetDimensions(this JacketSize jacketSize)
-        {
-            return jacketSize.GetAttributeProperty<SizeAttribute, Size>(attribute => attribute.Size);
-        }
-    }
 }

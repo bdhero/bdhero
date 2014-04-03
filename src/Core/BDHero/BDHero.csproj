@@ -64,6 +64,7 @@
     <Compile Include="BDROM\DiscFeatures.cs" />
     <Compile Include="BDROM\DiscMetadata.cs" />
     <Compile Include="BDROM\Isan.cs" />
+    <Compile Include="BDROM\JacketSize.cs" />
     <Compile Include="BDROM\Playlist.cs" />
     <Compile Include="BDROM\RegionCode.cs" />
     <Compile Include="BDROM\StreamClip.cs" />
