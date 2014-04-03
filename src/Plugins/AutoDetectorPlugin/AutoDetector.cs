@@ -317,7 +317,7 @@ namespace BDHero.Plugin.AutoDetector
                 if (primaryLanguageAudioTracks.Any())
                     SelectTracks(primaryLanguageAudioTracks);
                 else if (mainFeatureAudioTracks.Any())
-                    SelectTrack(primaryLanguageAudioTracks.First());
+                    SelectTrack(mainFeatureAudioTracks.First());
                 else if (firstAudioTrack != null)
                     SelectTrack(firstAudioTrack);
 
