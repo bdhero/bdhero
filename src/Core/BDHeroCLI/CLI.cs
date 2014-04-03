@@ -186,8 +186,6 @@ namespace BDHeroCLI
 
         private void InitController()
         {
-            _controller.BeforeScanStart += ControllerOnBeforeScanStart;
-            _controller.ScanSucceeded += ControllerOnScanSucceeded;
             _controller.PluginProgressUpdated += ControllerOnPluginProgressUpdated;
             _controller.SetUIContextCurrentThread();
         }
@@ -238,17 +236,6 @@ namespace BDHeroCLI
         private static void ShowVersion()
         {
             Console.Error.WriteLine("{0} v{1} - compiled {2}", AssemblyUtils.GetAssemblyName(), AssemblyUtils.GetAssemblyVersion(), AssemblyUtils.GetLinkerTimestamp());
-        }
-
-        private static void ControllerOnBeforeScanStart(IPromise<bool> promise)
-        {
-            Console.WriteLine();
-        }
-
-        private static void ControllerOnScanSucceeded(IPromise<bool> promise)
-        {
-            Console.WriteLine();
-            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
         private static string _lastLine;
