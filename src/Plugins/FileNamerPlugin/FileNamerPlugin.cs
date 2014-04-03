@@ -70,7 +70,7 @@ namespace BDHero.Plugin.FileNamer
 
             job.OutputPath = namer.GetPath().FullName;
 
-            Host.ReportProgress(this, 100.0, "Finished auto-renaming output file");
+            Host.ReportProgress(this, 100.0, "Renamed output file", "Finished auto-renaming output file");
         }
 
         private Preferences GetPreferences()
