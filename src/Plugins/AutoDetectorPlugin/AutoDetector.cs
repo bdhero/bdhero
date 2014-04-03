@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using I18N;
 
@@ -344,7 +345,7 @@ namespace BDHero.Plugin.AutoDetector
             }
         }
 
-        private static void SelectTrack(Track track)
+        private static void SelectTrack([CanBeNull] Track track)
         {
             if (track == null)
                 return;
