@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__MonoCS__
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
@@ -119,3 +120,4 @@ namespace UILib.WPF
         }
     }
 }
+#endif
