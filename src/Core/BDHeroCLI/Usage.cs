@@ -58,18 +58,22 @@ OPTIONS:
 
     -n
     --no
-        Never overwrite existing MKV files; abort immediately if the output file already exists.
+        Never overwrite existing MKV files; abort immediately if the
+        output file already exists.
 
     --debug
-        Log DEBUG-, INFO-, WARN-, ERROR-, and FATAL-level messages to the console and log file.
+        Log DEBUG-, INFO-, WARN-, ERROR-, and FATAL-level messages to the
+        console and log file.
 
     -v
     --verbose
-        Log INFO-, WARN-, ERROR-, and FATAL-level messages to the console and log file.  This is the default behavior.
+        Log INFO-, WARN-, ERROR-, and FATAL-level messages to the console
+        and log file.  This is the default behavior.
 
     -w
     --warn
-        Only log WARN-, ERROR-, and FATAL-level messages to the console and log file.
+        Only log WARN-, ERROR-, and FATAL-level messages to the console
+        and log file.
 
     -q
     --quiet
