@@ -166,12 +166,18 @@ namespace BDHero.BDROM
             /// <summary>
             /// Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
             /// </summary>
+            /// <example>
+            /// <c>MU_jacketpicture_D1_LRG.jpg</c>
+            /// </example>
             [CanBeNull]
             public FileInfo JacketImageSmall;
 
             /// <summary>
             /// Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT"/>).
             /// </summary>
+            /// <example>
+            /// <c>MU_jacketpicture_D1_SML.jpg</c>
+            /// </example>
             [CanBeNull]
             public FileInfo JacketImageLarge;
         }
