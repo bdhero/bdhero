@@ -56,10 +56,10 @@ namespace DotNetUtils.Extensions
         }
 
         /// <summary>
-        /// Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fffffff</c> format.
+        /// Returns a culture-invariant representation of the TimeSpan in <c>1h 2m 3s</c> format.
         /// </summary>
         /// <param name="timeSpan"></param>
-        /// <returns><c>hh:mm:ss.fffffff</c></returns>
+        /// <returns><c>1h 2m 3s</c></returns>
         public static string ToStringMicro(this TimeSpan timeSpan)
         {
             var strings = new List<string>();
