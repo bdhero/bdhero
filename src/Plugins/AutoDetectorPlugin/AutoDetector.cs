@@ -30,6 +30,9 @@ namespace BDHero.Plugin.AutoDetector
 {
     public class AutoDetector : IAutoDetectorPlugin
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IPluginHost Host { get; private set; }
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
 
@@ -306,8 +309,14 @@ namespace BDHero.Plugin.AutoDetector
             {
                 // Video
 
-                playlist.VideoTracks.First().IsBestGuess = true;
-                playlist.VideoTracks.First().Keep = true;
+                var firstVideoTrack = playlist.VideoTracks.FirstOrDefault();
+                if (firstVideoTrack == null)
+                {
+                    Logger.WarnFormat("Playlist {0} has no video tracks - skipping");
+                    continue;
+                }
+
+                SelectTrack(firstVideoTrack);
 
                 // Audio
 
