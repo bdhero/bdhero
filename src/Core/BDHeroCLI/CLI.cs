@@ -28,6 +28,7 @@ using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
+using log4net;
 using Mono.Options;
 using ProcessUtils;
 
@@ -42,7 +43,7 @@ namespace BDHeroCLI
         }
 
         private readonly log4net.ILog _logger;
-        private readonly IDirectoryLocator _directoryLocator;
+        private readonly LogInitializer _logInitializer;
         private readonly PluginLoader _pluginLoader;
         private readonly IController _controller;
 
@@ -50,10 +51,10 @@ namespace BDHeroCLI
         private string _bdromPath;
         private string _mkvPath;
 
-        public CLI(IDirectoryLocator directoryLocator, PluginLoader pluginLoader, IController controller)
+        public CLI(ILog logger, LogInitializer logInitializer, IDirectoryLocator directoryLocator, PluginLoader pluginLoader, IController controller)
         {
-            _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            _directoryLocator = directoryLocator;
+            _logger = logger;
+            _logInitializer = logInitializer;
             _pluginLoader = pluginLoader;
             _controller = controller;
         }
@@ -100,61 +101,7 @@ namespace BDHeroCLI
 
         private void LogDirectoryPaths()
         {
-            var paths = new[]
-                        {
-                            _directoryLocator.InstallDir,
-                            _directoryLocator.AppConfigDir,
-                            _directoryLocator.PluginConfigDir,
-                            _directoryLocator.RequiredPluginDir,
-                            _directoryLocator.CustomPluginDir,
-                            _directoryLocator.LogDir,
-                        };
-
-            var commonRoot = GetCommonRoot(paths);
-
-            _logger.InfoFormat("IsPortable        = {0}", _directoryLocator.IsPortable);
-            _logger.InfoFormat("RootDir           = {0}", commonRoot);
-            _logger.InfoFormat("InstallDir        = {0}", SubPath(commonRoot, _directoryLocator.InstallDir       ));
-            _logger.InfoFormat("AppConfigDir      = {0}", SubPath(commonRoot, _directoryLocator.AppConfigDir     ));
-            _logger.InfoFormat("PluginConfigDir   = {0}", SubPath(commonRoot, _directoryLocator.PluginConfigDir  ));
-            _logger.InfoFormat("RequiredPluginDir = {0}", SubPath(commonRoot, _directoryLocator.RequiredPluginDir));
-            _logger.InfoFormat("CustomPluginDir   = {0}", SubPath(commonRoot, _directoryLocator.CustomPluginDir  ));
-            _logger.InfoFormat("LogDir            = {0}", SubPath(commonRoot, _directoryLocator.LogDir           ));
-        }
-
-        private static string SubPath(string commonRoot, string fullPath)
-        {
-            var subPath = fullPath.Substring(commonRoot.Length);
-            if (subPath.Any())
-                return subPath;
-            return ".";
-        }
-
-        private static string GetCommonRoot(params string[] paths)
-        {
-            if (paths.Length < 2)
-                return paths.FirstOrDefault();
-
-            var lowerPaths = paths.Select(s => s.ToLower()).ToArray();
-
-            var first = lowerPaths.First();
-            var root = new StringBuilder();
-
-            foreach (var ch in first)
-            {
-                var curRoot = root.ToString() + ch;
-
-                foreach (var path in lowerPaths.Skip(1))
-                {
-                    if (!path.StartsWith(curRoot))
-                        goto end;
-                }
-
-                root.Append(ch);
-            }
-
-            end:
-            return paths.First().Substring(0, root.Length);
+            _logInitializer.LogDirectoryPaths();
         }
 
         private void LoadPlugins()

@@ -64,6 +64,7 @@ namespace BDHeroGUI
         private const string PluginEnabledMenuItemName = "enabled";
 
         private readonly ILog _logger;
+        private readonly LogInitializer _logInitializer;
         private readonly IDirectoryLocator _directoryLocator;
         private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
@@ -101,7 +102,7 @@ namespace BDHeroGUI
 
         #region Constructor and OnLoad
 
-        public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
+        public FormMain(ILog logger, LogInitializer logInitializer, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
                         IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
                         INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient, AppConfig appConfig)
@@ -112,6 +113,7 @@ namespace BDHeroGUI
             FormClosing += OnFormClosing;
 
             _logger = logger;
+            _logInitializer = logInitializer;
             _directoryLocator = directoryLocator;
             _preferenceManager = preferenceManager;
             _pluginLoader = pluginLoader;
@@ -295,13 +297,7 @@ namespace BDHeroGUI
 
         private void LogDirectoryPaths()
         {
-            _logger.InfoFormat("IsPortable = {0}", _directoryLocator.IsPortable);
-            _logger.InfoFormat("InstallDir = {0}", _directoryLocator.InstallDir);
-            _logger.InfoFormat("AppConfigDir = {0}", _directoryLocator.AppConfigDir);
-            _logger.InfoFormat("PluginConfigDir = {0}", _directoryLocator.PluginConfigDir);
-            _logger.InfoFormat("RequiredPluginDir = {0}", _directoryLocator.RequiredPluginDir);
-            _logger.InfoFormat("CustomPluginDir = {0}", _directoryLocator.CustomPluginDir);
-            _logger.InfoFormat("LogDir = {0}", _directoryLocator.LogDir);
+            _logInitializer.LogDirectoryPaths();
         }
 
         #endregion
