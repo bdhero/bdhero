@@ -76,17 +76,17 @@ namespace BDHeroCLI
 
             var optionSet = new OptionSet
                 {
-                    { "h|?|help", v => ShowHelp() },
-                    { "V|version", s => Environment.Exit(0) },
-                    { "debug", s => loggerRepository.Threshold = log4net.Core.Level.Debug },
-                    { "v|verbose", s => loggerRepository.Threshold = log4net.Core.Level.Info },
-                    { "w|warn", s => loggerRepository.Threshold = log4net.Core.Level.Warn },
-                    { "q|quiet", s => loggerRepository.Threshold = log4net.Core.Level.Error },
-                    { "s|silent", s => loggerRepository.Threshold = log4net.Core.Level.Fatal },
-                    { "i=|input=", s => _bdromPath = s },
+                    { "h|?|help",   v => ShowHelp() },
+                    { "V|version",  s => Environment.Exit(0) },
+                    { "debug",      s => loggerRepository.Threshold = log4net.Core.Level.Debug },
+                    { "v|verbose",  s => loggerRepository.Threshold = log4net.Core.Level.Info },
+                    { "w|warn",     s => loggerRepository.Threshold = log4net.Core.Level.Warn },
+                    { "q|quiet",    s => loggerRepository.Threshold = log4net.Core.Level.Error },
+                    { "s|silent",   s => loggerRepository.Threshold = log4net.Core.Level.Fatal },
+                    { "i=|input=",  s => _bdromPath = s },
                     { "o=|output=", s => _mkvPath = s },
-                    { "y|yes", s => _replaceExistingFiles = true },
-                    { "n|no", s => _replaceExistingFiles = false }
+                    { "y|yes",      s => _replaceExistingFiles = true },
+                    { "n|no",       s => _replaceExistingFiles = false }
                 };
 
             var extraArgs = optionSet.Parse(args);
