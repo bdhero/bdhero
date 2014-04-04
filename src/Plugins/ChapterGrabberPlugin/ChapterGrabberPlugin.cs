@@ -75,16 +75,9 @@ namespace ChapterGrabberPlugin
 
             Host.ReportProgress(this, 0.0, "Querying ChapterDb.org...");
 
-            //var playlist = job.Disc.Playlists[job.SelectedPlaylistIndex];
             if (job.SearchQuery != null)
             {
                 var apiResults = GetChapters(job.SearchQuery.Title);
-                /*
-                var apiValues = CompareChapters(apiResults, playlist.Chapters);
-                if (apiValues != null && apiValues.Count > 0)
-                {
-                    ReplaceChapters(apiValues[0], playlist.Chapters);
-                }*/
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
@@ -196,10 +189,9 @@ namespace ChapterGrabberPlugin
         static private List<JsonChaps> CompareChapters(List<JsonChaps> apiData, IList<Chapter> discData)
         {
             var apiResultsFilteredByChapter = apiData.Where(chaps => IsMatch(chaps, discData)).ToList();
-            
             var apiResultsFilteredByValidName = apiResultsFilteredByChapter.Where(IsValid).ToList();
 
-            if (apiResultsFilteredByValidName.Count > 0)
+            if (apiResultsFilteredByValidName.Any())
             {
                 Logger.InfoFormat("{0} result(s) matched the filter criteria for custom chapters", apiResultsFilteredByValidName.Count);
             }
