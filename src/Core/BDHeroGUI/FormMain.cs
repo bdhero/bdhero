@@ -647,7 +647,6 @@ namespace BDHeroGUI
         /// </returns>
         private static bool IsID10TError(Exception e)
         {
-            return false;
             return (e is ID10TException ||
                     e is DirectoryNotFoundException ||
                     e is DriveNotFoundException ||
