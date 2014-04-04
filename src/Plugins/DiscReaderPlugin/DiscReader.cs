@@ -95,11 +95,6 @@ namespace BDHero.Plugin.DiscReader
 
         private void BDROMOnScanProgress(BDROMScanProgressState bdromState)
         {
-#if false
-            Console.WriteLine("BDROM: {0}: scanning {1} of {2} ({3}%).  Total: {4} of {5} ({6}%).",
-                bdromState.FileType, bdromState.CurFileOfType, bdromState.NumFilesOfType, bdromState.TypeProgress.ToString("0.00"),
-                bdromState.CurFileOverall, bdromState.NumFilesOverall, bdromState.OverallProgress.ToString("0.00"));
-#endif
             Host.ReportProgress(this, bdromState.OverallProgress * .99,
                                 string.Format("{1} ({0})", bdromState.FileType, bdromState.FileName),
                                 string.Format("Scanning {0} file {1}", bdromState.FileType, bdromState.FileName));
