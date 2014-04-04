@@ -136,7 +136,7 @@ namespace BDHero.ErrorReporting
             ExceptionMessageRaw = exception.Message;
             ExceptionMessageRedacted = Redact(ExceptionMessageRaw);
 
-            ExceptionDetailRaw = exception.ToString();
+            ExceptionDetailRaw = string.Format("{0}\n\nSource: {1}", exception, exception.Source);
             ExceptionDetailRedacted = Redact(ExceptionDetailRaw);
 
             var plugins = pluginRepository.PluginsByType.Select(ToString).ToList();
