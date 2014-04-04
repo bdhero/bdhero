@@ -418,9 +418,11 @@ namespace BDHero
             var containsKey = _progressMap.ContainsKey(guid);
             var prevHashCode = containsKey ? _progressMap[guid] : -1;
 
+#if DEBUG_CONCURRENCY
             Logger.DebugFormat("ProgressProviderOnUpdated() - Plugin \"{0}\": prev progress hashCode = {1}, cur progress hashCode = {2}",
                                progressProvider.Plugin.Name, prevHashCode, hashCode
                 );
+#endif
 
             // Progress hasn't changed since last update
             if (containsKey && prevHashCode == hashCode)
@@ -430,7 +432,9 @@ namespace BDHero
 
             _progressMap[guid] = hashCode;
 
+#if DEBUG_CONCURRENCY
             Logger.Debug("ProgressProviderOnUpdated() - Calling PluginProgressUpdated event handlers");
+#endif
 
             PluginProgressUpdated(progressProvider.Plugin, progressProvider);
         }

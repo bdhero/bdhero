@@ -635,8 +635,10 @@ namespace DotNetUtils.Concurrency
 
         private void LogDebug(string format, params object[] args)
         {
+#if DEBUG_CONCURRENCY
             format = GetLogFormat(format);
             Logger.DebugFormat(format, args);
+#endif
         }
 
         private void LogWarn(string format, params object[] args)

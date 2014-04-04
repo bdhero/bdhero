@@ -219,10 +219,12 @@ namespace BDHero.Plugin
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void LogMethod(MethodBase method, MethodEntry entryType)
         {
+#if DEBUG_CONCURRENCY
             var @params = method.GetParameters();
             var strMethod = string.Format("{0}({1})", method.Name, string.Join(", ", @params.Select(info => info.ParameterType.Name + " " + info.Name)));
             var name = Plugin != null ? Plugin.Name : "??? UNINITIALIZED ???";
             Logger.DebugFormat("ProgressProvider for \"{0}\" plugin - {1} {2} method", name, entryType, strMethod);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
