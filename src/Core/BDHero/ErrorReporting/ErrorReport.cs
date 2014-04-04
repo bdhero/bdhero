@@ -19,6 +19,8 @@ namespace BDHero.ErrorReporting
 
         private const string Redacted = "[redacted]";
 
+        #region Regular expressions
+
         /// <summary>
         ///     Matches Windows-style or UNC paths wrapped in single or double quotes.
         /// </summary>
@@ -90,6 +92,8 @@ namespace BDHero.ErrorReporting
                 [^/:*?""<>|\r\n]*        # File
             ",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+
+        #endregion
 
         /// <summary>
         ///     Gets or sets a brief summary of the error.
