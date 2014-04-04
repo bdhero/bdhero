@@ -68,7 +68,7 @@ namespace BDHero.Config
     {
         public override void Load()
         {
-            Bind<ILog>().ToMethod(context => LogManager.GetLogger(context.Request.Target.Type));
+            Bind<ILog>().ToMethod(context => LogManager.GetLogger(context.Request.Target.Member.ReflectedType));
         }
     }
 
