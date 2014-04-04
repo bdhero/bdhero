@@ -1,6 +1,13 @@
 BDHero Changelog
 ================
 
+0.9.0.5 - 2014-04-0x
+--------------------
+
+*   New: Strip leading chapter numbers from chapter names
+*   Improve: Better log output
+*   Improve: More detailed error reports
+
 0.9.0.4 - 2014-04-02
 --------------------
 

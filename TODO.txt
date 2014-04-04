@@ -1,6 +1,8 @@
 Chores
 ======
 
+[ ] UPDATE Build/Tools NuGet Package!!!
+
 [ ] Add WyDay to LicenseUtils (SplitButton, LinkLabel2, etc.)
 [ ] Create new library that calls the native or managed API for each OS (e.g., DrawThemedTextBoxBorder)
 
@@ -40,8 +42,6 @@ Bugs
 [ ] Cancel first scan _AFTER_ BDInfoDiscReaderPlugin has ran, but _BEFORE_ the optional plugins complete:
     No items show up in the playlist or track ListViews, but the controls are enabled and "Disc Info" is populated.
 
-[ ] CTRL + I doesn't work in TextEditorControls in FormMain
-
 [ ] "Filter Playlists" and "Filter Tracks" settings no longer work
 
 [ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
@@ -60,7 +60,7 @@ Bugs
 Features
 ========
 
-[ ] UPDATE Build/Tools NuGet Package!!!
+[ ] Add ChapterGrabber preferences for adding leading chapter numbers
 
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
@@ -122,6 +122,8 @@ Meh
 
 Backlog
 =======
+
+[ ] Format specifiers for placeholder variables (e.g., lower/upper-case, short, long)
 
 [ ] "About 1 hour remaining" when estimates are in flux
 [ ] Estimate progress for the last 5 seconds (ever 5 seconds reset the counters for "time started" and "initial progress percentage")
