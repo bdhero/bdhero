@@ -145,7 +145,7 @@ namespace BDHero.ErrorReporting
             var logMessages = BoundedMemoryAppender.RecentEvents.Select(ToString).ToArray();
             var logEvents = string.Join("\n", logMessages);
 
-            Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, ExceptionMessageRedacted, AppUtils.AppName, AppUtils.AppVersion);
+            Title = string.Format("{0} v{1}: {2}: {3}", AppUtils.AppName, AppUtils.AppVersion, exception.GetType().FullName, ExceptionMessageRedacted);
             Body = string.Format(@"
 {0} v{1}{2} (built on {3:u})
 
