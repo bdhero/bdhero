@@ -54,6 +54,7 @@
     <Compile Include="DriveDetector\DriveDetectorEventArgs.cs" />
     <Compile Include="DriveDetector\DriveDetectorEventHandler.cs" />
     <Compile Include="DriveDetector\IDriveDetector.cs" />
+    <Compile Include="Info\CultureInfos.cs" />
     <Compile Include="Info\HardwareInfo.cs" />
     <Compile Include="Info\ProcessInfo.cs" />
     <Compile Include="JobObjects\IJobObject.cs" />

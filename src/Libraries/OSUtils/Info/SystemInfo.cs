@@ -44,11 +44,18 @@ namespace OSUtils.Info
         [UsedImplicitly]
         public readonly ProcessInfo Process;
 
+        /// <summary>
+        /// Gets information about the current thread's culture (a.k.a. locale).
+        /// </summary>
+        [UsedImplicitly]
+        public readonly CultureInfos Culture;
+
         private SystemInfo()
         {
             OS = new OSInfo(GetOSType());
             Hardware = new HardwareInfo();
             Process = new ProcessInfo();
+            Culture = new CultureInfos();
         }
 
         #region Native interop
