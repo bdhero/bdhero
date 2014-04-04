@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BDHero.Logging;
 using BDHero.Plugin;
 using BDHero.Startup;
 using DotNetUtils;
@@ -114,6 +115,9 @@ namespace BDHero.ErrorReporting
             var plugins = pluginRepository.PluginsByType.Select(ToString).ToList();
             AddPluginHeaderRows(plugins);
 
+            var logMessages = BoundedMemoryAppender.RecentEvents.Select(ToString).ToArray();
+            var logEvents = string.Join("\n", logMessages);
+
             Title = string.Format("{0}: {1} ({2} v{3})", exception.GetType().FullName, ExceptionMessageRedacted, AppUtils.AppName, AppUtils.AppVersion);
             Body = string.Format(@"
 {0} v{1}{2} (built on {3:u})
@@ -123,23 +127,34 @@ Stack Trace
 
 {4}
 
+Log Events
+----------
+
+{5}
+
 Plugins
 -------
 
-{5}
+{6}
 
 System Info
 -----------
 
-{6}
+{7}
 ".TrimStart(),
                 AppUtils.AppName,
                 AppUtils.AppVersion,
                 directoryLocator.IsPortable ? " portable" : "",
                 AppUtils.BuildDate,
                 FormatAsMarkdownCode(ExceptionDetailRedacted),
+                FormatAsMarkdownCode(logEvents),
                 FormatAsMarkdownTable(plugins.ToArray()),
                 FormatAsMarkdownCode(SystemInfo.Instance.ToString()));
+        }
+
+        private static string ToString(FormattedLoggingEvent @event)
+        {
+            return Redact(@event.ToString(true));
         }
 
         private static string FormatAsMarkdownTable(string[][] rows)

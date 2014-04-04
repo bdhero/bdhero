@@ -83,6 +83,8 @@
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
+    <Compile Include="Logging\FormattedLoggingEvent.cs" />
+    <Compile Include="Logging\BoundedMemoryAppender.cs" />
     <Compile Include="Plugin\DevPluginService.cs" />
     <Compile Include="Plugin\IPluginRepository.cs" />
     <Compile Include="Plugin\IPluginService.cs" />
