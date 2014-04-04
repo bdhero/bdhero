@@ -763,29 +763,14 @@ namespace BDHeroGUI
 
         #region File renamer
 
-        private int _renameCounter;
-
         private bool _isRenaming;
-
-        private readonly ConcurrentQueue<int> _renameQueue = new ConcurrentQueue<int>();
 
         private void RenameAsync()
         {
             if (_controller.Job == null)
                 return;
 
-            _renameQueue.Enqueue(_renameCounter++);
-
-            CheckRenameQueue();
-        }
-
-        private void CheckRenameQueue()
-        {
             if (_isRenaming)
-                return;
-
-            int dummy;
-            if (!_renameQueue.TryDequeue(out dummy))
                 return;
 
             _isRenaming = true;
@@ -794,7 +779,6 @@ namespace BDHeroGUI
                 .Work(p => _controller.RenameSync(null))
                 .Done(p => textBoxOutput.SelectedPath = _controller.Job.OutputPath)
                 .Always(p => _isRenaming = false)
-                .Always(p => CheckRenameQueue())
                 .Start()
                 ;
         }

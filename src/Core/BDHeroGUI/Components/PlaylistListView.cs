@@ -68,18 +68,38 @@ namespace BDHeroGUI.Components
             get { return listView.SelectedItems.Count > 0 ? listView.SelectedItems[0].Tag as Playlist : null; }
             set
             {
-                if (value == null)
-                {
-                    listView.SelectNone();
-                    return;
-                }
+                _ignoreSelectionChange = true;
 
-                listView.SelectWhere(item => item.Tag == value);
+                SelectPlaylist(value);
 
-                if (listView.SelectedItems.Count == 0 && listView.Items.Count > 0)
+                _ignoreSelectionChange = false;
+
+                // Trigger a ItemSelectionChanged event
+                // TODO: What if no item is selected?
+                if (listView.SelectedItems.Count > 0)
                 {
-                    listView.Items[0].Selected = true;
+                    var selectedItem = listView.SelectedItems[0];
+                    _ignoreSelectionChange = true;
+                    selectedItem.Selected = false;
+                    _ignoreSelectionChange = false;
+                    selectedItem.Selected = true;
                 }
+            }
+        }
+
+        private void SelectPlaylist(Playlist playlist)
+        {
+            if (playlist == null)
+            {
+                listView.SelectNone();
+                return;
+            }
+
+            listView.SelectWhere(item => item.Tag == playlist);
+
+            if (listView.SelectedItems.Count == 0 && listView.Items.Count > 0)
+            {
+                listView.Items[0].Selected = true;
             }
         }
 
@@ -107,6 +127,8 @@ namespace BDHeroGUI.Components
 
         private bool _showAllPlaylists;
 
+        private bool _ignoreSelectionChange;
+
         public PlaylistListView()
         {
             InitializeComponent();
@@ -114,6 +136,9 @@ namespace BDHeroGUI.Components
 
             listView.ItemSelectionChanged += delegate(object sender, ListViewItemSelectionChangedEventArgs args)
                                              {
+                                                 if (_ignoreSelectionChange)
+                                                     return;
+
                                                  if (ItemSelectionChanged != null)
                                                      ItemSelectionChanged(sender, args);
                                              };
