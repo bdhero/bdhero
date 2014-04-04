@@ -101,8 +101,33 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             if (_exception == null) return;
 
+            Log(job, ffmpeg);
+
             throw _exception;
         }
+
+        #region Logging
+
+        private static void Log(Job job, FFmpeg ffmpeg)
+        {
+            Logger.InfoFormat("FFmpeg was invoked with: {0}", ffmpeg.FullCommand);
+            ffmpeg.LogTracks();
+            LogSelectedReleaseMedium(job);
+        }
+
+        private static void LogSelectedReleaseMedium(Job job)
+        {
+            var medium = job.SelectedReleaseMedium;
+            if (medium == null)
+            {
+                Logger.Warn("No release medium (movie or TV show) was selected");
+                return;
+            }
+
+            Logger.InfoFormat("Release medium: {0} {{ Id = {1} }}: {2}", medium.GetType().Name, medium.Id, medium);
+        }
+
+        #endregion
 
         private void OnProgressUpdated(FFmpeg ffmpeg, ProgressState progressState, CancellationToken cancellationToken)
         {

@@ -70,6 +70,16 @@ namespace ProcessUtils
         }
         private ArgumentList _arguments = new ArgumentList();
 
+        public string FullCommand
+        {
+            get
+            {
+                var list = new ArgumentList(ExePath);
+                list.AddAll(Arguments);
+                return list.ToString();
+            }
+        }
+
         private bool _hasStarted;
         private bool _hasExited;
 
@@ -208,7 +218,7 @@ namespace ProcessUtils
                     process.OutputDataReceived += (sender, args) => HandleStdOut(args.Data);
                     process.ErrorDataReceived += (sender, args) => HandleStdErr(args.Data);
 
-                    Logger.InfoFormat("\"{0}\" {1}", ExePath, Arguments);
+                    Logger.Info(FullCommand);
 
                     process.Start();
 

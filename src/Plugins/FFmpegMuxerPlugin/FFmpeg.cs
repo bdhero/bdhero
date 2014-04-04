@@ -44,6 +44,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static readonly Regex OutTimeMsRegex = new Regex(@"^out_time_ms=(\d+)$");
         private static readonly Regex ProgressRegex = new Regex(@"^progress=(\w+)$");
 
+        private readonly Playlist _playlist;
         private readonly TimeSpan _playlistLength;
         private readonly List<string> _inputM2TSPaths;
         private readonly List<Track> _selectedTracks;
@@ -66,6 +67,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
         {
+            _playlist = playlist;
             _playlistLength = playlist.Length;
             _inputM2TSPaths = playlist.StreamClips.Select(clip => clip.FileInfo.FullName).ToList();
             _selectedTracks = playlist.Tracks.Where(track => track.Keep).ToList();
@@ -96,12 +98,24 @@ namespace BDHero.Plugin.FFmpegMuxer
             StdErr += OnStdErr;
             Exited += (state, code, exception, time) => OnExited(state, code, job.SelectedReleaseMedium, playlist, _selectedTracks, outputMKVPath);
 
-            foreach (var track in playlist.Tracks)
+            LogTracks();
+        }
+
+        public void LogTracks()
+        {
+            var tracks = new List<string>();
+            foreach (var track in _playlist.Tracks)
             {
                 var index = _indexer[track];
-                Logger.InfoFormat("Track w/ stream PID {0} (0x{0:x4}): index {1} => {2} ({3})",
-                    track.PID, index.InputIndex, index.OutputIndex, track.Codec);
+                tracks.Add(string.Format("Track w/ stream PID {0} (0x{0:x4}): index {1,2:D} => {2,2:D} [{3}] ({4}, {5})",
+                                         track.PID,
+                                         index.InputIndex,
+                                         index.OutputIndex,
+                                         track.Keep ? "X" : " ",
+                                         track.Language.ISO_639_2,
+                                         track.Codec));
             }
+            Logger.InfoFormat("Tracks:\n{0}", string.Join("\n", tracks));
         }
 
         private void OnStdErr(string line)
