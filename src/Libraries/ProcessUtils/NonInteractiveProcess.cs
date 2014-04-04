@@ -93,7 +93,7 @@ namespace ProcessUtils
             {
                 if (value != _state)
                 {
-                    Logger.DebugFormat("Process \"{0}\" changing state from {1} to {2}", ExePath, _state, value);
+                    Logger.InfoFormat("Process \"{0}\" changing state from {1} to {2}", ExePath, _state, value);
                     _state = value;
                     PropertyChanged.Notify(() => State);
                 }
@@ -208,7 +208,7 @@ namespace ProcessUtils
                     process.OutputDataReceived += (sender, args) => HandleStdOut(args.Data);
                     process.ErrorDataReceived += (sender, args) => HandleStdErr(args.Data);
 
-                    Logger.DebugFormat("\"{0}\" {1}", ExePath, Arguments);
+                    Logger.InfoFormat("\"{0}\" {1}", ExePath, Arguments);
 
                     process.Start();
 
@@ -233,13 +233,13 @@ namespace ProcessUtils
                     process.BeginOutputReadLine();
                     process.BeginErrorReadLine();
 
-                    Logger.DebugFormat("Waiting for process \"{0}\" w/ PID = {1} to exit...", ExePath, Id);
+                    Logger.InfoFormat("Waiting for process \"{0}\" w/ PID = {1} to exit...", ExePath, Id);
 
                     process.WaitForExit();
 
                     _hasExited = true;
 
-                    Logger.DebugFormat("Process \"{0}\" w/ PID = {1} exited", ExePath, Id);
+                    Logger.InfoFormat("Process \"{0}\" w/ PID = {1} exited", ExePath, Id);
 
                     ExitCode = process.ExitCode;
                 }
@@ -265,7 +265,7 @@ namespace ProcessUtils
         public void Kill()
         {
             if (!CanKill) return;
-            Logger.DebugFormat("Killing process \"{0}\" w/ PID = {1}...", ExePath, Id);
+            Logger.InfoFormat("Killing process \"{0}\" w/ PID = {1}...", ExePath, Id);
             try
             {
                 GetProcess().Kill();
@@ -347,7 +347,7 @@ namespace ProcessUtils
         {
             _hasExited = true;
 
-            Logger.DebugFormat("Process \"{0}\" exited (synchronous event)", ExePath);
+            Logger.InfoFormat("Process \"{0}\" exited (synchronous event)", ExePath);
 
             _stopwatch.Stop();
 
@@ -368,7 +368,7 @@ namespace ProcessUtils
         {
             _hasExited = true;
 
-            Logger.DebugFormat("Process \"{0}\" exited (asynchronous event)", ExePath);
+            Logger.InfoFormat("Process \"{0}\" exited (asynchronous event)", ExePath);
 
             var process = sender as Process;
             if (process == null) return;
@@ -382,7 +382,7 @@ namespace ProcessUtils
         {
             if (!CanPause) return;
 
-            Logger.DebugFormat("Pausing process \"{0}\"", ExePath);
+            Logger.InfoFormat("Pausing process \"{0}\"", ExePath);
 
             GetProcess().Suspend();
             _stopwatch.Stop();
@@ -393,7 +393,7 @@ namespace ProcessUtils
         {
             if (!CanResume) return;
 
-            Logger.DebugFormat("Resuming process \"{0}\"", ExePath);
+            Logger.InfoFormat("Resuming process \"{0}\"", ExePath);
 
             GetProcess().Resume();
             _stopwatch.Start();
