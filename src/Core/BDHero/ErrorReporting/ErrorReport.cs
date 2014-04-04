@@ -41,7 +41,21 @@ namespace BDHero.ErrorReporting
         /// <remarks>
         ///     Adapted from the RegexBuddy 4 library: "Path: Windows or UNC"
         /// </remarks>
-        private static readonly Regex WindowsPathUnquoted = new Regex(
+        private static readonly Regex WindowsPathUnquotedNoSpaces = new Regex(
+            @"
+                (?:\b[a-z]:|\\\\[a-z0-9 %._-]+\\[a-z0-9$%._-]+)\\  # Drive
+                (?:[^\\/:*?""<>| \r\n]+\\)*                        # Folder
+                [^\\/:*?""<>| \r\n]*                               # File
+            ",
+            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+
+        /// <summary>
+        ///     Matches Windows-style or UNC paths without regard for quotes.
+        /// </summary>
+        /// <remarks>
+        ///     Adapted from the RegexBuddy 4 library: "Path: Windows or UNC"
+        /// </remarks>
+        private static readonly Regex WindowsPathUnquotedSpaces = new Regex(
             @"
                 (?:\b[a-z]:|\\\\[a-z0-9 %._-]+\\[a-z0-9 $%._-]+)\\  # Drive
                 (?:[^\\/:*?""<>|\r\n]+\\)*                          # Folder
@@ -59,7 +73,16 @@ namespace BDHero.ErrorReporting
             ",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
 
-        private static readonly Regex UnixPathUnquoted = new Regex(
+        private static readonly Regex UnixPathUnquotedNoSpaces = new Regex(
+            @"
+                (?<=^|[\s])               # Anchor
+                /                         # Root
+                (?:[^/:*?""<>| \r\n]+/)*  # Folder
+                [^/:*?""<>| \r\n]*        # File
+            ",
+            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+
+        private static readonly Regex UnixPathUnquotedSpaces = new Regex(
             @"
                 (?<=^|[\s])              # Anchor
                 /                        # Root
@@ -240,12 +263,16 @@ System Info
 
         private static string Redact(string raw)
         {
-            var sanitized = raw;
-            sanitized = WindowsPathQuoted.Replace(sanitized, Redacted);
-            sanitized = WindowsPathUnquoted.Replace(sanitized, Redacted);
-            sanitized = UnixPathQuoted.Replace(sanitized, Redacted);
-            sanitized = UnixPathUnquoted.Replace(sanitized, Redacted);
-            return sanitized;
+            var regexes = new []
+                          {
+                              WindowsPathQuoted,
+                              WindowsPathUnquotedNoSpaces,
+                              WindowsPathUnquotedSpaces,
+                              UnixPathQuoted,
+                              UnixPathUnquotedNoSpaces,
+                              UnixPathUnquotedSpaces,
+                          };
+            return regexes.Aggregate(raw, (current, regex) => regex.Replace(current, Redacted));
         }
     }
 }
