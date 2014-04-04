@@ -45,6 +45,10 @@ namespace ChapterGrabberPlugin
         private const string QueryUrl = "http://chapterdb.org/chapters/search?title=";
         private const string QueryParams = "&chapterCount=0 HTTP/1.1";
 
+        // TODO: Make these user-configurable
+        private const bool ShouldPrependChapterNumbers = false;
+        private const string ChapterNumberFormat = "{0:D2}.";
+
         public IPluginHost Host { get; private set; }
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
 
@@ -89,7 +93,7 @@ namespace ChapterGrabberPlugin
                     var apiValues = CompareChapters(apiResults, moviePlaylist.Chapters);
                     if (apiValues != null && apiValues.Count > 0)
                     {
-                        StoreSearchResults(apiValues, moviePlaylist);
+                        StoreSearchResults(moviePlaylist, apiValues);
 
                         // To Do:  Allow the user to select which chapter list to use when 
                         // defaulted to [0] first chapter list that matches filter criteria
@@ -106,33 +110,7 @@ namespace ChapterGrabberPlugin
             Host.ReportProgress(this, 100.0, "Finished querying ChapterDb.org");
         }
 
-        private static void StoreSearchResults(IEnumerable<JsonChaps> searchResults, Playlist playlist)
-        {
-            var validResults = searchResults.Where(chaps => IsMatch(chaps, playlist.Chapters)).Where(IsValid).ToArray();
-            playlist.ChapterSearchResults = validResults.Select(searchResult => Transform(searchResult, playlist)).ToList();
-        }
-
-        private static ChapterSearchResult Transform(JsonChaps searchResult, Playlist playlist)
-        {
-            var jsonChapters = searchResult.chapterInfo.chapters.chapter.Take(playlist.ChapterCount).ToArray();
-            return new ChapterSearchResult
-                {
-                    Title =
-                        string.Format("+{0}: {1}", searchResult.chapterInfo.confirmations,
-                                      searchResult.chapterInfo.title),
-                    Chapters = jsonChapters.Select(Transform).ToList()
-                };
-        }
-
-        private static Chapter Transform(JsonChapter jsonChapter, int i)
-        {
-            var title = (jsonChapter.name ?? "").Trim();
-            var isValidChapterName = IsValidChapterName(title);
-            var chapter = new Chapter(i + 1, jsonChapter.time.TotalSeconds) { Title = title, Keep = isValidChapterName };
-            return chapter;
-        }
-
-        static private List<JsonChaps> GetChapters(string movieName)
+        private static List<JsonChaps> GetChapters(string movieName)
         {
             var movieSearchResults = new List<JsonChaps>();
             var headers = new List<string> { string.Format("ApiKey: {0}", ApiKey), string.Format("UserName: {0}", Username) };
@@ -186,7 +164,9 @@ namespace ChapterGrabberPlugin
             return movieSearchResults;
         }
 
-        static private List<JsonChaps> CompareChapters(List<JsonChaps> apiData, IList<Chapter> discData)
+        #region Validation / comparison
+
+        private static List<JsonChaps> CompareChapters(List<JsonChaps> apiData, IList<Chapter> discData)
         {
             var apiResultsFilteredByChapter = apiData.Where(chaps => IsMatch(chaps, discData)).ToList();
             var apiResultsFilteredByValidName = apiResultsFilteredByChapter.Where(IsValid).ToList();
@@ -197,6 +177,28 @@ namespace ChapterGrabberPlugin
             }
 
             return apiResultsFilteredByValidName;
+        }
+
+        private static bool IsMatch(JsonChaps jsonChaps, IList<Chapter> chapterDisc)
+        {
+            var chapterCountMatches = jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count ||
+                                      jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count + 1;
+            if (!chapterCountMatches)
+                return false;
+
+            for (var i = 0; i < chapterDisc.Count; i++)
+            {
+                var discChapter = chapterDisc[i];
+                var apiChapter = jsonChaps.chapterInfo.chapters.chapter[i];
+                if (!DoTimecodesMatch(discChapter.StartTime.TotalSeconds, apiChapter.time.TotalSeconds))
+                    return false;
+            }
+            return true;
+        }
+
+        private static bool DoTimecodesMatch(double timeDisc, double timeApi)
+        {
+            return Math.Abs(timeDisc - timeApi) <= 1.0;
         }
 
         private static bool IsValid(JsonChaps jsonChaps)
@@ -224,29 +226,17 @@ namespace ChapterGrabberPlugin
             return true;
         }
 
-        private static bool IsMatch(JsonChaps jsonChaps, IList<Chapter> chapterDisc)
-        {
-            var chapterCountMatches = jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count ||
-                                      jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count + 1;
-            if (!chapterCountMatches)
-                return false;
+        #endregion
 
-            for (var i = 0; i < chapterDisc.Count; i++)
-            {
-                var discChapter = chapterDisc[i];
-                var apiChapter = jsonChaps.chapterInfo.chapters.chapter[i];
-                if (!DoTimecodesMatch(discChapter.StartTime.TotalSeconds, apiChapter.time.TotalSeconds))
-                    return false;
-            }
-            return true;
+        #region Storage
+
+        private static void StoreSearchResults(Playlist playlist, IEnumerable<JsonChaps> searchResults)
+        {
+            var validResults = searchResults.Where(chaps => IsMatch(chaps, playlist.Chapters)).Where(IsValid).ToArray();
+            playlist.ChapterSearchResults = validResults.Select(searchResult => Transform(searchResult, playlist)).ToList();
         }
 
-        private static bool DoTimecodesMatch(double timeDisc, double timeApi)
-        {
-            return Math.Abs(timeDisc - timeApi) <= 1.0;
-        }
-
-        static private void ReplaceChapters(JsonChaps apiData, IList<Chapter> discData)
+        private static void ReplaceChapters(JsonChaps apiData, IList<Chapter> discData)
         {
             for (var i=0; i<discData.Count; i++)
             {
@@ -255,5 +245,86 @@ namespace ChapterGrabberPlugin
                 chapter.Title = jsonChapter.name;
             }
         }
+
+        #endregion
+
+        #region Transformation
+
+        private static ChapterSearchResult Transform(JsonChaps searchResult, Playlist playlist)
+        {
+            var jsonChapters = searchResult.chapterInfo.chapters.chapter.Take(playlist.ChapterCount).ToArray();
+            var chapters = jsonChapters.Select(Transform).ToList();
+
+            if (ShouldStripLeadingDigits(chapters))
+                StripLeadingDigits(chapters);
+
+            if (ShouldPrependChapterNumbers)
+                PrependChapterNumbers(chapters);
+
+            return new ChapterSearchResult
+            {
+                Title =
+                    string.Format("+{0}: {1}", searchResult.chapterInfo.confirmations,
+                                  searchResult.chapterInfo.title),
+                Chapters = chapters
+            };
+        }
+
+        private static Chapter Transform(JsonChapter jsonChapter, int i)
+        {
+            var title = (jsonChapter.name ?? "").Trim();
+            var isValidChapterName = IsValidChapterName(title);
+            var chapter = new Chapter(i + 1, jsonChapter.time.TotalSeconds) { Title = title, Keep = isValidChapterName };
+            return chapter;
+        }
+
+        #endregion
+
+        #region Number stripping
+
+        private static readonly Regex LeadingDigitsRegex = new Regex(@"^(?<number>\d+)[.:) ]+");
+
+        private static bool ShouldStripLeadingDigits(List<Chapter> chapters)
+        {
+            var numWithLeadingDigits = chapters.Count(ShouldStripLeadingDigits);
+            return (numWithLeadingDigits >= chapters.Count - 2);
+        }
+
+        private static bool ShouldStripLeadingDigits(Chapter chapter)
+        {
+            if (!LeadingDigitsRegex.IsMatch(chapter.Title))
+                return false;
+            
+            int intValue;
+            var strValue = LeadingDigitsRegex.Match(chapter.Title).Groups["number"].Value;
+
+            // This should never happen, but you never know
+            if (!int.TryParse(strValue, out intValue))
+                return false;
+
+            // Leading digits must match the chapter number (+/- 1)
+            return (intValue == chapter.Number || intValue == chapter.Number + 1 || intValue == chapter.Number - 1);
+        }
+
+        private static void StripLeadingDigits(List<Chapter> chapters)
+        {
+            chapters.ForEach(StripLeadingDigits);
+        }
+
+        private static void StripLeadingDigits(Chapter chapter)
+        {
+            chapter.Title = LeadingDigitsRegex.Replace(chapter.Title, "");
+        }
+
+        #endregion
+
+        #region Chapter number prepending
+
+        private static void PrependChapterNumbers(List<Chapter> chapters)
+        {
+            chapters.ForEach(chapter => chapter.Title = string.Format("{0} {1}", string.Format(ChapterNumberFormat, chapter.Number), chapter.Title));
+        }
+
+        #endregion
     }
 }
