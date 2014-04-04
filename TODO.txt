@@ -37,6 +37,8 @@ Chores
 Bugs
 ====
 
+[ ] 500 Days of Summer: Output file name input value twitches after scan due to playlist select/deselect/select
+
 [ ] Taskbar pinning w/ app ID
 
 [ ] Cancel first scan _AFTER_ BDInfoDiscReaderPlugin has ran, but _BEFORE_ the optional plugins complete:
