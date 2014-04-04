@@ -23,9 +23,11 @@ using BDHero.BDROM;
 using BDHero.Exceptions;
 using BDHero.Plugin.DiscReader.Transformer;
 using BDInfo;
+using DotNetUtils.Annotations;
 
 namespace BDHero.Plugin.DiscReader
 {
+    [UsedImplicitly]
     public class DiscReader : IDiscReaderPlugin
     {
         public IPluginHost Host { get; private set; }
