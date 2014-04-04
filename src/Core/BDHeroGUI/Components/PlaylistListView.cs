@@ -113,10 +113,10 @@ namespace BDHeroGUI.Components
             Load += OnLoad;
 
             listView.ItemSelectionChanged += delegate(object sender, ListViewItemSelectionChangedEventArgs args)
-                {
-                    if (ItemSelectionChanged != null)
-                        ItemSelectionChanged(sender, args);
-                };
+                                             {
+                                                 if (ItemSelectionChanged != null)
+                                                     ItemSelectionChanged(sender, args);
+                                             };
 
             listView.MouseClick += ListViewOnMouseClick;
             listView.MouseDoubleClick += ListViewOnMouseDoubleClick;
