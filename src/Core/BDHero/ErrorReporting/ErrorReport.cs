@@ -61,7 +61,7 @@ namespace BDHero.ErrorReporting
 
         private static readonly Regex UnixPathUnquoted = new Regex(
             @"
-                (?<=^|[\s])              # Opening quote
+                (?<=^|[\s])              # Anchor
                 /                        # Root
                 (?:[^/:*?""<>|\r\n]+/)*  # Folder
                 [^/:*?""<>|\r\n]*        # File
