@@ -99,7 +99,8 @@ namespace BDHero.Plugin.FFmpegMuxer
             cancellationToken.Register(ffmpeg.Kill, true);
             WaitForThreadToExit();
 
-            if (_exception == null) return;
+            if (_exception == null)
+                return;
 
             Log(job, ffmpeg);
 
