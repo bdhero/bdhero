@@ -345,11 +345,11 @@ namespace BDHero.Plugin.FFmpegMuxer
             }
         }
 
-        private void ProgressWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
+        private void ProgressWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            if (runWorkerCompletedEventArgs.Error != null)
+            if (args.Error != null)
             {
-                Exception = runWorkerCompletedEventArgs.Error;
+                Exception = args.Error;
                 Kill();
             }
         }
@@ -359,7 +359,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             get
             {
                 return (_progress < 100) &&
-                       (State == NonInteractiveProcessState.Ready ||
+                       (State == NonInteractiveProcessState.Ready   ||
                         State == NonInteractiveProcessState.Running ||
                         State == NonInteractiveProcessState.Paused);
             }

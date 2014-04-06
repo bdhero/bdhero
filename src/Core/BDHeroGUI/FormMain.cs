@@ -1057,7 +1057,7 @@ namespace BDHeroGUI
                 _logger.Warn("State mismatch: _isRunning == false but _state == Running");
             }
 
-            var percentCompleteStr = (progressProvider.PercentComplete/100.0).ToString("P");
+            var percentCompleteStr = (progressProvider.PercentComplete / 100.0).ToString("P");
             var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
                                      plugin.Name, progressProvider.State, percentCompleteStr,
                                      progressProvider.LongStatus,
