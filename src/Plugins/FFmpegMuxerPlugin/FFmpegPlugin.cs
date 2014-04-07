@@ -104,7 +104,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             Log(job, ffmpeg);
 
-            throw _exception;
+            throw new FFmpegException(_exception.Message, _exception);
         }
 
         #region Logging
