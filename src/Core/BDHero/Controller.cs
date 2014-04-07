@@ -239,7 +239,17 @@ namespace BDHero
                           })
                     .Fail(delegate(IPromise<bool> p)
                           {
-                              _pluginRepository.GetProgressProvider(plugin).Error(p.LastException);
+                              var progressProvider = _pluginRepository.GetProgressProvider(plugin);
+
+                              // Sanity check
+                              if (cancellationToken.IsCancellationRequested ||
+                                  progressProvider.State == ProgressProviderState.Canceled)
+                              {
+                                  progressProvider.Cancel();
+                                  return;
+                              }
+
+                              progressProvider.Error(p.LastException);
                               HandleUnhandledException(p.LastException);
                           })
                     .Canceled(delegate
