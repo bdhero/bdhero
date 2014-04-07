@@ -249,7 +249,7 @@ namespace OSUtils.Info
             {
                 var propName = Regex.Escape(prop.GetAttributeProperty<SysctlPropertyNameAttribute, string>(attribute => attribute.Name));
                 var match = new Regex(propName + @"\s*?[=:]\s*?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
-                return match.Success ? UInt64.Parse(match.Groups[propName].Value) : 0;
+                return match.Success ? match.Groups[propName].Value.ParseUInt64Invariant() : 0;
             }
         }
 

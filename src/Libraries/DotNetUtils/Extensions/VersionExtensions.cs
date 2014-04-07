@@ -42,7 +42,7 @@ namespace DotNetUtils.Extensions
         public static int GetId(this Version version)
         {
             var v = version;
-            return int.Parse(string.Format("{0:D2}{1:D2}{2:D2}{3:D2}", v.Major, v.Minor, v.Build, v.Revision));
+            return string.Format("{0:D2}{1:D2}{2:D2}{3:D2}", v.Major, v.Minor, v.Build, v.Revision).ParseIntInvariant();
         }
     }
 }

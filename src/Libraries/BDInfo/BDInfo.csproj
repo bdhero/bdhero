@@ -71,6 +71,10 @@
     <Compile Include="TSStreamFile.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
+      <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
+      <Name>DotNetUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\I18N\I18N.csproj">
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>

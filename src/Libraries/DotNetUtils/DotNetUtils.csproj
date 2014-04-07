@@ -74,6 +74,7 @@
     <Compile Include="Concurrency\SimplePromise.cs" />
     <Compile Include="Concurrency\UIInvoker.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Crypto\CryptoHashAlgorithm.cs" />
     <Compile Include="Crypto\CryptoHashInput.cs" />

@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using OSUtils.JobObjects;
 using ProcessUtils;
@@ -374,13 +375,13 @@ namespace BDHero.Plugin.FFmpegMuxer
             }
 
             if (FrameRegex.IsMatch(line))
-                CurFrame = long.Parse(FrameRegex.Match(line).Groups[1].Value);
+                CurFrame = GetLong(FrameRegex, line);
             else if (FpsRegex.IsMatch(line))
-                CurFps = double.Parse(FpsRegex.Match(line).Groups[1].Value);
+                CurFps = GetDouble(FpsRegex, line);
             else if (TotalSizeRegex.IsMatch(line))
-                CurSize = long.Parse(TotalSizeRegex.Match(line).Groups[1].Value);
+                CurSize = GetLong(TotalSizeRegex, line);
             else if (OutTimeMsRegex.IsMatch(line))
-                CurOutTimeMs = long.Parse(OutTimeMsRegex.Match(line).Groups[1].Value) / 1000;
+                CurOutTimeMs = GetLong(OutTimeMsRegex, line) / 1000;
 
             var prevProgress = _progress;
 
@@ -389,6 +390,16 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             if ("progress=end" == line)
                 _progress = 100;
+        }
+
+        private static long GetLong(Regex regex, string line)
+        {
+            return regex.Match(line).Groups[1].Value.ParseLongInvariant();
+        }
+
+        private static double GetDouble(Regex regex, string line)
+        {
+            return regex.Match(line).Groups[1].Value.ParseDoubleInvariant();
         }
 
         private FileStream CreateProgressFileStream()

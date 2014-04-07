@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DotNetUtils.Extensions;
 using I18N;
 using NativeAPI.Win.Kernel;
 
@@ -571,9 +572,9 @@ namespace BDInfo
 
                         foreach (Match titleMatch in titleMatches)
                         {
-                            if (titleMatch.Groups[2].ToString().Equals(discName))
+                            if (titleMatch.Groups[2].Value.Equals(discName))
                             {
-                                MainTitleIndex = int.Parse(titleMatch.Groups[1].ToString()) - 1;
+                                MainTitleIndex = titleMatch.Groups[1].Value.ParseIntInvariant() - 1;
                                 break;
                             }
                         }
