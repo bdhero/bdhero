@@ -43,6 +43,7 @@ using BDHeroGUI.Helpers;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
+using DotNetUtils.Exceptions;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using log4net;

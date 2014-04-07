@@ -20,10 +20,10 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using BDHero.BDROM;
-using BDHero.Exceptions;
 using BDHero.Plugin.DiscReader.Transformer;
 using BDInfo;
 using DotNetUtils.Annotations;
+using DotNetUtils.Exceptions;
 
 namespace BDHero.Plugin.DiscReader
 {

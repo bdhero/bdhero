@@ -1,7 +1,11 @@
 ﻿using System;
 
-namespace BDHero.Exceptions
+// ReSharper disable InconsistentNaming
+namespace DotNetUtils.Exceptions
 {
+    /// <summary>
+    ///     Indicates user error.
+    /// </summary>
     public class ID10TException : Exception
     {
         public ID10TException()
