@@ -66,6 +66,10 @@
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>
       <Name>BDHero</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\DotNetUtils\DotNetUtils.csproj">
+      <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
+      <Name>DotNetUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\ProcessUtils\ProcessUtils.csproj">
       <Project>{896F47DD-A9FC-413C-B125-8E999F72E101}</Project>
       <Name>ProcessUtils</Name>

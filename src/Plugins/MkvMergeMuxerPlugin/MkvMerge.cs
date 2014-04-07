@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using DotNetUtils.Extensions;
 using ProcessUtils;
 
 namespace BDHero.Plugin.MkvMergeMuxer
@@ -91,7 +92,7 @@ namespace BDHero.Plugin.MkvMergeMuxer
             if (Regex.IsMatch(line, progressRegex))
             {
                 var match = Regex.Match(line, progressRegex);
-                Double.TryParse(match.Groups[1].Value, out _progress);
+                match.Groups[1].Value.TryParseDoubleInvariant(out _progress);
             }
             else if (Regex.IsMatch(line, errorRegex))
             {

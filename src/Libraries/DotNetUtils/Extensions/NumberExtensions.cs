@@ -109,5 +109,24 @@ namespace DotNetUtils.Extensions
         {
             return double.Parse(str, InvariantCulture);
         }
+
+        /// <summary>
+        ///     Converts the string representation of a number in a culture-invariant format to its double-precision floating-point number equivalent.
+        ///     A return value indicates whether the conversion succeeded or failed.
+        /// </summary>
+        /// <param name="result">
+        ///     When this method returns, contains a double-precision floating-point number equivalent to the numeric value
+        ///     or symbol contained in the string, if the conversion succeeded, or zero if the conversion failed.
+        ///     The conversion fails if the the string is <c>null</c>, is not in a compliant format, or represents
+        ///     a number less than <see cref="double.MinValue"/> or greater than <see cref="double.MaxValue"/>.
+        ///     This parameter is passed uninitialized. 
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the string was converted successfully; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool TryParseDoubleInvariant(this string str, out double result)
+        {
+            return double.TryParse(str, NumberStyles.Float | NumberStyles.AllowThousands, InvariantCulture, out result);
+        }
     }
 }
