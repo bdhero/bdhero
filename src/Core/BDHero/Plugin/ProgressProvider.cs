@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Timers;
+using DotNetUtils.Exceptions;
 using DotNetUtils.TaskUtils;
 
 namespace BDHero.Plugin
@@ -640,6 +641,16 @@ namespace BDHero.Plugin
                     string.Format("Unable to switch to {0} state: must be in {1} or {2} state, but object is in {3} state",
                                   ProgressProviderState.Error, ProgressProviderState.Ready,
                                   ProgressProviderState.Running, State));
+            }
+
+            // Sanity check.
+            // This shouldn't ever happen, but it *might* if the thread timing is just right
+            // (e.g., https://github.com/bdhero/bdhero/issues/21)
+            if (ExceptionUtils.IsCanceled(exception))
+            {
+                Logger.Warn("Ignoring OperationCanceledException and invoking Cancel() method");
+                Cancel();
+                return;
             }
 
             _timer.Stop();
