@@ -73,6 +73,7 @@
     <Compile Include="Concurrency\PromiseDelegates.cs" />
     <Compile Include="Concurrency\SimplePromise.cs" />
     <Compile Include="Concurrency\UIInvoker.cs" />
+    <Compile Include="Exceptions\ExceptionUtils.cs" />
     <Compile Include="Exceptions\ID10TException.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
