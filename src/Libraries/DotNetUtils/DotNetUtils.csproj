@@ -106,6 +106,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\ReportableException.cs" />
     <Compile Include="SmartJsonConvert.cs" />
     <Compile Include="TaskUtils\ProgressEstimator.cs" />
     <Compile Include="TaskUtils\ProgressSample.cs" />
