@@ -185,9 +185,8 @@ namespace ProcessUtils
             catch (Exception e)
             {
                 Logger.Error("Error occurred while starting/running NonInteractiveProcess", e);
-                Kill();
                 Exception = e;
-                State = NonInteractiveProcessState.Error;
+                Kill(true);
                 ProcessOnExited();
                 throw;
             }
@@ -274,8 +273,22 @@ namespace ProcessUtils
         /// </summary>
         public void Kill()
         {
-            if (!CanKill) return;
-            Logger.InfoFormat("Killing process \"{0}\" w/ PID = {1}...", ExePath, Id);
+            Kill(false);
+        }
+
+        /// <summary>
+        /// Manually aborts the process immediately.
+        /// </summary>
+        /// <param name="dueToError">
+        /// Indicates that the process is being killed programmatically due to an error rather than by user action.
+        /// </param>
+        public void Kill(bool dueToError)
+        {
+            if (!CanKill)
+                return;
+
+            Logger.InfoFormat("Killing process \"{0}\" w/ PID = {1}{2}...", ExePath, Id, dueToError ? " due to an error being thrown" : "");
+
             try
             {
                 GetProcess().Kill();
@@ -284,7 +297,8 @@ namespace ProcessUtils
             {
                 Logger.WarnFormat("Unable to kill process \"{0}\": Exception was thrown:\n{1}", ExePath, exception);
             }
-            State = NonInteractiveProcessState.Killed;
+
+            State = dueToError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Killed;
         }
 
         private bool IsValidProcess
