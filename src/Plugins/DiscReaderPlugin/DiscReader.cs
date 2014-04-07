@@ -87,6 +87,7 @@ namespace BDHero.Plugin.DiscReader
             catch (Exception e)
             {
                 if (e is ArgumentException ||
+                    e is UnauthorizedAccessException ||
                     e is IOException)
                 {
                     throw new ID10TException(e.Message, e);
