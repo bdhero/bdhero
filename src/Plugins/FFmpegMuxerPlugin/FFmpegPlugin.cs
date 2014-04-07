@@ -151,15 +151,22 @@ namespace BDHero.Plugin.FFmpegMuxer
         private void FFmpegOnExited(NonInteractiveProcessState state, int exitCode, Exception exception, TimeSpan runTime)
         {
             Logger.InfoFormat("FFmpeg exited with state {0} and code {1}", state, exitCode);
-            if (state != NonInteractiveProcessState.Completed)
+
+            _exception = _exception ?? exception;
+
+            if (_exception == null && state != NonInteractiveProcessState.Completed)
             {
-                if (state == NonInteractiveProcessState.Killed)
+                try
                 {
-                    _exception = exception ?? new OperationCanceledException("FFmpeg was canceled");
+                    if (state == NonInteractiveProcessState.Killed)
+                    {
+                        throw new FFmpegException("FFmpeg was canceled", new OperationCanceledException());
+                    }
+                    throw new FFmpegException(string.Format("FFmpeg exited with state: {0}", state));
                 }
-                else
+                catch (FFmpegException e)
                 {
-                    _exception = exception ?? new FFmpegException(string.Format("FFmpeg exited with state: {0}", state));
+                    _exception = e;
                 }
             }
 
