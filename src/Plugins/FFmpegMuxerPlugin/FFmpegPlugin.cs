@@ -162,6 +162,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                     _exception = exception ?? new FFmpegException(string.Format("FFmpeg exited with state: {0}", state));
                 }
             }
+
             SignalThreadExited();
         }
 
