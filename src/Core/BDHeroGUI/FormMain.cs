@@ -593,7 +593,7 @@ namespace BDHeroGUI
 
             dialog.AddResultVisitor(this);
 
-            if (isReportable && !IsID10TError(exception))
+            if (isReportable && ExceptionUtils.IsReportable(exception))
             {
                 dialog.ShowReportable(this);
             }
@@ -635,25 +635,6 @@ namespace BDHeroGUI
                 .AddLink("(details)", (sender, args) => ShowNonReportableErrorDialog(result.Exception))
                 .Build();
             statusStrip1.Items.Add(panel);
-        }
-
-        /// <summary>
-        ///     Determines if the given exception is likely due to user error (ID10T).
-        /// </summary>
-        /// <param name="e">
-        ///     Exception that was thrown elsewhere in the application.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the given exception is likely due to user error; otherwise <c>false</c>.
-        /// </returns>
-        private static bool IsID10TError(Exception e)
-        {
-            return (e is ID10TException ||
-                    e is DirectoryNotFoundException ||
-                    e is DriveNotFoundException ||
-                    e is FileNotFoundException ||
-                    e is PathTooLongException ||
-                    e is WebException);
         }
 
         #endregion
