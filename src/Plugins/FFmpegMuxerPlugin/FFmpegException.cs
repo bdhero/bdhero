@@ -1,8 +1,9 @@
 ﻿using System;
+using DotNetUtils.Exceptions;
 
 namespace BDHero.Plugin.FFmpegMuxer
 {
-    public class FFmpegException : Exception
+    public class FFmpegException : ReportableException
     {
         public FFmpegException()
         {
