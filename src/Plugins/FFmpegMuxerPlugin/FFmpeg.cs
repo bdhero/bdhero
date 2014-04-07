@@ -130,7 +130,10 @@ namespace BDHero.Plugin.FFmpegMuxer
             try
             {
                 // Preserve stack trace by throwing and catching exception
-                throw new FFmpegException(string.Join(Environment.NewLine, _errors));
+                throw new FFmpegException(string.Join(Environment.NewLine, _errors))
+                      {
+                          IsReportable = true
+                      };
             }
             catch (FFmpegException e)
             {

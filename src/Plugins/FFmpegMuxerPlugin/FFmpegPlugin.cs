@@ -160,9 +160,15 @@ namespace BDHero.Plugin.FFmpegMuxer
                 {
                     if (state == NonInteractiveProcessState.Killed)
                     {
-                        throw new FFmpegException("FFmpeg was canceled", new OperationCanceledException());
+                        throw new FFmpegException("FFmpeg was canceled", new OperationCanceledException())
+                              {
+                                  IsReportable = false
+                              };
                     }
-                    throw new FFmpegException(string.Format("FFmpeg exited with state: {0}", state));
+                    throw new FFmpegException(string.Format("FFmpeg exited with state: {0}", state))
+                          {
+                              IsReportable = true
+                          };
                 }
                 catch (FFmpegException e)
                 {
