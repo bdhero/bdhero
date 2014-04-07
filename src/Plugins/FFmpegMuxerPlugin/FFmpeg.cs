@@ -350,6 +350,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             if (args.Error != null)
             {
+                Logger.Error("Error occurred in _progressWorker.DoWork", args.Error);
                 Exception = args.Error;
                 Kill();
             }
