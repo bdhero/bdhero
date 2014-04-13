@@ -22,7 +22,7 @@ namespace DotNetUtils.Exceptions
         /// </returns>
         public static bool IsReportable(Exception exception)
         {
-            if (!IsReportableImpl(exception))
+            if (IsNonReportable(exception))
                 return false;
 
             if (IsCanceled(exception))
@@ -34,17 +34,17 @@ namespace DotNetUtils.Exceptions
             return true;
         }
 
-        private static bool IsReportableImpl(Exception exception)
+        private static bool IsNonReportable(Exception exception)
         {
             while (exception != null)
             {
                 var reportableException = exception as ReportableException;
                 if (reportableException != null && reportableException.IsReportable == false)
-                    return false;
+                    return true;
 
                 exception = exception.InnerException;
             }
-            return true;
+            return false;
         }
 
         /// <summary>
