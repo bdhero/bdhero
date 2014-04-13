@@ -22,6 +22,20 @@ namespace DotNetUtils.Exceptions
         /// </returns>
         public static bool IsReportable(Exception exception)
         {
+            if (!IsReportableImpl(exception))
+                return false;
+
+            if (IsCanceled(exception))
+                return false;
+
+            if (IsUserError(exception))
+                return false;
+
+            return true;
+        }
+
+        private static bool IsReportableImpl(Exception exception)
+        {
             while (exception != null)
             {
                 var reportableException = exception as ReportableException;
@@ -30,13 +44,6 @@ namespace DotNetUtils.Exceptions
 
                 exception = exception.InnerException;
             }
-
-            if (IsCanceled(exception))
-                return false;
-
-            if (IsUserError(exception))
-                return false;
-
             return true;
         }
 
