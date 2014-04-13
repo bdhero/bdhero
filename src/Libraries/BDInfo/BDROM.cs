@@ -245,18 +245,18 @@ namespace BDInfo
         {
             if (ScanProgress != null)
                 ScanProgress(new BDROMScanProgressState
-                                        {
-                                            FileType = fileType,
-                                            FileName = fileName,
-                                            CurStep = curStep,
-                                            NumSteps = 3,
-                                            CurFileOfType = curFileOfType,
-                                            NumFilesOfType = numFilesOfType,
-                                            CompletedFilesOfType = completedFilesOfType,
-                                            CurFileOverall = curFileOverall,
-                                            NumFilesOverall = numFilesOverall,
-                                            CompletedFilesOverall = completedFilesOverall
-                                        });
+                             {
+                                 FileType = fileType,
+                                 FileName = fileName,
+                                 CurStep = curStep,
+                                 NumSteps = 3,
+                                 CurFileOfType = curFileOfType,
+                                 NumFilesOfType = numFilesOfType,
+                                 CompletedFilesOfType = completedFilesOfType,
+                                 CurFileOverall = curFileOverall,
+                                 NumFilesOverall = numFilesOverall,
+                                 CompletedFilesOverall = completedFilesOverall
+                             });
         }
 
         public event BDROMScanProgressHandler ScanProgress;
