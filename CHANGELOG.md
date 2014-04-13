@@ -1,9 +1,12 @@
 BDHero Changelog
 ================
 
-0.9.0.6 - 2014-04-xx
+0.9.0.6 - 2014-04-07
 --------------------
 
+*   Fix: #19 and #21: Number parsing bug with non-US cultures
+*   Fix: #22: Invalid exception (due to user error) could be reported
+*   Improve: Better exception handling in FFmpeg muxer plugin
 *   Improve: Better log output
 
 0.9.0.5 - 2014-04-04

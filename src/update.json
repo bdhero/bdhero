@@ -1,6 +1,6 @@
 {
-  "version": "0.9.0.5",
-  "date": "2014-04-04T15:59:20.5559284-05:00",
+  "version": "0.9.0.6",
+  "date": "2014-04-07T18:10:56.5493232-05:00",
   "mirrors": [
     "http://dl.cdn.bdhero.org/"
   ],
@@ -8,14 +8,14 @@
     "windows": {
       "packages": {
         "setup": {
-          "filename": "bdhero-0.9.0.5-setup.exe",
-          "sha1": "804c70d6c51ef351eb75ca6ef52e0d1eb24ff63d",
-          "size": 12712136
+          "filename": "bdhero-0.9.0.6-setup.exe",
+          "sha1": "18ec7e5ec5aea2548ff5f9e9c799d65cdab559c5",
+          "size": 12722304
         },
         "portable": {
-          "filename": "bdhero-0.9.0.5.zip",
-          "sha1": "c53adb884a3770419290b7b3bae5de81eedefb6d",
-          "size": 16245674
+          "filename": "bdhero-0.9.0.6.zip",
+          "sha1": "f76a21d4ef6e648ede1c453021687fbd8866b2ef",
+          "size": 16256899
         }
       }
     }
