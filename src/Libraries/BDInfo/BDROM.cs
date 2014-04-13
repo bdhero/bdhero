@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DotNetUtils.Exceptions;
 using DotNetUtils.Extensions;
 using I18N;
 using NativeAPI.Win.Kernel;
@@ -112,6 +113,8 @@ namespace BDInfo
             {
                 throw new IOException("Unable to locate BD structure.");
             }
+
+            VerifyUnencrypted(DirectoryBDMV.Parent);
 
             DirectoryRoot = 
                 DirectoryBDMV.Parent;
@@ -236,6 +239,15 @@ namespace BDInfo
                     InterleavedFiles.Add(
                         file.Name.ToUpper(), new TSInterleavedFile(file));
                 }
+            }
+        }
+
+        private void VerifyUnencrypted(DirectoryInfo root)
+        {
+            if (GetDirectory("AACS",  root, 0) != null ||
+                GetDirectory("BDSVM", root, 0) != null)
+            {
+                throw new ID10TException("Unable to read encrypted disc.");
             }
         }
 
