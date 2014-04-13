@@ -156,6 +156,9 @@ namespace BDInfo
     /// </summary>
     public class TSStreamFile
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public FileInfo FileInfo = null;
         public string Name = null;
         public long Size = 0;
@@ -868,7 +871,9 @@ namespace BDInfo
                                         catch (Exception ex)
                                         {
                                             // TODO
-                                            Console.WriteLine(ex.Message);
+//                                            Console.WriteLine(ex.Message);
+
+                                            Logger.Warn("Exception thrown while parsing Program Map Tables (PMTs) - ignoring", ex);
                                         }
                                     }
                                 }
