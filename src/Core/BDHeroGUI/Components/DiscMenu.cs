@@ -161,23 +161,27 @@ namespace BDHeroGUI.Components
 
         #region Event handlers
 
-        private void OnDeviceArrived(object sender, DriveDetectorEventArgs driveDetectorEventArgs)
+        private void OnDeviceArrived(object sender, DriveDetectorEventArgs args)
         {
+            Logger.InfoFormat("Device arrived: {0}", args.DriveInfo);
             Refresh();
         }
 
-        private void OnDeviceRemoved(object sender, DriveDetectorEventArgs driveDetectorEventArgs)
+        private void OnDeviceRemoved(object sender, DriveDetectorEventArgs args)
         {
+            Logger.InfoFormat("Device removed: {0}", args.DriveInfo);
             Refresh();
         }
 
         private void OnDropDownOpened(object sender, EventArgs eventArgs)
         {
+            Logger.Debug("DropDown opened");
             Refresh();
         }
 
         private void OnDropDownClosed(object sender, EventArgs eventArgs)
         {
+            Logger.Debug("DropDown closed");
         }
 
         private void WndProc(ref Message m, HandledEventArgs args)
@@ -212,11 +216,11 @@ namespace BDHeroGUI.Components
         {
             if (_isScanning)
             {
-                Logger.Debug("Already scanning for discs; ignoring");
+                Logger.Info("Already scanning for discs; ignoring");
                 return;
             }
 
-            Logger.Debug("Scanning for discs...");
+            Logger.Info("Scanning for discs...");
 
             _isScanning = true;
 
@@ -260,7 +264,7 @@ namespace BDHeroGUI.Components
 
         private void UpdateMenu(ToolStripItem[] menuItems)
         {
-            Logger.DebugFormat("Found {0} discs", menuItems.Length);
+            Logger.InfoFormat("Found {0} discs", menuItems.Length);
 
             var selectionState = new MenuSelectionState(AllMenuItems);
 
