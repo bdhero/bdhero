@@ -113,7 +113,12 @@ namespace ChapterGrabberPlugin
         private static List<JsonChaps> GetChapters(string movieName)
         {
             var movieSearchResults = new List<JsonChaps>();
-            var headers = new List<string> { string.Format("ApiKey: {0}", ApiKey), string.Format("UserName: {0}", Username) };
+            var headers = new List<string>
+                          {
+                              string.Format("ApiKey: {0}", ApiKey),
+                              string.Format("UserName: {0}", Username)
+                          };
+
             var doc = new XmlDocument();
             
             try
