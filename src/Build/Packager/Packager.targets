@@ -69,7 +69,7 @@
 
     <!-- Core files -->
     <PropertyGroup>
-        <CoreBinariesStr>$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll;$(PackagerTargetDir)\BDInfo.pdb</CoreBinariesStr>
+        <CoreBinariesStr>$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll;$(PackagerTargetDir)\BDInfo.pdb;$(RootDir)\LICENSE*</CoreBinariesStr>
         <ConfigFilesStr>$(PackagerTargetDir)\Config\**\*.*</ConfigFilesStr>
         <ProgramFilesStr>$(ProgramFilesDir)\*.*</ProgramFilesStr>
     </PropertyGroup>
