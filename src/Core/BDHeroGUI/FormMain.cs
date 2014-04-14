@@ -16,20 +16,17 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BDHero;
 using BDHero.BDROM;
 using BDHero.ErrorReporting;
-using BDHero.Exceptions;
 using BDHero.JobQueue;
 using BDHero.Plugin;
 using BDHero.Prefs;
