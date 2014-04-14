@@ -47,7 +47,6 @@ using DotNetUtils.Exceptions;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using log4net;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
@@ -136,8 +135,6 @@ namespace BDHeroGUI
             {
                 textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
             }
-
-            InitTaskBarId();
 
             toolsToolStripMenuItem.Visible = false;
             debugToolStripMenuItem.Visible = _appConfig.IsDebugMode;
@@ -279,21 +276,6 @@ namespace BDHeroGUI
         }
 
         #region Initialization
-
-        #region Taskbar ID
-
-        private static void InitTaskBarId()
-        {
-            if (!TaskbarManager.IsPlatformSupported)
-                return;
-
-            var manager = TaskbarManager.Instance;
-            manager.ApplicationId = string.Format("{0}.{1}.{2}.{3:s}",
-                                                  AppUtils.ProductName, AppUtils.AppName,
-                                                  AppUtils.AppVersion, AppUtils.BuildDate);
-        }
-
-        #endregion
 
         #region Logging
 
