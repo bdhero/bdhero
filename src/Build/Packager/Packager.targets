@@ -69,20 +69,20 @@
 
     <!-- Core files -->
     <PropertyGroup>
-        <CoreBinariesStr>$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll</CoreBinariesStr>
+        <CoreBinariesStr>$(PackagerTargetDir)\*.exe;$(PackagerTargetDir)\*.dll;$(PackagerTargetDir)\BDInfo.pdb</CoreBinariesStr>
         <ConfigFilesStr>$(PackagerTargetDir)\Config\**\*.*</ConfigFilesStr>
         <ProgramFilesStr>$(ProgramFilesDir)\*.*</ProgramFilesStr>
     </PropertyGroup>
 
     <!-- Plugin files -->
     <ItemGroup>
-        <DiscReaderSourceFiles Include="$(DiscReaderSourceDir)\DiscReaderPlugin.dll;$(DiscReaderSourceDir)\INIFileParser.dll" />
+        <DiscReaderSourceFiles Include="$(DiscReaderSourceDir)\DiscReaderPlugin.*;$(DiscReaderSourceDir)\INIFileParser.dll" />
         <TmdbSourceFiles Include="$(TmdbSourceDir)\TmdbPlugin.dll;$(TmdbSourceDir)\RestSharp.dll;$(TmdbSourceDir)\WatTmdb.dll" />
         <ChapterGrabberSourceFiles Include="$(ChapterGrabberSourceDir)\ChapterGrabberPlugin.dll" />
         <IsanSourceFiles Include="$(IsanSourceDir)\IsanPlugin.dll;$(IsanSourceDir)\CsQuery.dll" />
         <AutoDetectorSourceFiles Include="$(AutoDetectorSourceDir)\AutoDetectorPlugin.dll" />
         <FileNamerSourceFiles Include="$(FileNamerSourceDir)\FileNamerPlugin.dll" />
-        <FFmpegSourceFiles Include="$(FFmpegSourceDir)\FFmpegMuxerPlugin.dll;$(FFmpegSourceDir)\*.exe" />
+        <FFmpegSourceFiles Include="$(FFmpegSourceDir)\FFmpegMuxerPlugin.*;$(FFmpegSourceDir)\*.exe" />
     </ItemGroup>
 
     <Target Name="PackagerClean" AfterTargets="Clean">
