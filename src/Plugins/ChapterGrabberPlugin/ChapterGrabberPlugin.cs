@@ -147,13 +147,20 @@ namespace ChapterGrabberPlugin
 
             if (doc.DocumentElement != null)
             {
-                foreach (var node in doc.DocumentElement)
+                foreach (var node in doc.DocumentElement.OfType<XmlElement>())
                 {
-                    var jsonText = Regex.Replace(JsonConvert.SerializeXmlNode((XmlElement) node, Formatting.Indented),
-                                                 "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
+                    var jsonText = JsonConvert.SerializeXmlNode(node, Formatting.Indented);
+                    jsonText = Regex.Replace(jsonText, "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
                     jsonText = jsonText.Replace("?xml", "xml");
 
-                    movieSearchResults.Add(JsonConvert.DeserializeObject<JsonChaps>(jsonText));
+                    try
+                    {
+                        movieSearchResults.Add(JsonConvert.DeserializeObject<JsonChaps>(jsonText));
+                    }
+                    catch (JsonSerializationException)
+                    {
+                        // Junk data - ignore and continue
+                    }
                 }
             }
            
