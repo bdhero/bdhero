@@ -63,6 +63,48 @@ namespace DotNetUtils.FS
             return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
         }
 
+        /// <seealso cref="http://stackoverflow.com/a/398512/467582"/>
+        public static string Tail(string path, string tokenSeparator, Int64 numberOfTokens, Encoding encoding)
+        {
+            int sizeOfChar = encoding.GetByteCount("\n");
+            byte[] buffer = encoding.GetBytes(tokenSeparator);
+
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                Int64 tokenCount = 0;
+                Int64 endPosition = fs.Length / sizeOfChar;
+
+                for (Int64 position = sizeOfChar; position < endPosition; position += sizeOfChar)
+                {
+                    fs.Seek(-position, SeekOrigin.End);
+                    fs.Read(buffer, 0, buffer.Length);
+
+                    if (encoding.GetString(buffer) == tokenSeparator)
+                    {
+                        tokenCount++;
+                        if (tokenCount == numberOfTokens)
+                        {
+                            byte[] returnBuffer = new byte[fs.Length - fs.Position];
+                            fs.Read(returnBuffer, 0, returnBuffer.Length);
+                            return encoding.GetString(returnBuffer);
+                        }
+                    }
+                }
+
+                // handle case where number of tokens in file is less than numberOfTokens
+                fs.Seek(0, SeekOrigin.Begin);
+                buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                return encoding.GetString(buffer);
+            }
+        }
+
+        // TODO: Figure out why blank lines are being returned in between every line
+        public static string[] Tail(string path, Int64 numLines, string newLine = "\n")
+        {
+            return Tail(path, newLine, numLines, Encoding.UTF8).Split(newLine.ToCharArray());
+        }
+
         #endregion
 
         #region Detect encoding
