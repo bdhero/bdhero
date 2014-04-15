@@ -63,7 +63,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         public long CurSize { get; private set; }
         public long CurOutTimeMs { get; private set; }
 
-        private readonly IList<string> _errors = new List<string>();
+        private readonly IList<string> _stdErr = new List<string>();
 
         private readonly BackgroundWorker _progressWorker = new BackgroundWorker();
 
@@ -353,10 +353,10 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private void LogStdErr()
         {
-            if (!_errors.Any())
+            if (!_stdErr.Any())
                 return;
 
-            Logger.WarnFormat("StdErr:\n{0}", Indent(_errors));
+            Logger.WarnFormat("StdErr:\n{0}", Indent(_stdErr));
         }
 
         private void LogDumpFile()
@@ -446,7 +446,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                 return;
             }
 
-            _errors.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
+            _stdErr.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
 
             Logger.Error(line);
 
