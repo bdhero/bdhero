@@ -112,8 +112,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static void Log(Job job, FFmpeg ffmpeg)
         {
             Logger.InfoFormat("FFmpeg was invoked with: {0}", ffmpeg.FullCommand);
-            ffmpeg.LogTracks();
             LogSelectedReleaseMedium(job);
+            ffmpeg.LogDebugInfo();
         }
 
         private static void LogSelectedReleaseMedium(Job job)
