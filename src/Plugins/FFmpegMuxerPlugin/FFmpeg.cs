@@ -175,7 +175,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         /// <seealso cref="http://ffmpeg.org/ffmpeg.html#Generic-options"/>
         private void SetFFmpegLogLevel(bool compressRepeatedLogMessages = true)
         {
-            const string level = "fatal";
+            const string level = "error";
             var value = compressRepeatedLogMessages ? level : string.Format("repeat+{0}", level);
             Arguments.AddAll("-report", "-loglevel", value);
         }
