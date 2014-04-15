@@ -432,7 +432,8 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private void OnStdErr(string line)
         {
-            if (string.IsNullOrWhiteSpace(line)) return;
+            if (string.IsNullOrWhiteSpace(line))
+                return;
 
             _errors.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
 
