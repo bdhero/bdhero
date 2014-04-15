@@ -99,47 +99,10 @@ namespace BDHero.Plugin.FFmpegMuxer
             StdErr += OnStdErr;
             Exited += (state, code, exception, time) => OnExited(state, code, job.SelectedReleaseMedium, playlist, _selectedTracks, outputMKVPath);
 
-            LogTracks();
+            LogDebugInfo();
         }
 
-        public void LogTracks()
-        {
-            var tracks = new List<string>();
-            foreach (var track in _playlist.Tracks)
-            {
-                var index = _indexer[track];
-                tracks.Add(string.Format("Track w/ stream PID {0} (0x{0:x4}): index {1,2:D} => {2,2:D} [{3}] ({4}, {5})",
-                                         track.PID,
-                                         index.InputIndex,
-                                         index.OutputIndex,
-                                         track.Keep ? "X" : " ",
-                                         track.Language.ISO_639_2,
-                                         track.Codec));
-            }
-            Logger.InfoFormat("Tracks:\n{0}", string.Join("\n", tracks));
-        }
-
-        private void OnStdErr(string line)
-        {
-            if (string.IsNullOrWhiteSpace(line)) return;
-
-            _errors.Add(line);
-
-            Logger.Error(line);
-
-            try
-            {
-                // Preserve stack trace by throwing and catching exception
-                throw new FFmpegException(string.Join(Environment.NewLine, _errors))
-                      {
-                          IsReportable = true
-                      };
-            }
-            catch (FFmpegException e)
-            {
-                Exception = e;
-            }
-        }
+        #region Validation
 
         private void VerifyInputPaths()
         {
@@ -153,10 +116,20 @@ namespace BDHero.Plugin.FFmpegMuxer
                 throw new ArgumentOutOfRangeException("At least one track must be selected.");
         }
 
-        private static string GetInputFiles(IList<string> inputM2TsPaths)
+        #endregion
+
+        #region EXE locator
+
+        private void SetExePath()
         {
-            return inputM2TsPaths.Count == 1 ? inputM2TsPaths[0] : "concat:" + string.Join("|", inputM2TsPaths);
+            var assemblyPath = Assembly.GetExecutingAssembly().Location;
+            var ffmpegAssemblyDir = Path.GetDirectoryName(assemblyPath);
+            ExePath = Path.Combine(ffmpegAssemblyDir, FFmpegExeFilename);
         }
+
+        #endregion
+
+        #region Arguments
 
         /// <summary>
         /// `-loglevel [repeat+]loglevel | -v [repeat+]loglevel`
@@ -212,6 +185,10 @@ namespace BDHero.Plugin.FFmpegMuxer
             Arguments.AddAll("-progress", _progressFilePath);
         }
 
+        #region Input files
+
+        #region V2 - Text file
+
         /// <summary>
         ///     New input file list implementation.  Writes the list of input M2TS files to a temporary text file
         ///     and passes the path to the text file in to the FFmpeg CLI.  Avoids the 8191 character limit
@@ -238,6 +215,10 @@ namespace BDHero.Plugin.FFmpegMuxer
             return string.Format("file '{0}'", m2tsPath);
         }
 
+        #endregion
+
+        #region V1 - Command line
+
         /// <summary>
         ///     Original input file list implementation.  Passes the concatenated list of input files directly to the
         ///     FFmpeg CLI.  Simple and easy to use, but complex Blu-ray playlists with many .m2ts files may cause an
@@ -250,6 +231,15 @@ namespace BDHero.Plugin.FFmpegMuxer
             var inputFiles = GetInputFiles(_inputM2TSPaths);
             Arguments.AddAll("-i", inputFiles);
         }
+
+        private static string GetInputFiles(IList<string> inputM2TsPaths)
+        {
+            return inputM2TsPaths.Count == 1 ? inputM2TsPaths[0] : "concat:" + string.Join("|", inputM2TsPaths);
+        }
+
+        #endregion
+
+        #endregion
 
         private void SetMovieTitle(Job job)
         {
@@ -289,11 +279,11 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             var index = _indexer[track];
             return new[]
-                       {
-                           "-map", "0:" + index.InputIndex,
-                           "-metadata:s:" + index.OutputIndex, "language=" + track.Language.ISO_639_2,
-                           "-metadata:s:" + index.OutputIndex, "title=" + track.Title
-                       };
+                   {
+                       "-map", "0:" + index.InputIndex,
+                       "-metadata:s:" + index.OutputIndex, "language=" + track.Language.ISO_639_2,
+                       "-metadata:s:" + index.OutputIndex, "title=" + track.Title
+                   };
         }
 
         private void CopyAllCodecs()
@@ -328,6 +318,101 @@ namespace BDHero.Plugin.FFmpegMuxer
             Arguments.Add(_outputMKVPath);
         }
 
+        #endregion
+
+        #region Logging
+
+        public void LogDebugInfo()
+        {
+            LogTracks();
+            LogStdErr();
+        }
+
+        private void LogTracks()
+        {
+            var tracks = new List<string>();
+            foreach (var track in _playlist.Tracks)
+            {
+                var index = _indexer[track];
+                tracks.Add(string.Format("Track w/ stream PID {0} (0x{0:x4}): index {1,2:D} => {2,2:D} [{3}] ({4}, {5})",
+                                         track.PID,
+                                         index.InputIndex,
+                                         index.OutputIndex,
+                                         track.Keep ? "X" : " ",
+                                         track.Language.ISO_639_2,
+                                         track.Codec));
+            }
+            Logger.InfoFormat("Tracks:\n{0}", Indent(tracks));
+        }
+
+        private void LogStdErr()
+        {
+            if (!_errors.Any())
+                return;
+
+            Logger.WarnFormat("StdErr:\n{0}", Indent(_errors));
+        }
+
+        private static void LogExit(NonInteractiveProcessState processState, int exitCode)
+        {
+            const string message = "FFmpeg exited with state {0} and code {1}";
+            switch (processState)
+            {
+                case NonInteractiveProcessState.Completed:
+                    Logger.InfoFormat(message, processState, exitCode);
+                    break;
+                case NonInteractiveProcessState.Killed:
+                    Logger.WarnFormat(message, processState, exitCode);
+                    break;
+                default:
+                    Logger.ErrorFormat(message, processState, exitCode);
+                    break;
+            }
+        }
+
+        private static string Indent(IEnumerable<string> lines)
+        {
+            var filtered = lines.Where(line => !string.IsNullOrWhiteSpace(line))
+                                .Select(Indent)
+                                .ToArray();
+            return string.Join(Environment.NewLine, filtered);
+        }
+
+        private static string Indent(string line)
+        {
+            return string.Format("    {0}", line.Trim());
+        }
+
+        #endregion
+
+        #region StdErr
+
+        private void OnStdErr(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line)) return;
+
+            _errors.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
+
+            Logger.Error(line);
+
+            try
+            {
+                // Preserve stack trace by throwing and catching exception
+                throw new FFmpegException(line)
+                      {
+                          IsReportable = true
+                      };
+            }
+            catch (FFmpegException e)
+            {
+                Exception = e;
+            }
+        }
+
+        #endregion
+
+        #region Progress background worker
+
         private void OnBeforeStart(object sender, EventArgs eventArgs)
         {
             _progressWorker.DoWork += ProgressWorkerOnDoWork;
@@ -349,6 +434,14 @@ namespace BDHero.Plugin.FFmpegMuxer
             }
         }
 
+        private FileStream CreateProgressFileStream()
+        {
+            return new FileStream(_progressFilePath,
+                                  FileMode.Open,
+                                  FileAccess.Read,
+                                  FileShare.ReadWrite | FileShare.Delete);
+        }
+
         private void ProgressWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
             if (args.Error != null)
@@ -358,6 +451,10 @@ namespace BDHero.Plugin.FFmpegMuxer
                 Kill(true);
             }
         }
+
+        #endregion
+
+        #region Progress parsing
 
         private bool KeepParsingProgress
         {
@@ -406,20 +503,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             return regex.Match(line).Groups[1].Value.ParseDoubleInvariant();
         }
 
-        private FileStream CreateProgressFileStream()
-        {
-            return new FileStream(_progressFilePath,
-                                  FileMode.Open,
-                                  FileAccess.Read,
-                                  FileShare.ReadWrite | FileShare.Delete);
-        }
+        #endregion
 
-        private void SetExePath()
-        {
-            var assemblyPath = Assembly.GetExecutingAssembly().Location;
-            var ffmpegAssemblyDir = Path.GetDirectoryName(assemblyPath);
-            ExePath = Path.Combine(ffmpegAssemblyDir, FFmpegExeFilename);
-        }
+        #region Exit handling
 
         private void OnExited(NonInteractiveProcessState processState, int exitCode, ReleaseMedium releaseMedium, Playlist playlist, List<Track> selectedTracks, string outputMKVPath)
         {
@@ -441,21 +527,6 @@ namespace BDHero.Plugin.FFmpegMuxer
             mkvPropEdit.Start();
         }
 
-        private static void LogExit(NonInteractiveProcessState processState, int exitCode)
-        {
-            const string message = "FFmpeg exited with state {0} and code {1}";
-            switch (processState)
-            {
-                case NonInteractiveProcessState.Completed:
-                    Logger.DebugFormat(message, processState, exitCode);
-                    break;
-                case NonInteractiveProcessState.Killed:
-                    Logger.WarnFormat(message, processState, exitCode);
-                    break;
-                default:
-                    Logger.ErrorFormat(message, processState, exitCode);
-                    break;
-            }
-        }
+        #endregion
     }
 }
