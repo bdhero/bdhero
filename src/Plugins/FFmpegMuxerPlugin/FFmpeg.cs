@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -54,6 +55,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly ITempFileRegistrar _tempFileRegistrar;
         private readonly string _progressFilePath;
         private readonly string _inputFileListPath;
+        private readonly string _reportDumpFileDir;
         private readonly FFmpegTrackIndexer _indexer;
 
         public long CurFrame { get; private set; }
@@ -64,6 +66,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly IList<string> _errors = new List<string>();
 
         private readonly BackgroundWorker _progressWorker = new BackgroundWorker();
+
+        private string _reportDumpFilePath;
 
         public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
@@ -78,6 +82,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             _progressFilePath = _tempFileRegistrar.CreateTempFile(GetType(), "progress.log");
             _inputFileListPath = _tempFileRegistrar.CreateTempFile(GetType(), "inputFileList.txt");
+            _reportDumpFileDir = Path.GetDirectoryName(_progressFilePath);
             _indexer = new FFmpegTrackIndexer(playlist);
 
             VerifyInputPaths();
@@ -172,7 +177,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             const string level = "fatal";
             var value = compressRepeatedLogMessages ? level : string.Format("repeat+{0}", level);
-            Arguments.AddAll("-loglevel", value);
+            Arguments.AddAll("-report", "-loglevel", value);
         }
 
         private void ReplaceExistingFiles()
@@ -326,6 +331,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             LogTracks();
             LogStdErr();
+            LogDumpFile();
         }
 
         private void LogTracks()
@@ -351,6 +357,16 @@ namespace BDHero.Plugin.FFmpegMuxer
                 return;
 
             Logger.WarnFormat("StdErr:\n{0}", Indent(_errors));
+        }
+
+        private void LogDumpFile()
+        {
+            if (_reportDumpFilePath == null)
+                return;
+
+            var tail = FileUtils.Tail(_reportDumpFilePath, 30, Environment.NewLine);
+            var dump = Indent(tail);
+            Logger.WarnFormat("Report Dump:\n{0}", dump);
         }
 
         private static void LogExit(NonInteractiveProcessState processState, int exitCode)
@@ -381,6 +397,33 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static string Indent(string line)
         {
             return string.Format("    {0}", line.Trim());
+        }
+
+        #endregion
+
+        #region Start
+
+        protected override void OnBeforeStart(Process process)
+        {
+            base.OnBeforeStart(process);
+
+            process.StartInfo.WorkingDirectory = _reportDumpFileDir;
+        }
+
+        protected override void OnStart(Process process)
+        {
+            base.OnStart(process);
+
+            var i = 0;
+            while (_reportDumpFilePath == null && i++ < 10)
+            {
+                _reportDumpFilePath = Directory.GetFiles(_reportDumpFileDir, "ffmpeg*.log").FirstOrDefault();
+
+                if (_reportDumpFilePath == null)
+                {
+                    Thread.Sleep(500);
+                }
+            }
         }
 
         #endregion
