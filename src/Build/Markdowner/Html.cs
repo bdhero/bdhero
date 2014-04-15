@@ -9,6 +9,8 @@
 // ------------------------------------------------------------------------------
 namespace Markdowner
 {
+    using System;
+    
     /// <summary>
     /// Class to produce the template output
     /// </summary>
@@ -23,23 +25,24 @@ namespace Markdowner
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("<!doctype html>\r\n<html>\r\n    <head>\r\n        <title>");
+            this.Write("\n");
+            this.Write("\n<!doctype html>\n<html>\n    <head>\n        <title>");
             
-            #line 6 "C:\projects\bdhero\src\Build\Markdowner\Html.tt"
+            #line 1 "C:\projects\bdhero\src\Build\Markdowner\Html.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_title));
             
             #line default
             #line hidden
-            this.Write("</title>\r\n        <style>\r\n            body {\r\n                font-family: \'Micr" +
-                    "osoft Sans Serif\', Arial, Helvetica, sans-serif;\r\n            }\r\n        </style" +
-                    ">\r\n    </head>\r\n    <body>\r\n");
+            this.Write("</title>\n        <style>\n            body {\n                font-family: \'Microso" +
+                    "ft Sans Serif\', Arial, Helvetica, sans-serif;\n            }\n        </style>\n   " +
+                    " </head>\n    <body>\n");
             
-            #line 14 "C:\projects\bdhero\src\Build\Markdowner\Html.tt"
+            #line 1 "C:\projects\bdhero\src\Build\Markdowner\Html.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(_body));
             
             #line default
             #line hidden
-            this.Write("\r\n    </body>\r\n</html>");
+            this.Write("\n    </body>\n</html>");
             return this.GenerationEnvironment.ToString();
         }
     }
