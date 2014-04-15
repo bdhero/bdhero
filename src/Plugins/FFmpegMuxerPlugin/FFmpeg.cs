@@ -430,10 +430,21 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         #region StdErr
 
+        private static readonly string[] ErrorsToIgnore =
+        {
+            "Not a valid DCA frame"
+        };
+
         private void OnStdErr(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
                 return;
+
+            if (ErrorsToIgnore.Any(line.Contains))
+            {
+                Logger.Warn(line);
+                return;
+            }
 
             _errors.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
 
