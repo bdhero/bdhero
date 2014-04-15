@@ -440,13 +440,13 @@ namespace BDHero.Plugin.FFmpegMuxer
             if (string.IsNullOrWhiteSpace(line))
                 return;
 
+            _stdErr.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
+
             if (ErrorsToIgnore.Any(line.Contains))
             {
                 Logger.Warn(line);
                 return;
             }
-
-            _stdErr.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
 
             Logger.Error(line);
 
