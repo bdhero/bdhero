@@ -192,6 +192,14 @@ namespace ProcessUtils
             }
         }
 
+        protected virtual void OnBeforeStart(Process process)
+        {
+        }
+
+        protected virtual void OnStart(Process process)
+        {
+        }
+
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         private NonInteractiveProcess StartImpl()
@@ -210,6 +218,8 @@ namespace ProcessUtils
                     process.StartInfo.Arguments = Arguments.ToString();
                     process.EnableRaisingEvents = true;
                     process.Exited += ProcessOnExited;
+
+                    OnBeforeStart(process);
 
                     if (BeforeStart != null)
                         BeforeStart(this, EventArgs.Empty);
@@ -243,6 +253,8 @@ namespace ProcessUtils
                     process.BeginErrorReadLine();
 
                     Logger.InfoFormat("Waiting for process \"{0}\" w/ PID = {1} to exit...", ExePath, Id);
+
+                    OnStart(process);
 
                     process.WaitForExit();
 
