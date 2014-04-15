@@ -460,7 +460,7 @@ namespace BDInfo
             int dataSize = 16384;
             FileStream fileStream = null;
             try
-            {                
+            {
                 string fileName;
                 if (BDInfoSettings.EnableSSIF &&
                     InterleavedFile != null)
@@ -1553,6 +1553,6 @@ namespace BDInfo
             }
 
             return stream;
-        } 
+        }
     }
 }
