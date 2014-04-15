@@ -1,6 +1,17 @@
 BDHero Changelog
 ================
 
+0.9.0.7 - 2014-04-15
+--------------------
+
+*   Fix: #28: ChapterDb serialization exception when parsing invalid results
+*   Fix: Taskbar pinning broke between upgrades
+*   Fix: Logic bug in `ExceptionUtils.IsReportable()`
+*   Improve: Alert user if she tries to scan an encrypted disc
+*   Improve: Added PDB files to provide line numbers in error reports
+*   Improve: More detailed logging
+*   Misc: Added `LICENSE-GPL.txt`
+
 0.9.0.6 - 2014-04-07
 --------------------
 
