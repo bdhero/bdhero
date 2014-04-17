@@ -1,6 +1,11 @@
 BDHero Changelog
 ================
 
+0.9.0.8 - 2014-04-15
+--------------------
+
+*   Fix: Ignore "Last message repeated X times" message from FFmpeg
+
 0.9.0.7 - 2014-04-15
 --------------------
 
