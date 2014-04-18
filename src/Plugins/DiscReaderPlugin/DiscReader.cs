@@ -20,6 +20,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using BDHero.BDROM;
+using BDHero.Plugin.DiscReader.Exceptions;
 using BDHero.Plugin.DiscReader.Transformer;
 using BDInfo;
 using DotNetUtils.Annotations;
@@ -30,6 +31,9 @@ namespace BDHero.Plugin.DiscReader
     [UsedImplicitly]
     public class DiscReader : IDiscReaderPlugin
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IPluginHost Host { get; private set; }
 
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
@@ -81,6 +85,9 @@ namespace BDHero.Plugin.DiscReader
             {
                 var bdrom = new BDInfo.BDROM(bdromPath);
                 bdrom.ScanProgress += BDROMOnScanProgress;
+                bdrom.PlaylistFileScanError += BDROMOnPlaylistFileScanError;
+                bdrom.StreamFileScanError += BDROMOnStreamFileScanError;
+                bdrom.StreamClipFileScanError += BDROMOnStreamClipFileScanError;
                 bdrom.Scan(cancellationToken);
                 return bdrom;
             }
@@ -101,6 +108,24 @@ namespace BDHero.Plugin.DiscReader
             Host.ReportProgress(this, bdromState.OverallProgress * .99,
                                 string.Format("{1} ({0})", bdromState.FileType, bdromState.FileName),
                                 string.Format("Scanning {0} file {1}", bdromState.FileType, bdromState.FileName));
+        }
+
+        private bool BDROMOnPlaylistFileScanError(TSPlaylistFile playlistFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning playlist file {0}", playlistFile.Name);
+            throw new PlaylistFileScanException(message, exception) { PlaylistFile = playlistFile };
+        }
+
+        private bool BDROMOnStreamFileScanError(TSStreamFile streamFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning stream file {0}", streamFile.Name);
+            throw new StreamFileScanException(message, exception) { StreamFile = streamFile };
+        }
+
+        private bool BDROMOnStreamClipFileScanError(TSStreamClipFile streamClipFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning stream clip file {0}", streamClipFile.Name);
+            throw new StreamClipFileScanException(message, exception) { StreamClipFile = streamClipFile };
         }
     }
 }
