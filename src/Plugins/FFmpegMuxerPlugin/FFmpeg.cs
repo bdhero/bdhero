@@ -433,7 +433,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static readonly string[] ErrorsToIgnore =
         {
             "Not a valid DCA frame",
-            "Last message repeated"
+            "Last message repeated",
         };
 
         private void OnStdErr(string line)
