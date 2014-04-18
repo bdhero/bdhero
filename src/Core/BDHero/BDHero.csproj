@@ -79,6 +79,8 @@
     <Compile Include="ErrorReporting\ErrorReportResultUpdated.cs" />
     <Compile Include="ErrorReporting\IErrorReportResult.cs" />
     <Compile Include="ErrorReporting\IErrorReportResultVisitor.cs" />
+    <Compile Include="Exceptions\InvalidJobException.cs" />
+    <Compile Include="Exceptions\InvalidPlaylistException.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
