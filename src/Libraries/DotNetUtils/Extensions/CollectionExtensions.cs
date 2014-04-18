@@ -24,6 +24,16 @@ namespace DotNetUtils.Extensions
     /// <see cref="http://stackoverflow.com/a/2984664/467582"/>
     public static class CollectionExtensions
     {
+        public static string Join<T>(this IEnumerable<T> collection, string delimiter = "")
+        {
+            return string.Join(delimiter, collection);
+        }
+
+        public static string JoinLines<T>(this IEnumerable<T> collection)
+        {
+            return string.Join(Environment.NewLine, collection);
+        }
+
         /// <summary>
         /// Adds all elements in the specified enumerable to this collection.
         /// </summary>
