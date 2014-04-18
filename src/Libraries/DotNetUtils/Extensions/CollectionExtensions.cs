@@ -24,6 +24,8 @@ namespace DotNetUtils.Extensions
     /// <see cref="http://stackoverflow.com/a/2984664/467582"/>
     public static class CollectionExtensions
     {
+        #region Joining
+
         public static string Join<T>(this IEnumerable<T> collection, string delimiter = "")
         {
             return string.Join(delimiter, collection);
@@ -33,6 +35,8 @@ namespace DotNetUtils.Extensions
         {
             return string.Join(Environment.NewLine, collection);
         }
+
+        #endregion
 
         /// <summary>
         /// Adds all elements in the specified enumerable to this collection.

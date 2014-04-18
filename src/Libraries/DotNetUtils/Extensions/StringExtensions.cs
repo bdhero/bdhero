@@ -28,6 +28,8 @@ namespace DotNetUtils.Extensions
     /// </summary>
     public static class StringExtensions
     {
+        #region Casing
+
         /// <summary>
         /// Converts the string to Title Case (a.k.a., Proper Case).
         /// </summary>
@@ -38,6 +40,10 @@ namespace DotNetUtils.Extensions
             var titleCase = textInfo.ToTitleCase(textInfo.ToLower(str));
             return titleCase;
         }
+
+        #endregion
+
+        #region HTML escape/unescape
 
         /// <summary>
         /// Removes HTML tags and comments.
@@ -60,7 +66,9 @@ namespace DotNetUtils.Extensions
             return WebUtility.HtmlDecode(str);
         }
 
-        #region CsQuery.ExtensionMethods
+        #endregion
+
+        #region Regular Expressions - CsQuery.ExtensionMethods
 
         // https://github.com/jamietre/CsQuery/blob/master/source/CsQuery/ExtensionMethods/ExtensionMethods.cs
 
