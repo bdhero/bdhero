@@ -434,6 +434,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             "Not a valid DCA frame",
             "Last message repeated",
+            "max resync size reached, could not find sync byte",
         };
 
         private void OnStdErr(string line)
