@@ -33,7 +33,8 @@ namespace BDHero
 {
     public class Controller : IController
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IPluginRepository _pluginRepository;
         private readonly IPreferenceManager _preferenceManager;
