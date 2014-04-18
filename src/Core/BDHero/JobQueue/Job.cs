@@ -31,6 +31,9 @@ namespace BDHero.JobQueue
     /// </remarks>
     public class Job
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public readonly Disc Disc;
 
         /// <summary>
@@ -126,6 +129,36 @@ namespace BDHero.JobQueue
         public Job(Disc disc)
         {
             Disc = disc;
+        }
+
+        public void Log()
+        {
+            LogReleaseMedium();
+            LogSelectedPlaylistAndTracks();
+        }
+
+        private void LogReleaseMedium()
+        {
+            var medium = SelectedReleaseMedium;
+            if (medium == null)
+            {
+                Logger.Warn("No release medium (movie or TV show) is selected");
+                return;
+            }
+
+            Logger.InfoFormat("Release medium: {0} {{ Id = {1} }}: {2}", medium.GetType().Name, medium.Id, medium);
+        }
+
+        private void LogSelectedPlaylistAndTracks()
+        {
+            var playlist = SelectedPlaylist;
+            if (playlist == null)
+            {
+                Logger.Warn("No playlist is selected");
+                return;
+            }
+
+            playlist.Log();
         }
     }
 }
