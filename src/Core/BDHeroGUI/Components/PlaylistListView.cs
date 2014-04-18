@@ -68,24 +68,8 @@ namespace BDHeroGUI.Components
             get { return listView.SelectedItems.Count > 0 ? listView.SelectedItems[0].Tag as Playlist : null; }
             set
             {
-                _ignoreSelectionChange = true;
-
-                SelectPlaylist(value);
-
-                _ignoreSelectionChange = false;
-
-                // Trigger a ItemSelectionChanged event
-                if (listView.SelectedItems.Count > 0)
-                {
-                    var selectedItem = listView.SelectedItems[0];
-                    if (ItemSelectionChanged != null)
-                        ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(selectedItem, selectedItem.Index, selectedItem.Selected));
-                }
-                else
-                {
-                    if (ItemSelectionChanged != null)
-                        ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(null, -1, false));
-                }
+                IgnoreSelectionChange(() => SelectPlaylist(value));
+                TriggerItemSelectionChangedEvent();
             }
         }
 
@@ -103,6 +87,25 @@ namespace BDHeroGUI.Components
             {
                 listView.Items[0].Selected = true;
             }
+        }
+
+        private void IgnoreSelectionChange(Action action)
+        {
+            _ignoreSelectionChange = true;
+            action();
+            _ignoreSelectionChange = false;
+        }
+
+        private void TriggerItemSelectionChangedEvent()
+        {
+            if (ItemSelectionChanged == null)
+                return;
+
+            var selectedItem = listView.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            var isSelected = selectedItem != null && selectedItem.Selected;
+            var index = selectedItem != null ? selectedItem.Index : -1;
+
+            ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(selectedItem, index, isSelected));
         }
 
         /// <summary>
