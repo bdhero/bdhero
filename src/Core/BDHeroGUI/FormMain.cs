@@ -430,6 +430,8 @@ namespace BDHeroGUI
             }
 
             linkLabelNameProviderPreferences.Enabled = EnabledNameProviderPlugins.Any();
+
+            AutoEnableMetadataSearchControls();
         }
 
         #endregion
@@ -760,8 +762,25 @@ namespace BDHeroGUI
                 playlistListView.Playlists = _controller.Job.Disc.Playlists;
         }
 
+        private void AutoEnableMetadataSearchControls()
+        {
+            var hasJob = _controller.Job != null;
+            var isMetadataPluginEnabled = _controller.PluginsByType.OfType<IMetadataProviderPlugin>().Any(plugin => plugin.Enabled);
+            var enableMetadataSearch = hasJob && isMetadataPluginEnabled;
+
+            searchForMetadataToolStripMenuItem.Enabled = enableMetadataSearch;
+            mediaPanel.SearchLinkEnabled = enableMetadataSearch;
+        }
+
         private void EnableControls(bool enabled)
         {
+            AutoEnableMetadataSearchControls();
+            if (!enabled)
+            {
+                searchForMetadataToolStripMenuItem.Enabled = false;
+                mediaPanel.SearchLinkEnabled = false;
+            }
+
             var isPlaylistSelected = playlistListView.SelectedPlaylist != null;
             var hasJob = _controller.Job != null;
             var isScanning = (_stage == Stage.Scan);
@@ -769,7 +788,6 @@ namespace BDHeroGUI
 
             openBDROMFolderToolStripMenuItem.Enabled = enabled;
             openDiscToolStripMenuItem.Enabled = enabled;
-            searchForMetadataToolStripMenuItem.Enabled = enabled && hasJob;
 
             discInfoToolStripMenuItem.Enabled = (enabled || isConverting) && hasJob;
             filterPlaylistsToolStripMenuItem.Enabled = enabled;

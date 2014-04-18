@@ -70,6 +70,12 @@ namespace BDHeroGUI.Components
 
         private Job _job;
 
+        public bool SearchLinkEnabled
+        {
+            get { return linkLabelSearch.Enabled; }
+            set { linkLabelSearch.Enabled = value; }
+        }
+
         #endregion
 
         #region Private properties
