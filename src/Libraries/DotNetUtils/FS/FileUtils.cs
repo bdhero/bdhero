@@ -511,11 +511,28 @@ namespace DotNetUtils.FS
             return !containsABadCharacter.IsMatch(fileName);
         }
 
+        /// <summary>
+        ///     Returns any invalid characters found in the given <paramref name="path"/> as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to a file or directory.
+        /// </param>
+        /// <returns>
+        ///     Array of invalid characters in <paramref name="path"/>.
+        /// </returns>
         public static char[] GetInvalidChars(string path)
         {
             return Path.GetInvalidPathChars().Where(path.Contains).ToArray();
         }
 
+        /// <summary>
+        ///     Throws an exception if the given <paramref name="path"/> contains any illegal characters.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any illegal characters as determined by <see cref="GetInvalidChars"/>.
+        /// </exception>
         public static void EnsureValidChars(string path)
         {
             var invalidChars = GetInvalidChars(path);
