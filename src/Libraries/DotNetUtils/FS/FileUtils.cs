@@ -59,15 +59,22 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     An image object.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
         public static Image ImageFromFile(string path)
         {
+            EnsureValidChars(path);
             return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
         }
 
         /// <seealso cref="http://stackoverflow.com/a/398512/467582"/>
         public static string Tail(string path, string tokenSeparator, Int64 numberOfTokens, Encoding encoding)
         {
+            EnsureValidChars(path);
+
             int sizeOfChar = encoding.GetByteCount("\n");
             byte[] buffer = encoding.GetBytes(tokenSeparator);
 
@@ -104,6 +111,7 @@ namespace DotNetUtils.FS
         // TODO: Figure out why blank lines are being returned in between every line
         public static string[] Tail(string path, Int64 numLines, string newLine = "\n")
         {
+            EnsureValidChars(path);
             return Tail(path, newLine, numLines, Encoding.UTF8).Split(newLine.ToCharArray());
         }
 
@@ -123,9 +131,14 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     The detected encoding of the text file specified by <paramref name="filePath" />.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         /// <seealso cref="http://stackoverflow.com/a/8935635/467582"/>
         public static Encoding DetectEncodingAuto(string filePath, out string contents)
         {
+            EnsureValidChars(filePath);
             // open the file with the stream-reader:
             using (var reader = new StreamReader(filePath, true))
             {
@@ -158,9 +171,15 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     The detected encoding of the text file specified by <paramref name="filePath" />.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         /// <seealso cref="http://stackoverflow.com/a/12853721/467582" />
         public static Encoding DetectEncodingManual(string filePath, out string contents, int taster = 1000)
         {
+            EnsureValidChars(filePath);
+
             byte[] b = File.ReadAllBytes(filePath);
 
             //////////////// First check the low hanging fruit by checking if a
@@ -257,12 +276,18 @@ namespace DotNetUtils.FS
         /// <param name="path">
         ///     Path to a file or directory.
         /// </param>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static void CreateDirectory(string path)
         {
             // TODO: Does this check make sense?
             // Path will resolve to current working directory
             if (string.IsNullOrEmpty(path))
                 return;
+
+            EnsureValidChars(path);
 
             // More accurate checks first
             if (File.Exists(path) || Directory.Exists(path))
@@ -327,6 +352,10 @@ namespace DotNetUtils.FS
         /// <exception cref="NotSupportedException">
         ///     <paramref name="filePath"/> is in an invalid format.
         /// </exception>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static void TouchFile(string filePath)
         {
             var dirPath = new FileInfo(filePath).DirectoryName;
@@ -334,6 +363,7 @@ namespace DotNetUtils.FS
             {
                 throw new DirectoryNotFoundException(string.Format("File \"{0}\" has no parent directory", filePath));
             }
+            EnsureValidChars(filePath);
             if (!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
@@ -411,8 +441,13 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     <c>true</c> if <paramref name="path"/> is a file; otherwise <c>false</c>.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static bool IsFile(string path)
         {
+            EnsureValidChars(path);
             return !IsDirectory(path);
         }
 
@@ -425,8 +460,13 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     <c>true</c> if <paramref name="path"/> is a directory; otherwise <c>false</c>.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see cref="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static bool IsDirectory(string path)
         {
+            EnsureValidChars(path);
             return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
