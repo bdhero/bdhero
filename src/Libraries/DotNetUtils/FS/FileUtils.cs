@@ -25,6 +25,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
+using DotNetUtils.Exceptions;
+using DotNetUtils.Extensions;
 
 namespace DotNetUtils.FS
 {
@@ -467,6 +469,18 @@ namespace DotNetUtils.FS
         {
             var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
             return !containsABadCharacter.IsMatch(fileName);
+        }
+
+        public static char[] GetInvalidChars(string path)
+        {
+            return Path.GetInvalidPathChars().Where(path.Contains).ToArray();
+        }
+
+        public static void EnsureValidChars(string path)
+        {
+            var invalidChars = GetInvalidChars(path);
+            if (invalidChars.Any())
+                throw new ID10TException(string.Format("Path contains invalid characters: {0}", invalidChars.Join()));
         }
 
         /// <summary>
