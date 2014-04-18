@@ -862,6 +862,17 @@ namespace BDHeroGUI
             var textBoxInputPath = textBoxInput.SelectedPath;
             var textBoxOutputPath = textBoxOutput.SelectedPath;
 
+            try
+            {
+                FileUtils.EnsureValidChars(textBoxInputPath);
+                FileUtils.EnsureValidChars(textBoxOutputPath);
+            }
+            catch (ID10TException e)
+            {
+                ShowErrorDialog("Unable to scan BD-ROM", e, false);
+                return;
+            }
+
             _controller.SetUIContext(this);
 
             // TODO: Let File Namer plugin handle this
