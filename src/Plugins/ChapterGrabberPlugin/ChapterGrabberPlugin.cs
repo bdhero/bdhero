@@ -294,7 +294,7 @@ namespace ChapterGrabberPlugin
 
         #region Number stripping
 
-        private static readonly Regex LeadingDigitsRegex = new Regex(@"^(?<number>\d+)[.:) ]+");
+        private static readonly Regex LeadingDigitsRegex = new Regex(@"^(?<number>\d+)[.:) -]+");
 
         private static bool ShouldStripLeadingDigits(List<Chapter> chapters)
         {
