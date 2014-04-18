@@ -390,6 +390,11 @@ namespace BDHero.Plugin.FFmpegMuxer
             "max resync size reached, could not find sync byte",
         };
 
+        private static readonly string[] NonReportableErrors =
+        {
+            "Permission denied",
+        };
+
         private void OnStdErr(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
@@ -410,13 +415,18 @@ namespace BDHero.Plugin.FFmpegMuxer
                 // Preserve stack trace by throwing and catching exception
                 throw new FFmpegException(line)
                       {
-                          IsReportable = true
+                          IsReportable = IsReportable(line)
                       };
             }
             catch (FFmpegException e)
             {
                 Exception = e;
             }
+        }
+
+        private static bool IsReportable(string line)
+        {
+            return !NonReportableErrors.Any(line.Contains);
         }
 
         #endregion
