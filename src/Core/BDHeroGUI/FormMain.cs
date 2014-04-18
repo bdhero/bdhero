@@ -297,7 +297,7 @@ namespace BDHeroGUI
 
         #endregion
 
-        #region Controller events
+        #region Controller event bindings
 
         private void InitController()
         {
