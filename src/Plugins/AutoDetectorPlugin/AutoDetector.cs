@@ -298,7 +298,11 @@ namespace BDHero.Plugin.AutoDetector
             var bestPlaylists = job.Disc.ValidMainFeaturePlaylists;
             var bestPlaylist = bestPlaylists.FirstOrDefault();
 
-            if (bestPlaylist == null) return;
+            if (bestPlaylist == null)
+            {
+                job.SelectedPlaylistIndex = -1;
+                return;
+            }
 
             bestPlaylists.ForEach(playlist => playlist.IsBestGuess = true);
             job.SelectedPlaylistIndex = job.Disc.Playlists.IndexOf(bestPlaylist);
