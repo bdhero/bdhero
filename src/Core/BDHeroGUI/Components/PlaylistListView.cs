@@ -90,6 +90,9 @@ namespace BDHeroGUI.Components
             {
                 listView.Items[0].Selected = true;
             }
+
+            listView.EnsureVisible(listView.SelectedIndices[0]);
+            listView.AutoSizeColumns();
         }
 
         private void IgnoreSelectionChange(Action action)
