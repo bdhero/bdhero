@@ -37,36 +37,37 @@ Chores
 Bugs
 ====
 
-[ ] 500 Days of Summer: Output file name input value twitches after scan due to playlist select/deselect/select
+[ ] Output path: [1080p] missing on first scan (X-Men Origins: Wolverine (2009))
 
-[ ] Taskbar pinning w/ app ID
-
-[ ] Cancel first scan _AFTER_ BDInfoDiscReaderPlugin has ran, but _BEFORE_ the optional plugins complete:
-    No items show up in the playlist or track ListViews, but the controls are enabled and "Disc Info" is populated.
+[ ] GUI: Checked tracks may still be hidden unless "Show all tracks" is enabled (e.g., Misc/SpecialFeature playlists)
 
 [ ] "Filter Playlists" and "Filter Tracks" settings no longer work
 
-[ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
-
-[ ] Deception (2008): Metadata search is not using year from ISAN
-    V:\BD\Uncategorized\DECEPTION
-
-[ ] The Wolverine: FFmpeg fails without any error message (same as other X-Men/Wolverine movie(s)?)
-[ ] FFmpeg: error messages (e.g., "Permission denied") do not get logged with -loglevel fatal
-
 [ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
-
-[ ] Exception thrown in FileUtils.CreateDirectory() when user types in goofy output path
-[ ] Time Remaining is jumpy, esp. > 80% complete.  Thread queue?
 
 Features
 ========
 
+[ ] Detection/auto-selection:
+    [ ] "Rate" tracks/playlists based on "evidence" - confidence level that they are main feature
+    [ ] Apply certain filters only AFTER main playlists have been determined
+        - e.g., "4 possible main playlists, but only 1 has ChapterDb results" (The Expendables 2)
+    [ ] Primary audio -OR- subtitle language
+        [ ] Most common first audio track language (main movie playlists only)
+        [ ] If no audio (e.g., silent film - NOSFERATU), use same algorithm w/ subtitles
+    [ ] Select primary language tracks -AND- tracks w/ the user's preferred language (e.g., Pan's Labyrinth)
+        [ ] Configurable via preferences
+        [ ] Prompt user for preferred language on first run?
+            [ ] Suggest languages from:
+                - InstalledUICulture: en-US
+                - CurrentCulture:     bs-Latn-BA
+                - CurrentUICulture:   en-US
+
 [ ] Add ChapterGrabber preferences for adding leading chapter numbers
+    [X] Remove "1 - " (e.g.: "Killers" (2010)) (needs to be tested)
 
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
-[ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
 [ ] Add "use last folder" option to File Namer preference dialog
 [ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
 [ ] Add "Disc Info" icons to main form
@@ -130,7 +131,11 @@ Backlog
 [ ] "About 1 hour remaining" when estimates are in flux
 [ ] Estimate progress for the last 5 seconds (ever 5 seconds reset the counters for "time started" and "initial progress percentage")
 
-[ ] Scrape more information out of bdmt_eng.xml
+[ ] Scrape more information out of bdmt_eng.xml (e.g., "Charade (1963)")
+    [ ] <di:numSets>1</di:numSets>
+    [ ] <di:setNumber>1</di:setNumber>
+    [ ] <di:titleName titleNumber="1">Main Feature</di:titleName> (00001.MPLS)
+    [ ] <di:language>eng</di:language>
 
 [ ] What does AnyDVD HD report when it can't auto-detect the region code of a region-locked disc (e.g., Region A) and AnyDVD is configured to NOT remove region codes?  What does it report when it DOES remove the region code?
 
