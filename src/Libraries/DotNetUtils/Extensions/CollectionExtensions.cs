@@ -38,6 +38,24 @@ namespace DotNetUtils.Extensions
 
         #endregion
 
+        #region Indentation
+
+        public static string Indent<TItem>(this IEnumerable<TItem> enumerable, int numSpaces = 4)
+        {
+            var padding = new string(' ', numSpaces);
+            return enumerable.Select(item => string.Format("{0}{1}", padding, item)).JoinLines();
+        }
+
+        public static string IndentTrim<TItem>(this IEnumerable<TItem> enumerable, int numSpaces = 4)
+        {
+            var padding = new string(' ', numSpaces);
+            return enumerable.Select(item => item.ToString())
+                             .Where(line => !string.IsNullOrWhiteSpace(line))
+                             .Select(item => string.Format("{0}{1}", padding, item)).JoinLines();
+        }
+
+        #endregion
+
         /// <summary>
         /// Adds all elements in the specified enumerable to this collection.
         /// </summary>

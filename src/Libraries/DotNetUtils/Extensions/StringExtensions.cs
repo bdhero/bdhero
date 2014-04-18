@@ -43,6 +43,27 @@ namespace DotNetUtils.Extensions
 
         #endregion
 
+        #region Identation
+
+        private static readonly Regex NewlineRegex = new Regex(@"\r\n|\n");
+
+        /// <summary>
+        /// Converts the string to Title Case (a.k.a., Proper Case).
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="numSpaces"></param>
+        public static String Indent(this String str, int numSpaces = 4)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+
+            var padding = new string(' ', numSpaces);
+
+            return padding + NewlineRegex.Replace(str, string.Format("$0{0}", padding));
+        }
+
+        #endregion
+
         #region HTML escape/unescape
 
         /// <summary>
