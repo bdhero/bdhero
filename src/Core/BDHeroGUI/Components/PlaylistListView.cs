@@ -75,7 +75,6 @@ namespace BDHeroGUI.Components
                 _ignoreSelectionChange = false;
 
                 // Trigger a ItemSelectionChanged event
-                // TODO: What if no item is selected?
                 if (listView.SelectedItems.Count > 0)
                 {
                     var selectedItem = listView.SelectedItems[0];
@@ -83,6 +82,11 @@ namespace BDHeroGUI.Components
                     selectedItem.Selected = false;
                     _ignoreSelectionChange = false;
                     selectedItem.Selected = true;
+                }
+                else
+                {
+                    if (ItemSelectionChanged != null)
+                        ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(null, -1, false));
                 }
             }
         }
@@ -337,7 +341,10 @@ namespace BDHeroGUI.Components
         public void SelectBestPlaylist()
         {
             if (!VisiblePlaylistsInSortOrder.Any())
+            {
+                SelectedPlaylist = null;
                 return;
+            }
 
             SelectedPlaylist = VisiblePlaylistsInSortOrder.FirstOrDefault(IsBestChoice) ??
                                VisiblePlaylistsInSortOrder.FirstOrDefault();
