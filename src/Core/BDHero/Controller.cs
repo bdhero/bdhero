@@ -26,11 +26,13 @@ using System.Windows.Forms;
 using BDHero.Plugin;
 using BDHero.JobQueue;
 using BDHero.Prefs;
+using DotNetUtils.Annotations;
 using DotNetUtils.Concurrency;
 using DotNetUtils.FS;
 
 namespace BDHero
 {
+    [UsedImplicitly]
     public class Controller : IController
     {
         private static readonly log4net.ILog Logger =
