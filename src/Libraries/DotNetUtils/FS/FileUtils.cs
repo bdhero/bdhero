@@ -496,6 +496,46 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
+        ///     Determines if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />.
+        /// </summary>
+        /// <param name="path">
+        ///     Relative or absolute path to a file or directory.
+        /// </param>
+        /// <param name="extensions">
+        ///     Zero or more file extensions (will be automatically normalized).
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <paramref name="path" /> ends with at least one of the given
+        ///     <paramref name="extensions" />; otherwise <c>false</c>.
+        /// </returns>
+        public static bool FileHasExtension(string path, IEnumerable<string> extensions)
+        {
+            var extension = Path.GetExtension(path);
+            var normalized = NormalizeFileExtensions(extensions);
+            return extension != null && normalized.Contains(NormalizeFileExtension(extension));
+        }
+
+        /// <summary>
+        ///     Determines if the given <paramref name="directory"/> contains any files or subdirectories.
+        /// </summary>
+        /// <param name="directory">
+        ///     Parent directory to test.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="directory"/> contains at least one file or subdirectory;
+        ///     otherwise <c>false</c>.
+        /// </returns>
+        public static bool IsEmpty(DirectoryInfo directory)
+        {
+            return directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0;
+        }
+
+        #endregion
+
+        #region Validate / normalize / sanitize
+
+        /// <summary>
         ///     Determines if the given <paramref name="fileName"/> is a valid filename under the current operating system.
         /// </summary>
         /// <param name="fileName">
@@ -539,46 +579,6 @@ namespace DotNetUtils.FS
             if (invalidChars.Any())
                 throw new ID10TException(string.Format("Path contains invalid characters: {0}", invalidChars.Join()));
         }
-
-        /// <summary>
-        ///     Determines if the specified <paramref name="path" /> ends with at least one of the given
-        ///     <paramref name="extensions" />.
-        /// </summary>
-        /// <param name="path">
-        ///     Relative or absolute path to a file or directory.
-        /// </param>
-        /// <param name="extensions">
-        ///     Zero or more file extensions (will be automatically normalized).
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if the specified <paramref name="path" /> ends with at least one of the given
-        ///     <paramref name="extensions" />; otherwise <c>false</c>.
-        /// </returns>
-        public static bool FileHasExtension(string path, IEnumerable<string> extensions)
-        {
-            var extension = Path.GetExtension(path);
-            var normalized = NormalizeFileExtensions(extensions);
-            return extension != null && normalized.Contains(NormalizeFileExtension(extension));
-        }
-
-        /// <summary>
-        ///     Determines if the given <paramref name="directory"/> contains any files or subdirectories.
-        /// </summary>
-        /// <param name="directory">
-        ///     Parent directory to test.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="directory"/> contains at least one file or subdirectory;
-        ///     otherwise <c>false</c>.
-        /// </returns>
-        public static bool IsEmpty(DirectoryInfo directory)
-        {
-            return directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0;
-        }
-
-        #endregion
-
-        #region Validate / normalize / sanitize
 
         /// <summary>
         ///     Sanitizes the given <paramref name="fileName"/> by removing all invalid characters.
