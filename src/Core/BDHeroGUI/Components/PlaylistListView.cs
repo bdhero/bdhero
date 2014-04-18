@@ -75,6 +75,9 @@ namespace BDHeroGUI.Components
 
         private void SelectPlaylist(Playlist playlist)
         {
+            if (listView.Items.Count == 0)
+                return;
+
             if (playlist == null)
             {
                 listView.SelectNone();
