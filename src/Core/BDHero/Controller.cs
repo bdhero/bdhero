@@ -291,7 +291,13 @@ namespace BDHero
                     var disc = discReader.ReadBDROM(token, bdromPath);
                     if (!token.IsCancellationRequested)
                     {
+                        var prevJob = Job;
+
+                        // Create a new job for the current disc
                         Job = new Job(disc);
+
+                        // Restore the previous job if the current one is canceled
+                        cancellationToken.Register(() => Job = prevJob);
                     }
                 });
             return pluginTask.IsCompleted && pluginTask.Result;
