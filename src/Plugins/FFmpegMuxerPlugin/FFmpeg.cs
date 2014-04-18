@@ -85,9 +85,6 @@ namespace BDHero.Plugin.FFmpegMuxer
             _reportDumpFileDir = Path.GetDirectoryName(_progressFilePath);
             _indexer = new FFmpegTrackIndexer(playlist);
 
-            VerifyInputPaths();
-            VerifySelectedTracks();
-
             SetExePath();
 
             SetFFmpegLogLevel();
@@ -103,25 +100,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             BeforeStart += OnBeforeStart;
             StdErr += OnStdErr;
             Exited += (state, code, exception, time) => OnExited(state, code, job.SelectedReleaseMedium, playlist, _selectedTracks, outputMKVPath);
-
-            LogDebugInfo();
         }
-
-        #region Validation
-
-        private void VerifyInputPaths()
-        {
-            if (_inputM2TSPaths.Count == 0)
-                throw new ArgumentOutOfRangeException("At least one input M2TS file is required.");
-        }
-
-        private void VerifySelectedTracks()
-        {
-            if (_selectedTracks.Count == 0)
-                throw new ArgumentOutOfRangeException("At least one track must be selected.");
-        }
-
-        #endregion
 
         #region EXE locator
 
@@ -327,28 +306,10 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         #region Logging
 
-        public void LogDebugInfo()
+        public void Log()
         {
-            LogTracks();
             LogStdErr();
             LogDumpFile();
-        }
-
-        private void LogTracks()
-        {
-            var tracks = new List<string>();
-            foreach (var track in _playlist.Tracks)
-            {
-                var index = _indexer[track];
-                tracks.Add(string.Format("Track w/ stream PID {0} (0x{0:x4}): index {1,2:D} => {2,2:D} [{3}] ({4}, {5})",
-                                         track.PID,
-                                         index.InputIndex,
-                                         index.OutputIndex,
-                                         track.Keep ? "X" : " ",
-                                         track.Language.ISO_639_2,
-                                         track.Codec));
-            }
-            Logger.InfoFormat("Tracks:\n{0}", Indent(tracks));
         }
 
         private void LogStdErr()
@@ -388,15 +349,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private static string Indent(IEnumerable<string> lines)
         {
-            var filtered = lines.Where(line => !string.IsNullOrWhiteSpace(line))
-                                .Select(Indent)
-                                .ToArray();
-            return string.Join(Environment.NewLine, filtered);
-        }
-
-        private static string Indent(string line)
-        {
-            return string.Format("    {0}", line.Trim());
+            return lines.IndentTrim();
         }
 
         #endregion

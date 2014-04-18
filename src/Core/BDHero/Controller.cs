@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using BDHero.Exceptions;
 using BDHero.Plugin;
 using BDHero.JobQueue;
 using BDHero.Prefs;
@@ -365,14 +366,6 @@ namespace BDHero
 
         #region 5 - Mux
 
-        private void EnsureOutputDirExists()
-        {
-            if (string.IsNullOrWhiteSpace(Job.OutputPath))
-                throw new FileNotFoundException("Required output path not specified");
-
-            FileUtils.CreateDirectory(Job.OutputPath);
-        }
-
         private bool Mux(CancellationToken cancellationToken)
         {
             var enabledMuxerPlugins = _pluginRepository.MuxerPlugins.Where(plugin => plugin.Enabled).ToArray();
@@ -380,15 +373,63 @@ namespace BDHero
             if (!enabledMuxerPlugins.Any())
                 return false;
 
-            EnsureOutputDirExists();
+            SanityCheckMuxParams();
 
             return enabledMuxerPlugins.All(muxer => Mux(cancellationToken, muxer));
         }
 
         private bool Mux(CancellationToken cancellationToken, IMuxerPlugin plugin)
         {
+            LogMuxParams(plugin);
             var pluginTask = RunPluginSync(cancellationToken, plugin, token => plugin.Mux(token, Job));
             return pluginTask.IsCompleted && pluginTask.Result;
+        }
+
+        private void LogMuxParams(IMuxerPlugin plugin)
+        {
+            Logger.InfoFormat("Muxing with {0}", plugin.Name);
+            Job.Log();
+        }
+
+        private void SanityCheckMuxParams()
+        {
+            EnsureOutputDirExists();
+            EnsurePlaylistHasFileSize();
+            EnsurePlaylistHasDuration();
+            EnsurePlaylistHasStreamClips();
+            EnsurePlaylistHasSelectedTracks();
+        }
+
+        private void EnsureOutputDirExists()
+        {
+            if (string.IsNullOrWhiteSpace(Job.OutputPath))
+                throw new FileNotFoundException("Required output path not specified.");
+
+            FileUtils.CreateDirectory(Job.OutputPath);
+        }
+
+        private void EnsurePlaylistHasFileSize()
+        {
+            if (Job.SelectedPlaylist.FileSize == 0)
+                throw new InvalidPlaylistException("Cannot mux zero-byte playlist.");
+        }
+
+        private void EnsurePlaylistHasDuration()
+        {
+            if (Job.SelectedPlaylist.Length <= TimeSpan.Zero)
+                throw new InvalidPlaylistException("Cannot mux zero-length playlist.");
+        }
+
+        private void EnsurePlaylistHasStreamClips()
+        {
+            if (!Job.SelectedPlaylist.StreamClips.Any())
+                throw new InvalidPlaylistException("Playlist must contain at least one stream clip (.M2TS file).");
+        }
+
+        private void EnsurePlaylistHasSelectedTracks()
+        {
+            if (!Job.SelectedPlaylist.Tracks.Any(track => track.Keep))
+                throw new InvalidJobException("At least one track must be selected.");
         }
 
         #endregion
