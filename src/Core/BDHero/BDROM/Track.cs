@@ -229,6 +229,26 @@ namespace BDHero.BDROM
         }
 
         #endregion
+
+        public string SummaryDisplayable
+        {
+            get
+            {
+                if (IsVideo)
+                    return string.Format("{0,5} {1} @ {2} ({3})",
+                                         VideoFormatDisplayable,
+                                         Codec.ShortName,
+                                         FrameRateDisplayable,
+                                         AspectRatioDisplayable);
+                
+                if (IsAudio)
+                    return string.Format("{0} {1:F1} ch",
+                                         Codec.ShortName,
+                                         ChannelCount);
+
+                return Codec.ShortName;
+            }
+        }
     }
 
     public enum TrackType
