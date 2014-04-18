@@ -78,10 +78,8 @@ namespace BDHeroGUI.Components
                 if (listView.SelectedItems.Count > 0)
                 {
                     var selectedItem = listView.SelectedItems[0];
-                    _ignoreSelectionChange = true;
-                    selectedItem.Selected = false;
-                    _ignoreSelectionChange = false;
-                    selectedItem.Selected = true;
+                    if (ItemSelectionChanged != null)
+                        ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(selectedItem, selectedItem.Index, selectedItem.Selected));
                 }
                 else
                 {
