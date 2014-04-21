@@ -59,7 +59,7 @@ namespace WindowsOSUtils.DriveDetector
         }
 
         /// <summary>
-        /// New device has just arrived.
+        ///     New device has just arrived.
         /// </summary>
         private void HandleDeviceArrival(WindowMessage msg)
         {
@@ -67,7 +67,7 @@ namespace WindowsOSUtils.DriveDetector
         }
 
         /// <summary>
-        /// Device has been removed.
+        ///     Device has been removed.
         /// </summary>
         private void HandleDeviceAfterRemove(WindowMessage msg)
         {
@@ -110,11 +110,15 @@ namespace WindowsOSUtils.DriveDetector
         }
 
         /// <summary>
-        /// Gets the drive letter from a bit mask where bit 0 = A, bit 1 = B, bit 2 = C etc.
-        /// There can actually be more than one drive in the mask but we just use the first one in this case.
+        ///     Gets the drive letter from a bit mask where bit 0 = A, bit 1 = B, bit 2 = C, etc.
+        ///     There can actually be more than one drive in the mask but we just return the first one in this case.
         /// </summary>
-        /// <param name="driveMask">Bit mask in which each bit represents a drive letter.</param>
-        /// <returns>The drive letter represented by the bit mask.</returns>
+        /// <param name="driveMask">
+        ///     Bit mask in which each bit represents a drive letter.
+        /// </param>
+        /// <returns>
+        ///     The drive letter represented by the bit mask.
+        /// </returns>
         private static char DriveMaskToLetter(int driveMask)
         {
             var curMask = driveMask;
