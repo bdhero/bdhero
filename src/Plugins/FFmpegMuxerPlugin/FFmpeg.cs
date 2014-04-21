@@ -89,6 +89,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             SetFFmpegLogLevel();
             RedirectProgressToFile();
+            GenPTS();
             ReplaceExistingFiles();
             SetInputFiles();
             SetMovieTitle(job);
@@ -167,6 +168,21 @@ namespace BDHero.Plugin.FFmpegMuxer
         private void RedirectProgressToFile()
         {
             Arguments.AddAll("-progress", _progressFilePath);
+        }
+
+        /// <summary>
+        ///     Generate Presentation Time Stamps to avoid errors like the following:
+        ///     <code>
+        ///         [matroska @ 051051a0] Can't write packet with unknown timestamp
+        ///         av_interleaved_write_frame(): Invalid argument
+        ///     </code>
+        /// </summary>
+        /// <seealso cref="https://github.com/bdhero/bdhero/issues/30" />
+        /// <seealso cref="http://stackoverflow.com/a/6044365/467582" />
+        /// <seealso cref="https://www.ffmpeg.org/ffmpeg-formats.html#Format-Options" />
+        private void GenPTS()
+        {
+            Arguments.AddAll("-fflags", "+genpts");
         }
 
         #region Input files
