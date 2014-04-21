@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+#undef DEBUG_SCAN_ERRORS
+
 using System;
 using System.Drawing;
 using System.IO;
@@ -113,19 +115,34 @@ namespace BDHero.Plugin.DiscReader
         private bool BDROMOnPlaylistFileScanError(TSPlaylistFile playlistFile, Exception exception)
         {
             var message = string.Format("Error occurred while scanning playlist file {0}", playlistFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
             throw new PlaylistFileScanException(message, exception) { PlaylistFile = playlistFile };
+#endif
         }
 
         private bool BDROMOnStreamFileScanError(TSStreamFile streamFile, Exception exception)
         {
             var message = string.Format("Error occurred while scanning stream file {0}", streamFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
             throw new StreamFileScanException(message, exception) { StreamFile = streamFile };
+#endif
         }
 
         private bool BDROMOnStreamClipFileScanError(TSStreamClipFile streamClipFile, Exception exception)
         {
             var message = string.Format("Error occurred while scanning stream clip file {0}", streamClipFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
             throw new StreamClipFileScanException(message, exception) { StreamClipFile = streamClipFile };
+#endif
         }
     }
 }
