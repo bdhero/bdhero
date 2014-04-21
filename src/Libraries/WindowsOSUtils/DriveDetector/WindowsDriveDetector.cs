@@ -110,44 +110,23 @@ namespace WindowsOSUtils.DriveDetector
         }
 
         /// <summary>
-        /// Gets drive letter from a bit mask where bit 0 = A, bit 1 = B etc.
-        /// There can actually be more than one drive in the mask but we 
-        /// just use the last one in this case.
+        /// Gets the drive letter from a bit mask where bit 0 = A, bit 1 = B, bit 2 = C etc.
+        /// There can actually be more than one drive in the mask but we just use the first one in this case.
         /// </summary>
-        /// <param name="mask"></param>
-        /// <returns>The drive letter represented by the bit mask</returns>
-        private static char DriveMaskToLetter(int mask)
+        /// <param name="driveMask">Bit mask in which each bit represents a drive letter.</param>
+        /// <returns>The drive letter represented by the bit mask.</returns>
+        private static char DriveMaskToLetter(int driveMask)
         {
-            const string drives = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var curMask = driveMask;
 
-//            // 1 = A
-//            // 2 = B
-//            // 4 = C...
-//            int cnt = 0;
-//            int pom = mask / 2;
-//            while (pom != 0)
-//            {
-//                // while there is any bit set in the mask
-//                // shift it to the righ...                
-//                pom = pom / 2;
-//                cnt++;
-//            }
-//
-//            return cnt < drives.Length ? drives[cnt] : '?';
-
-            int i;
-
-            for (i = 0; i < 26; ++i)
+            for (var letter = 'A'; letter <= 'Z'; letter++)
             {
-                if ((mask & 0x1) != 0)
-                    break;
-                mask = mask >> 1;
+                if ((curMask & 0x1) != 0)
+                    return letter;
+                curMask = curMask >> 1;
             }
 
-            if (i >= drives.Length)
-                throw new ArgumentOutOfRangeException("Unable to determine drive letter for mask value " + mask);
-
-            return drives[i];
+            throw new ArgumentOutOfRangeException("driveMask", driveMask, "Unable to determine drive letter from mask value.");
         }
 
         #endregion
