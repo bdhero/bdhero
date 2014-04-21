@@ -87,6 +87,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             SetExePath();
 
+            DumpLogFile();
             SetFFmpegLogLevel();
             RedirectProgressToFile();
             GenPTS();
@@ -115,6 +116,11 @@ namespace BDHero.Plugin.FFmpegMuxer
         #endregion
 
         #region Arguments
+
+        private void DumpLogFile()
+        {
+            Arguments.AddAll("-report");
+        }
 
         /// <summary>
         /// `-loglevel [repeat+]loglevel | -v [repeat+]loglevel`
@@ -157,7 +163,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             const string level = "error";
             var value = compressRepeatedLogMessages ? level : string.Format("repeat+{0}", level);
-            Arguments.AddAll("-report", "-loglevel", value);
+            Arguments.AddAll("-loglevel", value);
         }
 
         private void ReplaceExistingFiles()
