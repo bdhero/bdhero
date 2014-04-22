@@ -465,9 +465,7 @@ namespace BDHero
         private void ProgressProviderOnUpdated(ProgressProvider progressProvider)
         {
             if (PluginProgressUpdated != null)
-            {
                 _uiInvoker.InvokeAsync(() => ProgressProviderOnUpdatedSync(progressProvider));
-            }
         }
 
         private void ProgressProviderOnUpdatedSync(ProgressProvider progressProvider)
@@ -486,9 +484,7 @@ namespace BDHero
 
             // Progress hasn't changed since last update
             if (containsKey && prevHashCode == hashCode)
-            {
                 return;
-            }
 
             _progressMap[guid] = hashCode;
 
