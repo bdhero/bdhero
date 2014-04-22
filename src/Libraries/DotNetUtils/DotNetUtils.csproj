@@ -77,6 +77,7 @@
     <Compile Include="Exceptions\ID10TException.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="FS\FileType.cs" />
     <Compile Include="Crypto\CryptoHashAlgorithm.cs" />
     <Compile Include="Crypto\CryptoHashInput.cs" />
