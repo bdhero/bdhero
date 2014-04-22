@@ -60,6 +60,7 @@ namespace NativeAPI.Win.Kernel
             var volumeFlags = FileSystemFlags.NULL;
             var volumeLabel = new StringBuilder(256);
             var fileSystemName = new StringBuilder(256);
+            var invocation = string.Format("GetVolumeInformation({0})", dir == null ? "null" : string.Format("\"{0}\"", dir.FullName));
 
             try
             {
@@ -86,7 +87,7 @@ namespace NativeAPI.Win.Kernel
             }
             catch (Win32Exception e)
             {
-                Logger.Error("Invocation of native GetVolumeInformation() function threw a Win32 exception", e);
+                Logger.Error(string.Format("Invocation of native {0} function threw a Win32 exception", invocation), e);
             }
             catch (DllNotFoundException e)
             {
@@ -94,7 +95,7 @@ namespace NativeAPI.Win.Kernel
             }
             catch (Exception e)
             {
-                Logger.Error("GetVolumeInformation() threw an exception", e);
+                Logger.Error(string.Format("{0} threw an exception", invocation), e);
             }
 
             return null;
