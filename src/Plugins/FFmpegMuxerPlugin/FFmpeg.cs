@@ -72,7 +72,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private readonly BackgroundWorker _progressWorker = new BackgroundWorker();
 
-        private readonly IList<string> _stdErr = new List<string>();
+        private readonly IList<StdErrMessage> _stdErr = new List<StdErrMessage>();
 
         private readonly ManualResetEventSlim _cleanExitEvent = new ManualResetEventSlim();
 
@@ -155,7 +155,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             if (!_stdErr.Any())
                 return;
 
-            Logger.WarnFormat("StdErr:\n{0}", Indent(_stdErr));
+            Logger.WarnFormat("StdErr:\n{0}", Indent(_stdErr.Select(message => message.ToString())));
         }
 
         private void LogDumpFile()
@@ -211,7 +211,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             if (string.IsNullOrWhiteSpace(line))
                 return;
 
-            _stdErr.Add(string.Format("{0:yyyy-MM-dd HH:mm:ss,fff} {1}", DateTime.Now, line));
+            _stdErr.Add(new StdErrMessage(DateTime.Now, line));
 
             if (ErrorsToIgnore.Any(line.Contains))
             {
