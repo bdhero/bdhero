@@ -187,7 +187,7 @@ namespace ProcessUtils
                 Logger.Error("Error occurred while starting/running NonInteractiveProcess", e);
                 Exception = e;
                 Kill(true);
-                ProcessOnExited();
+                ProcessExitedSync();
                 throw;
             }
         }
@@ -217,7 +217,7 @@ namespace ProcessUtils
                     process.StartInfo.FileName = ExePath;
                     process.StartInfo.Arguments = Arguments.ToString();
                     process.EnableRaisingEvents = true;
-                    process.Exited += ProcessOnExited;
+                    process.Exited += ProcessExitedAsync;
 
                     OnBeforeStart(process);
 
@@ -266,7 +266,7 @@ namespace ProcessUtils
                 }
             }
 
-            ProcessOnExited();
+            ProcessExitedSync();
 
             return this;
         }
@@ -379,7 +379,7 @@ namespace ProcessUtils
         /// <summary>
         /// Invoked synchronously by <see cref="Start()"/> after waiting for the process to exit.
         /// </summary>
-        private void ProcessOnExited()
+        private void ProcessExitedSync()
         {
             _hasExited = true;
 
@@ -400,7 +400,7 @@ namespace ProcessUtils
         /// <summary>
         /// Invoked asynchronously by the <see cref="Process.Exited"/> event.
         /// </summary>
-        private void ProcessOnExited(object sender, EventArgs eventArgs)
+        private void ProcessExitedAsync(object sender, EventArgs eventArgs)
         {
             _hasExited = true;
 
