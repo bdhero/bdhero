@@ -199,9 +199,6 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static AnyDVDDiscInf GetAnyDVDDiscInf(Disc disc)
         {
-
-            // TODO: REMOVE ME
-            throw new Exception();
             var discInf = disc.FileSystem.Files.AnyDVDDiscInf;
             if (discInf == null)
                 return null;
