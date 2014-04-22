@@ -128,7 +128,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             var longStatus = string.Format("Muxing to MKV: {0} - {1} @ {2} fps",
                 TimeSpan.FromMilliseconds(ffmpeg.CurOutTimeMs).ToStringMedium(),
                 FileUtils.HumanFriendlyFileSize(ffmpeg.CurSize),
-                ffmpeg.CurFps.ToString("0.0"));
+                ffmpeg.CurFps.ToString("N1"));
 
             Host.ReportProgress(this, progressState.PercentComplete, shortStatus, longStatus);
 
