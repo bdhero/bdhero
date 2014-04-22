@@ -689,9 +689,13 @@ namespace BDHero.Plugin
             _stopwatch.Stop();
             _progressSample.Stop();
 
+            var prevPercentComplete = PercentComplete;
+
             State = ProgressProviderState.Success;
             PercentComplete = 100.0;
             TimeRemaining = TimeSpan.Zero;
+
+            LogPercentCompleteChange(prevPercentComplete, PercentComplete);
 
             if (Successful != null)
                 Successful(this);
@@ -702,6 +706,21 @@ namespace BDHero.Plugin
             NotifyObservers();
 
             LogMethodExit();
+        }
+
+        private void LogPercentCompleteChange(double prevPercentComplete, double newPercentComplete)
+        {
+            if (prevPercentComplete == PercentComplete)
+            {
+                Logger.InfoFormat("PercentComplete is already {0:P}",
+                                  newPercentComplete / 100.0);
+            }
+            else
+            {
+                Logger.InfoFormat("Changing PercentComplete from {0:P} to {1:P}",
+                                  prevPercentComplete / 100.0,
+                                  newPercentComplete / 100.0);
+            }
         }
 
         #endregion
