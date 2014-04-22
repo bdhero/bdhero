@@ -80,8 +80,6 @@ namespace BDHero.Plugin.DiscReader.Transformer
                                    Derived = derived
                                };
 
-                throw new Exception();
-
                 disc.Metadata = metadata;
             }
             catch (Exception ex)
