@@ -720,14 +720,14 @@ namespace BDHero.Plugin
         {
             if (prevPercentComplete == PercentComplete)
             {
-                Logger.InfoFormat("PercentComplete is already {0:P}",
-                                  newPercentComplete / 100.0);
+                Logger.DebugFormat("PercentComplete is already {0:P}",
+                                   newPercentComplete / 100.0);
             }
             else
             {
-                Logger.InfoFormat("Changing PercentComplete from {0:P} to {1:P}",
-                                  prevPercentComplete / 100.0,
-                                  newPercentComplete / 100.0);
+                Logger.DebugFormat("Changing PercentComplete from {0:P} to {1:P}",
+                                   prevPercentComplete / 100.0,
+                                   newPercentComplete / 100.0);
             }
         }
 
