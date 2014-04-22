@@ -301,6 +301,8 @@ namespace ProcessUtils
 
             Logger.InfoFormat("Killing process \"{0}\" w/ PID = {1}{2}...", ExePath, Id, dueToError ? " due to an error being thrown" : "");
 
+            State = dueToError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Killed;
+
             try
             {
                 GetProcess().Kill();
@@ -309,8 +311,6 @@ namespace ProcessUtils
             {
                 Logger.WarnFormat("Unable to kill process \"{0}\": Exception was thrown:\n{1}", ExePath, exception);
             }
-
-            State = dueToError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Killed;
         }
 
         private bool IsValidProcess
