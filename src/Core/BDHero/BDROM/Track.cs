@@ -249,6 +249,16 @@ namespace BDHero.BDROM
                 return Codec.ShortName;
             }
         }
+
+        public string ToStringLoggable()
+        {
+            return string.Format("Track w/ stream PID {0,5:D} (0x{0:x4}): {1,2:D} [{2}] {3}, {4}",
+                                 PID,
+                                 Index,
+                                 Keep ? "X" : " ",
+                                 Language.ISO_639_2,
+                                 SummaryDisplayable);
+        }
     }
 
     public enum TrackType
