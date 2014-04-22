@@ -314,6 +314,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             if ("progress=end" == line)
             {
                 _progress = 100;
+                Logger.InfoFormat("{0} ({1:P})", line, _progress / 100.0);
             }
         }
 
