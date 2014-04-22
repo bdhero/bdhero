@@ -312,7 +312,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             _progress = Math.Min(_progress, 100);
 
             if ("progress=end" == line)
+            {
                 _progress = 100;
+            }
         }
 
         private static long GetLong(Regex regex, string line)
