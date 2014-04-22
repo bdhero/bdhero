@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DotNetUtils.Extensions;
 
 // ReSharper disable ClassNeverInstantiated.Global
 namespace BDHero.Startup
@@ -86,14 +87,19 @@ namespace BDHero.Startup
 
             var commonRoot = GetCommonRoot(paths);
 
-            Logger.InfoFormat("IsPortable        = {0}", _directoryLocator.IsPortable);
-            Logger.InfoFormat("RootDir           = {0}", commonRoot);
-            Logger.InfoFormat("InstallDir        = {0}", SubPath(commonRoot, _directoryLocator.InstallDir));
-            Logger.InfoFormat("AppConfigDir      = {0}", SubPath(commonRoot, _directoryLocator.AppConfigDir));
-            Logger.InfoFormat("PluginConfigDir   = {0}", SubPath(commonRoot, _directoryLocator.PluginConfigDir));
-            Logger.InfoFormat("RequiredPluginDir = {0}", SubPath(commonRoot, _directoryLocator.RequiredPluginDir));
-            Logger.InfoFormat("CustomPluginDir   = {0}", SubPath(commonRoot, _directoryLocator.CustomPluginDir));
-            Logger.InfoFormat("LogDir            = {0}", SubPath(commonRoot, _directoryLocator.LogDir));
+            var lines = new[]
+                        {
+                            string.Format("IsPortable        = {0}", _directoryLocator.IsPortable),
+                            string.Format("RootDir           = {0}", commonRoot),
+                            string.Format("InstallDir        = {0}", SubPath(commonRoot, _directoryLocator.InstallDir)),
+                            string.Format("AppConfigDir      = {0}", SubPath(commonRoot, _directoryLocator.AppConfigDir)),
+                            string.Format("PluginConfigDir   = {0}", SubPath(commonRoot, _directoryLocator.PluginConfigDir)),
+                            string.Format("RequiredPluginDir = {0}", SubPath(commonRoot, _directoryLocator.RequiredPluginDir)),
+                            string.Format("CustomPluginDir   = {0}", SubPath(commonRoot, _directoryLocator.CustomPluginDir)),
+                            string.Format("LogDir            = {0}", SubPath(commonRoot, _directoryLocator.LogDir)),
+                        };
+
+            Logger.InfoFormat("Directories:\n{0}", lines.Indent());
         }
 
         private static string SubPath(string commonRoot, string fullPath)

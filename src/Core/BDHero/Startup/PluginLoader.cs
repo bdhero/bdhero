@@ -20,6 +20,7 @@ using System.Linq;
 using BDHero.Exceptions;
 using BDHero.Plugin;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 using log4net;
 
 namespace BDHero.Startup
@@ -66,22 +67,30 @@ namespace BDHero.Startup
 
         public void LogPlugins()
         {
-            _logger.InfoFormat("Loaded {0} plugins:", _pluginRepository.Count);
-            LogPlugins("Disc Readers", _pluginRepository.DiscReaderPlugins);
-            LogPlugins("Metadata Providers", _pluginRepository.MetadataProviderPlugins);
-            LogPlugins("Auto Detectors", _pluginRepository.AutoDetectorPlugins);
-            LogPlugins("Name Providers", _pluginRepository.NameProviderPlugins);
-            LogPlugins("Muxers", _pluginRepository.MuxerPlugins);
-            LogPlugins("Post Processors", _pluginRepository.PostProcessorPlugins);
+            var categories = new[]
+                             {
+                                 LogPlugins("Disc Readers", _pluginRepository.DiscReaderPlugins),
+                                 LogPlugins("Metadata Providers", _pluginRepository.MetadataProviderPlugins),
+                                 LogPlugins("Auto Detectors", _pluginRepository.AutoDetectorPlugins),
+                                 LogPlugins("Name Providers", _pluginRepository.NameProviderPlugins),
+                                 LogPlugins("Muxers", _pluginRepository.MuxerPlugins),
+                                 LogPlugins("Post Processors", _pluginRepository.PostProcessorPlugins),
+                             };
+
+            var lines = categories.Select(list => list.Indent()).JoinLines();
+
+            _logger.InfoFormat("Loaded {0} plugins:\n{1}", _pluginRepository.Count, lines);
         }
 
-        private void LogPlugins<T>(string name, IList<T> plugins) where T : IPlugin
+        private List<string> LogPlugins<T>(string name, IList<T> plugins) where T : IPlugin
         {
-            _logger.InfoFormat("    {0} ({1}){2}", name, plugins.Count, plugins.Any() ? ":" : "");
+            var lines = new List<string>();
+            lines.Add(string.Format("{0} ({1}){2}", name, plugins.Count, plugins.Any() ? ":" : ""));
             foreach (var plugin in plugins)
             {
-                _logger.InfoFormat("        {0} v{1} ({2})", plugin.Name, plugin.AssemblyInfo.Version, plugin.AssemblyInfo.Guid);
+                lines.Add(string.Format("{0} v{1} ({2})", plugin.Name, plugin.AssemblyInfo.Version, plugin.AssemblyInfo.Guid).Indent());
             }
+            return lines;
         }
     }
 }
