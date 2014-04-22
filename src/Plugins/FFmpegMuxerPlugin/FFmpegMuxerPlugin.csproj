@@ -53,8 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentAttribute.cs" />
     <Compile Include="FFmpeg.cs" />
+    <Compile Include="FFmpegCLI.cs" />
     <Compile Include="FFmpegException.cs" />
+    <Compile Include="FFmpegLogLevel.cs" />
     <Compile Include="FFmpegPlugin.cs" />
     <Compile Include="FFmpegTrackIndex.cs" />
     <Compile Include="MkvPropEdit.cs" />
