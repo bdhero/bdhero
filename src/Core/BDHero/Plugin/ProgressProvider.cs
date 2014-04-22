@@ -246,9 +246,10 @@ namespace BDHero.Plugin
 
         #region Update notification
 
-        private void NotifyObservers()
+        private void NotifyObservers(bool force = true)
         {
-            if (!CanUpdate) return;
+            if (!CanUpdate && !force)
+                return;
 
             if (Updated != null)
                 Updated(this);
@@ -291,7 +292,7 @@ namespace BDHero.Plugin
             LogMethodEntry();
 
             CalculateTimeRemaining();
-            NotifyObservers();
+            NotifyObservers(false);
             SetLastTick();
 
             LogMethodExit();
@@ -536,6 +537,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Running;
             Tick();
+            NotifyObservers();
 
             _timer.Start();
             _stopwatch.Start();
@@ -563,6 +565,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Running;
             Tick();
+            NotifyObservers();
 
             _timer.Start();
             _stopwatch.Start();
@@ -593,6 +596,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Paused;
             Tick();
+            NotifyObservers();
 
             if (Paused != null)
                 Paused(this);
@@ -619,6 +623,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Canceled;
             Tick();
+            NotifyObservers();
 
             if (Canceled != null)
                 Canceled(this);
@@ -660,6 +665,7 @@ namespace BDHero.Plugin
             State = ProgressProviderState.Error;
             Exception = exception;
             Tick();
+            NotifyObservers();
 
             if (Errored != null)
                 Errored(this);
@@ -696,6 +702,8 @@ namespace BDHero.Plugin
             TimeRemaining = TimeSpan.Zero;
 
             LogPercentCompleteChange(prevPercentComplete, PercentComplete);
+
+            NotifyObservers();
 
             if (Successful != null)
                 Successful(this);
@@ -739,7 +747,7 @@ namespace BDHero.Plugin
             ShortStatus = shortStatus;
             LongStatus = longStatus ?? shortStatus;
 
-            NotifyObservers();
+            NotifyObservers(false);
 
             LogMethodExit();
         }
