@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace BDHero.Plugin.FFmpegMuxer
+﻿namespace BDHero.Plugin.FFmpegMuxer
 {
     public enum FFmpegLogLevel
     {
