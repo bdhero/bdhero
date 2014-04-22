@@ -285,6 +285,10 @@ System Info
             var path = match.Value;
             var name = Path.GetFileName(path);
             var sep = Path.DirectorySeparatorChar;
+
+            if (string.IsNullOrEmpty(name))
+                return path;
+
             return string.Format("{0}{1}{2}", Redacted, sep, name);
         }
     }
