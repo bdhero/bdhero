@@ -468,17 +468,7 @@ namespace BDHero.BDROM
 
         public void Log()
         {
-            var tracks = new List<string>();
-            foreach (var track in Tracks)
-            {
-                tracks.Add(string.Format("Track w/ stream PID {0,5:D} (0x{0:x4}): {1,2:D} [{2}] {3}, {4}",
-                                         track.PID,
-                                         track.Index,
-                                         track.Keep ? "X" : " ",
-                                         track.Language.ISO_639_2,
-                                         track.SummaryDisplayable));
-            }
-
+            var tracks = Tracks.Select(track => track.ToStringLoggable()).ToList();
             Logger.InfoFormat("{0} tracks:\n{1}", FileName, tracks.IndentTrim());
         }
 
