@@ -180,16 +180,20 @@ namespace ProcessUtils
         {
             try
             {
-                return StartImpl();
+                StartImpl();
             }
             catch (Exception e)
             {
                 Logger.Error("Error occurred while starting/running NonInteractiveProcess", e);
                 Exception = e;
                 Kill(true);
-                ProcessExitedSync();
                 throw;
             }
+            finally
+            {
+                ProcessExitedSync();
+            }
+            return this;
         }
 
         protected virtual void OnBeforeStart(Process process)
@@ -202,7 +206,7 @@ namespace ProcessUtils
 
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
-        private NonInteractiveProcess StartImpl()
+        private void StartImpl()
         {
             if (State != NonInteractiveProcessState.Ready)
                 throw new InvalidOperationException("NonInteractiveProcess.Start() cannot be called more than once.");
@@ -265,10 +269,6 @@ namespace ProcessUtils
                     ExitCode = process.ExitCode;
                 }
             }
-
-            ProcessExitedSync();
-
-            return this;
         }
 
         private bool ShouldKeepRunning
