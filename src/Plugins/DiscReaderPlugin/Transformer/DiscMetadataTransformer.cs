@@ -54,33 +54,38 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         public static void Transform(Disc disc)
         {
+            var raw = new DiscMetadata.RawMetadata
+                        {
+                            HardwareVolumeLabel = TryGet(disc, () => GetHardwareVolumeLabel(disc)),
+                            DiscInf             = TryGet(disc, () => GetAnyDVDDiscInf(disc)),
+                            AllBdmtTitles       = TryGet(disc, () => GetAllBdmtTitles(disc)),
+                            DboxTitle           = TryGet(disc, () => GetDboxTitle(disc)),
+                            V_ISAN              = TryGet(disc, () => GetVISAN(disc)),
+                        };
+
+            var derived = new DiscMetadata.DerivedMetadata
+                            {
+                                VolumeLabel          = TryGet(disc, () => GetVolumeLabel(raw)),
+                                VolumeLabelSanitized = TryGet(disc, () => GetVolumeLabelSanitized(raw)),
+                                ValidBdmtTitles      = TryGet(disc, () => GetValidBdmtTitles(raw.AllBdmtTitles)),
+                                DboxTitleSanitized   = TryGet(disc, () => GetDboxTitleSanitized(raw)),
+                                SearchQueries        = TryGet(disc, () => new List<SearchQuery>()), /* populated by DiscTransformer */
+                            };
+
+            var metadata = new DiscMetadata
+                            {
+                                Raw = raw,
+                                Derived = derived
+                            };
+
+            disc.Metadata = metadata;
+        }
+
+        private static TResult TryGet<TResult>(Disc disc, Func<TResult> func)
+        {
             try
             {
-                var raw = new DiscMetadata.RawMetadata
-                          {
-                              HardwareVolumeLabel = GetHardwareVolumeLabel(disc),
-                              DiscInf = GetAnyDVDDiscInf(disc),
-                              AllBdmtTitles = GetAllBdmtTitles(disc),
-                              DboxTitle = GetDboxTitle(disc),
-                              V_ISAN = GetVISAN(disc)
-                          };
-
-                var derived = new DiscMetadata.DerivedMetadata
-                              {
-                                  VolumeLabel = GetVolumeLabel(raw),
-                                  VolumeLabelSanitized = GetVolumeLabelSanitized(raw),
-                                  ValidBdmtTitles = GetValidBdmtTitles(raw.AllBdmtTitles),
-                                  DboxTitleSanitized = GetDboxTitleSanitized(raw),
-                                  SearchQueries = new List<SearchQuery>() /* populated by DiscTransformer */
-                              };
-
-                var metadata = new DiscMetadata
-                               {
-                                   Raw = raw,
-                                   Derived = derived
-                               };
-
-                disc.Metadata = metadata;
+                return func();
             }
             catch (Exception ex)
             {
@@ -194,6 +199,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static AnyDVDDiscInf GetAnyDVDDiscInf(Disc disc)
         {
+
+            // TODO: REMOVE ME
+            throw new Exception();
             var discInf = disc.FileSystem.Files.AnyDVDDiscInf;
             if (discInf == null)
                 return null;
