@@ -284,18 +284,8 @@ System Info
         {
             var path = match.Value;
             var name = Path.GetFileName(path);
-            var ext = Path.GetExtension(path);
-            
-            // Directory
-            if (string.IsNullOrEmpty(ext))
-                return match.Result(Redacted);
-
-            // C# source file from a stack trace
-            if (".cs".Equals(ext, StringComparison.InvariantCultureIgnoreCase))
-                return string.Format("{0}{1}{2}", Redacted, Path.DirectorySeparatorChar, name);
-
-            // All other files
-            return match.Result(string.Format("{0}{1}", Redacted, ext));
+            var sep = Path.DirectorySeparatorChar;
+            return string.Format("{0}{1}{2}", Redacted, sep, name);
         }
     }
 }
