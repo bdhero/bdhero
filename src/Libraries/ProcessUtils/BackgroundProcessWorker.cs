@@ -105,7 +105,7 @@ namespace ProcessUtils
         /// <summary>
         /// Runs in UI thread.
         /// </summary>
-        private void TimerOnTick(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void TimerOnTick(object sender, ElapsedEventArgs args)
         {
             CalculateTimeRemaining();
             if (ProgressUpdated != null)
