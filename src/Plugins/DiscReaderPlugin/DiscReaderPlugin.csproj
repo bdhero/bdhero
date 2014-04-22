@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiscReader.cs" />
+    <Compile Include="Exceptions\DiscMetadataTransformerException.cs" />
     <Compile Include="Exceptions\PlaylistFileScanException.cs" />
     <Compile Include="Exceptions\ScanException.cs" />
     <Compile Include="Exceptions\StreamClipFileScanException.cs" />

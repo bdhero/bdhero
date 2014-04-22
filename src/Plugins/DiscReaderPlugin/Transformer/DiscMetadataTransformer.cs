@@ -15,13 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using BDHero.Plugin.DiscReader.Exceptions;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using I18N;
 using IniParser;
@@ -30,6 +33,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
 {
     public static class DiscMetadataTransformer
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly Regex BdmtFileNameRegex = new Regex(
             "bdmt_([a-z]{3}).xml",
             RegexOptions.IgnoreCase);
@@ -48,31 +54,41 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         public static void Transform(Disc disc)
         {
-            var raw = new DiscMetadata.RawMetadata
-                {
-                    HardwareVolumeLabel = GetHardwareVolumeLabel(disc),
-                    DiscInf = GetAnyDVDDiscInf(disc),
-                    AllBdmtTitles = GetAllBdmtTitles(disc),
-                    DboxTitle = GetDboxTitle(disc),
-                    V_ISAN = GetVISAN(disc)
-                };
+            try
+            {
+                var raw = new DiscMetadata.RawMetadata
+                          {
+                              HardwareVolumeLabel = GetHardwareVolumeLabel(disc),
+                              DiscInf = GetAnyDVDDiscInf(disc),
+                              AllBdmtTitles = GetAllBdmtTitles(disc),
+                              DboxTitle = GetDboxTitle(disc),
+                              V_ISAN = GetVISAN(disc)
+                          };
 
-            var derived = new DiscMetadata.DerivedMetadata
-                {
-                    VolumeLabel = GetVolumeLabel(raw),
-                    VolumeLabelSanitized = GetVolumeLabelSanitized(raw),
-                    ValidBdmtTitles = GetValidBdmtTitles(raw.AllBdmtTitles),
-                    DboxTitleSanitized = GetDboxTitleSanitized(raw),
-                    SearchQueries = new List<SearchQuery>() /* populated by DiscTransformer */
-                };
+                var derived = new DiscMetadata.DerivedMetadata
+                              {
+                                  VolumeLabel = GetVolumeLabel(raw),
+                                  VolumeLabelSanitized = GetVolumeLabelSanitized(raw),
+                                  ValidBdmtTitles = GetValidBdmtTitles(raw.AllBdmtTitles),
+                                  DboxTitleSanitized = GetDboxTitleSanitized(raw),
+                                  SearchQueries = new List<SearchQuery>() /* populated by DiscTransformer */
+                              };
 
-            var metadata = new DiscMetadata
-                {
-                    Raw = raw,
-                    Derived = derived
-                };
+                var metadata = new DiscMetadata
+                               {
+                                   Raw = raw,
+                                   Derived = derived
+                               };
 
-            disc.Metadata = metadata;
+                throw new Exception();
+
+                disc.Metadata = metadata;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(string.Format("Disc.FileSystem:\n{0}", disc.FileSystem.ToJsonPlainIndented().Indent()));
+                throw new DiscMetadataTransformerException("Error occurred while retrieving metadata from disc.", ex);
+            }
         }
 
         #region Derived methods
