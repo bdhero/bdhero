@@ -37,6 +37,9 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static readonly log4net.ILog Logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private static readonly TimeSpan ProgressParseInterval = TimeSpan.FromMilliseconds(250);
+        private static readonly TimeSpan ExitWaitTimeout = ProgressParseInterval + ProgressParseInterval;
+
         #region Regexes - progress parsing
 
         private static readonly Regex FrameRegex = new Regex(@"^frame=(\d+)$");
@@ -70,6 +73,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         private readonly BackgroundWorker _progressWorker = new BackgroundWorker();
 
         private readonly IList<string> _stdErr = new List<string>();
+
+        private readonly ManualResetEventSlim _cleanExitEvent = new ManualResetEventSlim();
 
         public FFmpeg(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
             : base(jobObjectManager)
@@ -106,6 +111,8 @@ namespace BDHero.Plugin.FFmpegMuxer
             BeforeStart += OnBeforeStart;
             StdErr += OnStdErr;
             Exited += (state, code, exception, time) => OnExited(state, code, job.SelectedReleaseMedium, playlist, outputMKVPath);
+
+            CleanExit = false;
         }
 
         #region Process start
@@ -294,7 +301,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             if (line == null)
             {
-                Thread.Sleep(500);
+                if (State == NonInteractiveProcessState.Running && _progress < 98.0)
+                    Thread.Sleep(ProgressParseInterval);
                 return;
             }
 
@@ -313,7 +321,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             if ("progress=end" == line)
             {
                 _progress = 100;
+                CleanExit = true;
                 Logger.InfoFormat("{0} ({1:P})", line, _progress / 100.0);
+                _cleanExitEvent.Set();
             }
         }
 
@@ -330,6 +340,16 @@ namespace BDHero.Plugin.FFmpegMuxer
         #endregion
 
         #region Exit handling
+
+        protected override void BeforeProcessExited()
+        {
+            // ParseProgressLine() already parsed "progress=end" line
+            if (CleanExit.HasValue && CleanExit.Value)
+                return;
+
+            // Give ParseProgressLine() time to read the final output written by the process
+            _cleanExitEvent.Wait(ExitWaitTimeout);
+        }
 
         private void OnExited(NonInteractiveProcessState processState, int exitCode, ReleaseMedium releaseMedium, Playlist playlist, string outputMKVPath)
         {
