@@ -680,7 +680,9 @@ namespace BDHero.Plugin
             {
                 throw new InvalidOperationException(
                     string.Format("Unable to switch to {0} state: must be in {1} state, but object is in {2} state",
-                                  ProgressProviderState.Success, ProgressProviderState.Running, State));
+                                  ProgressProviderState.Success,
+                                  ProgressProviderState.Running,
+                                  State));
             }
 
             _timer.Stop();
