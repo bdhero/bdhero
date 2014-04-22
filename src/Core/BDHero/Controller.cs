@@ -492,7 +492,8 @@ namespace BDHero
             Logger.Debug("ProgressProviderOnUpdated() - Calling PluginProgressUpdated event handlers");
 #endif
 
-            PluginProgressUpdated(progressProvider.Plugin, progressProvider);
+            if (PluginProgressUpdated != null)
+                PluginProgressUpdated(progressProvider.Plugin, progressProvider);
         }
 
         #endregion
