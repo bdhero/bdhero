@@ -83,7 +83,7 @@ namespace ProcessUtils
         private bool _hasStarted;
         private bool _hasExited;
 
-        protected bool CleanExit = true;
+        protected bool? CleanExit;
 
         /// <summary>
         /// Gets the system process ID.
@@ -378,11 +378,42 @@ namespace ProcessUtils
 
         #region Exit handling
 
+        private bool IsUncleanExit
+        {
+            get { return CleanExit.HasValue && CleanExit.Value == false; }
+        }
+
+        private bool IsError
+        {
+            get
+            {
+                if (State == NonInteractiveProcessState.Error)
+                    return true;
+
+                if (ExitCode != 0)
+                    return true;
+
+                if (Exception != null)
+                    return true;
+
+                if (IsUncleanExit)
+                    return true;
+
+                return false;
+            }
+        }
+
+        protected virtual void BeforeProcessExited()
+        {
+        }
+
         /// <summary>
         /// Invoked synchronously by <see cref="Start()"/> after waiting for the process to exit.
         /// </summary>
         private void ProcessExitedSync()
         {
+            BeforeProcessExited();
+
             _hasExited = true;
 
             LogExit("synchronous");
@@ -391,8 +422,7 @@ namespace ProcessUtils
 
             if (State != NonInteractiveProcessState.Killed)
             {
-                var hasError = (State == NonInteractiveProcessState.Error) || ExitCode != 0 || Exception != null;
-                State = hasError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Completed;
+                State = IsError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Completed;
             }
 
             if (Exited != null)
@@ -404,6 +434,8 @@ namespace ProcessUtils
         /// </summary>
         private void ProcessExitedAsync(object sender, EventArgs eventArgs)
         {
+            BeforeProcessExited();
+
             _hasExited = true;
 
             LogExit("asynchronous");
@@ -416,13 +448,13 @@ namespace ProcessUtils
         {
             var message = string.Format("Process \"{0}\" exited {1} ({2} event)",
                                         ExePath,
-                                        CleanExit ? "cleanly" : "uncleanly",
+                                        CleanExit.HasValue ? (CleanExit.Value ? "cleanly" : "uncleanly") : "",
                                         eventType);
 
-            if (CleanExit)
-                Logger.Info(message);
-            else
+            if (CleanExit.HasValue && CleanExit.Value == false)
                 Logger.Warn(message);
+            else
+                Logger.Info(message);
         }
 
         #endregion
