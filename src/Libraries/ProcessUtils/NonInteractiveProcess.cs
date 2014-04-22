@@ -83,6 +83,8 @@ namespace ProcessUtils
         private bool _hasStarted;
         private bool _hasExited;
 
+        protected bool CleanExit = true;
+
         /// <summary>
         /// Gets the system process ID.
         /// </summary>
@@ -383,7 +385,7 @@ namespace ProcessUtils
         {
             _hasExited = true;
 
-            Logger.InfoFormat("Process \"{0}\" exited (synchronous event)", ExePath);
+            LogExit("synchronous");
 
             _stopwatch.Stop();
 
@@ -404,10 +406,23 @@ namespace ProcessUtils
         {
             _hasExited = true;
 
-            Logger.InfoFormat("Process \"{0}\" exited (asynchronous event)", ExePath);
+            LogExit("asynchronous");
 
             var process = sender as Process;
             if (process == null) return;
+        }
+
+        private void LogExit(string eventType)
+        {
+            var message = string.Format("Process \"{0}\" exited {1} ({2} event)",
+                                        ExePath,
+                                        CleanExit ? "cleanly" : "uncleanly",
+                                        eventType);
+
+            if (CleanExit)
+                Logger.Info(message);
+            else
+                Logger.Warn(message);
         }
 
         #endregion
