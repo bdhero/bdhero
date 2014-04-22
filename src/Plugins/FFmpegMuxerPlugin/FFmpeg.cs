@@ -284,10 +284,9 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             get
             {
-                return (_progress < 100) &&
-                       (State == NonInteractiveProcessState.Ready   ||
-                        State == NonInteractiveProcessState.Running ||
-                        State == NonInteractiveProcessState.Paused);
+                return State == NonInteractiveProcessState.Ready   ||
+                       State == NonInteractiveProcessState.Running ||
+                       State == NonInteractiveProcessState.Paused;
             }
         }
 
