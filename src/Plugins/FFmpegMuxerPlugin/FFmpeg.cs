@@ -526,8 +526,6 @@ namespace BDHero.Plugin.FFmpegMuxer
             else if (OutTimeMsRegex.IsMatch(line))
                 CurOutTimeMs = GetLong(OutTimeMsRegex, line) / 1000;
 
-            var prevProgress = _progress;
-
             _progress = 100 * (CurOutTimeMs / _playlistLength.TotalMilliseconds);
             _progress = Math.Min(_progress, 100);
 
