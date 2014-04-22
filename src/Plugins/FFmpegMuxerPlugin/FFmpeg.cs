@@ -198,6 +198,10 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             "Not a valid DCA frame",
             "Last message repeated",
+        };
+
+        private static readonly string[] ErrorsToIgnoreIfComplete =
+        {
             "max resync size reached, could not find sync byte", // TODO: How should we handle this?
         };
 
@@ -343,12 +347,40 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         protected override void BeforeProcessExited()
         {
+            PickBestException();
+
             // ParseProgressLine() already parsed "progress=end" line
             if (CleanExit.HasValue && CleanExit.Value)
                 return;
 
             // Give ParseProgressLine() time to read the final output written by the process
             _cleanExitEvent.Wait(ExitWaitTimeout);
+        }
+
+        // TODO: Clean this garbage up
+        private void PickBestException()
+        {
+            var stdErr =
+                new Stack<string>(
+                    _stdErr.Where(message => !ErrorsToIgnoreIfComplete.Contains(message.Message))
+                           .Select(message => message.Message));
+
+            if (_progress == 100.0 ||
+                Exception == null ||
+                !ErrorsToIgnoreIfComplete.Any(Exception.Message.Contains) ||
+                !stdErr.Any())
+            {
+                return;
+            }
+
+            try
+            {
+                throw new Exception(stdErr.Pop());
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+            }
         }
 
         private void OnExited(NonInteractiveProcessState processState, int exitCode, ReleaseMedium releaseMedium, Playlist playlist, string outputMKVPath)
