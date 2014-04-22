@@ -93,7 +93,13 @@ namespace ProcessUtils
             if (State == NonInteractiveProcessState.Running)
                 _timer.Start();
             else
-                _timer.Stop();
+                _timer.Elapsed += StopTimer;
+        }
+
+        private void StopTimer(object sender, ElapsedEventArgs args)
+        {
+            _timer.Stop();
+            _timer.Elapsed -= StopTimer;
         }
 
         /// <summary>
