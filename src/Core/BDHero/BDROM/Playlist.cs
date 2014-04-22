@@ -469,7 +469,13 @@ namespace BDHero.BDROM
         public void Log()
         {
             var tracks = Tracks.Select(track => track.ToStringLoggable()).ToList();
-            Logger.InfoFormat("{0} tracks:\n{1}", FileName, tracks.IndentTrim());
+
+            Logger.InfoFormat("{0}: {1}, {2} chapters, {3:N0} bytes\n{4}",
+                              FileName,
+                              Length.ToStringMedium(),
+                              ChapterCount,
+                              FileSize,
+                              tracks.IndentTrim());
         }
 
         #endregion
