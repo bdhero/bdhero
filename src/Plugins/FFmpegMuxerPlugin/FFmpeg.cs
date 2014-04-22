@@ -194,7 +194,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         #region StdErr
 
-        private static readonly string[] ErrorsToIgnore =
+        private static readonly string[] ErrorsToIgnoreAlways =
         {
             "Not a valid DCA frame",
             "Last message repeated",
@@ -213,7 +213,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             _stdErr.Add(new StdErrMessage(DateTime.Now, line));
 
-            if (ErrorsToIgnore.Any(line.Contains))
+            if (ErrorsToIgnoreAlways.Any(line.Contains))
             {
                 Logger.Warn(line);
                 return;
