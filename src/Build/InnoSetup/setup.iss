@@ -4,7 +4,7 @@
 
 #define MyAppName "BDHero"
 #define MyAppMachineName "bdhero"
-#define MyAppVersion "0.9.0.9"
+#define MyAppVersion "0.9.1.0"
 #define MyAppPublisher "BDHero"
 #define MyAppURL "http://bdhero.org/"
 #define MyAppExeName "bdhero-gui.exe"

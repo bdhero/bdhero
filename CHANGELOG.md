@@ -1,6 +1,14 @@
 BDHero Changelog
 ================
 
+0.9.1.0 - 2014-04-17
+--------------------
+
+*   Downgrade: FFmpeg 2.1.4 (regression introduced in 2.x (4eb49fdd); see #30)
+*   Improve: Better error detection when FFmpeg process exits
+*   Improve: Minor usability improvements
+*   Improve: More specific error messages
+
 0.9.0.9 - 2014-04-17
 --------------------
 
