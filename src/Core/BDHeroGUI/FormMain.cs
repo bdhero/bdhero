@@ -726,6 +726,7 @@ namespace BDHeroGUI
         #region File renamer
 
         private bool _isRenaming;
+        private bool _preventRename;
 
         private void RenameAsync()
         {
@@ -733,6 +734,9 @@ namespace BDHeroGUI
                 return;
 
             if (_isRenaming)
+                return;
+
+            if (_preventRename)
                 return;
 
             _isRenaming = true;
@@ -924,6 +928,8 @@ namespace BDHeroGUI
             EnableControls(false);
 
             _taskbarItem.SetProgress(0).Indeterminate();
+
+            _preventRename = true;
         }
 
         private void ControllerOnScanSucceeded(IPromise<bool> promise)
@@ -934,6 +940,9 @@ namespace BDHeroGUI
             AppendStatus("Scan succeeded!");
 
             _state = ProgressProviderState.Success;
+
+            _preventRename = false;
+            RenameAsync();
 
             RefreshUI();
             PromptForMetadataIfNeeded();
@@ -957,6 +966,8 @@ namespace BDHeroGUI
             {
                 ShowErrorDialog("Error: Scan Failed", promise.LastException);
             }
+
+            _preventRename = false;
         }
 
         private void ControllerOnScanCompleted(IPromise<bool> promise)
