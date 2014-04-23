@@ -691,7 +691,9 @@ namespace BDHeroGUI
 
         private void PromptForMetadataIfNeeded()
         {
-            if (!_controller.Job.Movies.Any() && !_controller.Job.TVShows.Any())
+            if (!_controller.Job.Movies.Any() &&
+                !_controller.Job.TVShows.Any() &&
+                _controller.PluginsByType.OfType<IMetadataProviderPlugin>().Any(plugin => plugin.Enabled))
             {
                 ShowMetadataSearchWindow();
             }
