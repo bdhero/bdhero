@@ -27,6 +27,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
 {
     static class DiscTransformer
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static Disc Transform(BDInfo.BDROM bdrom)
         {
             var tsPlaylistFiles = PlaylistTransformer.Transform(bdrom.PlaylistFiles);
@@ -64,6 +67,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
                                        .OrderByDescending(grouping => grouping.Count())
                                        .Select(grouping => grouping.Key)
                                        .FirstOrDefault();
+
+            if (!HasPrimaryLanguage(disc))
+                Logger.Warn("Unable to determine primary disc language.");
         }
 
         private static void TransformVideoLanguages(Disc disc)
