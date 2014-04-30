@@ -111,10 +111,13 @@ namespace BDHero.Plugin.DiscReader.Transformer
         {
             var derived = disc.Metadata.Derived;
 
-            var validBdmtTitles = derived.ValidBdmtTitles;
-            if (validBdmtTitles.ContainsKey(disc.PrimaryLanguage))
+            if (HasPrimaryLanguage(disc))
             {
-                AddSearchableTitleIfNotEmpty(disc, validBdmtTitles[disc.PrimaryLanguage]);
+                var validBdmtTitles = derived.ValidBdmtTitles;
+                if (validBdmtTitles.ContainsKey(disc.PrimaryLanguage))
+                {
+                    AddSearchableTitleIfNotEmpty(disc, validBdmtTitles[disc.PrimaryLanguage]);
+                }
             }
 
             AddSearchableTitleIfNotEmpty(disc, derived.DboxTitleSanitized);
