@@ -55,7 +55,8 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static void TransformPrimaryLanguage(Disc disc)
         {
-            if (disc.PrimaryLanguage != null) return;
+            if (HasPrimaryLanguage(disc))
+                return;
 
             disc.PrimaryLanguage = disc.Playlists.SelectMany(playlist => playlist.AudioTracks)
                                        .Select(track => track.Language)
@@ -67,7 +68,8 @@ namespace BDHero.Plugin.DiscReader.Transformer
 
         private static void TransformVideoLanguages(Disc disc)
         {
-            if (disc.PrimaryLanguage == null) return;
+            if (!HasPrimaryLanguage(disc))
+                return;
 
             foreach (var videoTrack in disc.Playlists.SelectMany(playlist => playlist.VideoTracks))
             {
@@ -79,21 +81,22 @@ namespace BDHero.Plugin.DiscReader.Transformer
         {
             var playlists = disc.Playlists;
             var languages = disc.Languages;
-            var primaryLanguage = disc.PrimaryLanguage;
 
             // Sort languages alphabetically
             var languagesWithDups =
                     playlists
                         .SelectMany(playlist => playlist.Tracks)
                         .Select(track => track.Language)
-                        .Where(language => language != null && language != Language.Undetermined);
+                        .Where(IsValidLanguage);
 
             languages.Clear();
             languages.AddRange(new HashSet<Language>(languagesWithDups).OrderBy(language => language.Name));
 
-            if (primaryLanguage == null || primaryLanguage == Language.Undetermined) return;
+            if (!HasPrimaryLanguage(disc))
+                return;
 
             // Move primary language to the beginning of the list
+            var primaryLanguage = disc.PrimaryLanguage;
             languages.Remove(primaryLanguage);
             languages.Insert(0, primaryLanguage);
         }
@@ -116,6 +119,16 @@ namespace BDHero.Plugin.DiscReader.Transformer
         {
             if (!string.IsNullOrWhiteSpace(query))
                 disc.Metadata.Derived.SearchQueries.Add(new SearchQuery { Title = query, Language = disc.PrimaryLanguage });
+        }
+
+        private static bool HasPrimaryLanguage(Disc disc)
+        {
+            return IsValidLanguage(disc.PrimaryLanguage);
+        }
+
+        private static bool IsValidLanguage(Language language)
+        {
+            return language != null && language != Language.Undetermined;
         }
 
         #endregion
