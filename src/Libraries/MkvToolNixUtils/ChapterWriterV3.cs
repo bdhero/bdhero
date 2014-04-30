@@ -37,19 +37,8 @@ namespace MkvToolNixUtils
             _tempFileRegistrar = tempFileRegistrar;
         }
 
-        /// <summary>
-        ///     Saves the given <paramref name="chapters"/> in Matroska XML format to a temporary file
-        ///     and adds the necessary command line arguments to <paramref name="arguments"/> to
-        ///     add the <paramref name="chapters"/> to an MKV file using any of the supported MkvToolNix binaries.
-        /// </summary>
-        /// <param name="arguments"></param>
-        /// <param name="chapters"></param>
-        public void SetChapters(ArgumentList arguments, ICollection<Chapter> chapters)
+        public void SetChapterMetadata(ArgumentList arguments, IEnumerable<Chapter> chapters)
         {
-            var path = _tempFileRegistrar.CreateTempFile(GetType(), "chapters.xml");
-
-            SaveAsXml(chapters, path);
-
             var firstChapterWithLanguage = chapters.FirstOrDefault(HasLanguage);
             var lang = firstChapterWithLanguage != null
                            ? firstChapterWithLanguage.Language.ISO_639_2
@@ -57,6 +46,19 @@ namespace MkvToolNixUtils
 
             arguments.AddAll("--chapter-language", lang);
             arguments.AddAll("--chapter-charset", Encoding.BodyName.ToUpper());
+        }
+
+        /// <summary>
+        ///     Saves the given <paramref name="chapters"/> in Matroska XML format to a temporary file
+        ///     and adds the necessary command line arguments to <paramref name="arguments"/> to
+        ///     add the <paramref name="chapters"/> to an MKV file using any of the supported MkvToolNix binaries.
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <param name="chapters"></param>
+        public void SetChapters(ArgumentList arguments, IEnumerable<Chapter> chapters)
+        {
+            var path = _tempFileRegistrar.CreateTempFile(GetType(), "chapters.xml");
+            SaveAsXml(chapters, path);
             arguments.AddAll("--chapters", path);
         }
 

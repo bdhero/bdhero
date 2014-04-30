@@ -192,7 +192,9 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         public MkvMergeCLI SetChapters(IList<Chapter> chapters)
         {
-            new ChapterWriterV3(_tempFileRegistrar).SetChapters(Arguments, chapters);
+            var chapterWriter = new ChapterWriterV3(_tempFileRegistrar);
+            chapterWriter.SetChapterMetadata(Arguments, chapters);
+            chapterWriter.SetChapters(Arguments, chapters);
             return this;
         }
 

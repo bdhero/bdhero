@@ -136,7 +136,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             return this;
         }
 
-        public MkvPropEdit AttachCoverArt([CanBeNull] ReleaseMedium releaseMedium)
+        public MkvPropEdit AddCoverArt([CanBeNull] ReleaseMedium releaseMedium)
         {
             new CoverArtResizer(Arguments, _tempFileRegistrar).AddCoverArt(releaseMedium);
             return this;
@@ -204,7 +204,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                                };
 //            var mkvPropEdit = new MkvPropEdit { SourceFilePath = mkvFilePath }
 //                .SetMovieTitle(movieTitle)
-//                .AttachCoverArt(coverArt)
+//                .AddCoverArt(coverArt)
 //                .SetChapters(chapters)
 //                .SetTrackProps(trackProps);
 //            mkvPropEdit.Start();

@@ -394,7 +394,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             var mkvPropEdit = new MkvPropEdit(_jobObjectManager, _tempFileRegistrar) { SourceFilePath = outputMKVPath }
                 .RemoveAllTags()
-                .AttachCoverArt(releaseMedium)
+                .AddCoverArt(releaseMedium)
                 .SetChapters(playlist.Chapters)
 //                .SetDefaultTracksAuto(selectedTracks) // Breaks MediaInfo
             ;
