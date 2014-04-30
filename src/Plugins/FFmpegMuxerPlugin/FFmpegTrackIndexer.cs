@@ -38,8 +38,6 @@ namespace BDHero.Plugin.FFmpegMuxer
     /// </summary>
     internal class FFmpegTrackIndexer
     {
-        private readonly Playlist _playlist;
-
         /// <summary>
         /// Map of track PIDs to their TrackIndexes.
         /// </summary>
@@ -47,7 +45,6 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         public FFmpegTrackIndexer(Playlist playlist)
         {
-            _playlist = playlist;
             _trackIndices = new Dictionary<int, FFmpegTrackIndex>(playlist.Tracks.Count * 2);
 
             // Input indexes
@@ -57,7 +54,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                 si = 0; // subtitle index
 
             // Input tracks in FFmpeg order (by PID ascending)
-            foreach (var track in _playlist.Tracks.OrderBy(track => track.PID))
+            foreach (var track in playlist.Tracks.OrderBy(track => track.PID))
             {
                 var inputIndex = ii++;
                 var inputIndexOfType = -1;
@@ -92,7 +89,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                 so = 0; // subtitle index
 
             // Output tracks in original BDInfo order
-            foreach (var track in _playlist.Tracks.Where(track => track.Keep))
+            foreach (var track in playlist.Tracks.Where(track => track.Keep))
             {
                 var outputIndex = io++;
                 var outputIndexOfType = -1;

@@ -18,16 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using BDHero.BDROM;
+using BDHero.JobQueue;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.FS;
 using I18N;
+using MkvToolNixUtils;
 using OSUtils.JobObjects;
 using ProcessUtils;
 
@@ -72,10 +71,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             ExePath = Path.Combine(exeDir, MkvPropEditFileName);
         }
 
-        public MkvPropEdit SetChapters(IEnumerable<Chapter> chapters)
+        public MkvPropEdit SetChapters(ICollection<Chapter> chapters)
         {
-            var chapterXmlPath = SaveChaptersToXml(chapters);
-            Arguments.AddAll("--chapters", chapterXmlPath);
+            new ChapterWriterV3(_tempFileRegistrar).SetChapters(Arguments, chapters);
             return this;
         }
 
@@ -138,17 +136,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             return this;
         }
 
-        public MkvPropEdit AddCoverArt([CanBeNull] Image coverArt)
+        public MkvPropEdit AttachCoverArt([CanBeNull] ReleaseMedium releaseMedium)
         {
-            var coverImagePathLarge = ResizeCoverArt(coverArt, CoverArtSize.Large, "cover.jpg");
-            var coverImagePathSmall = ResizeCoverArt(coverArt, CoverArtSize.Small, "small_cover.jpg");
-
-            if (coverImagePathLarge != null)
-                AddAttachment(coverImagePathLarge);
-
-            if (coverImagePathSmall != null)
-                AddAttachment(coverImagePathSmall);
-
+            new CoverArtResizer(_tempFileRegistrar).AttachCoverArt(Arguments, releaseMedium);
             return this;
         }
 
@@ -184,52 +174,6 @@ namespace BDHero.Plugin.FFmpegMuxer
             return this;
         }
 
-        /// <summary>
-        /// Saves the given <paramref name="chapters"/> in Matroska XML format to a temporary file and returns the path to the file.
-        /// </summary>
-        /// <param name="chapters"></param>
-        /// <returns>Full, absolute path to the chapter XML file</returns>
-        [NotNull]
-        private string SaveChaptersToXml(IEnumerable<Chapter> chapters)
-        {
-            var path = _tempFileRegistrar.CreateTempFile(GetType(), "chapters.xml");
-            ChapterWriterV3.SaveAsXml(chapters, path);
-            return path;
-        }
-
-        /// <summary>
-        /// Resizes the cover art image to the appropriate dimensions and saves it to a temporary file with the given filename.
-        /// </summary>
-        /// <param name="image">Full size cover art image from TMDb.  If <paramref name="image"/> is null, this method will return null.</param>
-        /// <param name="width">120 for small or 600 for large</param>
-        /// <param name="filename">cover.{jpg,png} or small_cover.{jpg,png}</param>
-        /// <returns>Full, absolute path to the resized image on disk if <paramref name="image"/> is not null; otherwise null.</returns>
-        [CanBeNull]
-        private string ResizeCoverArt([CanBeNull] Image image, CoverArtSize width, [NotNull] string filename)
-        {
-            if (image == null) return null;
-            var ext = Path.GetExtension(filename.ToLowerInvariant());
-            var format = ext == ".png" ? ImageFormat.Png : ImageFormat.Jpeg;
-            var path = _tempFileRegistrar.CreateTempFile(GetType(), filename);
-            ScaleImage(image, (int)width, int.MaxValue).Save(path, format);
-            return path;
-        }
-
-        [NotNull]
-        private static Image ScaleImage([NotNull] Image image, int maxWidth, int maxHeight)
-        {
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
-
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            var newImage = new Bitmap(newWidth, newHeight);
-            Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
-            return newImage;
-        }
-
 #if TestMkvPropEdit
 
         public static void Test(string mkvFilePath = null)
@@ -260,7 +204,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                                };
 //            var mkvPropEdit = new MkvPropEdit { SourceFilePath = mkvFilePath }
 //                .SetMovieTitle(movieTitle)
-//                .AddCoverArt(coverArt)
+//                .AttachCoverArt(coverArt)
 //                .SetChapters(chapters)
 //                .SetTrackProps(trackProps);
 //            mkvPropEdit.Start();
@@ -276,53 +220,11 @@ namespace BDHero.Plugin.FFmpegMuxer
 #endif
     }
 
-    public enum CoverArtSize
-    {
-        Small = 120,
-        Large = 600
-    }
-
     public class MkvTrackProps
     {
         public string Name;
         public bool? Default;
         public bool? Forced;
         public Language Language;
-    }
-
-    public static class ChapterWriterV3
-    {
-        public static void SaveAsXml(IEnumerable<Chapter> chapters, string path)
-        {
-            var writer = new XmlTextWriter(path, Encoding.GetEncoding("ISO-8859-1"));
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartDocument();
-                writer.WriteDocType("Chapters", null, "matroskachapters.dtd", null);
-                writer.WriteStartElement("Chapters");
-                    writer.WriteStartElement("EditionEntry");
-                    foreach (var chapter in chapters.Where(chapter => chapter.Keep))
-                    {
-                        writer.WriteStartElement("ChapterAtom");
-                            writer.WriteStartElement("ChapterTimeStart");
-                                writer.WriteString(chapter.StartTimeXmlFormat); // 00:00:00.000
-                            writer.WriteEndElement();
-                            writer.WriteStartElement("ChapterDisplay");
-                                writer.WriteStartElement("ChapterString");
-                                    writer.WriteString(chapter.Title); // Chapter 1
-                                writer.WriteEndElement();
-                                if (chapter.Language != null && chapter.Language != Language.Undetermined)
-                                {
-                                    writer.WriteStartElement("ChapterLanguage");
-                                        writer.WriteString(chapter.Language.ISO_639_2); // eng
-                                    writer.WriteEndElement();
-                                }   
-                            writer.WriteEndElement();
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Close();
-        }
     }
 }

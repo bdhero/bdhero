@@ -29,9 +29,6 @@ namespace BDHero.Plugin.FFmpegMuxer
 {
     public class FFmpegPlugin : IMuxerPlugin
     {
-        private readonly IJobObjectManager _jobObjectManager;
-        private readonly ITempFileRegistrar _tempFileRegistrar;
-
         private static readonly log4net.ILog Logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -58,6 +55,9 @@ namespace BDHero.Plugin.FFmpegMuxer
                     ;
             }
         }
+
+        private readonly IJobObjectManager _jobObjectManager;
+        private readonly ITempFileRegistrar _tempFileRegistrar;
 
         private readonly AutoResetEvent _mutex = new AutoResetEvent(false);
 
@@ -94,7 +94,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             var ffmpeg = new FFmpeg(job, job.SelectedPlaylist, job.OutputPath, _jobObjectManager, _tempFileRegistrar);
             ffmpeg.ProgressUpdated += state => OnProgressUpdated(ffmpeg, state, cancellationToken);
-            ffmpeg.Exited += FFmpegOnExited;
+            ffmpeg.Exited += OnExited;
             ffmpeg.StartAsync();
             cancellationToken.Register(ffmpeg.Kill, true);
             WaitForThreadToExit();
@@ -136,7 +136,7 @@ namespace BDHero.Plugin.FFmpegMuxer
                 ffmpeg.Kill();
         }
 
-        private void FFmpegOnExited(NonInteractiveProcessState state, int exitCode, Exception exception, TimeSpan runTime)
+        private void OnExited(NonInteractiveProcessState state, int exitCode, Exception exception, TimeSpan runTime)
         {
             Logger.InfoFormat("FFmpeg exited with state {0} and code {1}", state, exitCode);
 

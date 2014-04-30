@@ -126,6 +126,33 @@ namespace BDHero.JobQueue
 
         private SearchQuery _searchQuery;
 
+        // TODO: Make this user-configurable
+        [JsonIgnore]
+        public string Title
+        {
+            get
+            {
+                var releaseMedium = SelectedReleaseMedium;
+                if (releaseMedium == null)
+                    return SearchQuery.Title;
+
+                var movie = releaseMedium as Movie;
+                if (movie != null)
+                    return movie.ToString();
+
+                var tvShow = releaseMedium as TVShow;
+                if (tvShow != null)
+                    return string.Format("{0} - {1}, season {2}, episode {3} ({4})",
+                                         tvShow.SelectedEpisode.Title,
+                                         tvShow.Title,
+                                         tvShow.SelectedEpisode.SeasonNumber,
+                                         tvShow.SelectedEpisode.EpisodeNumber,
+                                         tvShow.SelectedEpisode.ReleaseDate.ToString("yyyy'-'MM'-'dd"));
+
+                return releaseMedium.Title;
+            }
+        }
+
         public Job(Disc disc)
         {
             Disc = disc;

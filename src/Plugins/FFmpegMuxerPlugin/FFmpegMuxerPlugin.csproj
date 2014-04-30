@@ -83,6 +83,10 @@
       <Project>{1FBE870D-5664-4B24-A768-8A175A72ADDF}</Project>
       <Name>I18N</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\MkvToolNixUtils\MkvToolNixUtils.csproj">
+      <Project>{EDCC6D0F-93A7-4D53-BF13-701307EBB2E7}</Project>
+      <Name>MkvToolNixUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\OSUtils\OSUtils.csproj">
       <Project>{EE69E896-8779-4E3D-A033-75A96F28DE2F}</Project>
       <Name>OSUtils</Name>

@@ -31,8 +31,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         private static string GetExePath()
         {
             var assemblyPath = Assembly.GetExecutingAssembly().Location;
-            var ffmpegAssemblyDir = Path.GetDirectoryName(assemblyPath);
-            return Path.Combine(ffmpegAssemblyDir, FFmpegExeFilename);
+            var pluginAssemblyDir = Path.GetDirectoryName(assemblyPath);
+            return Path.Combine(pluginAssemblyDir, FFmpegExeFilename);
         }
 
         #region Logging
@@ -178,31 +178,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         public FFmpegCLI SetMovieTitle(Job job)
         {
-            var title = job.SearchQuery.Title;
-            var releaseMedium = job.SelectedReleaseMedium;
-            if (releaseMedium != null)
-            {
-                var movie = releaseMedium as Movie;
-                var tvShow = releaseMedium as TVShow;
-                if (movie != null)
-                {
-                    title = movie.ToString();
-                }
-                else if (tvShow != null)
-                {
-                    title = string.Format("{0} - {1}, season {2}, episode {3} ({4})",
-                                          tvShow.SelectedEpisode.Title,
-                                          tvShow.Title,
-                                          tvShow.SelectedEpisode.SeasonNumber,
-                                          tvShow.SelectedEpisode.EpisodeNumber,
-                                          tvShow.SelectedEpisode.ReleaseDate.ToString("yyyy'-'MM'-'dd"));
-                }
-                else
-                {
-                    title = releaseMedium.Title;
-                }
-            }
-            _arguments.AddAll("-metadata", "title=" + title);
+            _arguments.AddAll("-metadata", "title=" + job.Title);
             return this;
         }
 

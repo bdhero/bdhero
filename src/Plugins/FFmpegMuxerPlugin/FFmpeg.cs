@@ -392,11 +392,9 @@ namespace BDHero.Plugin.FFmpegMuxer
             if (processState != NonInteractiveProcessState.Completed)
                 return;
 
-            var coverArt = releaseMedium != null ? releaseMedium.CoverArtImages.FirstOrDefault(image => image.IsSelected) : null;
-            var coverArtImage = coverArt != null ? coverArt.Image : null;
             var mkvPropEdit = new MkvPropEdit(_jobObjectManager, _tempFileRegistrar) { SourceFilePath = outputMKVPath }
                 .RemoveAllTags()
-                .AddCoverArt(coverArtImage)
+                .AttachCoverArt(releaseMedium)
                 .SetChapters(playlist.Chapters)
 //                .SetDefaultTracksAuto(selectedTracks) // Breaks MediaInfo
             ;
