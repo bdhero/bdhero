@@ -85,7 +85,7 @@ namespace BDHeroGUI.Components
 
         private bool ShowTrack(Track track)
         {
-            return _filter.Show(track) || _showAllTracks;
+            return _filter.Show(track) || _showAllTracks || track.Keep;
         }
 
         private void RefreshPlaylist()
