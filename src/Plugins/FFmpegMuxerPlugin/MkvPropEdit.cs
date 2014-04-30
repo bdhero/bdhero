@@ -138,7 +138,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         public MkvPropEdit AttachCoverArt([CanBeNull] ReleaseMedium releaseMedium)
         {
-            new CoverArtResizer(_tempFileRegistrar).AttachCoverArt(Arguments, releaseMedium);
+            new CoverArtResizer(Arguments, _tempFileRegistrar).AddCoverArt(releaseMedium);
             return this;
         }
 

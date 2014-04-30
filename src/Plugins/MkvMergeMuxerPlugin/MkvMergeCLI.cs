@@ -77,11 +77,20 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
             playlist.Tracks.Where(KeepTrack).ForEach(VisitTrack);
 
-            Arguments.AddAll("--audio-tracks",    string.Join(",", playlist.AudioTracks.Where(KeepTrack).Select(TrackOutputIndex)));
-            Arguments.AddAll("--video-tracks",    string.Join(",", playlist.VideoTracks.Where(KeepTrack).Select(TrackOutputIndex)));
-            Arguments.AddAll("--subtitle-tracks", string.Join(",", playlist.SubtitleTracks.Where(KeepTrack).Select(TrackOutputIndex)));
+            AddTracks(playlist.VideoTracks, "--video-tracks", "--no-video");
+            AddTracks(playlist.AudioTracks, "--audio-tracks", "--no-audio");
+            AddTracks(playlist.SubtitleTracks, "--subtitle-tracks", "--no-subtitles");
 
             return this;
+        }
+
+        private void AddTracks(IEnumerable<Track> tracks, string hasTracksArg, string hasNoTracksArg)
+        {
+            var trackIndexes = tracks.Where(KeepTrack).Select(TrackOutputIndex).ToArray();
+            if (trackIndexes.Any())
+                Arguments.AddAll(hasTracksArg, string.Join(",", trackIndexes));
+            else
+                Arguments.Add(hasNoTracksArg);
         }
 
         private bool KeepTrack(Track track)
@@ -131,6 +140,20 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         #endregion
 
+        #region Chapters
+
+        /// <summary>
+        ///     Don't copy chapters from this file.
+        /// </summary>
+        /// <returns></returns>
+        public MkvMergeCLI NoChapters()
+        {
+            Arguments.Add("--no-chapters");
+            return this;
+        }
+
+        #endregion
+
         #region Input files
 
         public MkvMergeCLI SetInputPath(string mplsFilePath)
@@ -149,7 +172,7 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         public MkvMergeCLI AttachCoverArt(ReleaseMedium releaseMedium)
         {
-            new CoverArtResizer(_tempFileRegistrar).AttachCoverArt(Arguments, releaseMedium);
+            new CoverArtResizer(Arguments, _tempFileRegistrar).AttachCoverArt(releaseMedium);
             return this;
         }
 

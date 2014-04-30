@@ -49,6 +49,7 @@ namespace BDHero.Plugin.MkvMergeMuxer
                 .SetSelectedTracks(playlist)
                 .NoGlobalTags()
                 .NoTrackTags()
+                .NoChapters()
                 .SetInputPath(playlist.FullPath)
                 .AttachCoverArt(job.SelectedReleaseMedium)
                 .SetMovieTitle(job)

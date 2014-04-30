@@ -27,16 +27,38 @@ using ProcessUtils;
 
 namespace MkvToolNixUtils
 {
+    internal delegate void AttachFileDelegate(string attachmentFilePath);
+
     public class CoverArtResizer
     {
+        private readonly ArgumentList _arguments;
         private readonly ITempFileRegistrar _tempFileRegistrar;
 
-        public CoverArtResizer(ITempFileRegistrar tempFileRegistrar)
+        public CoverArtResizer([NotNull] ArgumentList arguments, ITempFileRegistrar tempFileRegistrar)
         {
+            _arguments = arguments;
             _tempFileRegistrar = tempFileRegistrar;
         }
 
-        public void AttachCoverArt([NotNull] ArgumentList arguments, [CanBeNull] ReleaseMedium releaseMedium)
+        /// <summary>
+        ///     Used by mkvmerge.
+        /// </summary>
+        /// <param name="releaseMedium"></param>
+        public void AttachCoverArt([CanBeNull] ReleaseMedium releaseMedium)
+        {
+            AttachCoverArt(releaseMedium, AttachFile);
+        }
+
+        /// <summary>
+        ///     Used by mkvpropedit.
+        /// </summary>
+        /// <param name="releaseMedium"></param>
+        public void AddCoverArt([CanBeNull] ReleaseMedium releaseMedium)
+        {
+            AttachCoverArt(releaseMedium, AddAttachment);
+        }
+
+        private void AttachCoverArt([CanBeNull] ReleaseMedium releaseMedium, AttachFileDelegate @delegate)
         {
             var coverArt = releaseMedium != null ? releaseMedium.CoverArtImages.FirstOrDefault(image => image.IsSelected) : null;
             var coverArtImage = coverArt != null ? coverArt.Image : null;
@@ -44,27 +66,37 @@ namespace MkvToolNixUtils
             if (coverArtImage == null)
                 return;
 
-            AddCoverArt(arguments, coverArtImage);
+            AttachCoverArt(coverArtImage, @delegate);
         }
 
-        private void AddCoverArt([NotNull] ArgumentList arguments, [CanBeNull] Image coverArt)
+        private void AttachCoverArt([CanBeNull] Image coverArt, AttachFileDelegate @delegate)
         {
             var coverImagePathLarge = ResizeCoverArt(coverArt, CoverArtSize.Large, "cover.jpg");
             var coverImagePathSmall = ResizeCoverArt(coverArt, CoverArtSize.Small, "small_cover.jpg");
 
             if (coverImagePathLarge != null)
-                AddAttachment(arguments, coverImagePathLarge);
+                @delegate(coverImagePathLarge);
 
             if (coverImagePathSmall != null)
-                AddAttachment(arguments, coverImagePathSmall);
+                @delegate(coverImagePathSmall);
         }
 
-        private static void AddAttachment([NotNull] ArgumentList arguments, [NotNull] string attachmentFilePath)
+        /// <summary>
+        ///     Used by mkvmerge.
+        /// </summary>
+        /// <param name="attachmentFilePath"></param>
+        private void AttachFile([NotNull] string attachmentFilePath)
         {
-            arguments.AddAll("--attach-file", attachmentFilePath);
+            _arguments.AddAll("--attach-file", attachmentFilePath);
+        }
 
-            // TODO: mkvpropedit
-//            arguments.AddAll("--add-attachment", attachmentFilePath);
+        /// <summary>
+        ///     Used by mkvpropedit.
+        /// </summary>
+        /// <param name="attachmentFilePath"></param>
+        private void AddAttachment([NotNull] string attachmentFilePath)
+        {
+            _arguments.AddAll("--add-attachment", attachmentFilePath);
         }
 
         /// <summary>
