@@ -1,7 +1,17 @@
 BDHero Changelog
 ================
 
-0.9.1.0 - 2014-04-17
+0.9.1.1 - 2014-05-01
+--------------------
+
+*   Fix: #36 and #37: Only auto-select muxable tracks in AutoDetector.cs
+*   Fix: #43: NPE in DiscTransformer and TrackTransformer
+*   Fix: FFmpeg "inputFileList.txt: No such file or directory" error
+*   Improve: Always show selected tracks in GUI
+*   Improve: Better FFmpeg exit handling and error detection
+*   Improve: Don't report invalid disc errors
+
+0.9.1.0 - 2014-04-23
 --------------------
 
 *   Downgrade: FFmpeg 2.1.4 (regression introduced in 2.x (4eb49fdd); see #30)
