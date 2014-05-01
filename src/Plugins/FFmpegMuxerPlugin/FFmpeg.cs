@@ -194,6 +194,8 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         #region StdErr
 
+        #region Error messages/codes to ignore
+
         private static readonly string[] ErrorsToIgnoreAlways =
         {
             "Not a valid DCA frame",
@@ -207,8 +209,55 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private static readonly string[] NonReportableErrors =
         {
-            "Permission denied",
         };
+
+        /// <summary>
+        ///     From FFmpeg src (<c>doc/errno.txt</c>).
+        /// </summary>
+        private static readonly Dictionary<string, string> NonReportableErrorCodes = new Dictionary<string, string>
+        {
+            { "EACCES",       "Permission denied" },
+            { "EAGAIN",       "Resource temporarily unavailable" },
+            { "EAUTH",        "Authentication error" },
+            { "EBUSY",        "Device or resource busy" },
+            { "ECANCELED",    "Operation canceled" },
+            { "ECONNREFUSED", "Connection refused" },
+            { "ECONNRESET",   "Connection reset" },
+            { "EDEVERR",      "Device error" },
+            { "EDQUOT",       "Disc quota exceeded" },
+            { "EFBIG",        "File too large" },
+            { "EHOSTDOWN",    "Host is down" },
+            { "EHOSTUNREACH", "No route to host" },
+            { "EHWPOISON",    "Memory page has hardware error" },
+            { "EIO",          "I/O error" },
+            { "EMFILE",       "Too many open files" },
+            { "EMLINK",       "Too many links" },
+            { "EMSGSIZE",     "Message too long" },
+            { "ENAMETOOLONG", "File name too long" },
+            { "ENETDOWN",     "Network is down" },
+            { "ENETRESET",    "Network dropped connection on reset" },
+            { "ENETUNREACH",  "Network unreachable" },
+            { "ENFILE",       "Too many open files in system" },
+            { "ENODEV",       "No such device" },
+            { "ENOENT",       "No such file or directory" },
+            { "ENOFILE",      "No such file or directory" },
+            { "ENOMEM",       "Not enough space" },
+            { "ENONET",       "Machine is not on the network" },
+            { "ENOSPC",       "No space left on device" },
+            { "ENXIO",        "No such device or address" },
+            { "EPWROFF",      "Device power is off" },
+            { "EROFS",        "Read-only file system" },
+            { "ETIMEDOUT",    "Connection timed out" },
+            { "ETXTBSY",      "Text file busy" },
+            { "EUSERS",       "Too many users" },
+        };
+
+        #endregion
+
+        private static bool ShouldIgnoreError(string line)
+        {
+            return ErrorsToIgnoreAlways.Any(line.Contains);
+        }
 
         private void OnStdErr(string line)
         {
@@ -217,7 +266,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             _stdErr.Add(new StdErrMessage(DateTime.Now, line));
 
-            if (ErrorsToIgnoreAlways.Any(line.Contains))
+            if (ShouldIgnoreError(line))
             {
                 Logger.Warn(line);
                 return;
@@ -241,7 +290,15 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         private static bool IsReportable(string line)
         {
-            return !NonReportableErrors.Any(line.Contains);
+            return !IsNonReportable(line);
+        }
+
+        private static bool IsNonReportable(string line)
+        {
+            return NonReportableErrors.Any(line.Contains)
+                || NonReportableErrorCodes.Keys.Any(key => new Regex(string.Format(@"\b{0}\b", key)).IsMatch(line))
+                || NonReportableErrorCodes.Values.Any(line.Contains)
+                ;
         }
 
         #endregion
