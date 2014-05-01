@@ -23,12 +23,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Timers;
 using BDHero.BDROM;
 using BDHero.JobQueue;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using OSUtils.JobObjects;
 using ProcessUtils;
+using Timer = System.Timers.Timer;
 
 namespace BDHero.Plugin.FFmpegMuxer
 {
@@ -461,7 +463,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         {
             LogExit(processState, exitCode);
 
-            _tempFileRegistrar.DeleteTempFiles(_progressFilePath, _inputFileListPath);
+            DeleteTempFilesAsync();
 
             if (processState != NonInteractiveProcessState.Completed)
                 return;
@@ -473,6 +475,20 @@ namespace BDHero.Plugin.FFmpegMuxer
 //                .SetDefaultTracksAuto(selectedTracks) // Breaks MediaInfo
             ;
             mkvPropEdit.Start();
+        }
+
+        private void DeleteTempFilesAsync()
+        {
+            // Wait about 2 seconds before deleting temp files to give the FFmpeg process a chance to finish reading
+            // the input file list and exit.
+            var timer = new Timer(2000) { AutoReset = false };
+            timer.Elapsed += DeleteTempFiles;
+            timer.Start();
+        }
+
+        private void DeleteTempFiles(object sender, ElapsedEventArgs args)
+        {
+            _tempFileRegistrar.DeleteTempFiles(_progressFilePath, _inputFileListPath, _reportDumpFilePath);
         }
 
         #endregion
