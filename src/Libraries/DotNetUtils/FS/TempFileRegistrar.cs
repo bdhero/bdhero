@@ -42,6 +42,9 @@ namespace DotNetUtils.FS
     [UsedImplicitly]
     public class TempFileRegistrar : ITempFileRegistrar
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private volatile bool _isDisposed;
 
         private readonly ISet<string> _tempFilePaths = new HashSet<string>();
@@ -71,6 +74,7 @@ namespace DotNetUtils.FS
             if (freeManagedObjectsAlso)
             {
                 if (_isDisposed) { return; }
+                Logger.Info("TempFileRegistrar.Dispose()");
                 DeleteEverything();
                 _isDisposed = true;
             }
@@ -109,6 +113,7 @@ namespace DotNetUtils.FS
 
         public void DeleteEverything()
         {
+            Logger.Info("TempFileRegistrar.DeleteEverything()");
             lock (this)
             {
                 var tempFilePaths = _tempFilePaths.ToArray();
