@@ -346,7 +346,8 @@ namespace BDInfo
                 int pos = 0;
 
                 _fileType = ReadString(data, 8, ref pos);
-                if (_fileType != "MPLS0100" && _fileType != "MPLS0200")
+                if (_fileType != "MPLS0100" &
+                    _fileType != "MPLS0200")
                 {
                     throw new IOException(string.Format(
                         "Playlist {0} has an unknown file type {1}.",
