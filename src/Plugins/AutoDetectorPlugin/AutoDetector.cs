@@ -314,10 +314,12 @@ namespace BDHero.Plugin.AutoDetector
             {
                 // Video
 
-                var firstVideoTrack = playlist.VideoTracks.FirstOrDefault();
+                var firstVideoTrack = playlist.VideoTracks.FirstOrDefault(IsMuxable);
                 if (firstVideoTrack == null)
                 {
-                    Logger.WarnFormat("Playlist {0} has no video tracks - skipping");
+                    Logger.WarnFormat(playlist.VideoTracks.Any()
+                                          ? "Playlist {0} has no muxable video tracks - skipping"
+                                          : "Playlist {0} has no video tracks - skipping", playlist.FileName);
                     continue;
                 }
 
@@ -325,9 +327,9 @@ namespace BDHero.Plugin.AutoDetector
 
                 // Audio
 
-                var mainFeatureAudioTracks = playlist.AudioTracks.Where(track => track.IsMainFeature).ToList();
+                var mainFeatureAudioTracks = playlist.AudioTracks.Where(IsMuxable).Where(IsMainFeature).ToList();
                 var primaryLanguageAudioTracks = mainFeatureAudioTracks.Where(track => track.Language == disc.PrimaryLanguage).ToList();
-                var firstAudioTrack = playlist.AudioTracks.FirstOrDefault();
+                var firstAudioTrack = playlist.AudioTracks.FirstOrDefault(IsMuxable);
 
                 if (primaryLanguageAudioTracks.Any())
                     SelectTracks(primaryLanguageAudioTracks);
@@ -338,9 +340,9 @@ namespace BDHero.Plugin.AutoDetector
 
                 // Subtitles
 
-                var mainFeatureSubtitleTracks = playlist.SubtitleTracks.Where(track => track.IsMainFeature).ToList();
+                var mainFeatureSubtitleTracks = playlist.SubtitleTracks.Where(IsMuxable).Where(IsMainFeature).ToList();
                 var primaryLanguageSubtitleTracks = mainFeatureSubtitleTracks.Where(track => track.Language == disc.PrimaryLanguage).ToList();
-                var firstSubtitleTrack = playlist.SubtitleTracks.FirstOrDefault();
+                var firstSubtitleTrack = playlist.SubtitleTracks.FirstOrDefault(IsMuxable);
 
                 if (primaryLanguageSubtitleTracks.Any())
                     SelectTracks(primaryLanguageSubtitleTracks);
@@ -364,8 +366,28 @@ namespace BDHero.Plugin.AutoDetector
             if (track == null)
                 return;
 
+            if (!IsMuxable(track))
+            {
+                Logger.WarnFormat("{0} is not muxable; skipping", track.ToStringLoggable());
+                return;
+            }
+
             track.IsBestGuess = true;
             track.Keep = true;
+        }
+
+        #endregion
+
+        #region Track property methods for LINQ
+
+        private static bool IsMuxable(Track track)
+        {
+            return track.Codec.IsMuxable;
+        }
+
+        private static bool IsMainFeature(Track track)
+        {
+            return track.IsMainFeature;
         }
 
         #endregion
