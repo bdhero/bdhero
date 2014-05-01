@@ -38,15 +38,13 @@ Bugs
 ====
 
 [ ] ffmpeg:
-    - 00001.mpls: (2011) The Day
-    - 00000.mpls: (2012) The Three Stooges
-    - 00800.mpls: (1987) The Living Daylights
-    - 00000.mpls: (2011) The Mechanic
-    - 00000.mpls: (1997) Titanic
+    [-] 00001.mpls: (2011) The Day
+    [ ] 00000.mpls: (2012) The Three Stooges
+    [Q] 00000.mpls: (2011) The Mechanic
+    [Q] 00000.mpls: (1997) Titanic
         ! Stream map '0:2' matches no streams.
-    - 00600.mpls: (1997) Tomorrow Never Dies
-    - 00000.mpls: (2008) Transporter 3
-    - 00000.mpls: (1988) Who Framed Roger Rabbit
+    [-] 00000.mpls: (2008) Transporter 3
+    [-] 00000.mpls: (1988) Who Framed Roger Rabbit
         ? 1080i @ 25fps
 
 [ ] Path redaction: spaces in file paths without quotes
