@@ -350,7 +350,7 @@ namespace BDInfo
                     _fileType != "MPLS0200")
                 {
                     throw new IOException(string.Format(
-                        "Playlist {0} has an unknown file type {1}.",
+                        "Playlist {0} has an unknown file type {1}.  The disc may be damaged or corrupt.",
                         _fileInfo.Name, _fileType));
                 }
 
