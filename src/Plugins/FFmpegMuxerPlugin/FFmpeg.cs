@@ -326,7 +326,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             {
                 Logger.Info(line);
 
-                if (_progress > 98)
+                if (_progress >= 99.9)
                 {
                     var prevProgress = _progress;
 
