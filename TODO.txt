@@ -37,11 +37,6 @@ Chores
 Bugs
 ====
 
-[ ] FFmpeg:
-    [ ] "progress=end" (100%) after error at 50% (e.g., https://github.com/bdhero/bdhero/issues/41)
-
-[ ] Output path: [1080p] missing on first scan (X-Men Origins: Wolverine (2009))
-
 [ ] ffmpeg:
     - 00001.mpls: (2011) The Day
     - 00000.mpls: (2012) The Three Stooges
@@ -56,8 +51,6 @@ Bugs
 
 [ ] Path redaction: spaces in file paths without quotes
     - e.g.: https://github.com/bdhero/bdhero/issues/37
-
-[ ] GUI: Checked tracks may still be hidden unless "Show all tracks" is enabled (e.g., Misc/SpecialFeature playlists)
 
 [ ] "Filter Playlists" and "Filter Tracks" settings no longer work
 
