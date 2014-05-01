@@ -324,9 +324,19 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             if ("progress=end" == line)
             {
-                _progress = 100;
-                CleanExit = true;
-                Logger.InfoFormat("{0} ({1:P})", line, _progress / 100.0);
+                Logger.Info(line);
+
+                if (_progress > 98)
+                {
+                    var prevProgress = _progress;
+
+                    _progress = 100;
+                    CleanExit = true;
+
+                    Logger.InfoFormat("{0:P} => {1:P}", prevProgress / 100.0, _progress / 100.0);
+                }
+
+                _sawProgressEnd = true;
                 _cleanExitEvent.Set();
             }
         }
@@ -343,6 +353,13 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         #endregion
 
+        private bool _sawProgressEnd;
+
+        protected override bool IsError
+        {
+            get { return base.IsError || _progress < 100.0; }
+        }
+
         #region Exit handling
 
         protected override void BeforeProcessExited()
@@ -350,7 +367,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             PickBestException();
 
             // ParseProgressLine() already parsed "progress=end" line
-            if (CleanExit.HasValue && CleanExit.Value)
+            if (_sawProgressEnd)
                 return;
 
             // Give ParseProgressLine() time to read the final output written by the process

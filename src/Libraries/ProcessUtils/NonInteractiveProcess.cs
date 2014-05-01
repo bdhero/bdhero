@@ -383,7 +383,7 @@ namespace ProcessUtils
             get { return CleanExit.HasValue && CleanExit.Value == false; }
         }
 
-        private bool IsError
+        protected virtual bool IsError
         {
             get
             {
