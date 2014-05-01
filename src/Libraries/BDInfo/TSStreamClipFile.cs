@@ -68,7 +68,7 @@ namespace BDInfo
                 byte[] fileType = new byte[8];
                 Array.Copy(data, 0, fileType, 0, fileType.Length);
                 
-                FileType = ASCIIEncoding.ASCII.GetString(fileType);
+                FileType = Encoding.ASCII.GetString(fileType);
                 if (FileType != "HDMV0100" &&
                     FileType != "HDMV0200")
                 {
