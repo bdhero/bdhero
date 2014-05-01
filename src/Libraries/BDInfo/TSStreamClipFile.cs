@@ -72,7 +72,7 @@ namespace BDInfo
                 if (FileType != "HDMV0100" &&
                     FileType != "HDMV0200")
                 {
-                    throw new Exception(string.Format(
+                    throw new InvalidDataException(string.Format(
                         "Clip info file {0} has an unknown file type {1}.  The disc may be damaged or corrupt.",
                         FileInfo.Name, FileType));
                 }
