@@ -37,7 +37,25 @@ Chores
 Bugs
 ====
 
+[ ] FFmpeg:
+    [ ] "progress=end" (100%) after error at 50% (e.g., https://github.com/bdhero/bdhero/issues/41)
+
 [ ] Output path: [1080p] missing on first scan (X-Men Origins: Wolverine (2009))
+
+[ ] ffmpeg:
+    - 00001.mpls: (2011) The Day
+    - 00000.mpls: (2012) The Three Stooges
+    - 00800.mpls: (1987) The Living Daylights
+    - 00000.mpls: (2011) The Mechanic
+    - 00000.mpls: (1997) Titanic
+        ! Stream map '0:2' matches no streams.
+    - 00600.mpls: (1997) Tomorrow Never Dies
+    - 00000.mpls: (2008) Transporter 3
+    - 00000.mpls: (1988) Who Framed Roger Rabbit
+        ? 1080i @ 25fps
+
+[ ] Path redaction: spaces in file paths without quotes
+    - e.g.: https://github.com/bdhero/bdhero/issues/37
 
 [ ] GUI: Checked tracks may still be hidden unless "Show all tracks" is enabled (e.g., Misc/SpecialFeature playlists)
 
@@ -45,8 +63,20 @@ Bugs
 
 [ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
 
+Detection
+=========
+
+[ ] Battle Los Angeles (2011)
+
 Features
 ========
+
+[ ] known ffmpeg defect alert
+[ ] max resync size reached, could not find sync byte
+    - https://github.com/bdhero/bdhero/issues/32
+    - https://github.com/bdhero/bdhero/issues/24
+[ ] mkvmerge plugin
+[ ] old ffmpeg versions
 
 [ ] Detection/auto-selection:
     [ ] "Rate" tracks/playlists based on "evidence" - confidence level that they are main feature
@@ -65,6 +95,9 @@ Features
 
 [ ] Add ChapterGrabber preferences for adding leading chapter numbers
     [X] Remove "1 - " (e.g.: "Killers" (2010)) (needs to be tested)
+    [ ] Machete (2010)
+    [ ] Battle Los Angeles (2011)
+        - Kapitola 1...16
 
 [ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
 
