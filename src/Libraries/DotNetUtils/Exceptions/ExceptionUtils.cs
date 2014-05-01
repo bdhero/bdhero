@@ -86,6 +86,7 @@ namespace DotNetUtils.Exceptions
             while (exception != null)
             {
                 if (exception is ID10TException ||
+                    exception is InvalidDataException ||
                     exception is DirectoryNotFoundException ||
                     exception is DriveNotFoundException ||
                     exception is FileNotFoundException ||
